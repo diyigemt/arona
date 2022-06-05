@@ -1,5 +1,6 @@
-package org.example.mirai.plugin;
+package net.diyigemt.arona;
 
+import net.diyigemt.arona.dispatcher.GroupEventDispatcher;
 import net.mamoe.mirai.console.plugin.jvm.JavaPlugin;
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription;
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescriptionBuilder;
@@ -29,7 +30,7 @@ import net.mamoe.mirai.event.events.GroupMessageEvent;
 public final class JavaPluginMain extends JavaPlugin {
     public static final JavaPluginMain INSTANCE = new JavaPluginMain();
     private JavaPluginMain() {
-        super(new JvmPluginDescriptionBuilder("org.example.mirai-example", "0.1.0")
+        super(new JvmPluginDescriptionBuilder("net.diyigemt.arona-arona", "0.1.0")
                 .info("EG")
                 .build());
     }
@@ -38,14 +39,6 @@ public final class JavaPluginMain extends JavaPlugin {
     public void onEnable() {
         getLogger().info("日志");
         EventChannel<Event> eventChannel = GlobalEventChannel.INSTANCE.parentScope(this);
-        eventChannel.subscribeAlways(GroupMessageEvent.class, g -> {
-            //监听群消息
-            getLogger().info(g.getMessage().contentToString());
-
-        });
-        eventChannel.subscribeAlways(FriendMessageEvent.class, f -> {
-            //监听好友消息
-            getLogger().info(f.getMessage().contentToString());
-        });
+        eventChannel.subscribeAlways(GroupMessageEvent.class, new GroupEventDispatcher());
     }
 }

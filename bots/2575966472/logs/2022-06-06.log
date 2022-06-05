@@ -1,0 +1,259 @@
+[91m2022-06-06 00:00:50 W/: HeartbeatFailedException: AliveHeartbeat, recoverable=true, cause=PacketTimeoutException(message=Timeout receiving Heartbeat response, cause=kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 5000 ms)
+HeartbeatFailedException: AliveHeartbeat, recoverable=true, cause=PacketTimeoutException(message=Timeout receiving Heartbeat response, cause=kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 5000 ms)
+	at net.mamoe.mirai.internal.network.impl.netty.NettyNetworkHandler$StateOK$heartbeatJobs$1$1.invoke(NettyNetworkHandler.kt:349)
+	at net.mamoe.mirai.internal.network.impl.netty.NettyNetworkHandler$StateOK$heartbeatJobs$1$1.invoke(NettyNetworkHandler.kt:349)
+	at net.mamoe.mirai.internal.network.handler.NetworkHandlerSupport.setStateImpl$mirai_core(NetworkHandlerSupport.kt:251)
+	at net.mamoe.mirai.internal.network.impl.netty.NettyNetworkHandler$StateOK$heartbeatJobs$1.invoke(NettyNetworkHandler.kt:395)
+	at net.mamoe.mirai.internal.network.impl.netty.NettyNetworkHandler$StateOK$heartbeatJobs$1.invoke(NettyNetworkHandler.kt:348)
+	at net.mamoe.mirai.internal.network.components.TimeBasedHeartbeatSchedulerImpl$launchHeartbeatJobAsync$1.invokeSuspend(HeartbeatScheduler.kt:108)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.internal.ScopeCoroutine.afterResume(Scopes.kt:33)
+	at kotlinx.coroutines.AbstractCoroutine.resumeWith(AbstractCoroutine.kt:102)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:46)
+	at kotlinx.coroutines.internal.ScopeCoroutine.afterResume(Scopes.kt:33)
+	at kotlinx.coroutines.AbstractCoroutine.resumeWith(AbstractCoroutine.kt:102)
+	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:46)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:104)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:571)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:750)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:678)
+	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:665)
+Caused by: PacketTimeoutException(message=Timeout receiving Heartbeat response, cause=kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 5000 ms)
+	... 13 more
+Caused by: kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 5000 ms
+	at kotlinx.coroutines.TimeoutKt.TimeoutCancellationException(Timeout.kt:184)
+	at kotlinx.coroutines.TimeoutCoroutine.run(Timeout.kt:154)
+	at kotlinx.coroutines.EventLoopImplBase$DelayedRunnableTask.run(EventLoop.common.kt:502)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:279)
+	at kotlinx.coroutines.DefaultExecutor.run(DefaultExecutor.kt:108)
+	at java.base/java.lang.Thread.run(Thread.java:832)
+[0m
+[91m2022-06-06 00:01:11 W/: io.netty.channel.AbstractChannel$AnnotatedConnectException: Connection timed out: no further information: /113.96.18.168:8080
+io.netty.channel.AbstractChannel$AnnotatedConnectException: Connection timed out: no further information: /113.96.18.168:8080
+	Suppressed: kotlinx.coroutines.JobCancellationException: Parent job is Cancelling; job=JobImpl{Cancelled}@4e75a0a6
+	Caused by: [CIRCULAR REFERENCE: io.netty.channel.AbstractChannel$AnnotatedConnectException: Connection timed out: no further information: /113.96.18.168:8080]
+	Suppressed: [CIRCULAR REFERENCE: kotlinx.coroutines.JobCancellationException: Parent job is Cancelling; job=JobImpl{Cancelled}@4e75a0a6]
+Caused by: java.net.ConnectException: Connection timed out: no further information
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:589)
+	at java.base/sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:839)
+	at io.netty.channel.socket.nio.NioSocketChannel.doFinishConnect(NioSocketChannel.java:330)
+	at io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.finishConnect(AbstractNioChannel.java:334)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:707)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:655)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:581)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:493)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:989)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:832)
+[0m
+[0m2022-06-06 00:01:37 V/: Loading server list from cache.[0m
+[92m2022-06-06 00:01:37 I/: Server list: 113.96.18.168:8080, msfwifi.3g.qq.com:8080, 157.148.54.140:80, 120.232.31.250:443, 42.81.192.168:80, 60.29.242.161:80, 222.94.109.123:14000.[0m
+[92m2022-06-06 00:01:37 I/: ECDH key is valid.[0m
+[0m2022-06-06 00:01:37 V/: Send: wtlogin.exchange_emp[0m
+[0m2022-06-06 00:01:37 V/: Send: wtlogin.login[0m
+[91m2022-06-06 00:01:37 W/: NettyChannelException(message=null, cause=null)
+NettyChannelException(message=null, cause=null)
+	at net.mamoe.mirai.internal.network.impl.netty.NettyNetworkHandler.createConnection$lambda-3(NettyNetworkHandler.kt:162)
+	at io.netty.util.concurrent.DefaultPromise.notifyListener0(DefaultPromise.java:578)
+	at io.netty.util.concurrent.DefaultPromise.notifyListenersNow(DefaultPromise.java:552)
+	at io.netty.util.concurrent.DefaultPromise.notifyListeners(DefaultPromise.java:491)
+	at io.netty.util.concurrent.DefaultPromise.setValue0(DefaultPromise.java:616)
+	at io.netty.util.concurrent.DefaultPromise.setSuccess0(DefaultPromise.java:605)
+	at io.netty.util.concurrent.DefaultPromise.trySuccess(DefaultPromise.java:104)
+	at io.netty.channel.DefaultChannelPromise.trySuccess(DefaultChannelPromise.java:84)
+	at io.netty.channel.AbstractChannel$CloseFuture.setClosed(AbstractChannel.java:1186)
+	at io.netty.channel.AbstractChannel$AbstractUnsafe.doClose0(AbstractChannel.java:773)
+	at io.netty.channel.AbstractChannel$AbstractUnsafe.close(AbstractChannel.java:749)
+	at io.netty.channel.AbstractChannel$AbstractUnsafe.close(AbstractChannel.java:620)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.closeOnRead(AbstractNioByteChannel.java:105)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:174)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:719)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:655)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:581)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:493)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:989)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:832)
+	Suppressed: java.util.concurrent.CancellationException: NetworkHandler closed
+		at kotlinx.coroutines.ExceptionsKt.CancellationException(Exceptions.kt:22)
+		at kotlinx.coroutines.JobKt__JobKt.cancel(Job.kt:602)
+		at kotlinx.coroutines.JobKt.cancel(Unknown Source)
+		at net.mamoe.mirai.internal.network.handler.NetworkHandlerSupport.close(NetworkHandlerSupport.kt:55)
+		at net.mamoe.mirai.internal.network.impl.netty.NettyNetworkHandler.close(NettyNetworkHandler.kt:191)
+		... 22 more
+	Caused by: [CIRCULAR REFERENCE: NettyChannelException(message=null, cause=null)]
+[0m
+[0m2022-06-06 00:01:37 V/: Loading server list from cache.[0m
+[92m2022-06-06 00:01:37 I/: Server list: 113.96.18.168:8080, msfwifi.3g.qq.com:8080, 157.148.54.140:80, 120.232.31.250:443, 42.81.192.168:80, 60.29.242.161:80, 222.94.109.123:14000.[0m
+[92m2022-06-06 00:01:37 I/: ECDH key is valid.[0m
+[0m2022-06-06 00:01:37 V/: Send: wtlogin.exchange_emp[0m
+[0m2022-06-06 00:01:37 V/: Send: wtlogin.login[0m
+[91m2022-06-06 00:01:37 W/: NettyChannelException(message=null, cause=java.net.SocketException: Connection reset)
+NettyChannelException(message=null, cause=java.net.SocketException: Connection reset)
+	at net.mamoe.mirai.internal.network.impl.netty.NettyNetworkHandler$handlePipelineException$1.invoke(NettyNetworkHandler.kt:66)
+	at net.mamoe.mirai.internal.network.impl.netty.NettyNetworkHandler$handlePipelineException$1.invoke(NettyNetworkHandler.kt:66)
+	at net.mamoe.mirai.internal.network.handler.NetworkHandlerSupport.setStateImpl$mirai_core(NetworkHandlerSupport.kt:251)
+	at net.mamoe.mirai.internal.network.impl.netty.NettyNetworkHandler.handlePipelineException(NettyNetworkHandler.kt:406)
+	at net.mamoe.mirai.internal.network.impl.netty.NettyNetworkHandler$setupChannelPipeline$1.exceptionCaught(NettyNetworkHandler.kt:107)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeExceptionCaught(AbstractChannelHandlerContext.java:302)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeExceptionCaught(AbstractChannelHandlerContext.java:281)
+	at io.netty.channel.AbstractChannelHandlerContext.fireExceptionCaught(AbstractChannelHandlerContext.java:273)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.exceptionCaught(DefaultChannelPipeline.java:1377)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeExceptionCaught(AbstractChannelHandlerContext.java:302)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeExceptionCaught(AbstractChannelHandlerContext.java:281)
+	at io.netty.channel.DefaultChannelPipeline.fireExceptionCaught(DefaultChannelPipeline.java:907)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.handleReadException(AbstractNioByteChannel.java:125)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:177)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:719)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:655)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:581)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:493)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:989)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:832)
+Caused by: java.net.SocketException: Connection reset
+	at java.base/sun.nio.ch.SocketChannelImpl.throwConnectionReset(SocketChannelImpl.java:345)
+	at java.base/sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:376)
+	at io.netty.buffer.PooledByteBuf.setBytes(PooledByteBuf.java:253)
+	at io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1132)
+	at io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:350)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:151)
+	... 8 more
+[0m
+[0m2022-06-06 00:01:38 V/: Loading server list from cache.[0m
+[92m2022-06-06 00:01:38 I/: Server list: 113.96.18.168:8080, msfwifi.3g.qq.com:8080, 157.148.54.140:80, 120.232.31.250:443, 42.81.192.168:80, 60.29.242.161:80, 222.94.109.123:14000.[0m
+[92m2022-06-06 00:01:38 I/: ECDH key is valid.[0m
+[0m2022-06-06 00:01:38 V/: Send: wtlogin.exchange_emp[0m
+[0m2022-06-06 00:01:38 V/: Send: wtlogin.login[0m
+[91m2022-06-06 00:01:38 W/: NettyChannelException(message=null, cause=null)
+NettyChannelException(message=null, cause=null)
+	at net.mamoe.mirai.internal.network.impl.netty.NettyNetworkHandler.createConnection$lambda-3(NettyNetworkHandler.kt:162)
+	at io.netty.util.concurrent.DefaultPromise.notifyListener0(DefaultPromise.java:578)
+	at io.netty.util.concurrent.DefaultPromise.notifyListenersNow(DefaultPromise.java:552)
+	at io.netty.util.concurrent.DefaultPromise.notifyListeners(DefaultPromise.java:491)
+	at io.netty.util.concurrent.DefaultPromise.setValue0(DefaultPromise.java:616)
+	at io.netty.util.concurrent.DefaultPromise.setSuccess0(DefaultPromise.java:605)
+	at io.netty.util.concurrent.DefaultPromise.trySuccess(DefaultPromise.java:104)
+	at io.netty.channel.DefaultChannelPromise.trySuccess(DefaultChannelPromise.java:84)
+	at io.netty.channel.AbstractChannel$CloseFuture.setClosed(AbstractChannel.java:1186)
+	at io.netty.channel.AbstractChannel$AbstractUnsafe.doClose0(AbstractChannel.java:773)
+	at io.netty.channel.AbstractChannel$AbstractUnsafe.close(AbstractChannel.java:749)
+	at io.netty.channel.AbstractChannel$AbstractUnsafe.close(AbstractChannel.java:620)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.closeOnRead(AbstractNioByteChannel.java:105)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:174)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:719)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:655)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:581)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:493)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:989)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:832)
+	Suppressed: java.util.concurrent.CancellationException: NetworkHandler closed
+		at kotlinx.coroutines.ExceptionsKt.CancellationException(Exceptions.kt:22)
+		at kotlinx.coroutines.JobKt__JobKt.cancel(Job.kt:602)
+		at kotlinx.coroutines.JobKt.cancel(Unknown Source)
+		at net.mamoe.mirai.internal.network.handler.NetworkHandlerSupport.close(NetworkHandlerSupport.kt:55)
+		at net.mamoe.mirai.internal.network.impl.netty.NettyNetworkHandler.close(NettyNetworkHandler.kt:191)
+		... 22 more
+	Caused by: [CIRCULAR REFERENCE: NettyChannelException(message=null, cause=null)]
+[0m
+[0m2022-06-06 00:01:40 V/: Loading server list from cache.[0m
+[92m2022-06-06 00:01:40 I/: Server list: 113.96.18.168:8080, msfwifi.3g.qq.com:8080, 157.148.54.140:80, 120.232.31.250:443, 42.81.192.168:80, 60.29.242.161:80, 222.94.109.123:14000.[0m
+[92m2022-06-06 00:01:40 I/: ECDH key is valid.[0m
+[0m2022-06-06 00:01:40 V/: Send: wtlogin.exchange_emp[0m
+[0m2022-06-06 00:01:40 V/: Send: wtlogin.login[0m
+[91m2022-06-06 00:01:47 W/: kotlinx.coroutines.JobCancellationException: Job was cancelled; job=SupervisorJobImpl{Cancelling}@54e0986
+kotlinx.coroutines.JobCancellationException: Job was cancelled; job=SupervisorJobImpl{Cancelling}@54e0986
+[0m
+[0m2022-06-06 00:03:57 V/Net 2575966472: Loading server list from cache.[0m
+[92m2022-06-06 00:03:57 I/Net 2575966472: Server list: 113.96.18.168:8080, msfwifi.3g.qq.com:8080, 157.148.54.140:80, 120.232.31.250:443, 42.81.192.168:80, 60.29.242.161:80, 222.94.109.123:14000.[0m
+[92m2022-06-06 00:03:58 I/Net 2575966472: ECDH key is valid.[0m
+[0m2022-06-06 00:03:58 V/Net 2575966472: Send: wtlogin.exchange_emp[0m
+[0m2022-06-06 00:03:58 V/Net 2575966472: Recv: wtlogin.exchange_emp[0m
+[0m2022-06-06 00:03:58 V/Net 2575966472: Send: StatSvc.register(online)[0m
+[92m2022-06-06 00:03:58 I/Net 2575966472: Server time updated, serverTime: 1654445038, diff: 0ms=0.0s[0m
+[0m2022-06-06 00:03:58 V/Net 2575966472: Recv: StatSvc.register[0m
+[0m2022-06-06 00:03:58 V/Net 2575966472: Loading BdhSession from cache file[0m
+[92m2022-06-06 00:03:58 I/Net 2575966472: Syncing friend message history...[0m
+[92m2022-06-06 00:03:58 I/Net 2575966472: Start loading friend list...[0m
+[92m2022-06-06 00:03:58 I/Net 2575966472: Start loading stranger list...[0m
+[0m2022-06-06 00:03:58 V/Net 2575966472: Send: StatSvc.GetDevLoginInfo(StatSvc.GetDevLoginInfo)[0m
+[0m2022-06-06 00:03:58 V/Net 2575966472: Send: OidbSvc.0x496(OidbSvc.0x496)[0m
+[0m2022-06-06 00:03:58 V/Net 2575966472: Send: OidbSvc.0x5d2_0(OidbSvc.0x5d2_0)[0m
+[0m2022-06-06 00:03:58 V/Net 2575966472: Send: friendlist.getFriendGroupList(friendlist.getFriendGroupList)[0m
+[0m2022-06-06 00:03:59 V/Net 2575966472: Recv: OidbSvc.0x5d2_0[0m
+[92m2022-06-06 00:03:59 I/Net 2575966472: Successfully loaded stranger list: 0 in total[0m
+[0m2022-06-06 00:03:59 V/Net 2575966472: Recv: StatSvc.GetDevLoginInfo[0m
+[92m2022-06-06 00:03:59 I/Net 2575966472: No OtherClient online.[0m
+[92m2022-06-06 00:03:59 I/Net 2575966472: Start loading group list...[0m
+[0m2022-06-06 00:03:59 V/Net 2575966472: Recv: OidbSvc.0x496[0m
+[0m2022-06-06 00:03:59 V/Net 2575966472: Send: friendlist.GetTroopListReqV2(friendlist.GetTroopListReqV2)[0m
+[0m2022-06-06 00:03:59 V/Net 2575966472: Recv: friendlist.getFriendGroupList[0m
+[0m2022-06-06 00:03:59 V/Net 2575966472: Loading friend list: 3/3[0m
+[92m2022-06-06 00:03:59 I/Net 2575966472: Successfully loaded friend list: 3 in total[0m
+[92m2022-06-06 00:03:59 I/Net 2575966472: Syncing friend message history: Success.[0m
+[0m2022-06-06 00:03:59 V/Net 2575966472: Recv: friendlist.GetTroopListReqV2[0m
+[0m2022-06-06 00:03:59 V/Net 2575966472: Send: friendlist.GetTroopMemberListReq(friendlist.GetTroopMemberListReq)[0m
+[0m2022-06-06 00:03:59 V/Net 2575966472: Send: friendlist.GetTroopMemberListReq(friendlist.GetTroopMemberListReq)[0m
+[0m2022-06-06 00:03:59 V/Net 2575966472: Recv: friendlist.GetTroopMemberListReq[0m
+[0m2022-06-06 00:03:59 V/Net 2575966472: Recv: friendlist.GetTroopMemberListReq[0m
+[92m2022-06-06 00:03:59 I/Net 2575966472: Successfully loaded group list: 2 in total.[0m
+[92m2022-06-06 00:03:59 I/Net 2575966472: Scheduled refresh login session in 19d 23h 55min 0.0s.[0m
+[92m2022-06-06 00:03:59 I/Net 2575966472: Scheduled key refresh in 23h 55min 0.0s.[0m
+[92m2022-06-06 00:04:01 I/Net 2575966472: Server list: 117.62.242.81:80, 42.81.192.168:80, 42.81.194.38:8080, 119.147.190.155:443, 119.147.190.142:8080, 183.47.98.77:443, msfwifi.3g.qq.com:8080, 180.101.246.123:14000, 123.151.54.177:80.[0m
+[0m2022-06-06 00:04:01 V/Net 2575966472: Saving bdh session to cache[0m
+[0m2022-06-06 00:04:01 V/Net 2575966472: Saving server list to cache[0m
+[0m2022-06-06 00:04:01 V/Net 2575966472: Send: ConfigPushSvc.PushResp(ConfigPushSvc.PushResp)[0m
+[0m2022-06-06 00:04:01 V/Net 2575966472: Recv: ConfigPushSvc.PushReq[0m
+[0m2022-06-06 00:04:01 V/Net 2575966472: Saving bdh session to cache[0m
+[0m2022-06-06 00:04:01 V/Net 2575966472: Send: ConfigPushSvc.PushResp(ConfigPushSvc.PushResp)[0m
+[0m2022-06-06 00:04:01 V/Net 2575966472: Recv: ConfigPushSvc.PushReq[0m
+[0m2022-06-06 00:04:40 V/Net 2575966472: Send: StatSvc.register(offline)[0m
+[0m2022-06-06 00:04:46 V/Net 2575966472: Loading server list from cache.[0m
+[92m2022-06-06 00:04:46 I/Net 2575966472: Server list: 117.62.242.81:80, 42.81.192.168:80, 42.81.194.38:8080, 119.147.190.155:443, 119.147.190.142:8080, 183.47.98.77:443, msfwifi.3g.qq.com:8080, 180.101.246.123:14000, 123.151.54.177:80.[0m
+[92m2022-06-06 00:04:47 I/Net 2575966472: ECDH key is valid.[0m
+[0m2022-06-06 00:04:47 V/Net 2575966472: Send: wtlogin.exchange_emp[0m
+[0m2022-06-06 00:04:47 V/Net 2575966472: Recv: wtlogin.exchange_emp[0m
+[0m2022-06-06 00:04:47 V/Net 2575966472: Send: StatSvc.register(online)[0m
+[92m2022-06-06 00:04:47 I/Net 2575966472: Server time updated, serverTime: 1654445087, diff: 0ms=0.0s[0m
+[0m2022-06-06 00:04:47 V/Net 2575966472: Recv: StatSvc.register[0m
+[0m2022-06-06 00:04:47 V/Net 2575966472: Loading BdhSession from cache file[0m
+[92m2022-06-06 00:04:47 I/Net 2575966472: Syncing friend message history...[0m
+[92m2022-06-06 00:04:47 I/Net 2575966472: Start loading friend list...[0m
+[92m2022-06-06 00:04:47 I/Net 2575966472: Start loading stranger list...[0m
+[0m2022-06-06 00:04:47 V/Net 2575966472: Send: StatSvc.GetDevLoginInfo(StatSvc.GetDevLoginInfo)[0m
+[0m2022-06-06 00:04:47 V/Net 2575966472: Send: OidbSvc.0x496(OidbSvc.0x496)[0m
+[0m2022-06-06 00:04:47 V/Net 2575966472: Send: OidbSvc.0x5d2_0(OidbSvc.0x5d2_0)[0m
+[0m2022-06-06 00:04:47 V/Net 2575966472: Send: friendlist.getFriendGroupList(friendlist.getFriendGroupList)[0m
+[0m2022-06-06 00:04:47 V/Net 2575966472: Recv: OidbSvc.0x5d2_0[0m
+[92m2022-06-06 00:04:47 I/Net 2575966472: Successfully loaded stranger list: 0 in total[0m
+[0m2022-06-06 00:04:47 V/Net 2575966472: Recv: StatSvc.GetDevLoginInfo[0m
+[92m2022-06-06 00:04:47 I/Net 2575966472: No OtherClient online.[0m
+[0m2022-06-06 00:04:47 V/Net 2575966472: Recv: OidbSvc.0x496[0m
+[92m2022-06-06 00:04:47 I/Net 2575966472: Start loading group list...[0m
+[0m2022-06-06 00:04:47 V/Net 2575966472: Send: friendlist.GetTroopListReqV2(friendlist.GetTroopListReqV2)[0m
+[0m2022-06-06 00:04:47 V/Net 2575966472: Recv: friendlist.getFriendGroupList[0m
+[0m2022-06-06 00:04:47 V/Net 2575966472: Loading friend list: 3/3[0m
+[92m2022-06-06 00:04:47 I/Net 2575966472: Successfully loaded friend list: 3 in total[0m
+[92m2022-06-06 00:04:47 I/Net 2575966472: Syncing friend message history: Success.[0m
+[0m2022-06-06 00:04:47 V/Net 2575966472: Recv: friendlist.GetTroopListReqV2[0m
+[0m2022-06-06 00:04:47 V/Net 2575966472: Send: friendlist.GetTroopMemberListReq(friendlist.GetTroopMemberListReq)[0m
+[0m2022-06-06 00:04:47 V/Net 2575966472: Send: friendlist.GetTroopMemberListReq(friendlist.GetTroopMemberListReq)[0m
+[0m2022-06-06 00:04:47 V/Net 2575966472: Recv: friendlist.GetTroopMemberListReq[0m
+[0m2022-06-06 00:04:48 V/Net 2575966472: Recv: friendlist.GetTroopMemberListReq[0m
+[92m2022-06-06 00:04:48 I/Net 2575966472: Successfully loaded group list: 2 in total.[0m
+[92m2022-06-06 00:04:48 I/Net 2575966472: Scheduled refresh login session in 19d 23h 55min 0.0s.[0m
+[92m2022-06-06 00:04:48 I/Net 2575966472: Scheduled key refresh in 23h 55min 0.0s.[0m
+[0m2022-06-06 00:04:50 V/Net 2575966472: Saving bdh session to cache[0m
+[0m2022-06-06 00:04:50 V/Net 2575966472: Send: ConfigPushSvc.PushResp(ConfigPushSvc.PushResp)[0m
+[0m2022-06-06 00:04:50 V/Net 2575966472: Recv: ConfigPushSvc.PushReq[0m
+[0m2022-06-06 00:04:52 V/Net 2575966472: Send: MessageSvc.PbSendMsg(MessageSvc.PbSendMsg)[0m
+[0m2022-06-06 00:04:53 V/Net 2575966472: Recv: MessageSvc.PbSendMsg[0m
+[0m2022-06-06 00:05:19 V/Net 2575966472: Send: MessageSvc.PbSendMsg(MessageSvc.PbSendMsg)[0m
+[0m2022-06-06 00:05:19 V/Net 2575966472: Recv: MessageSvc.PbSendMsg[0m
+[0m2022-06-06 00:07:05 V/Net 2575966472: Send: StatSvc.register(offline)[0m

@@ -5,6 +5,11 @@ import net.mamoe.mirai.console.command.CommandManager
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
+import net.mamoe.mirai.event.GlobalEventChannel
+import net.mamoe.mirai.event.events.GroupMemberEvent
+import net.mamoe.mirai.event.events.GroupMessageEvent
+import net.mamoe.mirai.event.subscribeGroupMessages
+import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.utils.info
 
 /**
@@ -40,6 +45,16 @@ object Arona : KotlinPlugin(
 ) {
   override fun onEnable() {
     init()
+    GlobalEventChannel.subscribeGroupMessages {
+      atBot { it ->
+        val commandAndArg = this.message.filter { message -> message::class == PlainText::class }.map { message -> message.contentToString().trim() }.toMutableList()
+        logger.info(commandAndArg.toString())
+        val command = commandAndArg.removeFirst()
+        if (command == "签到") {
+          this.group.sendMessage(At(this.sender).plus("签到成功! 信用点+20000 清辉石+20"))
+        }
+      }
+    }
     logger.info { "arona loaded" }
     //配置文件目录 "${dataFolder.absolutePath}/"
   }
@@ -47,4 +62,5 @@ object Arona : KotlinPlugin(
   private fun init() {
     ActivityCommand.register()
   }
+
 }

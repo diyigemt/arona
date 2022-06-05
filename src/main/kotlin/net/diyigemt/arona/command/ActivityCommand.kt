@@ -22,14 +22,14 @@ object ActivityCommand : SimpleCommand(
   suspend fun CommandSender.activities() {
     val document = Jsoup.connect("https://wiki.biligame.com/bluearchive/%E9%A6%96%E9%A1%B5").get()
     val activities = document.getElementsByClass("activity")
-    val active = mutableListOf<Activity>();
-    val pending = mutableListOf<Activity>();
+    val active = mutableListOf<Activity>()
+    val pending = mutableListOf<Activity>()
     activities.forEach {
       val startTime = it.attr("data-start").replace("维护后","17:00")
       val endTime = it.attr("data-end").replace("维护前","11:00")
       val parseStart = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(startTime)
       val parseEnd = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(endTime)
-      val now = Calendar.getInstance().time;
+      val now = Calendar.getInstance().time
       if (now.after(parseEnd)) return@forEach
       val content = it.getElementsByClass("activity__name").text()
       var level = 1
@@ -39,10 +39,10 @@ object ActivityCommand : SimpleCommand(
         level = 3
       }
       if (now.before(parseStart)) {
-        val calcTime = calcTime(now, parseStart);
+        val calcTime = calcTime(now, parseStart)
         pending.add(Activity(content, level, "${calcTime.first}天${calcTime.second}小时后开始"))
       } else {
-        val calcTime = calcTime(now, parseEnd);
+        val calcTime = calcTime(now, parseEnd)
         active.add(Activity(content, level, "${calcTime.first}天${calcTime.second}小时后结束"))
       }
     }
@@ -57,8 +57,8 @@ object ActivityCommand : SimpleCommand(
   private fun calcTime(now: Date, time: Date): Pair<Int, Int> {
     val hour = floor(((time.time - now.time) / 1000 / 60 / 60).toDouble())
     val day = floor(hour / 24).toInt()
-    val leftHour = (hour - day * 24).toInt();
-    return Pair(day, leftHour);
+    val leftHour = (hour - day * 24).toInt()
+    return Pair(day, leftHour)
   }
 
   data class Activity(

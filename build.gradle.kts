@@ -13,3 +13,8 @@ repositories {
     maven("https://maven.aliyun.com/repository/public") // 阿里云国内代理仓库
     mavenCentral()
 }
+
+dependencies {
+//    implementation("com.github.kittinunf.fuel:fuel:2.3.1")
+    implementation("org.jsoup:jsoup:1.15.1")
+}

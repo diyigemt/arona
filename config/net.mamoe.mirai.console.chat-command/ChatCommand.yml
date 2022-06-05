@@ -1,0 +1,4 @@
+# 插件是否启用. 设置 false 时禁用插件.
+enabled: true
+# 是否在参数不匹配时输出帮助.
+replyUnresolvedCommandHelp: true

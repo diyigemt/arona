@@ -1,5 +1,0 @@
-grantedPermissionMap: 
-  '*:*': 
-    - console
-  'net.diyigemt.arona:command.active': 
-    - '*'

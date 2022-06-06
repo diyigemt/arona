@@ -54,6 +54,11 @@ object Arona : KotlinPlugin(
           this.group.sendMessage(At(this.sender).plus("签到成功! 信用点+20000 清辉石+20"))
         }
       }
+      (contains("老婆") or contains("老公")) {
+        if (this.sender.id == 758213389L) {
+          this.group.sendMessage(At(this.sender).plus("爬"))
+        }
+      }
     }
     logger.info { "arona loaded" }
     //配置文件目录 "${dataFolder.absolutePath}/"

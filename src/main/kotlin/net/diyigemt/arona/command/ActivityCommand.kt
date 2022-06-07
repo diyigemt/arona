@@ -3,6 +3,7 @@ package net.diyigemt.arona.command
 import net.diyigemt.arona.Arona
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
+import net.mamoe.mirai.console.command.UserCommandSender
 import net.mamoe.mirai.console.command.descriptor.ExperimentalCommandDescriptors
 import net.mamoe.mirai.console.util.ConsoleExperimentalApi
 import org.jsoup.Jsoup
@@ -19,7 +20,7 @@ object ActivityCommand : SimpleCommand(
 //  override val prefixOptional: Boolean = true
 
   @Handler
-  suspend fun CommandSender.activities() {
+  suspend fun UserCommandSender.activities() {
     val document = Jsoup.connect("https://wiki.biligame.com/bluearchive/%E9%A6%96%E9%A1%B5").get()
     val activities = document.getElementsByClass("activity")
     val active = mutableListOf<Activity>()
@@ -50,8 +51,7 @@ object ActivityCommand : SimpleCommand(
     active.sortByDescending { at -> at.level }
     val activeString = active.map { at -> "${at.content}     ${at.time}\n" }.reduceOrNull { prv, cur -> prv + cur }
     val pendingString = pending.map { at -> "${at.content}     ${at.time}\n" }.reduceOrNull { prv, cur -> prv + cur }
-    Arona.logger.info("正在进行:\n${activeString}即将开始:\n${pendingString ?: '无'}")
-    subject?.sendMessage("正在进行:\n${activeString}即将开始:\n${pendingString ?: '无'}")
+    subject.sendMessage("正在进行:\n${activeString}即将开始:\n${pendingString ?: '无'}")
   }
 
   private fun calcTime(now: Date, time: Date): Pair<Int, Int> {

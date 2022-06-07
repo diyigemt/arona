@@ -1,6 +1,7 @@
 package net.diyigemt.arona
 
 import net.diyigemt.arona.command.ActivityCommand
+import net.diyigemt.arona.command.GachaCommand
 import net.mamoe.mirai.console.command.CommandManager
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
@@ -66,6 +67,7 @@ object Arona : KotlinPlugin(
 
   private fun init() {
     ActivityCommand.register()
+    GachaCommand.register()
   }
 
 }

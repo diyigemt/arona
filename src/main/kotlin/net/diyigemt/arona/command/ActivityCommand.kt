@@ -2,6 +2,7 @@ package net.diyigemt.arona.command
 
 import net.diyigemt.arona.Arona
 import net.mamoe.mirai.console.command.CommandSender
+import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.UserCommandSender
 import net.mamoe.mirai.console.command.descriptor.ExperimentalCommandDescriptors
@@ -11,15 +12,12 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.floor
 
-object ActivityCommand : SimpleCommand(
+object ActivityCommand : CompositeCommand(
   Arona,"active", "活动",
   description = "通过bili wiki获取活动列表"
 ) {
 
-//  @OptIn(ExperimentalCommandDescriptors::class, ConsoleExperimentalApi::class)
-//  override val prefixOptional: Boolean = true
-
-  @Handler
+  @SubCommand("")
   suspend fun UserCommandSender.activities() {
     val document = Jsoup.connect("https://wiki.biligame.com/bluearchive/%E9%A6%96%E9%A1%B5").get()
     val activities = document.getElementsByClass("activity")
@@ -52,6 +50,12 @@ object ActivityCommand : SimpleCommand(
     val activeString = active.map { at -> "${at.content}     ${at.time}\n" }.reduceOrNull { prv, cur -> prv + cur }
     val pendingString = pending.map { at -> "${at.content}     ${at.time}\n" }.reduceOrNull { prv, cur -> prv + cur }
     subject.sendMessage("正在进行:\n${activeString}即将开始:\n${pendingString ?: '无'}")
+  }
+
+  @SubCommand("jp")
+  suspend fun UserCommandSender.activities_jp() {
+    val document = Jsoup.connect("https://wiki.biligame.com/bluearchive/%E9%A6%96%E9%A1%B5")
+      .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36").get()
   }
 
   private fun calcTime(now: Date, time: Date): Pair<Int, Int> {

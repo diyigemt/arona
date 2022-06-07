@@ -12,12 +12,8 @@ import net.mamoe.mirai.console.util.ConsoleExperimentalApi
 suspend fun main() {
     MiraiConsoleTerminalLoader.startAsDaemon()
 
-    //如果是Kotlin
     Arona.load()
     Arona.enable()
-    //如果是Java
-//    JavaPluginMain.INSTANCE.load()
-//    JavaPluginMain.INSTANCE.enable()
 
     val bot = MiraiConsole.addBot(2575966472, "1355247243qwe") {
         fileBasedDeviceInfo()

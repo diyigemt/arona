@@ -7,6 +7,7 @@ object GachaConstant {
   const val PICK_UP_ONE_STAR = 79F
   const val PICK_UP_TOW_STAR = 18.5F
   const val PICK_UP_THREE_STAR = 2.5F
+  const val star = "★"
   val REWARD_LIST_ONE_STAR: JsonElement = Json.parseToJsonElement("[{\"star\":1,\"name\":\"好美\"}," +
     "{\"star\":1,\"name\":\"春香\"}," +
     "{\"star\":1,\"name\":\"泉(泳装)\"}," +

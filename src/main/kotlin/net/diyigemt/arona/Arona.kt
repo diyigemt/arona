@@ -1,16 +1,15 @@
 package net.diyigemt.arona
 
 import net.diyigemt.arona.command.ActivityCommand
-import net.diyigemt.arona.command.GachaCommand
-import net.mamoe.mirai.console.command.CommandManager
+import net.diyigemt.arona.command.GachaMultiCommand
+import net.diyigemt.arona.command.GachaSingleCommand
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
 import net.mamoe.mirai.event.GlobalEventChannel
-import net.mamoe.mirai.event.events.GroupMemberEvent
-import net.mamoe.mirai.event.events.GroupMessageEvent
 import net.mamoe.mirai.event.subscribeGroupMessages
-import net.mamoe.mirai.message.data.*
+import net.mamoe.mirai.message.data.At
+import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.utils.info
 
 /**
@@ -67,7 +66,8 @@ object Arona : KotlinPlugin(
 
   private fun init() {
     ActivityCommand.register()
-    GachaCommand.register()
+    GachaSingleCommand.register()
+    GachaMultiCommand.register()
   }
 
 }

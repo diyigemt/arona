@@ -1,19 +1,24 @@
 package net.diyigemt.arona
 
-import net.diyigemt.arona.Arona.save
-import net.diyigemt.arona.command.ActivityCommand
-import net.diyigemt.arona.command.GachaDogCommand
-import net.diyigemt.arona.command.GachaMultiCommand
-import net.diyigemt.arona.command.GachaSingleCommand
+import net.diyigemt.arona.command.*
 import net.diyigemt.arona.command.data.GachaData
+import net.diyigemt.arona.config.AronaNudgeConfig
+import net.diyigemt.arona.handler.GroupRepeaterHandler
+import net.diyigemt.arona.handler.NudgeEventHandler
+import net.diyigemt.arona.util.MessageUtil
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
+import net.mamoe.mirai.contact.User
 import net.mamoe.mirai.event.GlobalEventChannel
+import net.mamoe.mirai.event.events.GroupMessageEvent
+import net.mamoe.mirai.event.events.NudgeEvent
 import net.mamoe.mirai.event.subscribeGroupMessages
 import net.mamoe.mirai.message.data.At
 import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.utils.info
+import javax.swing.GroupLayout.Group
+import kotlin.math.log
 
 /**
  * 使用 kotlin 版请把
@@ -58,21 +63,29 @@ object Arona : KotlinPlugin(
         }
       }
       (contains("老婆") or contains("老公")) {
-        if (this.sender.id == 758213389L) {
+        if (this.sender.id == 758213389L || this.sender.id == 3617305541L) {
           this.group.sendMessage(At(this.sender).plus("爬"))
         }
       }
+    }
+    GlobalEventChannel.subscribeAlways<NudgeEvent>(priority = AronaNudgeConfig.priority) {
+      NudgeEventHandler.handle(this)
+    }
+    GlobalEventChannel.subscribeAlways<GroupMessageEvent> {
+      GroupRepeaterHandler.handle(this)
     }
     logger.info { "arona loaded" }
     //配置文件目录 "${dataFolder.absolutePath}/"
   }
 
   private fun init() {
-    ActivityCommand.register()
-    GachaSingleCommand.register()
-    GachaMultiCommand.register()
+    GachaData.reload()
+    AronaNudgeConfig.reload()
     GachaDogCommand.register()
-    GachaData.save()
+    ActivityCommand.register()
+    GachaMultiCommand.register()
+    GachaResetCommand.register()
+    GachaSingleCommand.register()
   }
 
   override fun onDisable() {

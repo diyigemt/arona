@@ -1,10 +1,11 @@
 package net.diyigemt.arona.command.data
 
+import net.mamoe.mirai.console.data.AutoSavePluginConfig
 import net.mamoe.mirai.console.data.AutoSavePluginData
 import net.mamoe.mirai.console.data.ValueDescription
 import net.mamoe.mirai.console.data.value
 
-object GachaData: AutoSavePluginData("gacha") {
+object GachaData: AutoSavePluginConfig("arona-gacha") {
   @ValueDescription("用于保存抽卡的历史数据:次数,123星个数")
   val history: MutableMap<Long, Int> by value()
   @ValueDescription("用于保存抽到pick次数")
@@ -27,8 +28,7 @@ object GachaData: AutoSavePluginData("gacha") {
   }
 
   fun getDogCall(): List<Pair<Long, Int>> {
-    if (dog.isEmpty() || dog.size < 5) return dog
     dog.sortBy { it.second }
-    return dog.subList(0, 4)
+    return dog
   }
 }

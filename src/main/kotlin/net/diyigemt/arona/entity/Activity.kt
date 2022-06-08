@@ -1,4 +1,4 @@
-package net.diyigemt.arona.command.entity
+package net.diyigemt.arona.entity
 
 data class Activity(
   val content: String,

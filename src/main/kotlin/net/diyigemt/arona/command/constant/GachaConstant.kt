@@ -11,7 +11,6 @@ object GachaConstant {
   const val star = "★"
   val REWARD_LIST_ONE_STAR: JsonElement = Json.parseToJsonElement("[{\"star\":1,\"name\":\"好美\"}," +
     "{\"star\":1,\"name\":\"春香\"}," +
-    "{\"star\":1,\"name\":\"泉(泳装)\"}," +
     "{\"star\":1,\"name\":\"铃美\"}," +
     "{\"star\":1,\"name\":\"满\"}," +
     "{\"star\":1,\"name\":\"明日奈\"}," +
@@ -26,7 +25,8 @@ object GachaConstant {
     "{\"star\":1,\"name\":\"千夏\"}," +
     "{\"star\":1,\"name\":\"芹娜\"}," +
     "{\"star\":1,\"name\":\"满\"}]")
-//    "{\"star\":1,\"name\":\"鹤城(泳装)\"}")
+//  "{\"star\":1,\"name\":\"泉(泳装)\"}," +
+  //    "{\"star\":1,\"name\":\"鹤城(泳装)\"}")
   val REWARD_LIST_TWO_STAR: JsonElement = Json.parseToJsonElement("[{\"star\":2,\"name\":\"芹香\"}," +
     "{\"star\":2,\"name\":\"睦月\"}," +
     "{\"star\":2,\"name\":\"茜里\"}," +

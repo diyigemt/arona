@@ -24,6 +24,9 @@ object GachaMultiCommand : SimpleCommand(
     val result = Array<JsonElement>(10) { pikerUp() }
     val starMap = result.map { it.jsonObject["star"].toString().toInt() }
     val stars = starMap.reduce { prv, cur -> prv + cur }
+    val stars1 = starMap.filter { it == 1 }.size
+    val stars2 = starMap.filter { it == 2 }.size
+    val stars3 = starMap.filter { it == 3 }.size
     if (stars <= 10) result[9] = pickUpTwoStar()
     val s = result.map { resultData2String(it) }
       .reduceIndexed { index, prv, cur -> if (index == 4) "$prv $cur\n" else "$prv $cur" }
@@ -36,6 +39,9 @@ object GachaMultiCommand : SimpleCommand(
     GachaData.putHistory(userId, history)
     val ss = "${s}\n${history} points"
     val dog = if (pickUpNum != 0) "恭喜老师,出货了呢" else ""
-    subject.sendMessage(atMessageAndCTRL(user, dog, ss))
+    user.sendMessage(atMessageAndCTRL(user, dog, ss))
+    val sss = "3星:$stars3 2星:$stars2 1星:$stars1 \n${history} points"
+    val ssss = if (pickUpNum != 0) "亚津子(PickUp):$pickUpNum $sss" else sss
+    subject.sendMessage(atMessageAndCTRL(user, dog, ssss))
   }
 }

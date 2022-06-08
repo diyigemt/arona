@@ -1,28 +1,55 @@
-package org.example.mirai.plugin.command
+package net.diyigemt.arona.util
 
 import kotlinx.serialization.json.*
-import net.diyigemt.arona.command.ActivityCommand
 import net.diyigemt.arona.entity.Activity
-import net.diyigemt.arona.util.TimeUtil.calcTime
 import org.jsoup.Jsoup
-import org.junit.jupiter.api.Test
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.math.floor
 
-class TestActivity {
+object ActivityUtil {
 
-  val N3H3Plus = Regex("([3双2翻])倍")
-  val NormalTime = Regex("[Nn]ormal.*?(\\d+)[月/](\\d+).*?([–-]|~).*?(\\d+)[月/](\\d+)")
-  val HardTime = Regex("[Hh]ard.*?(\\d)[月/](\\d+).*?([–-]|~).*?(\\d)[月/](\\d+)")
-  val PickUpRegex = Regex("(\\d)([\\u4e00-\\u9fa5A-z]+)(\\([\\u4e00-\\u9fa5A-z]+\\))?")
-  val PickUpTime = Regex("(\\d+)/(\\d+).*?[–-](\\d+)/(\\d+)")
-  val MaintenanceRegex = Regex("(\\d+)月(\\d+)日.*?[上下]午(\\d+)点")
-  val TotalAssault = Regex("([\\u4e00-\\u9fa5A-z]+) ?[（(]([\\u4e00-\\u9fa5A-z]+)[)）].*?(\\d+)/(\\d+)")
-  @Test
-  fun testB() {
+  private val N3H3Plus = Regex("([3双2翻])倍")
+  private val NormalTime = Regex("[Nn]ormal.*?(\\d+)[月/](\\d+).*?([–-]|~).*?(\\d+)[月/](\\d+)")
+  private val HardTime = Regex("[Hh]ard.*?(\\d)[月/](\\d+).*?([–-]|~).*?(\\d)[月/](\\d+)")
+  private val PickUpRegex = Regex("(\\d)([\\u4e00-\\u9fa5A-z]+)(\\([\\u4e00-\\u9fa5A-z]+\\))?")
+  private val PickUpTime = Regex("(\\d+)/(\\d+).*?[–-](\\d+)/(\\d+)")
+  private val MaintenanceRegex = Regex("(\\d+)月(\\d+)日.*?[上下]午(\\d+)点")
+  private val TotalAssault = Regex("([\\u4e00-\\u9fa5A-z]+) ?[（(]([\\u4e00-\\u9fa5A-z]+)[)）].*?(\\d+)/(\\d+)")
+
+  fun fetchJPActivity(): Pair<List<Activity>, List<Activity>> {
+    val document = Jsoup.connect("https://wiki.biligame.com/bluearchive/%E9%A6%96%E9%A1%B5").get()
+    val activities = document.getElementsByClass("activity")
+    val active = mutableListOf<Activity>()
+    val pending = mutableListOf<Activity>()
+    activities.forEach {
+      val startTime = it.attr("data-start").replace("维护后","17:00")
+      val endTime = it.attr("data-end").replace("维护前","11:00")
+      val parseStart = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(startTime)
+      val parseEnd = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(endTime)
+      val now = Calendar.getInstance().time
+      if (now.after(parseEnd)) return@forEach
+      val content = it.getElementsByClass("activity__name").text()
+      var level = 1
+      if (content.indexOf("倍") != -1) {
+        level = 2
+      } else if (content.indexOf("总力战") != -1) {
+        level = 3
+      }
+      if (now.before(parseStart)) {
+        pending.add(Activity(content, level, TimeUtil.calcTime(now, parseStart, true)))
+      } else {
+        active.add(Activity(content, level, TimeUtil.calcTime(now, parseEnd, false)))
+      }
+    }
+    pending.sortByDescending { at -> at.level }
+    active.sortByDescending { at -> at.level }
+    return Pair(active, pending)
+  }
+
+  fun fetchENActivity(): Pair<List<Activity>, List<Activity>> {
     val fetchActivities = fetchActivities()
     val active = mutableListOf<Activity>()
     val pending = mutableListOf<Activity>()
@@ -63,14 +90,14 @@ class TestActivity {
             val titleH = "Hard${power}倍掉落"
             val now = Calendar.getInstance().time
             if (now.before(parseStartN)) {
-              pending.add(Activity(titleN, power, calcTime(now, parseStartN, true)))
+              pending.add(Activity(titleN, power, TimeUtil.calcTime(now, parseStartN, true)))
             } else if (now.before(parseEndN)) {
-              active.add(Activity(titleN, 2, calcTime(now, parseEndN, false)))
+              active.add(Activity(titleN, 2, TimeUtil.calcTime(now, parseEndN, false)))
             }
             if (now.before(parseStartH)) {
-              pending.add(Activity(titleH, power, calcTime(now, parseStartH, true)))
+              pending.add(Activity(titleH, power, TimeUtil.calcTime(now, parseStartH, true)))
             } else if (now.before(parseEndH)) {
-              active.add(Activity(titleH, 2, calcTime(now, parseEndH, false)))
+              active.add(Activity(titleH, 2, TimeUtil.calcTime(now, parseEndH, false)))
             }
           }
         }
@@ -111,9 +138,9 @@ class TestActivity {
           val parseEnd = SimpleDateFormat("yyyy/MM/dd").parse(end)
           val now = Calendar.getInstance().time
           if (now.before(parseStart)) {
-            pending.add(Activity(student, 2, calcTime(now, parseStart, true)))
+            pending.add(Activity(student, 2, TimeUtil.calcTime(now, parseStart, true)))
           } else if (now.before(parseEnd)) {
-            active.add(Activity(student, 2, calcTime(now, parseEnd, false)))
+            active.add(Activity(student, 2, TimeUtil.calcTime(now, parseEnd, false)))
           }
         }
         return@forEach
@@ -131,7 +158,7 @@ class TestActivity {
           val now = Calendar.getInstance().time
           val title = "游戏维护"
           if (now.before(parseStart)) {
-            pending.add(Activity(title, 2, calcTime(now, parseStart, true)))
+            pending.add(Activity(title, 2, TimeUtil.calcTime(now, parseStart, true)))
           }
         }
         return@forEach
@@ -151,30 +178,13 @@ class TestActivity {
           val now = Calendar.getInstance().time
           val title = "总力战 $name($terrain)"
           if (now.before(parseStart)) {
-            pending.add(Activity(title, 2, calcTime(now, parseStart, true)))
+            pending.add(Activity(title, 2, TimeUtil.calcTime(now, parseStart, true)))
           }
         }
         return@forEach
       }
     }
-    val activeString = active.map { at -> "${at.content}     ${at.time}\n" }.reduceOrNull { prv, cur -> prv + cur }
-    val pendingString = pending.map { at -> "${at.content}     ${at.time}\n" }.reduceOrNull { prv, cur -> prv + cur }
-    println(activeString)
-    println(pendingString)
-  }
-
-  @Test
-  fun testRegex() {
-    val source = "▎PICK UP募集?预告5月31日（周二）将开始新的 Pick Up招募！? 持续时间5/31（周二）维护后 – 6/14（周二）维护前 ? PICK UP学生 ★3 夏＆2 ★ 玛丽"
-    val target = source.substringAfter("PICK UP学生").replace("★", "").replace("＆", "").replace(" ", "")
-    val res = Regex("(\\d)([\\u4e00-\\u9fa5A-z]+)(\\([\\u4e00-\\u9fa5A-z]+\\))?").find(target)
-    val res2 = Regex("(\\d)([\\u4e00-\\u9fa5A-z]+)(\\([\\u4e00-\\u9fa5A-z]+\\))?").find("3明日奈(兔女郎)")
-    println("!")
-  }
-
-  @Test
-  fun testFloor() {
-    println(floor(5.toDouble() / 2))
+    return Pair(active, pending)
   }
 
   private fun fetchActivities(): List<JsonObject> {

@@ -1,8 +1,11 @@
 package net.diyigemt.arona
 
+import net.diyigemt.arona.Arona.save
 import net.diyigemt.arona.command.ActivityCommand
+import net.diyigemt.arona.command.GachaDogCommand
 import net.diyigemt.arona.command.GachaMultiCommand
 import net.diyigemt.arona.command.GachaSingleCommand
+import net.diyigemt.arona.command.data.GachaData
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
@@ -68,6 +71,12 @@ object Arona : KotlinPlugin(
     ActivityCommand.register()
     GachaSingleCommand.register()
     GachaMultiCommand.register()
+    GachaDogCommand.register()
+    GachaData.save()
+  }
+
+  override fun onDisable() {
+    GachaData.save()
   }
 
 }

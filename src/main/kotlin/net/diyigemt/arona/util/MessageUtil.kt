@@ -14,4 +14,8 @@ object MessageUtil {
     return At(user).plus("\n").plus(msg)
   }
 
+  fun atMessageAndCTRL(user: User, inline: String, msg: String): MessageChain {
+    return At(user).plus("$inline\n").plus(msg)
+  }
+
 }

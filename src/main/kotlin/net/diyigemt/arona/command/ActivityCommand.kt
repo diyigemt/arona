@@ -1,7 +1,7 @@
 package net.diyigemt.arona.command
 
 import net.diyigemt.arona.Arona
-import net.mamoe.mirai.console.command.CommandSender
+import net.diyigemt.arona.command.entity.Activity
 import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.UserCommandSender
@@ -17,7 +17,7 @@ object ActivityCommand : CompositeCommand(
   description = "通过bili wiki获取活动列表"
 ) {
 
-  @SubCommand("")
+  @SubCommand("2")
   suspend fun UserCommandSender.activities() {
     val document = Jsoup.connect("https://wiki.biligame.com/bluearchive/%E9%A6%96%E9%A1%B5").get()
     val activities = document.getElementsByClass("activity")
@@ -65,9 +65,4 @@ object ActivityCommand : CompositeCommand(
     return Pair(day, leftHour)
   }
 
-  data class Activity(
-    val content: String,
-    val level: Int,
-    val time: String
-  )
 }

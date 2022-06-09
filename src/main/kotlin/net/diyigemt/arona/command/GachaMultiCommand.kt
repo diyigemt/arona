@@ -24,10 +24,14 @@ object GachaMultiCommand : SimpleCommand(
     val result = Array<JsonElement>(10) { pikerUp() }
     val starMap = result.map { it.jsonObject["star"].toString().toInt() }
     val stars = starMap.reduce { prv, cur -> prv + cur }
-    val stars1 = starMap.filter { it == 1 }.size
-    val stars2 = starMap.filter { it == 2 }.size
+    var stars1 = starMap.filter { it == 1 }.size
+    var stars2 = starMap.filter { it == 2 }.size
     val stars3 = starMap.filter { it == 3 }.size
-    if (stars <= 10) result[9] = pickUpTwoStar()
+    if (stars <= 10) {
+      result[9] = pickUpTwoStar()
+      stars1--
+      stars2++
+    }
     val s = result.map { resultData2String(it) }
       .reduceIndexed { index, prv, cur -> if (index == 4) "$prv $cur\n" else "$prv $cur" }
     val pickUpNum = result.filter { it.jsonObject["name"].toString().contains("亚津子") }.size

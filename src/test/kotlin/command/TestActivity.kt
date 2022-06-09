@@ -3,6 +3,7 @@ package org.example.mirai.plugin.command
 import kotlinx.serialization.json.*
 import net.diyigemt.arona.command.ActivityCommand
 import net.diyigemt.arona.entity.Activity
+import net.diyigemt.arona.util.ActivityUtil
 import net.diyigemt.arona.util.TimeUtil.calcTime
 import org.jsoup.Jsoup
 import org.junit.jupiter.api.Test
@@ -175,6 +176,11 @@ class TestActivity {
   @Test
   fun testFloor() {
     println(floor(5.toDouble() / 2))
+  }
+
+  @Test
+  fun testEn() {
+    ActivityUtil.fetchENActivity()
   }
 
   private fun fetchActivities(): List<JsonObject> {

@@ -1,4 +1,4 @@
-package net.diyigemt.arona.command.constant
+package net.diyigemt.arona.constant
 
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement

@@ -1,0 +1,25 @@
+[92m2022-06-10 17:11:02 I/main: Starting mirai-console...[0m[m
+[92m2022-06-10 17:11:02 I/main: Backend: version 2.11.1, built on 2022-05-26 04:43:10.[0m[m
+[92m2022-06-10 17:11:02 I/main: Frontend Terminal: version 2.11.1, provided by Mamoe Technologies[0m[m
+[92m2022-06-10 17:11:02 I/main: Welcome to visit https://mirai.mamoe.net/[0m[m
+[91m2022-06-10 17:11:03 W/stderr: SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".[0m[m
+[91m2022-06-10 17:11:03 W/stderr: SLF4J: Defaulting to no-operation (NOP) logger implementation[0m[m
+[91m2022-06-10 17:11:03 W/stderr: SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.[0m[m
+[92m2022-06-10 17:11:03 I/plugin: Successfully loaded plugin Chat Command v0.5.0[0m[m
+[92m2022-06-10 17:11:03 I/main: Prepared built-in commands: autoLogin, help, login, logout, permission, status, stop[0m[m
+[92m2022-06-10 17:11:03 I/main: 1 plugin(s) enabled.[0m[m
+[92m2022-06-10 17:11:03 I/main: mirai-console started successfully.[0m[m
+[31m2022-06-10 17:11:03 E/arona: Database initialization failed. Any operation that requires database support cannot be performed.[0m[m
+[92m2022-06-10 17:11:03 I/arona: arona loaded[0m[m
+[91m2022-06-10 17:11:03 W/stderr: Exception in thread "main" java.io.FileNotFoundException: account.properties (系统找不到指定的文件。)[0m[m
+[91m2022-06-10 17:11:03 W/stderr: 	at java.base/java.io.FileInputStream.open0(Native Method)[0m[m
+[91m2022-06-10 17:11:03 W/stderr: 	at java.base/java.io.FileInputStream.open(FileInputStream.java:212)[0m[m
+[91m2022-06-10 17:11:03 W/stderr: 	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:154)[0m[m
+[91m2022-06-10 17:11:03 W/stderr: 	at org.example.mirai.plugin.RunMiraiKt.main(RunMirai.kt:22)[0m[m
+[91m2022-06-10 17:11:03 W/stderr: 	at org.example.mirai.plugin.RunMiraiKt$main$2.invoke(RunMirai.kt)[0m[m
+[91m2022-06-10 17:11:03 W/stderr: 	at org.example.mirai.plugin.RunMiraiKt$main$2.invoke(RunMirai.kt)[0m[m
+[91m2022-06-10 17:11:03 W/stderr: 	at kotlin.coroutines.intrinsics.IntrinsicsKt__IntrinsicsJvmKt$createCoroutineUnintercepted$$inlined$createCoroutineFromSuspendFunction$IntrinsicsKt__IntrinsicsJvmKt$1.invokeSuspend(IntrinsicsJvm.kt:205)[0m[m
+[91m2022-06-10 17:11:03 W/stderr: 	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)[0m[m
+[91m2022-06-10 17:11:03 W/stderr: 	at kotlin.coroutines.ContinuationKt.startCoroutine(Continuation.kt:115)[0m[m
+[91m2022-06-10 17:11:03 W/stderr: 	at kotlin.coroutines.jvm.internal.RunSuspendKt.runSuspend(RunSuspend.kt:19)[0m[m
+[91m2022-06-10 17:11:03 W/stderr: 	at org.example.mirai.plugin.RunMiraiKt.main(RunMirai.kt)[0m[m

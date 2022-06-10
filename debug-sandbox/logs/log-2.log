@@ -1,0 +1,23 @@
+[92m2022-06-10 17:11:42 I/main: Starting mirai-console...[0m[m
+[92m2022-06-10 17:11:42 I/main: Backend: version 2.11.1, built on 2022-05-26 04:43:10.[0m[m
+[92m2022-06-10 17:11:42 I/main: Frontend Terminal: version 2.11.1, provided by Mamoe Technologies[0m[m
+[92m2022-06-10 17:11:42 I/main: Welcome to visit https://mirai.mamoe.net/[0m[m
+[91m2022-06-10 17:11:42 W/stderr: SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".[0m[m
+[91m2022-06-10 17:11:42 W/stderr: SLF4J: Defaulting to no-operation (NOP) logger implementation[0m[m
+[91m2022-06-10 17:11:42 W/stderr: SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.[0m[m
+[92m2022-06-10 17:11:42 I/plugin: Successfully loaded plugin Chat Command v0.5.0[0m[m
+[92m2022-06-10 17:11:42 I/main: Prepared built-in commands: autoLogin, help, login, logout, permission, status, stop[0m[m
+[92m2022-06-10 17:11:42 I/main: 1 plugin(s) enabled.[0m[m
+[92m2022-06-10 17:11:42 I/main: mirai-console started successfully.[0m[m
+[31m2022-06-10 17:11:42 E/arona: Database initialization failed. Any operation that requires database support cannot be performed.[0m[m
+[92m2022-06-10 17:11:42 I/arona: arona loaded[0m[m
+[92m2022-06-10 17:11:42 I/WindowHelperJvm: Mirai 正在使用桌面环境. 如遇到验证码将会弹出对话框. 可添加 JVM 属性 `mirai.no-desktop` 以关闭.[0m[m
+[92m2022-06-10 17:11:42 I/WindowHelperJvm: Mirai is using desktop. Captcha will be thrown by window popup. You can add `mirai.no-desktop` to JVM properties (-Dmirai.no-desktop) to disable it.[0m[m
+[91m2022-06-10 17:11:42 W/stderr: ERROR StatusLogger Log4j2 could not find a logging implementation. Please add log4j-core to the classpath. Using SimpleLogger to log to the console...[0m[m
+[92m2022-06-10 17:11:44 I/Bot.2492921801: Login successful[0m[m
+[92m2022-06-10 17:11:44 I/Bot.2492921801: Saved account secrets to local cache for fast login.[0m[m
+[92m2022-06-10 17:11:45 I/Bot.2492921801: Login successful.[0m[m
+[0m2022-06-10 17:11:45 V/Bot.2492921801: Event: BotOnlineEvent(bot=Bot(2492921801))[0m[m
+[92m2022-06-10 17:11:45 I/Bot.2492921801: Bot login successful.[0m[m
+[0m2022-06-10 17:12:29 V/Bot.2492921801: Event: BotOfflineEvent.Active(bot=Bot(2492921801), cause=kotlinx.coroutines.JobCancellationException: Job was cancelled; job=SupervisorJobImpl{Cancelling}@10229feb, reconnect=false)[0m[m
+[92m2022-06-10 17:12:29 I/Bot.2492921801: Bot cancelled: Job was cancelled[0m[m

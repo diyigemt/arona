@@ -9,16 +9,17 @@ object GroupRepeaterHandler: AronaEventHandler<GroupMessageEvent> {
   private var count: Int = 0
   override suspend fun handle(event: GroupMessageEvent) {
     val now = event.message.contentToString()
+    if (now.startsWith("/")) return
     if (now == last) {
       count++
       if (count > 2) {
         event.subject.sendMessage(event.message)
-        count = 0
+        count = 1
         last = now
       }
     } else {
       last = now
-      count = 0
+      count = 1
     }
   }
 }

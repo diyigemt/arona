@@ -7,17 +7,22 @@ import net.mamoe.mirai.console.plugin.PluginManager.INSTANCE.enable
 import net.mamoe.mirai.console.plugin.PluginManager.INSTANCE.load
 import net.mamoe.mirai.console.terminal.MiraiConsoleTerminalLoader
 import net.mamoe.mirai.console.util.ConsoleExperimentalApi
+import java.io.File
+import java.util.*
 
 @OptIn(ConsoleExperimentalApi::class)
 suspend fun main() {
-    MiraiConsoleTerminalLoader.startAsDaemon()
+  MiraiConsoleTerminalLoader.startAsDaemon()
 
-    Arona.load()
-    Arona.enable()
+  val pluginInstance = Arona
 
-    val bot = MiraiConsole.addBot(2575966472, "1355247243qwe") {
-        fileBasedDeviceInfo()
-    }.alsoLogin()
+  pluginInstance.load() // 主动加载插件, Console 会调用 Dice.onLoad
+  pluginInstance.enable() // 主动启用插件, Console 会调用 Dice.onEnable
 
-    MiraiConsole.job.join()
+  val properties = Properties().apply { File("account.properties").inputStream().use { load(it) } }
+
+  val bot = MiraiConsole.addBot(properties.getProperty("id").toLong(), properties.getProperty("password"))
+    .alsoLogin() // 登录一个测试环境的 Bot
+
+  MiraiConsole.job.join()
 }

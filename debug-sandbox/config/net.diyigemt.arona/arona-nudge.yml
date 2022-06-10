@@ -1,0 +1,9 @@
+# 回复的消息
+messageList: 
+  - message: 爬
+    weight: 1
+  - message: '老师别戳了>_<'
+    weight: 1
+# 事件优先级 从高到低可选 HIGHEST, HIGH, NORMAL, LOW, LOWEST, MONITOR
+# 设置后需要重启插件生效
+priority: HIGH

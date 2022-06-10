@@ -1,9 +1,14 @@
 package net.diyigemt.arona
 
+import net.diyigemt.arona.Arona.save
 import net.diyigemt.arona.command.*
 import net.diyigemt.arona.command.data.GachaData
+import net.diyigemt.arona.config.AronaGachaConfig
+import net.diyigemt.arona.config.AronaHentaiConfig
 import net.diyigemt.arona.config.AronaNudgeConfig
+import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.handler.GroupRepeaterHandler
+import net.diyigemt.arona.handler.HentaiEventHandler
 import net.diyigemt.arona.handler.NudgeEventHandler
 import net.diyigemt.arona.util.MessageUtil
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
@@ -42,13 +47,6 @@ object Arona : KotlinPlugin(
     version = "0.1.0"
   ) {
     author("diyigemt")
-    info(
-      """
-            这是一个测试插件, 
-            在这里描述插件的功能和用法等.
-        """.trimIndent()
-    )
-    // author 和 info 可以删除.
   }
 ) {
   override fun onEnable() {
@@ -62,17 +60,13 @@ object Arona : KotlinPlugin(
           this.group.sendMessage(At(this.sender).plus("签到成功! 信用点+20000 清辉石+20"))
         }
       }
-      (contains("老婆") or contains("老公")) {
-        if (this.sender.id == 758213389L || this.sender.id == 3617305541L) {
-          this.group.sendMessage(At(this.sender).plus("爬"))
-        }
-      }
     }
     GlobalEventChannel.subscribeAlways<NudgeEvent>(priority = AronaNudgeConfig.priority) {
       NudgeEventHandler.handle(this)
     }
     GlobalEventChannel.subscribeAlways<GroupMessageEvent> {
       GroupRepeaterHandler.handle(this)
+      HentaiEventHandler.handle(this)
     }
     logger.info { "arona loaded" }
     //配置文件目录 "${dataFolder.absolutePath}/"
@@ -80,16 +74,34 @@ object Arona : KotlinPlugin(
 
   private fun init() {
     GachaData.reload()
+    AronaGachaConfig.reload()
     AronaNudgeConfig.reload()
+    AronaHentaiConfig.reload()
     GachaDogCommand.register()
     ActivityCommand.register()
     GachaMultiCommand.register()
     GachaResetCommand.register()
     GachaSingleCommand.register()
+    HentaiConfigCommand.register()
+    DataBaseProvider.init()
   }
 
   override fun onDisable() {
     GachaData.save()
+    AronaNudgeConfig.save()
+    AronaHentaiConfig.save()
   }
+
+  fun info(message: String?) = logger.info(message)
+
+  fun error(message: String?) = logger.error(message)
+
+  fun verbose(message: String?) = logger.verbose(message)
+
+  fun info(message: () -> String?) = logger.info(message())
+
+  fun verbose(message: () -> String?) = logger.verbose(message())
+
+  fun error(message: () -> String?) = logger.error(message())
 
 }

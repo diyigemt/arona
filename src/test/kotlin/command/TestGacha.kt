@@ -3,10 +3,10 @@ package org.example.mirai.plugin.command
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
-import net.diyigemt.arona.command.constant.GachaConstant
-import net.diyigemt.arona.command.constant.GachaConstant.REWARD_LIST_ONE_STAR
-import net.diyigemt.arona.command.constant.GachaConstant.REWARD_LIST_THREE_STAR
-import net.diyigemt.arona.command.constant.GachaConstant.REWARD_LIST_TWO_STAR
+import net.diyigemt.arona.constant.GachaConstant
+import net.diyigemt.arona.constant.GachaConstant.REWARD_LIST_ONE_STAR
+import net.diyigemt.arona.constant.GachaConstant.REWARD_LIST_THREE_STAR
+import net.diyigemt.arona.constant.GachaConstant.REWARD_LIST_TWO_STAR
 import org.junit.jupiter.api.Test
 
 class TestGacha {

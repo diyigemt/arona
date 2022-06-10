@@ -1,0 +1,9 @@
+# 要被骂的id
+listen: []
+# 返回被骂的信息
+messageList: []
+# 是否启用
+enable: true
+# 事件优先级 从高到低可选 HIGHEST, HIGH, NORMAL, LOW, LOWEST, MONITOR
+# 设置后需要重启插件生效
+priority: HIGH

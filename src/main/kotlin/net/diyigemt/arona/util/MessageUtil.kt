@@ -6,6 +6,14 @@ import net.mamoe.mirai.message.data.MessageChain
 
 object MessageUtil {
 
+  fun at(user: User, msg: MessageChain): MessageChain {
+    return At(user).plus(msg)
+  }
+
+  fun at(user: User, msg: String): MessageChain {
+    return At(user).plus(msg)
+  }
+
   fun atAndCTRL(user: User, msg: MessageChain): MessageChain {
     return At(user).plus("\n").plus(msg)
   }

@@ -22,6 +22,7 @@ object NudgeEventHandler: AronaEventHandler<NudgeEvent> {
     for (msg in messageList) {
       if (index < msg.weight) {
         subject.sendMessage(MessageUtil.atAndCTRL(from as User, msg.message))
+        return
       } else {
         index -= msg.weight
       }

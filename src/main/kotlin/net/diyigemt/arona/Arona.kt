@@ -9,6 +9,7 @@ import net.diyigemt.arona.config.AronaNudgeConfig
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.handler.GroupRepeaterHandler
 import net.diyigemt.arona.handler.HentaiEventHandler
+import net.diyigemt.arona.handler.MessageForwardHandler
 import net.diyigemt.arona.handler.NudgeEventHandler
 import net.diyigemt.arona.util.MessageUtil
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
@@ -17,6 +18,7 @@ import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
 import net.mamoe.mirai.contact.User
 import net.mamoe.mirai.event.GlobalEventChannel
 import net.mamoe.mirai.event.events.GroupMessageEvent
+import net.mamoe.mirai.event.events.GroupTempMessageEvent
 import net.mamoe.mirai.event.events.NudgeEvent
 import net.mamoe.mirai.event.subscribeGroupMessages
 import net.mamoe.mirai.message.data.At
@@ -68,6 +70,9 @@ object Arona : KotlinPlugin(
       GroupRepeaterHandler.handle(this)
       HentaiEventHandler.handle(this)
     }
+//    GlobalEventChannel.subscribeAlways<GroupTempMessageEvent> {
+//      MessageForwardHandler.handle(this)
+//    }
     logger.info { "arona loaded" }
     //配置文件目录 "${dataFolder.absolutePath}/"
   }

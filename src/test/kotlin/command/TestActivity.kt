@@ -183,6 +183,13 @@ class TestActivity {
     ActivityUtil.fetchENActivity()
   }
 
+  @Test
+  fun testJpWiki() {
+    val fetchJPActivityFromJP = ActivityUtil.fetchJPActivityFromJP()
+    println(fetchJPActivityFromJP.first)
+    println(fetchJPActivityFromJP.second)
+  }
+
   private fun fetchActivities(): List<JsonObject> {
     var offset = ""
     val res = mutableListOf<JsonObject>()

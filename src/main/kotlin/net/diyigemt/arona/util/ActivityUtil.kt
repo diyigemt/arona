@@ -18,7 +18,7 @@ object ActivityUtil {
   private val PickUpTime = Regex("(\\d+)/(\\d+).*?[–-](\\d+)/(\\d+)")
   private val MaintenanceRegex = Regex("(\\d+)月(\\d+)日.*?[上下]午(\\d+)点")
   private val TotalAssault = Regex("([\\u4e00-\\u9fa5A-z. \\d]+) ?[（(]([\\u4e00-\\u9fa5A-z]+)[)）].*?(\\d+)/(\\d+)")
-
+  private val ActivityJPRegex = Regex("(\\d+/\\d+/\\d+)( \\d+:\\d+)? ～ (\\d+/\\d+ \\d+:\\d+)")
   fun fetchJPActivity(): Pair<List<Activity>, List<Activity>> {
     val document = Jsoup.connect("https://wiki.biligame.com/bluearchive/%E9%A6%96%E9%A1%B5").get()
     val activities = document.getElementsByClass("activity")
@@ -46,7 +46,7 @@ object ActivityUtil {
     }
     pending.sortByDescending { at -> at.level }
     active.sortByDescending { at -> at.level }
-    return Pair(active, pending)
+    return active to pending
   }
 
   fun fetchENActivity(): Pair<List<Activity>, List<Activity>> {
@@ -184,7 +184,7 @@ object ActivityUtil {
         return@forEach
       }
     }
-    return Pair(active, pending)
+    return active to pending
   }
 
   private fun fetchActivities(): List<JsonObject> {
@@ -210,6 +210,56 @@ object ActivityUtil {
       }
     }
     return res
+  }
+
+  fun fetchJPActivityFromJP(): Pair<List<Activity>, List<Activity>> {
+    val active = mutableListOf<Activity>()
+    val pending = mutableListOf<Activity>()
+    val document = Jsoup.connect("https://bluearchive.wikiru.jp/?%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88%E4%B8%80%E8%A6%A7")
+      .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
+      .ignoreContentType(true)
+      .get()
+    val body = document.getElementById("body") ?: return Pair(active, pending)
+    val activities = body.getElementsByClass("list-indent1")
+    activities.forEach {
+      val outer = it.getElementsByTag("li")
+      if (outer.isEmpty()) return@forEach
+      val target = outer[0]
+      val containString = target.text().replace("メンテナンス前まで", "11:00")
+      val timeSource = containString.substringAfterLast("(")
+      var contentSource = containString
+        .substringBeforeLast("(")
+        .replace("・", "·")
+        .replace("ガイドミッション", "指导任务")
+        .trim()
+      val findTime = ActivityJPRegex.find(timeSource)
+      if (findTime == null || findTime.groups.size < 3) return@forEach
+      val groups = findTime.groups
+      val start = groups[1]!!.value
+      val parseStart: Date = if (groups.filterNotNull().size == 3) {
+        SimpleDateFormat("yyyy/M/d").parse(start)
+      } else {
+        SimpleDateFormat("yyyy/M/d HH:mm").parse("${start}${groups[2]!!.value}")
+      }
+      val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
+      val end = "${year}/${groups[groups.size - 1]!!.value}"
+      val parseEnd = SimpleDateFormat("yyyy/M/d HH:mm").parse(end)
+      val now = Calendar.getInstance().time
+      // 判断是不是特别依赖(经验本钱本)
+      val special = target.getElementsByTag("img")
+      if (special.isNotEmpty()) {
+        val find = Regex("(\\d)").find(special[0].attr("title"))
+        if (find == null || find.groups.size != 2) return@forEach
+        val pow = find.groups[1]!!.value.toInt()
+        contentSource = "特殊作战掉落${pow}倍"
+      }
+      if (now.before(parseStart)) {
+        pending.add(Activity(contentSource, 2, TimeUtil.calcTime(now, parseStart, true)))
+      } else if (now.before(parseEnd)) {
+        active.add(Activity(contentSource, 2, TimeUtil.calcTime(now, parseEnd, false)))
+      }
+    }
+    return active to pending
   }
 
   private fun forceGet(target: JsonElement, key: String): JsonElement {

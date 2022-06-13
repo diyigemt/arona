@@ -7,3 +7,4 @@
 /run/
 /config/
 /plugins/
+/debug-sandbox/*

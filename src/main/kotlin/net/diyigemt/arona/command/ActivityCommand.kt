@@ -30,9 +30,13 @@ object ActivityCommand : CompositeCommand(
   @SubCommand("jp")
   @Description("查看日服活动")
   suspend fun UserCommandSender.activities_jp() {
-    val jpActivity = ActivityUtil.fetchJPActivity()
+    var jpActivity = ActivityUtil.fetchJPActivity()
     if (jpActivity.first.isEmpty() && jpActivity.second.isEmpty()) {
-      subject.sendMessage("日服wiki寄了")
+      subject.sendMessage("biliwiki寄了, 从wikiru拉取...")
+    }
+    jpActivity = ActivityUtil.fetchJPActivityFromJP()
+    if (jpActivity.first.isEmpty() && jpActivity.second.isEmpty()) {
+      subject.sendMessage("wikiru也寄了")
       return
     }
     send(subject, jpActivity)

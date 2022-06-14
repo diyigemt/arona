@@ -5,6 +5,7 @@ import kotlinx.serialization.json.jsonObject
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.command.data.GachaData
 import net.diyigemt.arona.threadpool.RecallTimer
+import net.diyigemt.arona.util.GachaUtil
 import net.diyigemt.arona.util.GachaUtil.pickUpTwoStar
 import net.diyigemt.arona.util.GachaUtil.pikerUp
 import net.diyigemt.arona.util.GachaUtil.resultData2String
@@ -22,13 +23,19 @@ object GachaMultiCommand : SimpleCommand(
 
   @Handler
   suspend fun UserCommandSender.gacha_multi() {
-    val result = Array<JsonElement>(10) { pikerUp() }
+    val userId = user.id
+    val checkTime = GachaUtil.checkTime(userId)
+    if (checkTime <= 0) {
+      subject.sendMessage(MessageUtil.at(user, "老师,石头不够了哦,明天再来抽吧"))
+      return
+    }
+    val result = Array<JsonElement>(checkTime) { pikerUp() }
     val starMap = result.map { it.jsonObject["star"].toString().toInt() }
     val stars = starMap.reduce { prv, cur -> prv + cur }
     var stars1 = starMap.filter { it == 1 }.size
     var stars2 = starMap.filter { it == 2 }.size
     val stars3 = starMap.filter { it == 3 }.size
-    if (stars <= 10) {
+    if (stars <= 10 && checkTime == 10) {
       result[9] = pickUpTwoStar()
       stars1--
       stars2++
@@ -36,9 +43,8 @@ object GachaMultiCommand : SimpleCommand(
     val s = result.map { resultData2String(it) }
       .reduceIndexed { index, prv, cur -> if (index == 4) "$prv $cur\n" else "$prv $cur" }
     val pickUpNum = result.filter { it.jsonObject["name"].toString().contains("初音") }.size
-    val userId = user.id
     val history = GachaData.getHistory(userId) ?: Triple(userId, 0, 0)
-    val newHistory = Triple(userId, history.second + 10, history.third + stars3)
+    val newHistory = Triple(userId, history.second + checkTime, history.third + stars3)
     if (pickUpNum != 0) {
       GachaData.saveDog(userId, newHistory.second)
     }

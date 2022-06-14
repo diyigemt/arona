@@ -4,6 +4,7 @@ import net.diyigemt.arona.Arona.save
 import net.diyigemt.arona.command.*
 import net.diyigemt.arona.command.data.GachaData
 import net.diyigemt.arona.config.AronaGachaConfig
+import net.diyigemt.arona.config.AronaGachaLimitConfig
 import net.diyigemt.arona.config.AronaHentaiConfig
 import net.diyigemt.arona.config.AronaNudgeConfig
 import net.diyigemt.arona.db.DataBaseProvider
@@ -83,6 +84,7 @@ object Arona : KotlinPlugin(
     AronaGachaConfig.reload()
     AronaNudgeConfig.reload()
     AronaHentaiConfig.reload()
+    AronaGachaLimitConfig.reload()
     GachaDogCommand.register()
     ActivityCommand.register()
     GachaMultiCommand.register()

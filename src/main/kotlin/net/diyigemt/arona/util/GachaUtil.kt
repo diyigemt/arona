@@ -6,6 +6,7 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import net.diyigemt.arona.command.cache.GachaCache
 import net.diyigemt.arona.config.AronaGachaConfig
+import net.diyigemt.arona.config.AronaGachaLimitConfig
 import net.diyigemt.arona.constant.GachaConstant
 import net.diyigemt.arona.db.model.GachaCharacter
 import java.time.LocalDateTime
@@ -68,6 +69,33 @@ object GachaUtil {
       val nextFloat = Random(LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"))).nextFloat()
     }
     return star2PickupList[0]
+  }
+
+  fun checkTime(userId: Long, time: Int = 10): Int {
+    AronaGachaLimitConfig.update()
+    val limit = AronaGachaLimitConfig.limit
+    val record = AronaGachaLimitConfig.record
+    val filter = record.filter { it.first == userId }
+    if (filter.isEmpty()) {
+      return if ((limit - time) > 0) {
+        record.add(Pair(userId, time))
+        time
+      } else {
+        record.add(Pair(userId, limit))
+        limit
+      }
+    }
+    val target = filter[0]
+    record.remove(target)
+    val history = target.second
+    val time2 = history + time
+    return if ((limit - time2) >= 0) {
+      record.add(Pair(userId, time2))
+      time
+    } else {
+      record.add(Pair(userId, limit))
+      limit - history
+    }
   }
 
   private fun rollList(list: List<GachaCharacter>) = list[(list.indices).random()]

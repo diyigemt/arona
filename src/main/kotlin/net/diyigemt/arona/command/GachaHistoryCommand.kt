@@ -11,23 +11,25 @@ import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.UserCommandSender
 import net.mamoe.mirai.contact.nameCardOrNick
 import net.mamoe.mirai.message.data.At
+import kotlin.math.floor
 
-object GachaDogCommand : SimpleCommand(
-  Arona,"gacha_dog", "狗叫",
-  description = "单抽一次"
+object GachaHistoryCommand : SimpleCommand(
+  Arona,"gacha_history", "历史",
+  description = "抽卡历史记录"
 ) {
 
   @Handler
-  suspend fun UserCommandSender.gacha_dog() {
-    val dogCall = GachaData.getDogCall()
-    if (dogCall.isEmpty()) {
-      subject.sendMessage("还没有老师抽出来哦")
+  suspend fun UserCommandSender.gacha_history() {
+    val history = GachaData.getHistoryAll()
+    if (history.isEmpty()) {
+      subject.sendMessage("还没有记录哦")
       return
     }
-    var ss = "狗叫排行:\n"
-    dogCall.map {
+    var ss = "历史排行:\n"
+    history.reversed().map {
       val nick = bot.getGroup(726453107L)!![it.first]!!.nameCardOrNick
-      "${nick}(${it.first}): ${it.second}抽"
+      val rate = if (it.third == 0) "0.00" else (it.third.toFloat() / it.second).toString()
+      "${nick}(${it.first}): ${it.second}抽/${it.third}个3星 = ${rate}%"
     }.forEachIndexed {
       index, s -> ss += "${index + 1}. $s\n"
     }

@@ -11,4 +11,10 @@ class TestSimple {
     println(parse)
   }
 
+  @Test
+  fun testSubstring() {
+    val value = ((0).toFloat() / 20).toString()
+    println(value.substring(0, value.indexOf(".") + 3))
+  }
+
 }

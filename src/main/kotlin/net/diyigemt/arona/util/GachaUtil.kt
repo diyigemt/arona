@@ -24,7 +24,7 @@ object GachaUtil {
     } else if (random in (GachaConstant.PICK_UP_TOW_STAR .. GachaConstant.PICK_UP_THREE_STAR)) {
       target = GachaConstant.REWARD_LIST_THREE_STAR
     } else {
-      return Json.parseToJsonElement("{\"star\":3,\"name\":\"亚津子(Pick Up)\"}")
+      return Json.parseToJsonElement("{\"star\":3,\"name\":\"初音(Pick Up)\"}")
     }
     val index = (0 until target.jsonArray.size).random()
     return target.jsonArray[index]

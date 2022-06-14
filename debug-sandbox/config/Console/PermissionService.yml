@@ -13,3 +13,5 @@ grantedPermissionMap:
     - '*'
   'net.diyigemt.arona:command.gacha_reset': 
     - '*'
+  'net.diyigemt.arona:command.gacha_history': 
+    - '*'

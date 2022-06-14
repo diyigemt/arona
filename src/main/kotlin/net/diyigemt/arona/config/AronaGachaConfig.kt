@@ -7,7 +7,7 @@ import net.mamoe.mirai.console.data.value
 import net.mamoe.mirai.event.EventPriority
 
 @ValueDescription("注意总出率加起来要等于100, 2,3星限定出率要低于其总出率")
-object AronaGachaConfig: AutoSavePluginConfig("arona-gacha") {
+object AronaGachaConfig: AutoSavePluginConfig("arona-gacha-2") {
 
   @ValueDescription("1星总出率百分比")
   var star1Rate: Float by value(79F)

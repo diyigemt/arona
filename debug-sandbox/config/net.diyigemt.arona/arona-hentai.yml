@@ -1,7 +1,11 @@
 # 要被骂的id
 listen: []
 # 返回被骂的信息
-messageList: []
+messageList: 
+  - message: 爬
+    weight: 1
+  - message: 老师大变态❤
+    weight: 1
 # 是否启用
 enable: true
 # 事件优先级 从高到低可选 HIGHEST, HIGH, NORMAL, LOW, LOWEST, MONITOR

@@ -14,7 +14,7 @@ object ActivityUtil {
   private val N3H3Plus = Regex("([3双2翻])倍")
   private val NormalTime = Regex("[Nn]ormal.*?(\\d+)[月/](\\d+).*?([–-]|~).*?(\\d+)[月/](\\d+)")
   private val HardTime = Regex("[Hh]ard.*?(\\d)[月/](\\d+).*?([–-]|~).*?(\\d)[月/](\\d+)")
-  private val PickUpRegex = Regex("(\\d)([\\u4e00-\\u9fa5A-z]+)(\\([\\u4e00-\\u9fa5A-z]+\\))?")
+  private val PickUpRegex = Regex("(\\d)?([\\u4e00-\\u9fa5A-z]+)(\\([\\u4e00-\\u9fa5A-z]+\\))?")
   private val PickUpTime = Regex("(\\d+)/(\\d+).*?[–-](\\d+)/(\\d+)")
   private val MaintenanceRegex = Regex("(\\d+)月(\\d+)日.*?[上下]午(\\d+)点")
   private val TotalAssault = Regex("([\\u4e00-\\u9fa5A-z. \\d]+) ?[（(]([\\u4e00-\\u9fa5A-z]+)[)）].*?(\\d+)/(\\d+)")
@@ -116,11 +116,11 @@ object ActivityUtil {
             if (size > (floor((size / 2).toDouble()) * 2)) {
               val extraName = groups[size - 1]!!.value
               val studentName = groups[size - 2]!!.value
-              val studentStar = groups[size - 3]!!.value
+              val studentStar = groups[size - 3]?.value ?: 3
               student = "$student $studentStar★$studentName($extraName)"
             } else {
               val studentName = groups[size - 2]!!.value
-              val studentStar = groups[size - 3]!!.value
+              val studentStar = groups[size - 3]?.value ?: 3
               student = "$student $studentStar★$studentName"
             }
           }

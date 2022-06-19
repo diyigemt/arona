@@ -82,6 +82,7 @@ object Arona : KotlinPlugin(
   private fun init() {
     GachaData.reload()
     AronaGachaConfig.reload()
+    AronaGachaConfig.init()
     AronaNudgeConfig.reload()
     AronaHentaiConfig.reload()
     AronaGachaLimitConfig.reload()

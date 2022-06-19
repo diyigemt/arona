@@ -1,17 +1,11 @@
 package net.diyigemt.arona.command
 
-import kotlinx.serialization.json.jsonObject
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.command.data.GachaData
 import net.diyigemt.arona.threadpool.RecallTimer
-import net.diyigemt.arona.util.GachaUtil.pikerUp
-import net.diyigemt.arona.util.GachaUtil.resultData2String
-import net.diyigemt.arona.util.MessageUtil
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.UserCommandSender
 import net.mamoe.mirai.contact.nameCardOrNick
-import net.mamoe.mirai.message.data.At
-import kotlin.math.floor
 
 object GachaHistoryCommand : SimpleCommand(
   Arona,"gacha_history", "历史",

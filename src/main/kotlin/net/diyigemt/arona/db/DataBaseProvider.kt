@@ -2,11 +2,10 @@ package net.diyigemt.arona.db
 
 import kotlinx.coroutines.Dispatchers
 import net.diyigemt.arona.Arona
-import net.diyigemt.arona.command.cache.GachaCache
-import net.diyigemt.arona.db.model.gacha.GachaCharacterTable
-import net.diyigemt.arona.db.model.gacha.GachaPoolCharacterTable
-import net.diyigemt.arona.db.model.gacha.GachaPoolTable
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SqlLogger
+import org.jetbrains.exposed.sql.Transaction
+import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.statements.StatementContext
 import org.jetbrains.exposed.sql.statements.expandArgs
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
@@ -33,15 +32,14 @@ object DataBaseProvider {
     }
   }
 
-  fun initDataBase(): Unit {
+  private fun initDataBase(): Unit {
     query {
       it.addLogger(object: SqlLogger {
         override fun log(context: StatementContext, transaction: Transaction) {
           Arona.verbose { "SQL: ${context.expandArgs(transaction)}" }
         }
       })
-      SchemaUtils.create(GachaCharacterTable, GachaPoolTable, GachaPoolCharacterTable)
-      GachaCache.init()
+      GachaDataBase.init()
       Arona.info("arona database init success.")
     }
   }

@@ -1,4 +1,4 @@
-package net.diyigemt.arona.db.model.gacha
+package net.diyigemt.arona.db.gacha
 
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass

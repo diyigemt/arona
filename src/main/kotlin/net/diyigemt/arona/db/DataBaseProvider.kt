@@ -3,12 +3,10 @@ package net.diyigemt.arona.db
 import kotlinx.coroutines.Dispatchers
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.command.cache.GachaCache
-import net.mamoe.mirai.utils.error
-import net.mamoe.mirai.utils.verbose
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SqlLogger
-import org.jetbrains.exposed.sql.Transaction
-import org.jetbrains.exposed.sql.addLogger
+import net.diyigemt.arona.db.model.gacha.GachaCharacterTable
+import net.diyigemt.arona.db.model.gacha.GachaPoolCharacterTable
+import net.diyigemt.arona.db.model.gacha.GachaPoolTable
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.statements.StatementContext
 import org.jetbrains.exposed.sql.statements.expandArgs
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
@@ -29,7 +27,8 @@ object DataBaseProvider {
       db = Database.connect("jdbc:sqlite:${Arona.dataFolder}/${DBConstant.GLOBAL_DB_NAME}", "org.sqlite.JDBC")
       connectionStatus = ConnectionStatus.CONNECTED
       initDataBase()
-    } catch (_: Exception) {
+    } catch (e: Exception) {
+      e.printStackTrace()
       Arona.error("Database initialization failed. Any operation that requires database support cannot be performed.")
     }
   }
@@ -41,9 +40,10 @@ object DataBaseProvider {
           Arona.verbose { "SQL: ${context.expandArgs(transaction)}" }
         }
       })
+      SchemaUtils.create(GachaCharacterTable, GachaPoolTable, GachaPoolCharacterTable)
+      GachaCache.init()
+      Arona.info("arona database init success.")
     }
-    GachaCache.init()
-    Arona.info("arona database init success.")
   }
 
   fun isConnected() = connectionStatus == ConnectionStatus.CONNECTED

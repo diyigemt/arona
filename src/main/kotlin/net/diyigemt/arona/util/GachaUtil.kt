@@ -8,10 +8,7 @@ import net.diyigemt.arona.command.cache.GachaCache
 import net.diyigemt.arona.config.AronaGachaConfig
 import net.diyigemt.arona.config.AronaGachaLimitConfig
 import net.diyigemt.arona.constant.GachaConstant
-import net.diyigemt.arona.db.model.GachaCharacter
-import java.time.LocalDateTime
-import java.time.ZoneOffset
-import kotlin.random.Random
+import net.diyigemt.arona.db.model.gacha.GachaCharacter
 
 object GachaUtil {
 
@@ -54,21 +51,31 @@ object GachaUtil {
     val star3Rate = (AronaGachaConfig.star3Rate * maxDot).toInt()
     val star2PickupRate = (AronaGachaConfig.star2PickupRate * maxDot).toInt()
     val star3PickupRate = (AronaGachaConfig.star3PickupRate * maxDot).toInt()
-    val random = (0 until pow10(maxDot)).random()
-    val targetList = star1List
-    if (random in (star1Rate until star1Rate + star2Rate)) {
-      // 有pickup
-      if (star2PickupList.size != 0) {
-        val random = (0 until (star2Rate)).random()
-        // 抽到pickup
-        if (random < star2PickupRate) {
-          return rollList(star2PickupList)
+    return when ((0 until pow10(maxDot)).random()) {
+      in (0 until star1Rate) -> rollList(star1List)
+      in (star1Rate until (star1Rate + star2Rate)) -> {
+        if (star2PickupList.size != 0) {
+          return if ((0 until (star2Rate)).random() < star2PickupRate) {
+            // 抽到pickup
+            rollList(star2PickupList)
+          } else {
+            rollList(star2List)
+          }
         }
-        return rollList(star2List)
+        rollList(star2List)
       }
-      val nextFloat = Random(LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"))).nextFloat()
+      else -> {
+        if (star3PickupList.size != 0) {
+          return if ((0 until (star3Rate)).random() < star3PickupRate) {
+            // 抽到pickup
+            rollList(star3PickupList)
+          } else {
+            rollList(star3List)
+          }
+        }
+        rollList(star3List)
+      }
     }
-    return star2PickupList[0]
   }
 
   fun checkTime(userId: Long, time: Int = 10): Int {

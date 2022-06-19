@@ -24,6 +24,8 @@ object AronaGachaConfig: AutoSavePluginConfig("arona-gacha-2") {
   @ValueDescription("3星限定出率百分比")
   var star3PickupRate: Float by value(0.7F)
 
+  var defaultActivePool: Int by value(0)
+
   var maxDot: Int = 10
 
   fun init() {

@@ -1,8 +1,15 @@
 package net.diyigemt.arona.command.cache
-
+//
 import net.diyigemt.arona.Arona
-import net.diyigemt.arona.db.model.GachaCharacter
+import net.diyigemt.arona.db.model.gacha.GachaCharacter
+import net.diyigemt.arona.db.model.gacha.GachaCharacterTable
+import net.diyigemt.arona.db.model.gacha.GachaPoolCharacterTable
+import net.diyigemt.arona.db.model.gacha.GachaPoolTable
+import org.jetbrains.exposed.sql.JoinType
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.selectAll
 
+//
 object GachaCache {
 
   lateinit var star1List: MutableList<GachaCharacter>
@@ -17,14 +24,21 @@ object GachaCache {
   }
 
   fun updateData() {
-    val all = GachaCharacter.all()
-    star1List = all.filter { it.star == 1 && !it.limit }.toMutableList()
-    val star2ListTmp = all.filter { it.star == 2 }.toMutableList()
-    val star3ListTmp = all.filter { it.star == 3 }.toMutableList()
-    star2List = star2ListTmp.filter { !it.pickup && !it.limit }.toMutableList()
-    star3List = star3ListTmp.filter { !it.pickup && !it.limit }.toMutableList()
-    star2PickupList = star2ListTmp.filter { it.pickup }.toMutableList()
-    star3PickupList = star3ListTmp.filter { it.pickup }.toMutableList()
+    val all = GachaCharacter.find { GachaCharacterTable.limit eq false }
+    val limit = GachaCharacterTable.join(GachaPoolCharacterTable, JoinType.INNER,
+      additionalConstraint = { GachaCharacterTable.id eq GachaPoolCharacterTable.characterId })
+      .join(GachaPoolTable, JoinType.INNER,
+        additionalConstraint = { GachaPoolTable.id eq GachaPoolCharacterTable.poolId })
+      .selectAll()
+      .map {
+        GachaCharacter.wrapRow(it)
+      }
+    star1List = all.filter { it.star == 1 }.toMutableList()
+    star2List = all.filter { it.star == 2 }.toMutableList()
+    star3List = all.filter { it.star == 3 }.toMutableList()
+    star2PickupList = limit.filter { it.star == 2 }.toMutableList()
+    star3PickupList = limit.filter { it.star == 3 }.toMutableList()
+    println(1)
   }
 
 }

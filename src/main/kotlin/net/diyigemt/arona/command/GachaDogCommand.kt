@@ -21,7 +21,7 @@ object GachaDogCommand : SimpleCommand(
     }
     var ss = "狗叫排行:\n"
     dogCall.map {
-      val nick = bot.getGroup(1002484182L)!![it.id.value]!!.nameCardOrNick
+      val nick = bot.getGroup(726453107L)!![it.id.value]!!.nameCardOrNick
       "${nick}(${it.id.value}): ${it.dog}抽"
     }.forEachIndexed {
       index, s -> ss += "${index + 1}. $s\n"

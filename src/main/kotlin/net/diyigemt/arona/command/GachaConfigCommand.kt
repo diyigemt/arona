@@ -1,6 +1,7 @@
 package net.diyigemt.arona.command
 
 import net.diyigemt.arona.Arona
+import net.diyigemt.arona.command.cache.GachaCache
 import net.diyigemt.arona.config.AronaGachaConfig
 import net.diyigemt.arona.config.AronaGachaLimitConfig
 import net.diyigemt.arona.db.DataBaseProvider.query
@@ -21,14 +22,11 @@ object GachaConfigCommand : CompositeCommand(
   @Description("设置激活的池子")
   suspend fun UserCommandSender.setpool(pool: Int) {
     if (user is Member && (user as Member).permission != MemberPermission.MEMBER) {
-      val targetPool = query {
-        GachaPool.findById(pool)
-      }
+      val targetPool = GachaCache.updatePool(pool)
       if (targetPool == null) {
         subject.sendMessage("没有找到池子")
         return
       }
-      AronaGachaConfig.defaultActivePool = pool
       subject.sendMessage("池子设置为:${targetPool.name}")
     } else {
       subject.sendMessage("爬, 权限不足")

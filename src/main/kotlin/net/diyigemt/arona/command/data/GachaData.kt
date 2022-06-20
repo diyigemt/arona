@@ -37,7 +37,7 @@ object GachaData {
 
   fun getHistoryAll(pool: Int = AronaGachaConfig.defaultActivePool) = query {
     GachaHistory.find { GachaHistoryTable.pool eq pool }.toList().sortedBy {
-      if (it.count3 == 0) 0 else it.points / it.count3
+      if (it.count3 == 0) 999 else it.points / it.count3
     }
   }!!
 }

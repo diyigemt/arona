@@ -22,7 +22,7 @@ object GachaHistoryCommand : SimpleCommand(
     var ss = "历史排行:\n"
     history
       .map {
-        val nick = bot.getGroup(1002484182L)!![it.id.value]!!.nameCardOrNick
+        val nick = bot.getGroup(726453107L)!![it.id.value]!!.nameCardOrNick
         val rate = if (it.count3 == 0) 0 else it.points / it.count3
         "${nick}(${it.id.value}): ${it.points}抽/${it.count3}个3星 = $rate"
       }

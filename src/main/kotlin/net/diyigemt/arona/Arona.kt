@@ -1,8 +1,6 @@
 package net.diyigemt.arona
 
-import net.diyigemt.arona.Arona.save
 import net.diyigemt.arona.command.*
-import net.diyigemt.arona.command.data.GachaData
 import net.diyigemt.arona.config.AronaGachaConfig
 import net.diyigemt.arona.config.AronaGachaLimitConfig
 import net.diyigemt.arona.config.AronaHentaiConfig
@@ -10,24 +8,17 @@ import net.diyigemt.arona.config.AronaNudgeConfig
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.handler.GroupRepeaterHandler
 import net.diyigemt.arona.handler.HentaiEventHandler
-import net.diyigemt.arona.handler.MessageForwardHandler
 import net.diyigemt.arona.handler.NudgeEventHandler
-import net.diyigemt.arona.util.MessageUtil
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
-import net.mamoe.mirai.contact.User
 import net.mamoe.mirai.event.GlobalEventChannel
-import net.mamoe.mirai.event.events.FriendMessageEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
-import net.mamoe.mirai.event.events.GroupTempMessageEvent
 import net.mamoe.mirai.event.events.NudgeEvent
 import net.mamoe.mirai.event.subscribeGroupMessages
 import net.mamoe.mirai.message.data.At
 import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.utils.info
-import javax.swing.GroupLayout.Group
-import kotlin.math.log
 
 /**
  * 使用 kotlin 版请把
@@ -80,7 +71,6 @@ object Arona : KotlinPlugin(
   }
 
   private fun init() {
-    GachaData.reload()
     AronaGachaConfig.reload()
     AronaGachaConfig.init()
     AronaNudgeConfig.reload()
@@ -89,7 +79,7 @@ object Arona : KotlinPlugin(
     GachaDogCommand.register()
     ActivityCommand.register()
     GachaMultiCommand.register()
-    GachaResetCommand.register()
+    GachaConfigCommand.register()
     GachaSingleCommand.register()
     GachaHistoryCommand.register()
     HentaiConfigCommand.register()
@@ -97,7 +87,6 @@ object Arona : KotlinPlugin(
   }
 
   override fun onDisable() {
-    GachaData.save()
     AronaNudgeConfig.save()
     AronaHentaiConfig.save()
   }

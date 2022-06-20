@@ -6,7 +6,6 @@ import net.diyigemt.arona.db.gacha.GachaCharacter
 import net.diyigemt.arona.db.gacha.GachaCharacterTable
 import net.diyigemt.arona.db.gacha.GachaPoolCharacterTable
 import net.diyigemt.arona.db.gacha.GachaPoolTable
-import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.select
 
 //

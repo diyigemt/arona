@@ -14,15 +14,15 @@ object GachaDogCommand : SimpleCommand(
 
   @Handler
   suspend fun UserCommandSender.gacha_dog() {
-    val dogCall = GachaData.getDogCall()
+    val dogCall = GachaData.getDogCall().filter { it.dog != 0 }
     if (dogCall.isEmpty()) {
       subject.sendMessage("还没有老师抽出来哦")
       return
     }
     var ss = "狗叫排行:\n"
     dogCall.map {
-      val nick = bot.getGroup(726453107L)!![it.first]!!.nameCardOrNick
-      "${nick}(${it.first}): ${it.second}抽"
+      val nick = bot.getGroup(1002484182L)!![it.id.value]!!.nameCardOrNick
+      "${nick}(${it.id.value}): ${it.dog}抽"
     }.forEachIndexed {
       index, s -> ss += "${index + 1}. $s\n"
     }

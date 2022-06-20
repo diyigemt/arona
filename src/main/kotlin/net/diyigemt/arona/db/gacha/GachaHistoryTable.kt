@@ -13,7 +13,7 @@ object GachaHistoryTable: IdTable<Long>(name = "GachaHistory") {
   val count3: Column<Int> = integer("count3")
   val dog: Column<Int> = integer("dog")
 
-  override val primaryKey: PrimaryKey = PrimaryKey(id)
+  override val primaryKey: PrimaryKey = PrimaryKey(id, pool)
 }
 
 class GachaHistory(id: EntityID<Long>): LongEntity(id) {

@@ -26,15 +26,15 @@ object GachaSingleCommand : SimpleCommand(
     }
     val result = pickup()
     val stars = result.star
-    val history = GachaData.getHistory(userId) ?: Triple(userId, 0, 0)
+    val history = GachaData.getHistory(userId)
     var star3 = 0
-    if (stars.toString().toInt() == 3) {
+    if (stars == 3) {
       star3 = 1
     }
-    val newHistory = Triple(userId, history.second + 1, history.third + star3)
-    GachaData.putHistory(newHistory)
-    val s = "${resultData2String(result)}\n${newHistory.second} points"
-    val dog = if (hitPickup(result)) "恭喜老师,出货了呢" else ""
+    val hitPickup = hitPickup(result)
+    GachaData.updateHistory(userId, addPoints = 1, addCount3 = star3, dog = hitPickup)
+    val s = "${resultData2String(result)}\n${history.points + 1} points"
+    val dog = if (hitPickup) "恭喜老师,出货了呢" else ""
     RecallTimer.recall((subject.sendMessage(MessageUtil.atMessageAndCTRL(user, dog, s))))
   }
 }

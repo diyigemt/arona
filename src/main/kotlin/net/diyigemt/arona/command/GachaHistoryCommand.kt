@@ -20,13 +20,16 @@ object GachaHistoryCommand : SimpleCommand(
       return
     }
     var ss = "历史排行:\n"
-    history.reversed().map {
-      val nick = bot.getGroup(726453107L)!![it.first]!!.nameCardOrNick
-      val rate = if (it.third == 0) "0.00" else (it.third.toFloat() / it.second).toString()
-      "${nick}(${it.first}): ${it.second}抽/${it.third}个3星 = ${rate}%"
-    }.forEachIndexed {
-      index, s -> ss += "${index + 1}. $s\n"
-    }
+    history
+      .map {
+        val nick = bot.getGroup(1002484182L)!![it.id.value]!!.nameCardOrNick
+        val rate = if (it.count3 == 0) 0 else it.points / it.count3
+        "${nick}(${it.id.value}): ${it.points}抽/${it.count3}个3星 = $rate"
+      }
+      .subList(0, if (history.size > 6) 6 else history.size)
+      .forEachIndexed {
+        index, s -> ss += "${index + 1}. $s\n"
+      }
     RecallTimer.recall(subject.sendMessage(ss))
   }
 

@@ -20,7 +20,7 @@ import kotlin.math.floor
 
 object HentaiConfigCommand : CompositeCommand(
   Arona,"hentai", "发情",
-  description = "设置变发情触发的关键词"
+  description = "设置发情触发的关键词"
 ) {
 
   @SubCommand("adds")

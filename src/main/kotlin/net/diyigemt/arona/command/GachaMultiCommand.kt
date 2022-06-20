@@ -40,15 +40,11 @@ object GachaMultiCommand : SimpleCommand(
     }
     val s = result.map { resultData2String(it) }
       .reduceIndexed { index, prv, cur -> if (index == 4) "$prv $cur\n" else "$prv $cur" }
-    val pickUpNum = result.filter { hitPickup(it) }.size
-    val history = GachaData.getHistory(userId) ?: Triple(userId, 0, 0)
-    val newHistory = Triple(userId, history.second + checkTime, history.third + stars3)
-    if (pickUpNum != 0) {
-      GachaData.saveDog(userId, newHistory.second)
-    }
-    GachaData.putHistory(newHistory)
-    val dog = if (pickUpNum != 0) "恭喜老师,出货了呢" else ""
-    val sss = "3星:$stars3 2星:$stars2 1星:$stars1 ${newHistory.second} points\n${s}"
+    val hitPickup = result.any { hitPickup(it) }
+    val history = GachaData.getHistory(userId)
+    GachaData.updateHistory(userId, addPoints = checkTime, addCount3 = stars3, dog = hitPickup)
+    val dog = if (hitPickup) "恭喜老师,出货了呢" else ""
+    val sss = "3星:$stars3 2星:$stars2 1星:$stars1 ${history.points + checkTime} points\n${s}"
     RecallTimer.recall(subject.sendMessage(atMessageAndCTRL(user, dog, sss)))
   }
 }

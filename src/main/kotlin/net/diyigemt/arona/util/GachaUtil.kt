@@ -84,7 +84,7 @@ object GachaUtil {
     }
   }
 
-  fun resultData2String(result: GachaCharacter) = "${result.name}(${result.star}${GachaConstant.star}${if (hitPickup(result)) "(pick up)" else ""})"
+  fun resultData2String(result: GachaCharacter) = "${result.name}(${result.star}${GachaConstant.star})${if (hitPickup(result)) "(pick up)" else ""}"
 
   fun hitPickup(result: GachaCharacter) = GachaCache.star2PickupList.contains(result) || GachaCache.star3PickupList.contains(result)
 

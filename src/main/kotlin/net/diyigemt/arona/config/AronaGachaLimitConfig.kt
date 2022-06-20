@@ -20,6 +20,10 @@ object AronaGachaLimitConfig: AutoSavePluginConfig("arona-gacha-limit") {
     val today = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
     if (today == lastUpdate) return
     lastUpdate = today
+    forceUpdate()
+  }
+
+  fun forceUpdate() {
     record = record.map {
       (it.first) to 0
     }.toMutableList()

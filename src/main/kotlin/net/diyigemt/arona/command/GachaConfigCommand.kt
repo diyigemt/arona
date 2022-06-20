@@ -2,6 +2,7 @@ package net.diyigemt.arona.command
 
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.config.AronaGachaConfig
+import net.diyigemt.arona.config.AronaGachaLimitConfig
 import net.diyigemt.arona.db.DataBaseProvider.query
 import net.diyigemt.arona.db.gacha.GachaHistoryTable
 import net.diyigemt.arona.db.gacha.GachaPool
@@ -41,6 +42,7 @@ object GachaConfigCommand : CompositeCommand(
       query {
         GachaHistoryTable.deleteWhere { GachaHistoryTable.pool eq pool }
       }
+      AronaGachaLimitConfig.forceUpdate()
       subject.sendMessage("历史记录清除成功")
     } else {
       subject.sendMessage("爬, 权限不足")

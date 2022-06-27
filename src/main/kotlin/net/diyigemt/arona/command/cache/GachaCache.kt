@@ -45,7 +45,7 @@ object GachaCache {
   }
 
   fun updatePool(pool: Int): GachaPool? {
-    val targetPool = DataBaseProvider.query {
+    val targetPool = query {
       GachaPool.findById(pool)
     } ?: return null
     if (!updateLimitData(pool)) return null

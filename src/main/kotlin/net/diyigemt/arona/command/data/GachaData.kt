@@ -24,7 +24,7 @@ object GachaData {
       val target = GachaHistory.find { (GachaHistoryTable.id eq userId) and (GachaHistoryTable.pool eq pool) }.toList()[0]
       target.points += addPoints
       target.count3 += addCount3
-      if (dog && target.dog != 0) {
+      if (dog && target.dog == 0) {
         target.dog = target.points
       }
     }

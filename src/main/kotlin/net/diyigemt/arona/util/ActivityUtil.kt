@@ -190,6 +190,8 @@ object ActivityUtil {
         return@forEach
       }
     }
+    active.sortByDescending { it.level }
+    pending.sortByDescending { it.level }
     return active to pending
   }
 
@@ -265,7 +267,20 @@ object ActivityUtil {
         active.add(Activity(contentSource, 2, TimeUtil.calcTime(now, parseEnd, false)))
       }
     }
+    active.sortByDescending { it.level }
+    pending.sortByDescending { it.level }
     return active to pending
+  }
+
+  fun constructMessage(activities: Pair<List<Activity>, List<Activity>>): String {
+    val activeString = activities.first
+      .map { at -> "${at.content}     ${at.time}\n" }
+      .reduceOrNull { prv, cur -> prv + cur }
+    val pendingString = activities.second
+      .map { at -> "${at.content}     ${at.time}\n" }
+      .reduceOrNull { prv, cur -> prv + cur }
+      ?.let { it.take(it.length - 1) }
+    return "正在进行:\n${activeString ?: "无\n"}即将开始:\n${pendingString ?: '无'}"
   }
 
   private fun forceGet(target: JsonElement, key: String): JsonElement {

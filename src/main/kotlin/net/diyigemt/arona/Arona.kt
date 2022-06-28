@@ -8,20 +8,23 @@
  */
 package net.diyigemt.arona
 
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import net.diyigemt.arona.command.*
-import net.diyigemt.arona.config.AronaGachaConfig
-import net.diyigemt.arona.config.AronaGachaLimitConfig
-import net.diyigemt.arona.config.AronaHentaiConfig
-import net.diyigemt.arona.config.AronaNudgeConfig
+import net.diyigemt.arona.config.*
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.handler.GroupRepeaterHandler
 import net.diyigemt.arona.handler.HentaiEventHandler
 import net.diyigemt.arona.handler.NudgeEventHandler
+import net.diyigemt.arona.interfaces.InitializedFunction
+import net.diyigemt.arona.quartz.ActivityNotify
 import net.diyigemt.arona.quartz.QuartzProvider
+import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
 import net.mamoe.mirai.event.GlobalEventChannel
+import net.mamoe.mirai.event.events.BotOnlineEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
 import net.mamoe.mirai.event.events.NudgeEvent
 import net.mamoe.mirai.event.subscribeGroupMessages
@@ -40,33 +43,30 @@ object Arona : KotlinPlugin(
     author("diyigemt")
   }
 ) {
+  private lateinit var arona: Bot
+  private val INIT: List<InitializedFunction> = listOf(ActivityNotify)
 
   override fun onEnable() {
     init()
-//    GlobalEventChannel.subscribeGroupMessages {
-//      atBot { it ->
-//        val commandAndArg = this.message.filter { message -> message::class == PlainText::class }.map { message -> message.contentToString().trim() }.toMutableList()
-//        logger.info(commandAndArg.toString())
-//        val command = commandAndArg.removeFirst()
-//        if (command == "签到") {
-//          this.group.sendMessage(At(this.sender).plus("签到成功! 信用点+20000 清辉石+20"))
-//        }
-//      }
-//    }
-    GlobalEventChannel.subscribeAlways<NudgeEvent>(priority = AronaNudgeConfig.priority) {
-      NudgeEventHandler.handle(this)
-    }
-    GlobalEventChannel.subscribeAlways<GroupMessageEvent> {
-      GroupRepeaterHandler.handle(this)
-      HentaiEventHandler.handle(this)
-    }
-//    GlobalEventChannel.subscribeAlways<GroupTempMessageEvent> {
-//      MessageForwardHandler.handle(this)
-//    }
-    logger.info { "arona loaded" }
+    if (DataBaseProvider.isConnected()) {
+      GlobalEventChannel.filter {
+        it is BotOnlineEvent && it.bot.id == AronaConfig.qq
+      }.subscribeOnce<BotOnlineEvent> {
+        arona = it.bot
+      }
+      GlobalEventChannel.subscribeAlways<NudgeEvent>(priority = AronaNudgeConfig.priority) {
+        NudgeEventHandler.handle(this)
+      }
+      GlobalEventChannel.subscribeAlways<GroupMessageEvent> {
+        GroupRepeaterHandler.handle(this)
+        HentaiEventHandler.handle(this)
+      }
+      logger.info { "arona loaded" }
+    } else error("arona database init failed, arona will not start")
   }
 
   private fun init() {
+    AronaConfig.reload()
     AronaGachaConfig.reload()
     AronaGachaConfig.init()
     AronaNudgeConfig.reload()
@@ -81,11 +81,26 @@ object Arona : KotlinPlugin(
     HentaiConfigCommand.register()
     DataBaseProvider.start()
     QuartzProvider.start()
+    INIT.forEach {
+      it.init()
+    }
+    QuartzProvider.triggerTask("ActivityNotify", "ActivityNotify")
   }
 
   override fun onDisable() {
     AronaNudgeConfig.save()
     AronaHentaiConfig.save()
+  }
+
+  fun sendMessage(message: String) {
+    runBlocking {
+      withContext(coroutineContext) {
+        AronaConfig.groups.forEach {
+          val group =  arona.groups[it] ?: return@forEach
+          group.sendMessage(message)
+        }
+      }
+    }
   }
 
   fun info(message: String?) = logger.info(message)

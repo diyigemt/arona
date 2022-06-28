@@ -41,10 +41,16 @@ object MessageUtil {
   fun recall(target: MessageReceipt<Contact>, delay: Long = 1000 * 10) {
     val instance = Calendar.getInstance()
     instance.set(Calendar.MILLISECOND, (instance.get(Calendar.MILLISECOND) + delay).toInt())
-    QuartzProvider.createSingleTask(MessageRecallJob::class.java, instance.time, MessageRecallJobKey, MessageRecallJobKey, mapOf(JobDataMessageKey to target))
+    QuartzProvider.createSingleTask(
+      MessageRecallJob::class.java,
+      instance.time,
+      MessageRecallJobKey,
+      MessageRecallJobKey,
+      mapOf(JobDataMessageKey to target)
+    )
   }
 
-  class MessageRecallJob(): Job {
+  class MessageRecallJob: Job {
     override fun execute(context: JobExecutionContext?) {
       val message = context?.jobDetail?.jobDataMap?.get(JobDataMessageKey) ?: return
       runBlocking {

@@ -43,17 +43,8 @@ object ActivityCommand : CompositeCommand(
     send(subject, jpActivity)
   }
 
-  suspend fun send(subject: Contact, activities: Pair<List<Activity>, List<Activity>>) {
-    val activeString = activities.first
-      .sortedByDescending { it.level }
-      .map { at -> "${at.content}     ${at.time}\n" }
-      .reduceOrNull { prv, cur -> prv + cur }
-    val pendingString = activities.second
-      .sortedByDescending { it.level }
-      .map { at -> "${at.content}     ${at.time}\n" }
-      .reduceOrNull { prv, cur -> prv + cur }
-      ?.let { it.take(it.length - 1) }
-    subject.sendMessage("正在进行:\n${activeString ?: '无'}即将开始:\n${pendingString ?: '无'}")
+  private suspend fun send(subject: Contact, activities: Pair<List<Activity>, List<Activity>>) {
+    subject.sendMessage(ActivityUtil.constructMessage(activities))
   }
 
 }

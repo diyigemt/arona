@@ -42,15 +42,13 @@ class TestSingleTimer {
     val now = Calendar.getInstance()
     now.set(Calendar.SECOND, now.get(Calendar.SECOND) + 5)
     val res = createSingleTask(TestJob::class.java, now.time, "name", "group1")
-    var jobDetail = schedule.getJobDetail(res.first)
+    var jobDetail = schedule.getJobDetail(JobKey.jobKey("nameJob", "group1"))
     println(jobDetail == null)
     Thread.sleep(5 * 1000)
-    jobDetail = schedule.getJobDetail(res.first)
+    jobDetail = schedule.getJobDetail(JobKey.jobKey("nameJob", "group1"))
     println(jobDetail == null)
     Thread.sleep(5 * 1000)
-    jobDetail = schedule.getJobDetail(res.first)
+    jobDetail = schedule.getJobDetail(JobKey.jobKey("nameJob", "group1"))
     println(jobDetail == null)
   }
-
-
 }

@@ -1,6 +1,7 @@
 package net.diyigemt.arona.db
 
 import net.diyigemt.arona.command.cache.GachaCache
+import net.diyigemt.arona.db.DataBaseProvider.query
 import net.diyigemt.arona.db.gacha.GachaCharacterTable
 import net.diyigemt.arona.db.gacha.GachaHistoryTable
 import net.diyigemt.arona.db.gacha.GachaPoolCharacterTable
@@ -10,7 +11,9 @@ import org.jetbrains.exposed.sql.SchemaUtils
 object GachaDataBase {
 
   fun init() {
-    SchemaUtils.create(GachaCharacterTable, GachaPoolTable, GachaPoolCharacterTable, GachaHistoryTable)
+    query {
+      SchemaUtils.create(GachaCharacterTable, GachaPoolTable, GachaPoolCharacterTable, GachaHistoryTable)
+    }
     GachaCache.init()
   }
 

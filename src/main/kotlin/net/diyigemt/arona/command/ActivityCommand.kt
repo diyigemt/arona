@@ -3,6 +3,7 @@ package net.diyigemt.arona.command
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.util.ActivityUtil
+import net.diyigemt.arona.util.MessageUtil
 import net.diyigemt.arona.util.TimeUtil.calcTime
 import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.console.command.SimpleCommand
@@ -43,8 +44,15 @@ object ActivityCommand : CompositeCommand(
   }
 
   suspend fun send(subject: Contact, activities: Pair<List<Activity>, List<Activity>>) {
-    val activeString = activities.first.map { at -> "${at.content}     ${at.time}\n" }.reduceOrNull { prv, cur -> prv + cur }
-    val pendingString = activities.second.map { at -> "${at.content}     ${at.time}\n" }.reduceOrNull { prv, cur -> prv + cur }
+    val activeString = activities.first
+      .sortedByDescending { it.level }
+      .map { at -> "${at.content}     ${at.time}\n" }
+      .reduceOrNull { prv, cur -> prv + cur }
+    val pendingString = activities.second
+      .sortedByDescending { it.level }
+      .map { at -> "${at.content}     ${at.time}\n" }
+      .reduceOrNull { prv, cur -> prv + cur }
+      ?.let { it.take(it.length - 1) }
     subject.sendMessage("正在进行:\n${activeString ?: '无'}即将开始:\n${pendingString ?: '无'}")
   }
 

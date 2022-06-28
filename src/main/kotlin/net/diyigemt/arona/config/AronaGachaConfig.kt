@@ -1,10 +1,8 @@
 package net.diyigemt.arona.config
 
-import net.diyigemt.arona.entity.NudgeMessage
 import net.mamoe.mirai.console.data.AutoSavePluginConfig
 import net.mamoe.mirai.console.data.ValueDescription
 import net.mamoe.mirai.console.data.value
-import net.mamoe.mirai.event.EventPriority
 
 @ValueDescription("注意总出率加起来要等于100, 2,3星限定出率要低于其总出率")
 object AronaGachaConfig: AutoSavePluginConfig("arona-gacha") {
@@ -24,7 +22,8 @@ object AronaGachaConfig: AutoSavePluginConfig("arona-gacha") {
   @ValueDescription("3星限定出率百分比")
   var star3PickupRate: Float by value(0.7F)
 
-  var defaultActivePool: Int by value(1)
+  @ValueDescription("当前激活的池子")
+  var activePool: Int by value(1)
 
   var maxDot: Int = 10
 

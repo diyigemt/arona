@@ -6,7 +6,6 @@ import net.diyigemt.arona.config.AronaGachaConfig
 import net.diyigemt.arona.config.AronaGachaLimitConfig
 import net.diyigemt.arona.db.DataBaseProvider.query
 import net.diyigemt.arona.db.gacha.GachaHistoryTable
-import net.diyigemt.arona.db.gacha.GachaPool
 import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.console.command.UserCommandSender
 import net.mamoe.mirai.contact.Member
@@ -35,7 +34,7 @@ object GachaConfigCommand : CompositeCommand(
 
   @SubCommand
   @Description("重置某一池子的记录")
-  suspend fun UserCommandSender.reset(pool: Int = AronaGachaConfig.defaultActivePool) {
+  suspend fun UserCommandSender.reset(pool: Int = AronaGachaConfig.activePool) {
     if (user is Member && (user as Member).permission != MemberPermission.MEMBER) {
       query {
         GachaHistoryTable.deleteWhere { GachaHistoryTable.pool eq pool }

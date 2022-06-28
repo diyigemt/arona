@@ -1,3 +1,11 @@
+/*
+ * Copyright 2020-2021 StageGuard.
+ *
+ *  此源代码的使用受 GNU AFFERO GENERAL PUBLIC LICENSE version 3 许可证的约束, 可以在以下链接找到该许可证.
+ *  Use of this source code is governed by the GNU AGPLv3 license that can be found through the following link.
+ *
+ *  https://github.com/diyigemt/arona/blob/master/LICENSE
+ */
 package net.diyigemt.arona
 
 import net.diyigemt.arona.command.*
@@ -9,6 +17,7 @@ import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.handler.GroupRepeaterHandler
 import net.diyigemt.arona.handler.HentaiEventHandler
 import net.diyigemt.arona.handler.NudgeEventHandler
+import net.diyigemt.arona.quartz.QuartzProvider
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
@@ -19,21 +28,8 @@ import net.mamoe.mirai.event.subscribeGroupMessages
 import net.mamoe.mirai.message.data.At
 import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.utils.info
-
-/**
- * 使用 kotlin 版请把
- * `src/main/resources/META-INF.services/net.mamoe.mirai.console.plugin.jvm.JvmPlugin`
- * 文件内容改成 `org.example.mirai.plugin.PluginMain` 也就是当前主类全类名
- *
- * 使用 kotlin 可以把 java 源集删除不会对项目有影响
- *
- * 在 `settings.gradle.kts` 里改构建的插件名称、依赖库和插件版本
- *
- * 在该示例下的 [JvmPluginDescription] 修改插件名称，id和版本，etc
- *
- * 可以使用 `src/test/kotlin/RunMirai.kt` 在 ide 里直接调试，
- * 不用复制到 mirai-console-loader 或其他启动器中调试
- */
+import org.quartz.Scheduler
+import org.quartz.impl.StdSchedulerFactory
 
 object Arona : KotlinPlugin(
   JvmPluginDescription(
@@ -44,18 +40,19 @@ object Arona : KotlinPlugin(
     author("diyigemt")
   }
 ) {
+
   override fun onEnable() {
     init()
-    GlobalEventChannel.subscribeGroupMessages {
-      atBot { it ->
-        val commandAndArg = this.message.filter { message -> message::class == PlainText::class }.map { message -> message.contentToString().trim() }.toMutableList()
-        logger.info(commandAndArg.toString())
-        val command = commandAndArg.removeFirst()
-        if (command == "签到") {
-          this.group.sendMessage(At(this.sender).plus("签到成功! 信用点+20000 清辉石+20"))
-        }
-      }
-    }
+//    GlobalEventChannel.subscribeGroupMessages {
+//      atBot { it ->
+//        val commandAndArg = this.message.filter { message -> message::class == PlainText::class }.map { message -> message.contentToString().trim() }.toMutableList()
+//        logger.info(commandAndArg.toString())
+//        val command = commandAndArg.removeFirst()
+//        if (command == "签到") {
+//          this.group.sendMessage(At(this.sender).plus("签到成功! 信用点+20000 清辉石+20"))
+//        }
+//      }
+//    }
     GlobalEventChannel.subscribeAlways<NudgeEvent>(priority = AronaNudgeConfig.priority) {
       NudgeEventHandler.handle(this)
     }
@@ -67,7 +64,6 @@ object Arona : KotlinPlugin(
 //      MessageForwardHandler.handle(this)
 //    }
     logger.info { "arona loaded" }
-    //配置文件目录 "${dataFolder.absolutePath}/"
   }
 
   private fun init() {
@@ -83,7 +79,8 @@ object Arona : KotlinPlugin(
     GachaSingleCommand.register()
     GachaHistoryCommand.register()
     HentaiConfigCommand.register()
-    DataBaseProvider.init()
+    DataBaseProvider.start()
+    QuartzProvider.start()
   }
 
   override fun onDisable() {
@@ -93,11 +90,15 @@ object Arona : KotlinPlugin(
 
   fun info(message: String?) = logger.info(message)
 
+  fun warning(message: String?) = logger.warning(message)
+
   fun error(message: String?) = logger.error(message)
 
   fun verbose(message: String?) = logger.verbose(message)
 
   fun info(message: () -> String?) = logger.info(message())
+
+  fun warning(message: () -> String?) = logger.warning(message())
 
   fun verbose(message: () -> String?) = logger.verbose(message())
 

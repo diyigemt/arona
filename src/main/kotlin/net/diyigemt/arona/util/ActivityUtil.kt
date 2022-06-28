@@ -79,14 +79,14 @@ object ActivityUtil {
             val h3 = groupH[4]!!.value
             val h4 = groupH[5]!!.value
             val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
-            val startN = "${year}/${if (n1.toInt() < 10) "0$n1" else n1}/${if (n2.toInt() < 10) "0$n2" else n2}"
-            val endN = "${year}/${if (n3.toInt() < 10) "0$n3" else n3}/${if (n4.toInt() < 10) "0$n4" else n4}"
-            val startH = "${year}/${if (h1.toInt() < 10) "0$h1" else h1}/${if (h2.toInt() < 10) "0$h2" else h2}"
-            val endH = "${year}/${if (h3.toInt() < 10) "0$h3" else h3}/${if (h4.toInt() < 10) "0$h4" else h4}"
-            val parseStartN = SimpleDateFormat("yyyy/MM/dd").parse(startN)
-            val parseEndN = SimpleDateFormat("yyyy/MM/dd").parse(endN)
-            val parseStartH = SimpleDateFormat("yyyy/MM/dd").parse(startH)
-            val parseEndH = SimpleDateFormat("yyyy/MM/dd").parse(endH)
+            val startN = "${year}/${if (n1.toInt() < 10) "0$n1" else n1}/${if (n2.toInt() < 10) "0$n2" else n2} 03:00"
+            val endN = "${year}/${if (n3.toInt() < 10) "0$n3" else n3}/${if (n4.toInt() < 10) "0$n4" else n4} 02:59"
+            val startH = "${year}/${if (h1.toInt() < 10) "0$h1" else h1}/${if (h2.toInt() < 10) "0$h2" else h2} 03:00"
+            val endH = "${year}/${if (h3.toInt() < 10) "0$h3" else h3}/${if (h4.toInt() < 10) "0$h4" else h4} 02:59"
+            val parseStartN = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(startN)
+            val parseEndN = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(endN)
+            val parseStartH = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(startH)
+            val parseEndH = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(endH)
             val titleN = "Normal${power}倍掉落"
             val titleH = "Hard${power}倍掉落"
             val now = Calendar.getInstance().time
@@ -133,10 +133,10 @@ object ActivityUtil {
           val d1 = findTime.groups[2]!!.value
           val d2 = findTime.groups[4]!!.value
           val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
-          val start = "${year}/${if (m1.toInt() < 10) "0$m1" else m1}/${if (d1.toInt() < 10) "0$d1" else d1}"
-          val end = "${year}/${if (m2.toInt() < 10) "0$m2" else m2}/${if (d2.toInt() < 10) "0$d2" else d2}"
-          val parseStart = SimpleDateFormat("yyyy/MM/dd").parse(start)
-          val parseEnd = SimpleDateFormat("yyyy/MM/dd").parse(end)
+          val start = "${year}/${if (m1.toInt() < 10) "0$m1" else m1}/${if (d1.toInt() < 10) "0$d1" else d1} 16:00"
+          val end = "${year}/${if (m2.toInt() < 10) "0$m2" else m2}/${if (d2.toInt() < 10) "0$d2" else d2} 11:00"
+          val parseStart = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(start)
+          val parseEnd = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(end)
           val now = Calendar.getInstance().time
           if (now.before(parseStart)) {
             pending.add(Activity(student, 2, TimeUtil.calcTime(now, parseStart, true)))
@@ -156,10 +156,15 @@ object ActivityUtil {
           val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
           val start = "${year}/${if (m.toInt() < 10) "0$m" else m}/${if (d.toInt() < 10) "0$d" else d} ${if (hour.toInt() < 10) "0$hour" else hour}"
           val parseStart = SimpleDateFormat("yyyy/MM/dd HH").parse(start)
+          val parseEnd = Calendar.getInstance()
+          parseEnd.time = parseStart
+          parseEnd.set(Calendar.HOUR, 16)
           val now = Calendar.getInstance().time
           val title = "游戏维护"
           if (now.before(parseStart)) {
-            pending.add(Activity(title, 2, TimeUtil.calcTime(now, parseStart, true)))
+            pending.add(Activity(title, 3, TimeUtil.calcTime(now, parseStart, true)))
+          } else if (now.before(parseEnd.time)) {
+            active.add(Activity(title, 3, TimeUtil.calcTime(now, parseEnd.time, false)))
           }
         }
         return@forEach
@@ -174,8 +179,8 @@ object ActivityUtil {
           val m = find.groups[3]!!.value
           val d = find.groups[4]!!.value
           val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
-          val start = "${year}/${if (m.toInt() < 10) "0$m" else m}/${if (d.toInt() < 10) "0$d" else d}"
-          val parseStart = SimpleDateFormat("yyyy/MM/dd").parse(start)
+          val start = "${year}/${if (m.toInt() < 10) "0$m" else m}/${if (d.toInt() < 10) "0$d" else d} 16:00"
+          val parseStart = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(start)
           val now = Calendar.getInstance().time
           val title = "总力战 $name($terrain)"
           if (now.before(parseStart)) {

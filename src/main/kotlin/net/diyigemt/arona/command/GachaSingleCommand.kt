@@ -2,7 +2,6 @@ package net.diyigemt.arona.command
 
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.command.data.GachaData
-import net.diyigemt.arona.threadpool.RecallTimer
 import net.diyigemt.arona.util.GachaUtil
 import net.diyigemt.arona.util.GachaUtil.hitPickup
 import net.diyigemt.arona.util.GachaUtil.pickup
@@ -35,6 +34,6 @@ object GachaSingleCommand : SimpleCommand(
     GachaData.updateHistory(userId, addPoints = 1, addCount3 = star3, dog = hitPickup)
     val s = "${resultData2String(result)}\n${history.points + 1} points"
     val dog = if (hitPickup) "恭喜老师,出货了呢" else ""
-    RecallTimer.recall((subject.sendMessage(MessageUtil.atMessageAndCTRL(user, dog, s))))
+    MessageUtil.recall((subject.sendMessage(MessageUtil.atMessageAndCTRL(user, dog, s))))
   }
 }

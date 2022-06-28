@@ -2,7 +2,7 @@ package net.diyigemt.arona.command
 
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.command.data.GachaData
-import net.diyigemt.arona.threadpool.RecallTimer
+import net.diyigemt.arona.util.MessageUtil
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.UserCommandSender
 import net.mamoe.mirai.contact.nameCardOrNick
@@ -30,7 +30,7 @@ object GachaHistoryCommand : SimpleCommand(
       .forEachIndexed {
         index, s -> ss += "${index + 1}. $s\n"
       }
-    RecallTimer.recall(subject.sendMessage(ss))
+    MessageUtil.recall(subject.sendMessage(ss))
   }
 
 }

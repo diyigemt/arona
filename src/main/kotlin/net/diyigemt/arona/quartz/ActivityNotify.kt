@@ -22,7 +22,6 @@ object ActivityNotify: InitializedFunction() {
 
   class ActivityNotifyJob: Job {
     override fun execute(context: JobExecutionContext?) {
-      Arona.info("trigger notify")
       var jp = ActivityUtil.fetchJPActivity()
       if (jp.first.isEmpty() and jp.second.isEmpty()) {
         jp = ActivityUtil.fetchJPActivityFromJP()
@@ -53,8 +52,6 @@ object ActivityNotify: InitializedFunction() {
       if (alertListJP.isNotEmpty()) {
         val instance = Calendar.getInstance()
         instance.set(Calendar.HOUR_OF_DAY, 22)
-        //TODO
-        instance.set(Calendar.MINUTE, 56)
         QuartzProvider.createSingleTask(
           ActivityNotifyOneHourJob::class.java,
           instance.time,
@@ -109,10 +106,8 @@ object ActivityNotify: InitializedFunction() {
 
   class ActivityNotifyOneHourJob: InterruptableJob {
     override fun execute(context: JobExecutionContext?) {
-      Arona.info("trigger notify one 1")
       val activity = context?.jobDetail?.jobDataMap?.get(ActivityKey) ?: return
       val server = context?.jobDetail?.jobDataMap?.get(ActivityServerKey) ?: return
-      Arona.info("trigger notify one 2")
       val activityString = (activity as List<Activity>)
         .map { at -> "${at.content}\n" }
         .reduceOrNull { prv, cur -> prv + cur }

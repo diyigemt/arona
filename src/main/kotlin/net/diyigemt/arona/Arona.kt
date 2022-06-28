@@ -84,7 +84,6 @@ object Arona : KotlinPlugin(
     INIT.forEach {
       it.init()
     }
-    QuartzProvider.triggerTask("ActivityNotify", "ActivityNotify")
   }
 
   override fun onDisable() {

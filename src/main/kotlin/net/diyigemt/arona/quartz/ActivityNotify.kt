@@ -1,6 +1,7 @@
 package net.diyigemt.arona.quartz
 
 import net.diyigemt.arona.Arona
+import net.diyigemt.arona.config.AronaNotifyConfig
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.interfaces.InitializedFunction
 import net.diyigemt.arona.util.ActivityUtil
@@ -17,8 +18,10 @@ object ActivityNotify: InitializedFunction() {
   private const val ActivityKey = "activity"
   private const val ActivityServerKey = "server"
   override fun init() {
+    // 全局启用标志
+    if (!AronaNotifyConfig.enable) return
     // 每天早上8点触发
-    QuartzProvider.createCronTask(ActivityNotifyJob::class.java, "0 0 8 * * ? *", ActivityNotifyJobKey, ActivityNotifyJobKey)
+    QuartzProvider.createCronTask(ActivityNotifyJob::class.java, "0 0 ${AronaNotifyConfig.everyDayHour} * * ? *", ActivityNotifyJobKey, ActivityNotifyJobKey)
     QuartzProvider.triggerTaskWithData(ActivityNotifyJobKey, ActivityNotifyJobKey, mapOf(ActivityNotifyDataInitKey to true))
   }
 
@@ -52,12 +55,18 @@ object ActivityNotify: InitializedFunction() {
       val init = context?.mergedJobDataMap?.getBoolean(ActivityNotifyDataInitKey) ?: false
       // 初始化不显示信息
       if (!init) {
-        Arona.sendMessage("arona的防侠预警(日服)\n$jpMessage")
-        Arona.sendMessage("arona的防侠预警(国际服)\n$enMessage")
+        if (AronaNotifyConfig.enableEveryDay) {
+          if (AronaNotifyConfig.enableJP) {
+            Arona.sendMessage("${AronaNotifyConfig.notifyStringJP}\n$jpMessage")
+          }
+          if (AronaNotifyConfig.enableEN) {
+            Arona.sendMessage("${AronaNotifyConfig.notifyStringEN}\n$enMessage")
+          }
+        }
       }
-      if (alertListJP.isNotEmpty()) {
+      if (alertListJP.isNotEmpty() && AronaNotifyConfig.enableJP) {
         val instance = Calendar.getInstance()
-        instance.set(Calendar.HOUR_OF_DAY, 22)
+        instance.set(Calendar.HOUR_OF_DAY, AronaNotifyConfig.jpHour)
         QuartzProvider.createSingleTask(
           ActivityNotifyOneHourJob::class.java,
           instance.time,
@@ -66,7 +75,7 @@ object ActivityNotify: InitializedFunction() {
           mapOf(ActivityKey to alertListJP, ActivityServerKey to true)
         )
       }
-      if (alertListEN.isNotEmpty()) {
+      if (alertListEN.isNotEmpty() && AronaNotifyConfig.enableEN) {
         val instance = Calendar.getInstance()
         val h = extraHAndD(alertListEN[0], active = false).first
         instance.set(Calendar.HOUR_OF_DAY, instance.get(Calendar.HOUR_OF_DAY) + h - 1)
@@ -113,14 +122,14 @@ object ActivityNotify: InitializedFunction() {
   class ActivityNotifyOneHourJob: InterruptableJob {
     override fun execute(context: JobExecutionContext?) {
       val activity = context?.mergedJobDataMap?.get(ActivityKey) ?: return
-      val server = context?.mergedJobDataMap?.get(ActivityServerKey) ?: return
+      val server = context.mergedJobDataMap?.getBoolean(ActivityServerKey) ?: return
       val activityString = (activity as List<Activity>)
         .map { at -> "${at.content}\n" }
         .reduceOrNull { prv, cur -> prv + cur }
-      val serverString = if ((server as Boolean)) "日服" else "国际服"
-      Arona.sendMessage("arona的防侠预警(${serverString})\n" +
+      val serverString = if (server) AronaNotifyConfig.notifyStringJP else AronaNotifyConfig.notifyStringEN
+      Arona.sendMessage("${serverString}\n" +
         "$activityString" +
-        if (server) "将会在5小时后结束" else "将会在1小时后结束"
+        if (server) "将会在${27 - AronaNotifyConfig.jpHour}小时后结束" else "将会在1小时后结束"
       )
     }
 

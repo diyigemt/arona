@@ -30,7 +30,7 @@ object GachaHistoryCommand : SimpleCommand(
       .forEachIndexed {
         index, s -> ss += "${index + 1}. $s\n"
       }
-    MessageUtil.recall(subject.sendMessage(ss))
+    subject.sendMessage(ss)
   }
 
 }

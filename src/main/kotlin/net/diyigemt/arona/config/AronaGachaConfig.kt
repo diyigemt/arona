@@ -25,6 +25,9 @@ object AronaGachaConfig: AutoSavePluginConfig("arona-gacha") {
   @ValueDescription("当前激活的池子")
   var activePool: Int by value(1)
 
+  @ValueDescription("是否撤回结果信息防止刷屏")
+  var revoke: Boolean by value(true)
+
   var maxDot: Int = 10
 
   fun init() {

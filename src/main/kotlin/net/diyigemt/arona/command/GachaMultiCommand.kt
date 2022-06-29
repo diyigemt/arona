@@ -2,6 +2,7 @@ package net.diyigemt.arona.command
 
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.command.data.GachaData
+import net.diyigemt.arona.config.AronaGachaConfig
 import net.diyigemt.arona.db.gacha.GachaCharacter
 import net.diyigemt.arona.util.GachaUtil
 import net.diyigemt.arona.util.GachaUtil.hitPickup
@@ -44,6 +45,9 @@ object GachaMultiCommand : SimpleCommand(
     GachaData.updateHistory(userId, addPoints = checkTime, addCount3 = stars3, dog = hitPickup)
     val dog = if (hitPickup) "恭喜老师,出货了呢" else ""
     val sss = "3星:$stars3 2星:$stars2 1星:$stars1 ${history.points + checkTime} points\n${s}"
-    MessageUtil.recall(subject.sendMessage(atMessageAndCTRL(user, dog, sss)))
+    val handler = subject.sendMessage(atMessageAndCTRL(user, dog, sss))
+    if (AronaGachaConfig.revoke) {
+      MessageUtil.recall(handler)
+    }
   }
 }

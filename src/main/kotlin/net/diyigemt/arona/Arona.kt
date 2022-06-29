@@ -10,6 +10,7 @@ package net.diyigemt.arona
 
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import net.diyigemt.arona.Arona.save
 import net.diyigemt.arona.command.*
 import net.diyigemt.arona.config.*
 import net.diyigemt.arona.db.DataBaseProvider
@@ -53,9 +54,14 @@ object Arona : KotlinPlugin(
         it is BotOnlineEvent && it.bot.id == AronaConfig.qq
       }.subscribeOnce<BotOnlineEvent> {
         arona = it.bot
+        if (AronaConfig.sendOnlineMessage) {
+          sendMessage(AronaConfig.onlineMessage)
+        }
       }
-      GlobalEventChannel.subscribeAlways<NudgeEvent>(priority = AronaNudgeConfig.priority) {
-        NudgeEventHandler.handle(this)
+      if (AronaNudgeConfig.enable) {
+        GlobalEventChannel.subscribeAlways<NudgeEvent>(priority = AronaNudgeConfig.priority) {
+          NudgeEventHandler.handle(this)
+        }
       }
       GlobalEventChannel.subscribeAlways<GroupMessageEvent> {
         GroupRepeaterHandler.handle(this)
@@ -71,6 +77,8 @@ object Arona : KotlinPlugin(
     AronaGachaConfig.init()
     AronaNudgeConfig.reload()
     AronaHentaiConfig.reload()
+    AronaRepeatConfig.reload()
+    AronaNotifyConfig.reload()
     AronaGachaLimitConfig.reload()
     GachaDogCommand.register()
     ActivityCommand.register()
@@ -87,8 +95,16 @@ object Arona : KotlinPlugin(
   }
 
   override fun onDisable() {
+    AronaConfig.save()
     AronaNudgeConfig.save()
+    AronaGachaConfig.save()
     AronaHentaiConfig.save()
+    AronaRepeatConfig.save()
+    AronaNotifyConfig.save()
+    AronaGachaLimitConfig.save()
+    if (AronaConfig.sendOfflineMessage) {
+      sendMessage(AronaConfig.offlineMessage)
+    }
   }
 
   fun sendMessage(message: String) {

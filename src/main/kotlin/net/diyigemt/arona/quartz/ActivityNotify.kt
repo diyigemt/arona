@@ -12,12 +12,14 @@ import java.util.*
 
 object ActivityNotify: InitializedFunction() {
   private const val ActivityNotifyJobKey = "ActivityNotify"
+  private const val ActivityNotifyDataInitKey = "init"
   private const val ActivityNotifyOneHour = "ActivityNotifyOneHour"
   private const val ActivityKey = "activity"
   private const val ActivityServerKey = "server"
   override fun init() {
     // 每天早上8点触发
     QuartzProvider.createCronTask(ActivityNotifyJob::class.java, "0 0 8 * * ? *", ActivityNotifyJobKey, ActivityNotifyJobKey)
+    QuartzProvider.triggerTaskWithData(ActivityNotifyJobKey, ActivityNotifyJobKey, mapOf(ActivityNotifyDataInitKey to true))
   }
 
   class ActivityNotifyJob: Job {
@@ -47,8 +49,12 @@ object ActivityNotify: InitializedFunction() {
         }
       val jpMessage = ActivityUtil.constructMessage(activeJP to pendingJP)
       val enMessage = ActivityUtil.constructMessage(activeEN to pendingEN)
-      Arona.sendMessage("arona的防侠预警(日服)\n$jpMessage")
-      Arona.sendMessage("arona的防侠预警(国际服)\n$enMessage")
+      val init = context?.mergedJobDataMap?.getBoolean(ActivityNotifyDataInitKey) ?: false
+      // 初始化不显示信息
+      if (!init) {
+        Arona.sendMessage("arona的防侠预警(日服)\n$jpMessage")
+        Arona.sendMessage("arona的防侠预警(国际服)\n$enMessage")
+      }
       if (alertListJP.isNotEmpty()) {
         val instance = Calendar.getInstance()
         instance.set(Calendar.HOUR_OF_DAY, 22)
@@ -106,15 +112,16 @@ object ActivityNotify: InitializedFunction() {
 
   class ActivityNotifyOneHourJob: InterruptableJob {
     override fun execute(context: JobExecutionContext?) {
-      val activity = context?.jobDetail?.jobDataMap?.get(ActivityKey) ?: return
-      val server = context?.jobDetail?.jobDataMap?.get(ActivityServerKey) ?: return
+      val activity = context?.mergedJobDataMap?.get(ActivityKey) ?: return
+      val server = context?.mergedJobDataMap?.get(ActivityServerKey) ?: return
       val activityString = (activity as List<Activity>)
         .map { at -> "${at.content}\n" }
         .reduceOrNull { prv, cur -> prv + cur }
       val serverString = if ((server as Boolean)) "日服" else "国际服"
       Arona.sendMessage("arona的防侠预警(${serverString})\n" +
         "$activityString" +
-        "将会在5小时后结束")
+        if (server) "将会在5小时后结束" else "将会在1小时后结束"
+      )
     }
 
     override fun interrupt() {

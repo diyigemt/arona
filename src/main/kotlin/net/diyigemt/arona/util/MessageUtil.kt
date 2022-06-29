@@ -52,7 +52,7 @@ object MessageUtil {
 
   class MessageRecallJob: Job {
     override fun execute(context: JobExecutionContext?) {
-      val message = context?.jobDetail?.jobDataMap?.get(JobDataMessageKey) ?: return
+      val message = context?.mergedJobDataMap?.get(JobDataMessageKey) ?: return
       runBlocking {
         withContext(coroutineContext) {
           (message as MessageReceipt<Contact>).recall()

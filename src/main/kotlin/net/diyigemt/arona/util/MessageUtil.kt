@@ -39,15 +39,16 @@ object MessageUtil {
   }
 
   fun recall(target: MessageReceipt<Contact>, delay: Long = 1000 * 10) {
-    val instance = Calendar.getInstance()
-    instance.set(Calendar.MILLISECOND, (instance.get(Calendar.MILLISECOND) + delay).toInt())
-    QuartzProvider.createSingleTask(
-      MessageRecallJob::class.java,
-      instance.time,
-      MessageRecallJobKey,
-      MessageRecallJobKey,
-      mapOf(JobDataMessageKey to target)
-    )
+    target.recallIn(delay)
+//    val instance = Calendar.getInstance()
+//    instance.set(Calendar.MILLISECOND, (instance.get(Calendar.MILLISECOND) + delay).toInt())
+//    QuartzProvider.createSingleTask(
+//      MessageRecallJob::class.java,
+//      instance.time,
+//      "${MessageRecallJobKey}${target.source.originalMessage.serializeToMiraiCode().let { it.subSequence(0, 3) }}",
+//      MessageRecallJobKey,
+//      mapOf(JobDataMessageKey to target)
+//    )
   }
 
   class MessageRecallJob: Job {

@@ -25,7 +25,7 @@ object HentaiConfigCommand : CompositeCommand(
 
   @SubCommand("adds")
   @Description("添加一条关键词或者监听对象")
-  suspend fun UserCommandSender.hentai_add_s(action: String, weight: Int) {
+  suspend fun UserCommandSender.hentai_add_s(action: String, weight: Int = 1) {
     if (!(user as Member).isOperator()) {
       subject.sendMessage(MessageUtil.atAndCTRL(user, "爬, 权限不足"))
       return
@@ -35,7 +35,7 @@ object HentaiConfigCommand : CompositeCommand(
   }
 
   @SubCommand("add")
-  @Description("添加监听对象")
+    @Description("添加监听对象")
   suspend fun UserCommandSender.hentai_add(target: Member) {
     if (!(user as Member).isOperator()) {
       subject.sendMessage(MessageUtil.atAndCTRL(user, "爬, 权限不足"))

@@ -19,7 +19,7 @@ object GroupRepeaterHandler: AronaEventHandler<GroupMessageEvent> {
       count++
       if (count >= AronaRepeatConfig.times) {
         event.subject.sendMessage(event.message)
-        count = 1
+        count = 0
         last = now
       }
     } else {

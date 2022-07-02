@@ -10,7 +10,7 @@ import net.mamoe.mirai.event.EventPriority
 object AronaNudgeConfig: AutoSavePluginConfig("arona-nudge") {
 
   @ValueDescription("是否启用戳一戳回复")
-  val enable: Boolean by value(true)
+  val enable: Boolean by value(false)
 
   @ValueDescription("回复的消息")
   var messageList: MutableList<NudgeMessage> by value()

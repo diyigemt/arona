@@ -4,6 +4,7 @@ import net.diyigemt.arona.Arona
 import net.diyigemt.arona.command.data.GachaData
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.UserCommandSender
+import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.nameCardOrNick
 
 object GachaDogCommand : SimpleCommand(
@@ -20,7 +21,7 @@ object GachaDogCommand : SimpleCommand(
     }
     var ss = "狗叫排行:\n"
     dogCall.map {
-      val nick = bot.getGroup(726453107L)!![it.id.value]!!.nameCardOrNick
+      val nick = (subject as Group)[it.id.value]!!.nameCardOrNick
       "${nick}(${it.id.value}): ${it.dog}抽"
     }.forEachIndexed {
       index, s -> ss += "${index + 1}. $s\n"

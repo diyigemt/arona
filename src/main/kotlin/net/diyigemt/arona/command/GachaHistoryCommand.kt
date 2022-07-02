@@ -5,6 +5,7 @@ import net.diyigemt.arona.command.data.GachaData
 import net.diyigemt.arona.util.MessageUtil
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.UserCommandSender
+import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.nameCardOrNick
 
 object GachaHistoryCommand : SimpleCommand(
@@ -22,7 +23,7 @@ object GachaHistoryCommand : SimpleCommand(
     var ss = "历史排行:\n"
     history
       .map {
-        val nick = bot.getGroup(726453107L)!![it.id.value]!!.nameCardOrNick
+        val nick = (subject as Group)[it.id.value]!!.nameCardOrNick
         val rate = if (it.count3 == 0) 0 else it.points / it.count3
         "${nick}(${it.id.value}): ${it.points}抽/${it.count3}个3星 = $rate"
       }

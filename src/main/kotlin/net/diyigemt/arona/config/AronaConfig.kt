@@ -22,6 +22,6 @@ object AronaConfig: AutoSavePluginConfig("arona") {
   var sendOfflineMessage: Boolean by value(false)
 
   @ValueDescription("arona下线消息")
-  var offlineMessage: String by value("arona摸鱼了")
+  var offlineMessage: String by value("arona摸了")
 
 }

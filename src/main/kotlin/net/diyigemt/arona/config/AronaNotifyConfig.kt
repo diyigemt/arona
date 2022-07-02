@@ -27,7 +27,7 @@ object AronaNotifyConfig: AutoSavePluginConfig("arona-notify") {
   @ValueDescription("国际服防侠提醒开头文字")
   val notifyStringEN: String by value("arona的防侠预警(国际服)")
 
-  @ValueDescription("日服防侠提醒的时间")
-  val jpHour: Int by value(22)
+  @ValueDescription("双倍掉落防侠提醒的时间(因为一般是晚上3点结束)")
+  val dropNotify: Int by value(22)
 
 }

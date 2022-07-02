@@ -25,6 +25,8 @@ object ActivityNotify: InitializedFunction() {
     QuartzProvider.triggerTaskWithData(ActivityNotifyJobKey, ActivityNotifyJobKey, mapOf(ActivityNotifyDataInitKey to true))
   }
 
+  fun isDropActivity(activity: Activity): Boolean = activity.content.contains("倍")
+
   class ActivityNotifyJob: Job {
     override fun execute(context: JobExecutionContext?) {
       var jp = ActivityUtil.fetchJPActivity()
@@ -64,28 +66,34 @@ object ActivityNotify: InitializedFunction() {
           }
         }
       }
-      if (alertListJP.isNotEmpty() && AronaNotifyConfig.enableJP) {
-        val instance = Calendar.getInstance()
-        instance.set(Calendar.HOUR_OF_DAY, AronaNotifyConfig.jpHour)
-        QuartzProvider.createSingleTask(
-          ActivityNotifyOneHourJob::class.java,
-          instance.time,
-          "${ActivityNotifyOneHour}-jp",
-          ActivityNotifyOneHour,
-          mapOf(ActivityKey to alertListJP, ActivityServerKey to true)
-        )
+      insertAlert(alertListJP)
+      insertAlert(alertListEN, false)
+    }
+
+    private fun doInsert(activity: List<Activity>, h: Int, serverJp: Boolean = true) {
+      val now = Calendar.getInstance()
+      now.set(Calendar.HOUR_OF_DAY, h)
+      QuartzProvider.createSingleTask(
+        ActivityNotifyOneHourJob::class.java,
+        now.time,
+        "${ActivityNotifyOneHour}-${if (serverJp) "jp" else "en"}-${h}",
+        ActivityNotifyOneHour,
+        mapOf(ActivityKey to activity, ActivityServerKey to serverJp)
+      )
+    }
+    private fun insertAlert(activity: MutableList<Activity>, serverJp: Boolean = true) {
+      if (activity.isEmpty()) return
+      val instance = Calendar.getInstance()
+      val dropActivities = activity.filter { isDropActivity(it) }
+      activity.removeAll(dropActivities)
+      // 非双倍掉落提醒
+      if (activity.isNotEmpty()) {
+        val h = extraHAndD(activity[0]).first
+        doInsert(activity, instance.get(Calendar.HOUR_OF_DAY) + h - 1, serverJp)
       }
-      if (alertListEN.isNotEmpty() && AronaNotifyConfig.enableEN) {
-        val instance = Calendar.getInstance()
-        val h = extraHAndD(alertListEN[0], active = false).first
-        instance.set(Calendar.HOUR_OF_DAY, instance.get(Calendar.HOUR_OF_DAY) + h - 1)
-        QuartzProvider.createSingleTask(
-          ActivityNotifyOneHourJob::class.java,
-          instance.time,
-          "${ActivityNotifyOneHour}-en",
-          ActivityNotifyOneHour,
-          mapOf(ActivityKey to alertListEN, ActivityServerKey to false)
-        )
+      // 双倍掉落提醒
+      if (dropActivities.isNotEmpty()) {
+        doInsert(dropActivities, AronaNotifyConfig.dropNotify, serverJp)
       }
     }
 
@@ -117,26 +125,34 @@ object ActivityNotify: InitializedFunction() {
       val h = now.get(Calendar.HOUR)
       return h to d
     }
-  }
 
+  }
+  @Suppress("UNCHECKED_CAST")
   class ActivityNotifyOneHourJob: InterruptableJob {
     override fun execute(context: JobExecutionContext?) {
       val activity = context?.mergedJobDataMap?.get(ActivityKey) ?: return
       val server = context.mergedJobDataMap?.getBoolean(ActivityServerKey) ?: return
-      val activityString = (activity as List<Activity>)
+      activity as List<Activity>
+      if (activity.isEmpty()) return
+      val activityString = activity
         .map { at -> "${at.content}\n" }
         .reduceOrNull { prv, cur -> prv + cur }
       val serverString = if (server) AronaNotifyConfig.notifyStringJP else AronaNotifyConfig.notifyStringEN
+      val settingDropTime = if (AronaNotifyConfig.dropNotify <= 3) (AronaNotifyConfig.dropNotify + 24) else AronaNotifyConfig.dropNotify
+      val endTime = if (server or isDropActivity(activity[0])) {
+        27 - settingDropTime
+      } else {
+        1
+      }
       Arona.sendMessage("${serverString}\n" +
         "$activityString" +
-        if (server) "将会在${27 - AronaNotifyConfig.jpHour}小时后结束" else "将会在1小时后结束"
+        "将会在${endTime}小时后结束"
       )
     }
 
     override fun interrupt() {
       Arona.warning("interrupt")
     }
-
   }
 
 }

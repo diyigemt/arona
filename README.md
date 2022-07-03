@@ -129,14 +129,14 @@ arona一共提供了如下的指令：
 
 arona总的配置。
 
-| 键                 | 属性         | 作用                               |
-| ------------------ | ------------ | ---------------------------------- |
-| qq                 | Long         | 指定arona运行在哪个机器人上        |
-| groups             | List\<Long\> | 指定arona响应哪个群的消息          |
-| sendOnlineMessage  | Boolean      | 是否发送arona上线消息              |
-| onlineMessage      | String       | 上线消息内容                       |
-| sendOfflineMessage | Boolean      | 是否发送arona下线消息 (暂时不生效) |
-| offlineMessage     | String       | 下线消息内容 (暂时不生效)          |
+| 键                 | 属性         | 作用                        |
+| ------------------ | ------------ | --------------------------- |
+| qq                 | Long         | 指定arona运行在哪个机器人上 |
+| groups             | List\<Long\> | 指定arona响应哪个群的消息   |
+| sendOnlineMessage  | Boolean      | 是否发送arona上线消息       |
+| onlineMessage      | String       | 上线消息内容                |
+| sendOfflineMessage | Boolean      | 是否发送arona下线消息       |
+| offlineMessage     | String       | 下线消息内容                |
 
 ### 2.arona-gacha.yml
 
@@ -277,11 +277,11 @@ arona总的配置。
 1. 下载任意一个可以编辑SQLite的软件，比如[sqlite-gui](https://github.com/little-brother/sqlite-gui/releases/download/1.7.5/sqlite-gui.1.7.5-x64.zip)
 2. 使用工具栏中的`open`选项打开获取到的池子文件，如下图
 
-![help1](.\static\help1.JPG)
+![help1](static\help1.JPG)
 
 3. 双击`Tables`栏中的`GachaCharacters`数据表，编辑新老婆信息
 
-![help1](.\static\help2.JPG)
+![help1](static\help2.JPG)
 
 其中`name`为老婆名字;`star`为老婆初始星级；`limit`表示老婆是限定还是常驻，其中1表示限定、0表示常驻；`id`为自动生成，无需填写。
 
@@ -289,21 +289,21 @@ arona总的配置。
 
 4. 双击`Tables`栏中的`GachaPools`数据表，编辑新池子信息
 
-![help1](.\static\help3.JPG)
+![help1](static\help3.JPG)
 
 同上，只需要填入`name`作为新池子的名字即可。
 
 5. 双击`Tables`栏中的`GachaPoolCharacters`数据表，编辑新池子与新老婆的对应关系信息
 
-![help1](.\static\help4.JPG)
+![help1](static\help4.JPG)
 
 其中`pool_id`为之前新建池子的主键，可以在这里看到
 
-![help1](.\static\help5.JPG)
+![help1](static\help5.JPG)
 
 同理，`character_id`我之前新建的老婆信息的主键
 
-![help1](.\static\help6.JPG)
+![help1](static\help6.JPG)
 
 **特别的**，一个池子可以有多个pickup，因此可以根据需要在`GachaPoolCharacters`对同一个池子添加多条数据。
 
@@ -314,12 +314,16 @@ arona总的配置。
 
 ## 鸣谢
 
-[超级课程表](https://github.com/StageGuard/SuperCourseTimetableBot)
+[超级课程表](https://github.com/StageGuard/SuperCourseTimetableBot)(数据库支持)
 
-[碧蓝档案国际服情报站](https://space.bilibili.com/1585224247)
+[碧蓝档案国际服情报站](https://space.bilibili.com/1585224247)(国际服活动信息来源)
 
-[mirai](https://github.com/mamoe/mirai)
+[碧蓝档案wiki](https://wiki.biligame.com/bluearchive/%E9%A6%96%E9%A1%B5)(日服活动信息来源1)
 
-群友
+[碧蓝档案wikiru](https://bluearchive.wikiru.jp/)(日服活动信息来源2)
 
-[**Haythem723**](https://github.com/Haythem723)
+[mirai](https://github.com/mamoe/mirai)(技术支持)
+
+非正常学生研究委员会群友(陪我闲聊)
+
+[**Haythem723**](https://github.com/Haythem723)(陪我闲聊)

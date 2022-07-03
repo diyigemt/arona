@@ -10,10 +10,10 @@ package net.diyigemt.arona
 
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import net.diyigemt.arona.Arona.save
 import net.diyigemt.arona.command.*
 import net.diyigemt.arona.config.*
 import net.diyigemt.arona.db.DataBaseProvider
+import net.diyigemt.arona.extension.CommandResolver
 import net.diyigemt.arona.handler.GroupRepeaterHandler
 import net.diyigemt.arona.handler.HentaiEventHandler
 import net.diyigemt.arona.handler.NudgeEventHandler
@@ -22,19 +22,16 @@ import net.diyigemt.arona.quartz.ActivityNotify
 import net.diyigemt.arona.quartz.QuartzProvider
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
+import net.mamoe.mirai.console.command.descriptor.ExperimentalCommandDescriptors
+import net.mamoe.mirai.console.extension.PluginComponentStorage
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
+import net.mamoe.mirai.console.util.ConsoleExperimentalApi
 import net.mamoe.mirai.event.GlobalEventChannel
-import net.mamoe.mirai.event.events.BotOfflineEvent
 import net.mamoe.mirai.event.events.BotOnlineEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
 import net.mamoe.mirai.event.events.NudgeEvent
-import net.mamoe.mirai.event.subscribeGroupMessages
-import net.mamoe.mirai.message.data.At
-import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.utils.info
-import org.quartz.Scheduler
-import org.quartz.impl.StdSchedulerFactory
 
 object Arona : KotlinPlugin(
   JvmPluginDescription(
@@ -72,6 +69,11 @@ object Arona : KotlinPlugin(
     } else error("arona database init failed, arona will not start")
   }
 
+  @OptIn(ExperimentalCommandDescriptors::class, ConsoleExperimentalApi::class)
+  override fun PluginComponentStorage.onLoad() {
+    contributeCommandCallParser(CommandResolver)
+  }
+
   private fun init() {
     AronaConfig.reload()
     AronaGachaConfig.reload()
@@ -103,10 +105,9 @@ object Arona : KotlinPlugin(
     AronaRepeatConfig.save()
     AronaNotifyConfig.save()
     AronaGachaLimitConfig.save()
-    if (AronaConfig.sendOfflineMessage) {
-      sendMessage(AronaConfig.offlineMessage)
-    }
   }
+
+  fun sendExitMessage() = if (AronaConfig.sendOfflineMessage) sendMessage(AronaConfig.offlineMessage) else {}
 
   fun sendMessage(message: String) {
     runBlocking {

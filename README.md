@@ -62,23 +62,23 @@ arona是基于mirai-console的插件。
 
 活动推送：
 
-![help1](static/1.JPG)
+![help1](static/1.jpg)
 
 活动结束前防侠：
 
-![help1](static/2.JPG)
+![help1](static/2.jpg)
 
 活动日历：
 
-![help1](static/3.JPG)
+![help1](static/3.jpg)
 
 抽卡模拟：
 
-![help1](static/4.JPG)
+![help1](static/4.jpg)
 
 戳一戳：
 
-![help1](static/5.JPG)
+![help1](static/5.jpg)
 
 ## 使用方法
 
@@ -311,11 +311,11 @@ arona总的配置。
 1. 下载任意一个可以编辑SQLite的软件，比如[sqlite-gui](https://github.com/little-brother/sqlite-gui/releases/download/1.7.5/sqlite-gui.1.7.5-x64.zip)
 2. 使用工具栏中的`open`选项打开获取到的池子文件，如下图
 
-![help1](static/help1.JPG)
+![help1](static/help1.jpg)
 
 3. 双击`Tables`栏中的`GachaCharacters`数据表，编辑新老婆信息
 
-![help1](static/help2.JPG)
+![help1](static/help2.jpg)
 
 其中`name`为老婆名字;`star`为老婆初始星级；`limit`表示老婆是限定还是常驻，其中1表示限定、0表示常驻；`id`为自动生成，无需填写。
 
@@ -323,21 +323,21 @@ arona总的配置。
 
 4. 双击`Tables`栏中的`GachaPools`数据表，编辑新池子信息
 
-![help1](static/help3.JPG)
+![help1](static/help3.jpg)
 
 同上，只需要填入`name`作为新池子的名字即可。
 
 5. 双击`Tables`栏中的`GachaPoolCharacters`数据表，编辑新池子与新老婆的对应关系信息
 
-![help1](static/help4.JPG)
+![help1](static/help4.jpg)
 
 其中`pool_id`为之前新建池子的主键，可以在这里看到
 
-![help1](static/help5.JPG)
+![help1](static/help5.jpg)
 
 同理，`character_id`为之前新建的老婆信息的主键
 
-![help1](static/help6.JPG)
+![help1](static/help6.jpg)
 
 **特别的**，一个池子可以有多个pickup，因此可以根据需要在`GachaPoolCharacters`对同一个池子添加多条数据。
 

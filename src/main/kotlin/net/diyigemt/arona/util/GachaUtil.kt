@@ -60,6 +60,7 @@ object GachaUtil {
   fun checkTime(userId: Long, time: Int = 10): Int {
     AronaGachaLimitConfig.update()
     val limit = AronaGachaLimitConfig.limit
+    if (limit == 0) return time
     val record = AronaGachaLimitConfig.record
     val filter = record.filter { it.first == userId }
     if (filter.isEmpty()) {

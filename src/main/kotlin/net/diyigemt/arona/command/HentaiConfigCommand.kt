@@ -5,6 +5,7 @@ import net.diyigemt.arona.config.AronaHentaiConfig
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.entity.NudgeMessage
 import net.diyigemt.arona.util.ActivityUtil
+import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.MessageUtil
 import net.diyigemt.arona.util.TimeUtil.calcTime
 import net.mamoe.mirai.console.command.CompositeCommand
@@ -26,6 +27,7 @@ object HentaiConfigCommand : CompositeCommand(
   @SubCommand("adds")
   @Description("添加一条关键词或者监听对象")
   suspend fun UserCommandSender.hentai_add_s(action: String, weight: Int = 1) {
+    if (!GeneralUtils.checkService(subject)) return
     if (!(user as Member).isOperator()) {
       subject.sendMessage(MessageUtil.atAndCTRL(user, "爬, 权限不足"))
       return
@@ -35,8 +37,9 @@ object HentaiConfigCommand : CompositeCommand(
   }
 
   @SubCommand("add")
-    @Description("添加监听对象")
+  @Description("添加监听对象")
   suspend fun UserCommandSender.hentai_add(target: Member) {
+    if (!GeneralUtils.checkService(subject)) return
     if (!(user as Member).isOperator()) {
       subject.sendMessage(MessageUtil.atAndCTRL(user, "爬, 权限不足"))
       return
@@ -52,6 +55,7 @@ object HentaiConfigCommand : CompositeCommand(
   @SubCommand("remove")
   @Description("删除监听对象")
   suspend fun UserCommandSender.hentai_remove(target: Member) {
+    if (!GeneralUtils.checkService(subject)) return
     if (!(user as Member).isOperator()) {
       subject.sendMessage(MessageUtil.atAndCTRL(user, "爬, 权限不足"))
       return
@@ -67,6 +71,7 @@ object HentaiConfigCommand : CompositeCommand(
   @SubCommand("enable")
   @Description("启动")
   suspend fun UserCommandSender.hentai_enable() {
+    if (!GeneralUtils.checkService(subject)) return
     if (user !is Member) return
     if (!(user as Member).isOperator()) {
       subject.sendMessage(MessageUtil.atAndCTRL(user, "爬, 权限不足"))
@@ -79,6 +84,7 @@ object HentaiConfigCommand : CompositeCommand(
   @SubCommand("disable")
   @Description("退出")
   suspend fun UserCommandSender.hentai_disable() {
+    if (!GeneralUtils.checkService(subject)) return
     if (user !is Member) return
     if (!(user as Member).isOperator()) {
       subject.sendMessage(MessageUtil.atAndCTRL(user, "爬, 权限不足"))

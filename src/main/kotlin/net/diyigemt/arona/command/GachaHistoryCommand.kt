@@ -2,6 +2,7 @@ package net.diyigemt.arona.command
 
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.command.data.GachaData
+import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.MessageUtil
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.UserCommandSender
@@ -15,6 +16,7 @@ object GachaHistoryCommand : SimpleCommand(
 
   @Handler
   suspend fun UserCommandSender.gacha_history() {
+    if (!GeneralUtils.checkService(subject)) return
     val history = GachaData.getHistoryAll()
     if (history.isEmpty()) {
       subject.sendMessage("还没有记录哦")

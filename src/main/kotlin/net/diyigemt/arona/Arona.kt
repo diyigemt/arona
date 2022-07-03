@@ -61,12 +61,12 @@ object Arona : KotlinPlugin(
       }
       if (AronaNudgeConfig.enable) {
         GlobalEventChannel.subscribeAlways<NudgeEvent>(priority = AronaNudgeConfig.priority) {
-          NudgeEventHandler.handle(this)
+          NudgeEventHandler.preHandle(this)
         }
       }
       GlobalEventChannel.subscribeAlways<GroupMessageEvent> {
-        GroupRepeaterHandler.handle(this)
-        HentaiEventHandler.handle(this)
+        GroupRepeaterHandler.preHandle(this)
+        HentaiEventHandler.preHandle(this)
       }
       logger.info { "arona loaded" }
     } else error("arona database init failed, arona will not start")

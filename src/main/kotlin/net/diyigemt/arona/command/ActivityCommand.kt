@@ -3,6 +3,7 @@ package net.diyigemt.arona.command
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.util.ActivityUtil
+import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.MessageUtil
 import net.diyigemt.arona.util.TimeUtil.calcTime
 import net.mamoe.mirai.console.command.CompositeCommand
@@ -24,6 +25,7 @@ object ActivityCommand : CompositeCommand(
   @SubCommand("en")
   @Description("查看国际服活动")
   suspend fun UserCommandSender.activities() {
+    if (!GeneralUtils.checkService(subject)) return
     val enActivity = ActivityUtil.fetchENActivity()
     send(subject, enActivity)
   }
@@ -31,6 +33,7 @@ object ActivityCommand : CompositeCommand(
   @SubCommand("jp")
   @Description("查看日服活动")
   suspend fun UserCommandSender.activities_jp() {
+    if (!GeneralUtils.checkService(subject)) return
     var jpActivity = ActivityUtil.fetchJPActivity()
     if (jpActivity.first.isEmpty() && jpActivity.second.isEmpty()) {
       subject.sendMessage("biliwiki寄了, 从wikiru拉取...")

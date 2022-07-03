@@ -58,6 +58,26 @@ arona是基于mirai-console的插件。
 2. 国际服/日服活动推送以及防侠提醒；
 3. 摸头回复。
 
+活动推送：
+
+![help1](static\1.JPG)
+
+活动结束前防侠：
+
+![help1](static\2.JPG)
+
+活动日历：
+
+![help1](static\3.JPG)
+
+抽卡模拟：
+
+![help1](static\4.JPG)
+
+戳一戳：
+
+![help1](static\5.JPG)
+
 ## 使用方法
 
 以下需要

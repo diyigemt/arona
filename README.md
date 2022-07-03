@@ -52,6 +52,8 @@ Please note that for various reasons, developers may **stop updating** or **dele
 
 arona是基于mirai-console的插件。
 
+**本插件依赖的mirai-console版本为2.11.1**
+
 作为BA(Blue Archive)的一款群助手，她可以实现以下功能：
 
 1. 抽卡模拟及数据记录；
@@ -96,6 +98,7 @@ arona是基于mirai-console的插件。
 5. 再次运行mirai-console即可享受arona的服务。
 
 **注意**，arona的运行依赖`chat-command`插件，你可以在[这里](https://github.com/project-mirai/chat-command)找到它的下载链接
+**本插件依赖的mirai-console版本为2.11.1**
 
 ## 注意事项
 

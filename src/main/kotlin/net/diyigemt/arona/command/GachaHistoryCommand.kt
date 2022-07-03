@@ -17,7 +17,7 @@ object GachaHistoryCommand : SimpleCommand(
   @Handler
   suspend fun UserCommandSender.gacha_history() {
     if (!GeneralUtils.checkService(subject)) return
-    val history = GachaData.getHistoryAll()
+    val history = GachaData.getHistoryAll((subject as Group).id)
     if (history.isEmpty()) {
       subject.sendMessage("还没有记录哦")
       return
@@ -33,7 +33,7 @@ object GachaHistoryCommand : SimpleCommand(
       .forEachIndexed {
         index, s -> ss += "${index + 1}. $s\n"
       }
-    subject.sendMessage(ss)
+    subject.sendMessage(ss.subSequence(0, ss.length - 1).toString())
   }
 
 }

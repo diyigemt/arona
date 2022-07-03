@@ -16,7 +16,7 @@ object GachaDogCommand : SimpleCommand(
   @Handler
   suspend fun UserCommandSender.gacha_dog() {
     if (!GeneralUtils.checkService(subject)) return
-    val dogCall = GachaData.getDogCall().filter { it.dog != 0 }
+    val dogCall = GachaData.getDogCall((subject as Group).id).filter { it.dog != 0 }
     if (dogCall.isEmpty()) {
       subject.sendMessage("还没有老师抽出来哦")
       return
@@ -28,7 +28,7 @@ object GachaDogCommand : SimpleCommand(
     }.forEachIndexed {
       index, s -> ss += "${index + 1}. $s\n"
     }
-    subject.sendMessage(ss)
+    subject.sendMessage(ss.subSequence(0, ss.length - 1).toString())
   }
 
 }

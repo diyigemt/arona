@@ -9,8 +9,10 @@ import net.diyigemt.arona.db.gacha.GachaHistoryTable
 import net.diyigemt.arona.util.GeneralUtils
 import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.console.command.UserCommandSender
+import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.Member
 import net.mamoe.mirai.contact.MemberPermission
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
 
 object GachaConfigCommand : CompositeCommand(
@@ -40,7 +42,7 @@ object GachaConfigCommand : CompositeCommand(
     if (!GeneralUtils.checkService(subject)) return
     if (user is Member && (user as Member).permission != MemberPermission.MEMBER) {
       query {
-        GachaHistoryTable.deleteWhere { GachaHistoryTable.pool eq pool }
+        GachaHistoryTable.deleteWhere { (GachaHistoryTable.pool eq pool) and (GachaHistoryTable.group eq (subject as Group).id) }
       }
       AronaGachaLimitConfig.forceUpdate()
       subject.sendMessage("历史记录清除成功")

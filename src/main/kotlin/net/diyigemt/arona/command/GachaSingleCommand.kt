@@ -11,6 +11,7 @@ import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.MessageUtil
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.UserCommandSender
+import net.mamoe.mirai.contact.Group
 
 object GachaSingleCommand : SimpleCommand(
   Arona,"gacha_one", "单抽",
@@ -28,13 +29,13 @@ object GachaSingleCommand : SimpleCommand(
     }
     val result = pickup()
     val stars = result.star
-    val history = GachaData.getHistory(userId)
+    val history = GachaData.getHistory((subject as Group).id, userId)
     var star3 = 0
     if (stars == 3) {
       star3 = 1
     }
     val hitPickup = hitPickup(result)
-    GachaData.updateHistory(userId, addPoints = 1, addCount3 = star3, dog = hitPickup)
+    GachaData.updateHistory((subject as Group).id, userId, addPoints = 1, addCount3 = star3, dog = hitPickup)
     val s = "${resultData2String(result)}\n${history.points + 1} points"
     val dog = if (hitPickup) "恭喜老师,出货了呢" else ""
     val handler = subject.sendMessage(MessageUtil.atMessageAndCTRL(user, dog, s))

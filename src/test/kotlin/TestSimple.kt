@@ -13,12 +13,6 @@ class TestSimple {
   }
 
   @Test
-  fun testSubstring() {
-    val value = ((0).toFloat() / 20).toString()
-    println(value.substring(0, value.indexOf(".") + 3))
-  }
-
-  @Test
   fun testDateAdd() {
     val instance = Calendar.getInstance()
     instance.set(Calendar.DAY_OF_MONTH, 28)

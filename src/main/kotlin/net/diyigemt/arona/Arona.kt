@@ -34,13 +34,7 @@ import net.mamoe.mirai.event.events.NudgeEvent
 import net.mamoe.mirai.utils.info
 
 object Arona : KotlinPlugin(
-  JvmPluginDescription(
-    id = "net.diyigemt.arona",
-    name = "arona",
-    version = "0.1.0"
-  ) {
-    author("diyigemt")
-  }
+  JvmPluginDescription.loadFromResource()
 ) {
   private lateinit var arona: Bot
   private val INIT: List<InitializedFunction> = listOf(ActivityNotify)

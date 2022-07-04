@@ -1,0 +1,7 @@
+id: "net.diyigemt.arona"
+version: "0.1.1"
+name: "ba-activity-pusher"
+author: "diyigemt"
+dependencies:
+  - "net.mamoe.chat-command:[0.5, 2.0)"
+info: "BA日服/国际服活动推送插件"

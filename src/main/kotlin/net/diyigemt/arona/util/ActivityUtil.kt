@@ -183,8 +183,13 @@ object ActivityUtil {
           val parseStart = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(start)
           val now = Calendar.getInstance().time
           val title = "总力战 $name($terrain)"
+          val parseEnd = Calendar.getInstance()
+          parseEnd.set(Calendar.DAY_OF_MONTH, parseEnd.get(Calendar.DAY_OF_MONTH) + 6)
+          parseEnd.set(Calendar.HOUR_OF_DAY, 23)
           if (now.before(parseStart)) {
             pending.add(Activity(title, 2, TimeUtil.calcTime(now, parseStart, true)))
+          } else if (now.before(parseEnd.time)) {
+            active.add(Activity(title, 2, TimeUtil.calcTime(now, parseEnd.time, false)))
           }
         }
         return@forEach

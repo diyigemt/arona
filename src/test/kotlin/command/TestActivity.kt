@@ -236,4 +236,9 @@ class TestActivity {
     return s
   }
 
+  @Test
+  fun testFinal() {
+    ActivityUtil.fetchENActivity()
+  }
+
 }

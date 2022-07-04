@@ -176,14 +176,16 @@ object ActivityUtil {
         if (find != null && find.groups.size >= 5) {
           val name = find.groups[1]!!.value
           val terrain = find.groups[2]!!.value
-          val m = find.groups[3]!!.value
-          val d = find.groups[4]!!.value
+          val m = find.groups[3]!!.value.toInt()
+          val d = find.groups[4]!!.value.toInt()
           val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
-          val start = "${year}/${if (m.toInt() < 10) "0$m" else m}/${if (d.toInt() < 10) "0$d" else d} 16:00"
+          val start = "${year}/${if (m < 10) "0$m" else m}/${if (d < 10) "0$d" else d} 16:00"
           val parseStart = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(start)
           val now = Calendar.getInstance().time
           val title = "总力战 $name($terrain)"
           val parseEnd = Calendar.getInstance()
+          parseEnd.set(Calendar.MONTH, m - 1)
+          parseEnd.set(Calendar.DAY_OF_MONTH, d)
           parseEnd.set(Calendar.DAY_OF_MONTH, parseEnd.get(Calendar.DAY_OF_MONTH) + 6)
           parseEnd.set(Calendar.HOUR_OF_DAY, 23)
           if (now.before(parseStart)) {

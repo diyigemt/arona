@@ -27,6 +27,8 @@ object ActivityNotify: InitializedFunction() {
 
   fun isDropActivity(activity: Activity): Boolean = activity.content.contains("倍")
 
+  fun isMaintenanceActivity(activity: Activity): Boolean = activity.content.contains("游戏维护")
+
   class ActivityNotifyJob: Job {
     override fun execute(context: JobExecutionContext?) {
       var jp = ActivityUtil.fetchJPActivity()
@@ -42,7 +44,7 @@ object ActivityNotify: InitializedFunction() {
         }
       val pendingJP = jp.second
         .filter {
-          filterPending(it)
+          filterPending(it, alertListJP)
         }
       val activeEN = en.first
         .filter {
@@ -50,7 +52,7 @@ object ActivityNotify: InitializedFunction() {
         }
       val pendingEN = en.second
         .filter {
-          filterPending(it)
+          filterPending(it, alertListEN)
         }
       val jpMessage = ActivityUtil.constructMessage(activeJP to pendingJP)
       val enMessage = ActivityUtil.constructMessage(activeEN to pendingEN)
@@ -66,6 +68,7 @@ object ActivityNotify: InitializedFunction() {
           }
         }
       }
+      alertListJP.add(Activity("游戏维护", 2, "0天4小时后开始"))
       insertAlert(alertListJP)
       insertAlert(alertListEN, false)
     }
@@ -88,7 +91,7 @@ object ActivityNotify: InitializedFunction() {
       activity.removeAll(dropActivities)
       // 非双倍掉落提醒
       if (activity.isNotEmpty()) {
-        val h = extraHAndD(activity[0]).first
+        val h = extraHAndD(activity[0], !isMaintenanceActivity(activity[0])).first
         doInsert(activity, instance.get(Calendar.HOUR_OF_DAY) + h - 1, serverJp)
       }
       // 双倍掉落提醒
@@ -97,10 +100,13 @@ object ActivityNotify: InitializedFunction() {
       }
     }
 
-    private fun filterPending(activity: Activity): Boolean {
+    private fun filterPending(activity: Activity, list: MutableList<Activity>): Boolean {
       val extra = extraHAndD(activity, active = false)
       val h = extra.first
       val d = extra.second
+      if ((d == 0) and isMaintenanceActivity(activity)) {
+        list.add(activity)
+      }
       return d * 24 + h < 48
     }
 
@@ -130,19 +136,34 @@ object ActivityNotify: InitializedFunction() {
   @Suppress("UNCHECKED_CAST")
   class ActivityNotifyOneHourJob: InterruptableJob {
     override fun execute(context: JobExecutionContext?) {
-      val activity = context?.mergedJobDataMap?.get(ActivityKey) ?: return
+      val ac = context?.mergedJobDataMap?.get(ActivityKey) ?: return
       val server = context.mergedJobDataMap?.getBoolean(ActivityServerKey) ?: return
-      activity as List<Activity>
-      if (activity.isEmpty()) return
+      ac as List<Activity>
+      if (ac.isEmpty()) return
+      val activity = ac.toMutableList()
+      val maintenance: Activity? = activity
+        .filter { isMaintenanceActivity(it) }
+        .let {
+          if (it.isNotEmpty()) {
+            activity.removeAll(it)
+            return@let it[0]
+          } else {
+            return@let null
+          }
+        }
       val activityString = activity
         .map { at -> "${at.content}\n" }
         .reduceOrNull { prv, cur -> prv + cur }
+      val serverName = if (server) "日服" else "国际服"
       val serverString = if (server) AronaNotifyConfig.notifyStringJP else AronaNotifyConfig.notifyStringEN
       val settingDropTime = if (AronaNotifyConfig.dropNotify <= 3) (AronaNotifyConfig.dropNotify + 24) else AronaNotifyConfig.dropNotify
       val endTime = if (server or isDropActivity(activity[0])) {
         27 - settingDropTime
       } else {
         1
+      }
+      if (maintenance != null) {
+        Arona.sendMessage("距离${serverName}维护还有1小时")
       }
       Arona.sendMessage("${serverString}\n" +
         "$activityString" +

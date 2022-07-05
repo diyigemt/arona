@@ -50,7 +50,10 @@ Please note that for various reasons, developers may **stop updating** or **dele
 
 ## 更新日志
 
-2022-07-06 v0.1.2 添加新配置项(arona-gacha.yml -> revokeTime) 允许用户配置抽卡结果撤回时间<br/>
+2022-07-07 v0.1.2
+1. 添加新配置项(arona-gacha.yml -> revokeTime) 允许用户配置抽卡结果撤回时间
+2. 防侠预警添加维护预警
+
 2022-07-05 v0.1.1 修复国际服总力站没有结束时间的问题
 
 ## 介绍

@@ -50,7 +50,7 @@ object GachaMultiCommand : SimpleCommand(
     val sss = "3星:$stars3 2星:$stars2 1星:$stars1 ${history.points + checkTime} points\n${s}"
     val handler = subject.sendMessage(atMessageAndCTRL(user, dog, sss))
     if (AronaGachaConfig.revoke) {
-      MessageUtil.recall(handler)
+      MessageUtil.recall(handler, AronaGachaConfig.revokeTime * 1000L)
     }
   }
 }

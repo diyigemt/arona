@@ -48,6 +48,11 @@ Please note that for various reasons, developers may **stop updating** or **dele
 - If the arona source code is modified and then released, or another project is released by referring to arona's internal implementation, the derivative project must be clearly stated in the first part of the article or at the location where 'arona'-related content first appears from this repository ([arona](https://github.com/diyigemt/arona)).
 - The fact that it is free and open source must not be distorted or hidden.
 
+## 更新日志
+
+2022-07-06 v0.1.2 添加新配置项(arona-gacha.yml -> revokeTime) 允许用户配置抽卡结果撤回时间<br/>
+2022-07-05 v0.1.1 修复国际服总力站没有结束时间的问题
+
 ## 介绍
 
 arona是基于mirai-console的插件。
@@ -169,8 +174,8 @@ arona总的配置。
 
 当前激活的池子的设置与数据库有关，将会在下一节进行讨论。
 
-| 键              | 属性    | 作用                     |
-| --------------- | ------- | ------------------------ |
+| 键               | 属性      | 作用                     |
+|-----------------|---------| ------------------------ |
 | star1Rate       | Float   | 1星总出率百分比          |
 | star2Rate       | Float   | 2星总出率百分比          |
 | star3Rate       | Float   | 3星总出率百分比          |
@@ -178,6 +183,7 @@ arona总的配置。
 | star3PickupRate | Float   | 3星限定出率百分比        |
 | activePool      | Int     | 当前激活的池子           |
 | revoke          | Boolean | 是否撤回结果信息防止刷屏 |
+| revokeTime      | Int     | 撤回时间间隔(单位为秒) |
 
 ### 3.arona-gacha-limit.yml
 

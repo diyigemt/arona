@@ -40,7 +40,7 @@ object GachaSingleCommand : SimpleCommand(
     val dog = if (hitPickup) "恭喜老师,出货了呢" else ""
     val handler = subject.sendMessage(MessageUtil.atMessageAndCTRL(user, dog, s))
     if (AronaGachaConfig.revoke) {
-      MessageUtil.recall(handler)
+      MessageUtil.recall(handler, AronaGachaConfig.revokeTime * 1000L)
     }
   }
 }

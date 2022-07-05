@@ -26,7 +26,10 @@ object AronaGachaConfig: AutoSavePluginConfig("arona-gacha") {
   var activePool: Int by value(1)
 
   @ValueDescription("是否撤回结果信息防止刷屏")
-  var revoke: Boolean by value(true)
+  val revoke: Boolean by value(true)
+
+  @ValueDescription("撤回时间间隔(单位为秒)")
+  val revokeTime: Int by value(10)
 
   var maxDot: Int = 10
 

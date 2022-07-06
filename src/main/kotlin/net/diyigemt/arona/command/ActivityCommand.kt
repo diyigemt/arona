@@ -25,14 +25,22 @@ object ActivityCommand : CompositeCommand(
   @SubCommand("en")
   @Description("查看国际服活动")
   suspend fun UserCommandSender.activities() {
-    if (!GeneralUtils.checkService(subject)) return
-    val enActivity = ActivityUtil.fetchENActivity()
-    send(subject, enActivity)
+    sendEN(subject)
   }
 
   @SubCommand("jp")
   @Description("查看日服活动")
   suspend fun UserCommandSender.activities_jp() {
+    sendJP(subject)
+  }
+
+  suspend fun sendEN(subject: Contact) {
+    if (!GeneralUtils.checkService(subject)) return
+    val enActivity = ActivityUtil.fetchENActivity()
+    send(subject, enActivity)
+  }
+
+  suspend fun sendJP(subject: Contact) {
     if (!GeneralUtils.checkService(subject)) return
     var jpActivity = ActivityUtil.fetchJPActivity()
     if (jpActivity.first.isEmpty() && jpActivity.second.isEmpty()) {

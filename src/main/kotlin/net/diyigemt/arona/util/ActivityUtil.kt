@@ -1,8 +1,10 @@
 package net.diyigemt.arona.util
 
 import kotlinx.serialization.json.*
-import net.diyigemt.arona.config.AronaGachaLimitConfig
+import net.diyigemt.arona.Arona
 import net.diyigemt.arona.entity.Activity
+import net.diyigemt.arona.entity.ActivityType
+import net.diyigemt.arona.entity.ServerLocale
 import org.jsoup.Jsoup
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -33,21 +35,9 @@ object ActivityUtil {
       val now = Calendar.getInstance().time
       if (now.after(parseEnd)) return@forEach
       val content = it.getElementsByClass("activity__name").text()
-      var level = 1
-      if (content.indexOf("倍") != -1) {
-        level = 2
-      } else if (content.indexOf("总力战") != -1) {
-        level = 3
-      }
-      if (now.before(parseStart)) {
-        pending.add(Activity(content, level, TimeUtil.calcTime(now, parseStart, true)))
-      } else {
-        active.add(Activity(content, level, TimeUtil.calcTime(now, parseEnd, false)))
-      }
+      doInsert(now, parseStart, parseEnd, active, pending, content, contentSourceJP = false)
     }
-    pending.sortByDescending { at -> at.level }
-    active.sortByDescending { at -> at.level }
-    return active to pending
+    return sortAndPackage(active, pending);
   }
 
   fun fetchENActivity(): Pair<List<Activity>, List<Activity>> {
@@ -78,6 +68,7 @@ object ActivityUtil {
             val h2 = groupH[2]!!.value
             val h3 = groupH[4]!!.value
             val h4 = groupH[5]!!.value
+            val now = Calendar.getInstance().time
             val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
             val startN = "${year}/${if (n1.toInt() < 10) "0$n1" else n1}/${if (n2.toInt() < 10) "0$n2" else n2} 03:00"
             val endN = "${year}/${if (n3.toInt() < 10) "0$n3" else n3}/${if (n4.toInt() < 10) "0$n4" else n4} 02:59"
@@ -89,17 +80,8 @@ object ActivityUtil {
             val parseEndH = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(endH)
             val titleN = "Normal${power}倍掉落"
             val titleH = "Hard${power}倍掉落"
-            val now = Calendar.getInstance().time
-            if (now.before(parseStartN)) {
-              pending.add(Activity(titleN, power, TimeUtil.calcTime(now, parseStartN, true)))
-            } else if (now.before(parseEndN)) {
-              active.add(Activity(titleN, 2, TimeUtil.calcTime(now, parseEndN, false)))
-            }
-            if (now.before(parseStartH)) {
-              pending.add(Activity(titleH, power, TimeUtil.calcTime(now, parseStartH, true)))
-            } else if (now.before(parseEndH)) {
-              active.add(Activity(titleH, 2, TimeUtil.calcTime(now, parseEndH, false)))
-            }
+            doInsert(now, parseStartN, parseEndN, active, pending, titleN, type0 = ActivityType.N2_3)
+            doInsert(now, parseStartH, parseEndH, active, pending, titleH, type0 = ActivityType.H2_3)
           }
         }
         return@forEach
@@ -138,11 +120,7 @@ object ActivityUtil {
           val parseStart = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(start)
           val parseEnd = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(end)
           val now = Calendar.getInstance().time
-          if (now.before(parseStart)) {
-            pending.add(Activity(student, 2, TimeUtil.calcTime(now, parseStart, true)))
-          } else if (now.before(parseEnd)) {
-            active.add(Activity(student, 2, TimeUtil.calcTime(now, parseEnd, false)))
-          }
+          doInsert(now, parseStart, parseEnd, active, pending, student, type0 = ActivityType.PICK_UP)
         }
         return@forEach
       }
@@ -162,9 +140,7 @@ object ActivityUtil {
           val now = Calendar.getInstance().time
           val title = "游戏维护"
           if (now.before(parseStart)) {
-            pending.add(Activity(title, 3, TimeUtil.calcTime(now, parseStart, true)))
-          } else if (now.before(parseEnd.time)) {
-            active.add(Activity(title, 3, TimeUtil.calcTime(now, parseEnd.time, false)))
+            doInsert(now, parseStart, parseEnd.time, active, pending, title, type0 = ActivityType.MAINTENANCE)
           }
         }
         return@forEach
@@ -188,18 +164,12 @@ object ActivityUtil {
           parseEnd.set(Calendar.DAY_OF_MONTH, d)
           parseEnd.set(Calendar.DAY_OF_MONTH, parseEnd.get(Calendar.DAY_OF_MONTH) + 6)
           parseEnd.set(Calendar.HOUR_OF_DAY, 23)
-          if (now.before(parseStart)) {
-            pending.add(Activity(title, 2, TimeUtil.calcTime(now, parseStart, true)))
-          } else if (now.before(parseEnd.time)) {
-            active.add(Activity(title, 2, TimeUtil.calcTime(now, parseEnd.time, false)))
-          }
+          doInsert(now, parseStart, parseEnd.time, active, pending, title, type0 = ActivityType.DECISIVE_BATTLE)
         }
         return@forEach
       }
     }
-    active.sortByDescending { it.level }
-    pending.sortByDescending { it.level }
-    return active to pending
+    return sortAndPackage(active, pending);
   }
 
   private fun fetchActivities(): List<JsonObject> {
@@ -212,7 +182,7 @@ object ActivityUtil {
         .get()
       val data = Json.parseToJsonElement(document.text()).jsonObject
       if (clearExtraQute((data["code"] ?: "-1").toString()).toInt() != 0 || clearExtraQute((data["message"] ?: "-1").toString()).toInt() != 0) {
-        println("catch BA en activities error, ${data["message"].toString()}")
+        Arona.error("catch BA en activities error, ${data["message"].toString()}")
         continue
       }
       val items = forceGets(data, "data.items").jsonArray
@@ -268,15 +238,9 @@ object ActivityUtil {
         val pow = find.groups[1]!!.value.toInt()
         contentSource = "特殊作战掉落${pow}倍"
       }
-      if (now.before(parseStart)) {
-        pending.add(Activity(contentSource, 2, TimeUtil.calcTime(now, parseStart, true)))
-      } else if (now.before(parseEnd)) {
-        active.add(Activity(contentSource, 2, TimeUtil.calcTime(now, parseEnd, false)))
-      }
+      doInsert(now, parseStart, parseEnd, active, pending, contentSource)
     }
-    active.sortByDescending { it.level }
-    pending.sortByDescending { it.level }
-    return active to pending
+    return sortAndPackage(active, pending);
   }
 
   fun constructMessage(activities: Pair<List<Activity>, List<Activity>>): String {
@@ -288,6 +252,12 @@ object ActivityUtil {
       .reduceOrNull { prv, cur -> prv + cur }
       ?.let { it.take(it.length - 1) }
     return "正在进行:\n${activeString ?: "无\n"}即将开始:\n${pendingString ?: '无'}"
+  }
+
+  private fun sortAndPackage(active: MutableList<Activity>, pending: MutableList<Activity>): Pair<List<Activity>, List<Activity>> {
+    active.sortByDescending { it.type.level }
+    pending.sortByDescending { it.type.level }
+    return active to pending
   }
 
   private fun forceGet(target: JsonElement, key: String): JsonElement {
@@ -310,5 +280,57 @@ object ActivityUtil {
     }
     return s
   }
+
+  private fun extraActivityJPTypeFromJP(source: String): ActivityType {
+    return ActivityType.NULL
+  }
+
+  private fun extraActivityJPTypeFromCN(source: String): ActivityType {
+    return ActivityType.NULL
+  }
+
+  /**
+   * 插入活动并对活动进行分类
+   * @param now 当前时间
+   * @param parseStart 活动开始时间
+   * @param parseEnd 活动结束时间
+   * @param active 正在进行的活动列表
+   * @param pending 即将开始的活动列表
+   * @param contentSourceJP 若是日服的活动, 那么数据来源是日服wiki还是b站wiki
+   * @param type0 已知的活动类型(国际服才有)
+   */
+  private fun doInsert(
+    now: Date,
+    parseStart: Date,
+    parseEnd: Date,
+    active: MutableList<Activity>,
+    pending: MutableList<Activity>,
+    contentSource: String,
+    contentSourceJP: Boolean = true,
+    type0: ActivityType? = null
+  ) {
+    val type = type0 ?: if (contentSourceJP) extraActivityJPTypeFromJP(contentSource) else extraActivityJPTypeFromCN(contentSource)
+    if (now.before(parseStart)) {
+      pending.add(
+        Activity(
+          contentSource,
+          TimeUtil.calcTime(now, parseStart, true),
+          type,
+          locale(type0)
+        )
+      )
+    } else if (now.before(parseEnd)) {
+      active.add(
+        Activity(
+          contentSource,
+          TimeUtil.calcTime(now, parseEnd, false),
+          type,
+          locale(type0)
+        )
+      )
+    }
+  }
+
+  private fun locale(type: ActivityType?): ServerLocale = if (type == null) ServerLocale.JP else ServerLocale.GLOBAL
 
 }

@@ -64,14 +64,14 @@ class TestActivity {
             val titleH = "Hard${power}倍掉落"
             val now = Calendar.getInstance().time
             if (now.before(parseStartN)) {
-              pending.add(Activity(titleN, power, calcTime(now, parseStartN, true)))
+              pending.add(Activity(titleN, calcTime(now, parseStartN, true)))
             } else if (now.before(parseEndN)) {
-              active.add(Activity(titleN, 2, calcTime(now, parseEndN, false)))
+              active.add(Activity(titleN,  calcTime(now, parseEndN, false)))
             }
             if (now.before(parseStartH)) {
-              pending.add(Activity(titleH, power, calcTime(now, parseStartH, true)))
+              pending.add(Activity(titleH, calcTime(now, parseStartH, true)))
             } else if (now.before(parseEndH)) {
-              active.add(Activity(titleH, 2, calcTime(now, parseEndH, false)))
+              active.add(Activity(titleH, calcTime(now, parseEndH, false)))
             }
           }
         }
@@ -112,9 +112,9 @@ class TestActivity {
           val parseEnd = SimpleDateFormat("yyyy/MM/dd").parse(end)
           val now = Calendar.getInstance().time
           if (now.before(parseStart)) {
-            pending.add(Activity(student, 2, calcTime(now, parseStart, true)))
+            pending.add(Activity(student, calcTime(now, parseStart, true)))
           } else if (now.before(parseEnd)) {
-            active.add(Activity(student, 2, calcTime(now, parseEnd, false)))
+            active.add(Activity(student, calcTime(now, parseEnd, false)))
           }
         }
         return@forEach
@@ -132,7 +132,7 @@ class TestActivity {
           val now = Calendar.getInstance().time
           val title = "游戏维护"
           if (now.before(parseStart)) {
-            pending.add(Activity(title, 2, calcTime(now, parseStart, true)))
+            pending.add(Activity(title, calcTime(now, parseStart, true)))
           }
         }
         return@forEach
@@ -152,7 +152,7 @@ class TestActivity {
           val now = Calendar.getInstance().time
           val title = "总力战 $name($terrain)"
           if (now.before(parseStart)) {
-            pending.add(Activity(title, 2, calcTime(now, parseStart, true)))
+            pending.add(Activity(title, calcTime(now, parseStart, true)))
           }
         }
         return@forEach

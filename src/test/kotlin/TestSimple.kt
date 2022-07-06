@@ -21,4 +21,13 @@ class TestSimple {
     println(instance.get(Calendar.DAY_OF_MONTH))
   }
 
+  @Test
+  fun testEnumClass() {
+    println(A.B in (A.C .. A.E))
+  }
+
+  enum class A {
+    A, B, C, D, E
+  }
+
 }

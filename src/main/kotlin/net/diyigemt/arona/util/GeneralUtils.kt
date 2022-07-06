@@ -6,7 +6,7 @@ import net.mamoe.mirai.contact.Group
 
 object GeneralUtils {
 
-  fun checkService(group: Contact): Boolean = when(group) {
+  fun checkService(group: Contact?): Boolean = when(group) {
     is Group -> AronaConfig.groups.contains(group.id)
     else -> false
   }

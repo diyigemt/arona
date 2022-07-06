@@ -3,6 +3,8 @@ package net.diyigemt.arona.quartz
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.config.AronaNotifyConfig
 import net.diyigemt.arona.entity.Activity
+import net.diyigemt.arona.entity.ActivityType
+import net.diyigemt.arona.entity.ServerLocale
 import net.diyigemt.arona.interfaces.InitializedFunction
 import net.diyigemt.arona.util.ActivityUtil
 import org.quartz.InterruptableJob
@@ -16,7 +18,7 @@ object ActivityNotify: InitializedFunction() {
   private const val ActivityNotifyDataInitKey = "init"
   private const val ActivityNotifyOneHour = "ActivityNotifyOneHour"
   private const val ActivityKey = "activity"
-  private const val ActivityServerKey = "server"
+  private const val MaintenanceKey = "maintenance"
   override fun init() {
     // 全局启用标志
     if (!AronaNotifyConfig.enable) return
@@ -24,10 +26,6 @@ object ActivityNotify: InitializedFunction() {
     QuartzProvider.createCronTask(ActivityNotifyJob::class.java, "0 0 ${AronaNotifyConfig.everyDayHour} * * ? *", ActivityNotifyJobKey, ActivityNotifyJobKey)
     QuartzProvider.triggerTaskWithData(ActivityNotifyJobKey, ActivityNotifyJobKey, mapOf(ActivityNotifyDataInitKey to true))
   }
-
-  fun isDropActivity(activity: Activity): Boolean = activity.content.contains("倍")
-
-  fun isMaintenanceActivity(activity: Activity): Boolean = activity.content.contains("游戏维护")
 
   class ActivityNotifyJob: Job {
     override fun execute(context: JobExecutionContext?) {
@@ -38,74 +36,79 @@ object ActivityNotify: InitializedFunction() {
       val en = ActivityUtil.fetchENActivity()
       val alertListJP = mutableListOf<Activity>()
       val alertListEN = mutableListOf<Activity>()
-      val activeJP = jp.first
+      jp.first
         .filter {
           filterActive(it, alertListJP)
         }
-      val pendingJP = jp.second
+      jp.second
         .filter {
-          filterPending(it, alertListJP)
+          filterPending(it)
         }
-      val activeEN = en.first
+      en.first
         .filter {
           filterActive(it, alertListEN)
         }
-      val pendingEN = en.second
+      en.second
         .filter {
-          filterPending(it, alertListEN)
+          filterPending(it)
         }
-      val jpMessage = ActivityUtil.constructMessage(activeJP to pendingJP)
-      val enMessage = ActivityUtil.constructMessage(activeEN to pendingEN)
-      val init = context?.mergedJobDataMap?.getBoolean(ActivityNotifyDataInitKey) ?: false
+      insertAlert(alertListJP)
+      insertAlert(alertListEN)
       // 初始化不显示信息
-      if (!init) {
-        if (AronaNotifyConfig.enableEveryDay) {
-          if (AronaNotifyConfig.enableJP) {
-            Arona.sendMessage("${AronaNotifyConfig.notifyStringJP}\n$jpMessage")
-          }
-          if (AronaNotifyConfig.enableEN) {
-            Arona.sendMessage("${AronaNotifyConfig.notifyStringEN}\n$enMessage")
-          }
+      val init = context?.mergedJobDataMap?.getBoolean(ActivityNotifyDataInitKey) ?: false
+      if (init) return
+      val jpMessage = ActivityUtil.constructMessage(jp)
+      val enMessage = ActivityUtil.constructMessage(en)
+      if (AronaNotifyConfig.enableEveryDay) {
+        if (AronaNotifyConfig.enableJP) {
+          Arona.sendMessage("${AronaNotifyConfig.notifyStringJP}\n$jpMessage")
+        }
+        if (AronaNotifyConfig.enableEN) {
+          Arona.sendMessage("${AronaNotifyConfig.notifyStringEN}\n$enMessage")
         }
       }
-      alertListJP.add(Activity("游戏维护", 2, "0天4小时后开始"))
-      insertAlert(alertListJP)
-      insertAlert(alertListEN, false)
     }
 
-    private fun doInsert(activity: List<Activity>, h: Int, serverJp: Boolean = true) {
+    private fun doInsert(activity: List<Activity>, h: Int, extraKey: String = "") {
       val now = Calendar.getInstance()
       now.set(Calendar.HOUR_OF_DAY, h)
+      now.set(Calendar.MINUTE, 0)
+      now.set(Calendar.MILLISECOND, 0)
+      val serverJp = isJPServer(activity)
       QuartzProvider.createSingleTask(
         ActivityNotifyOneHourJob::class.java,
         now.time,
-        "${ActivityNotifyOneHour}-${if (serverJp) "jp" else "en"}-${h}",
+        "${ActivityNotifyOneHour}-${if (serverJp) "jp" else "en"}-${h}-${extraKey}",
         ActivityNotifyOneHour,
-        mapOf(ActivityKey to activity, ActivityServerKey to serverJp)
+        mapOf(ActivityKey to activity)
       )
     }
-    private fun insertAlert(activity: MutableList<Activity>, serverJp: Boolean = true) {
+    private fun insertAlert(activity: MutableList<Activity>) {
       if (activity.isEmpty()) return
       val instance = Calendar.getInstance()
       val dropActivities = activity.filter { isDropActivity(it) }
       activity.removeAll(dropActivities)
       // 非双倍掉落提醒
       if (activity.isNotEmpty()) {
-        val h = extraHAndD(activity[0], !isMaintenanceActivity(activity[0])).first
-        doInsert(activity, instance.get(Calendar.HOUR_OF_DAY) + h - 1, serverJp)
+        val h = extraHAndD(activity[0]).first
+        doInsert(activity, instance.get(Calendar.HOUR_OF_DAY) + h - 1)
       }
       // 双倍掉落提醒
       if (dropActivities.isNotEmpty()) {
-        doInsert(dropActivities, AronaNotifyConfig.dropNotify, serverJp)
+        doInsert(dropActivities, AronaNotifyConfig.dropNotify)
       }
     }
 
-    private fun filterPending(activity: Activity, list: MutableList<Activity>): Boolean {
+    private fun insertMaintenanceAlert(activity: Activity, h: Int) {
+      doInsert(listOf(activity), Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + h - 1, extraKey = MaintenanceKey)
+    }
+
+    private fun filterPending(activity: Activity): Boolean {
       val extra = extraHAndD(activity, active = false)
       val h = extra.first
       val d = extra.second
       if ((d == 0) and isMaintenanceActivity(activity)) {
-        list.add(activity)
+        insertMaintenanceAlert(activity, h)
       }
       return d * 24 + h < 48
     }
@@ -137,9 +140,9 @@ object ActivityNotify: InitializedFunction() {
   class ActivityNotifyOneHourJob: InterruptableJob {
     override fun execute(context: JobExecutionContext?) {
       val ac = context?.mergedJobDataMap?.get(ActivityKey) ?: return
-      val server = context.mergedJobDataMap?.getBoolean(ActivityServerKey) ?: return
       ac as List<Activity>
       if (ac.isEmpty()) return
+      val server = isJPServer(ac)
       val activity = ac.toMutableList()
       val maintenance: Activity? = activity
         .filter { isMaintenanceActivity(it) }
@@ -176,4 +179,11 @@ object ActivityNotify: InitializedFunction() {
     }
   }
 
+  private fun isDropActivity(activity: Activity): Boolean = activity.type in (ActivityType.N2_3 .. ActivityType.COLLEGE_EXCHANGE_DROP)
+
+  private fun isMaintenanceActivity(activity: Activity): Boolean = activity.type == ActivityType.MAINTENANCE
+
+  private fun isJPServer(activity: List<Activity>) = isJPServer(activity[0])
+
+  private fun isJPServer(activity: Activity) = activity.serverLocale == ServerLocale.JP
 }

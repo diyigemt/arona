@@ -101,7 +101,16 @@ object Arona : KotlinPlugin(
     AronaGachaLimitConfig.save()
   }
 
-  fun sendExitMessage() = if (AronaConfig.sendOfflineMessage) sendMessage(AronaConfig.offlineMessage) else {}
+  fun runSuspend(block: suspend () -> Unit) = runBlocking {
+    withContext(Arona.coroutineContext) {
+      block()
+    }
+  }
+  fun sendExitMessage() {
+    if (AronaConfig.sendOfflineMessage) {
+      sendMessage(AronaConfig.offlineMessage)
+    }
+  }
 
   fun sendMessage(message: String) {
     runBlocking {

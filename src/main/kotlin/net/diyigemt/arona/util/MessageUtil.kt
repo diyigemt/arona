@@ -1,16 +1,10 @@
 package net.diyigemt.arona.util
 
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
-import net.diyigemt.arona.quartz.QuartzProvider
 import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.User
 import net.mamoe.mirai.message.MessageReceipt
 import net.mamoe.mirai.message.data.At
 import net.mamoe.mirai.message.data.MessageChain
-import org.quartz.Job
-import org.quartz.JobExecutionContext
-import java.util.Calendar
 
 object MessageUtil {
 
@@ -40,26 +34,6 @@ object MessageUtil {
 
   fun recall(target: MessageReceipt<Contact>, delay: Long = 1000 * 10) {
     target.recallIn(delay)
-//    val instance = Calendar.getInstance()
-//    instance.set(Calendar.MILLISECOND, (instance.get(Calendar.MILLISECOND) + delay).toInt())
-//    QuartzProvider.createSingleTask(
-//      MessageRecallJob::class.java,
-//      instance.time,
-//      "${MessageRecallJobKey}${target.source.originalMessage.serializeToMiraiCode().let { it.subSequence(0, 3) }}",
-//      MessageRecallJobKey,
-//      mapOf(JobDataMessageKey to target)
-//    )
-  }
-
-  class MessageRecallJob: Job {
-    override fun execute(context: JobExecutionContext?) {
-      val message = context?.mergedJobDataMap?.get(JobDataMessageKey) ?: return
-      runBlocking {
-        withContext(coroutineContext) {
-          (message as MessageReceipt<Contact>).recall()
-        }
-      }
-    }
   }
 
 }

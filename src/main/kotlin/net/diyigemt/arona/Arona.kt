@@ -13,6 +13,7 @@ import kotlinx.coroutines.withContext
 import net.diyigemt.arona.command.*
 import net.diyigemt.arona.config.*
 import net.diyigemt.arona.db.DataBaseProvider
+import net.diyigemt.arona.extension.CommandInterceptorManager
 import net.diyigemt.arona.extension.CommandResolver
 import net.diyigemt.arona.handler.GroupRepeaterHandler
 import net.diyigemt.arona.handler.HentaiEventHandler
@@ -37,7 +38,7 @@ object Arona : KotlinPlugin(
   JvmPluginDescription.loadFromResource()
 ) {
   private lateinit var arona: Bot
-  private val INIT: List<InitializedFunction> = listOf(ActivityNotify)
+  private val INIT: List<InitializedFunction> = listOf(ActivityNotify, CommandInterceptorManager)
 
   override fun onEnable() {
     init()

@@ -6,6 +6,7 @@ import net.diyigemt.arona.config.AronaGachaConfig
 import net.diyigemt.arona.config.AronaGachaLimitConfig
 import net.diyigemt.arona.db.DataBaseProvider.query
 import net.diyigemt.arona.db.gacha.GachaHistoryTable
+import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.util.GeneralUtils
 import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.console.command.UserCommandSender
@@ -18,11 +19,11 @@ import org.jetbrains.exposed.sql.deleteWhere
 object GachaConfigCommand : CompositeCommand(
   Arona,"gacha", "抽卡",
   description = "设置发情触发的关键词"
-) {
+), AronaService {
 
-  @SubCommand
+  @SubCommand("ser_pool")
   @Description("设置激活的池子")
-  suspend fun UserCommandSender.setpool(pool: Int) {
+  suspend fun UserCommandSender.setPool(pool: Int) {
     if (!GeneralUtils.checkService(subject)) return
     if (user is Member && (user as Member).permission != MemberPermission.MEMBER) {
       val targetPool = GachaCache.updatePool(pool)
@@ -49,6 +50,13 @@ object GachaConfigCommand : CompositeCommand(
     } else {
       subject.sendMessage("爬, 权限不足")
     }
+  }
+
+  override val id: Int = 2
+  override val name: String = "抽卡"
+  override var enable: Boolean = true
+  override fun init() {
+    registerService()
   }
 
 }

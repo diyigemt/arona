@@ -1,5 +1,7 @@
 package net.diyigemt.arona.config
 
+import net.diyigemt.arona.config.AronaConfig.provideDelegate
+import net.diyigemt.arona.entity.ServerLocale
 import net.mamoe.mirai.console.data.AutoSavePluginConfig
 import net.mamoe.mirai.console.data.ValueDescription
 import net.mamoe.mirai.console.data.value
@@ -29,5 +31,8 @@ object AronaNotifyConfig: AutoSavePluginConfig("arona-notify") {
 
   @ValueDescription("双倍掉落防侠提醒的时间(因为一般是晚上3点结束)")
   val dropNotify: Int by value(22)
+
+  @ValueDescription("\"/活动\"指令的默认目标服务器,可选值为 \"JP\"和\"GLOBAL\"")
+  val defaultActivityCommandServer: ServerLocale by value(ServerLocale.JP)
 
 }

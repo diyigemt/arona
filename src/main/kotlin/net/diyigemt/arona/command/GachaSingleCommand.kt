@@ -1,7 +1,6 @@
 package net.diyigemt.arona.command
 
 import net.diyigemt.arona.Arona
-import net.diyigemt.arona.command.data.GachaData
 import net.diyigemt.arona.config.AronaGachaConfig
 import net.diyigemt.arona.util.GachaUtil
 import net.diyigemt.arona.util.GachaUtil.hitPickup
@@ -29,13 +28,13 @@ object GachaSingleCommand : SimpleCommand(
     }
     val result = pickup()
     val stars = result.star
-    val history = GachaData.getHistory((subject as Group).id, userId)
+    val history = GachaUtil.getHistory((subject as Group).id, userId)
     var star3 = 0
     if (stars == 3) {
       star3 = 1
     }
     val hitPickup = hitPickup(result)
-    GachaData.updateHistory((subject as Group).id, userId, addPoints = 1, addCount3 = star3, dog = hitPickup)
+    GachaUtil.updateHistory((subject as Group).id, userId, addPoints = 1, addCount3 = star3, dog = hitPickup)
     val s = "${resultData2String(result)}\n${history.points + 1} points"
     val dog = if (hitPickup) "恭喜老师,出货了呢" else ""
     val handler = subject.sendMessage(MessageUtil.atMessageAndCTRL(user, dog, s))

@@ -1,7 +1,6 @@
 package net.diyigemt.arona.command
 
 import net.diyigemt.arona.Arona
-import net.diyigemt.arona.command.data.GachaData
 import net.diyigemt.arona.config.AronaGachaConfig
 import net.diyigemt.arona.db.gacha.GachaCharacter
 import net.diyigemt.arona.util.GachaUtil
@@ -44,8 +43,8 @@ object GachaMultiCommand : SimpleCommand(
     val s = result.map { resultData2String(it) }
       .reduceIndexed { index, prv, cur -> if (index == 4) "$prv $cur\n" else "$prv $cur" }
     val hitPickup = result.any { hitPickup(it) }
-    val history = GachaData.getHistory((subject as Group).id, userId)
-    GachaData.updateHistory((subject as Group).id, userId, addPoints = checkTime, addCount3 = stars3, dog = hitPickup)
+    val history = GachaUtil.getHistory((subject as Group).id, userId)
+    GachaUtil.updateHistory((subject as Group).id, userId, addPoints = checkTime, addCount3 = stars3, dog = hitPickup)
     val dog = if (hitPickup) "恭喜老师,出货了呢" else ""
     val sss = "3星:$stars3 2星:$stars2 1星:$stars1 ${history.points + checkTime} points\n${s}"
     val handler = subject.sendMessage(atMessageAndCTRL(user, dog, sss))

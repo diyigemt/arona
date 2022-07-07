@@ -54,7 +54,16 @@ Please note that for various reasons, developers may **stop updating** or **dele
 1. 添加新配置项(arona-gacha.yml -> revokeTime) 允许用户配置抽卡结果撤回时间
 2. 防侠预警添加维护预警
 3. 修复在某些情况下防侠预警不在整点发送的Bug
-4. 新增配置项(arona.yml -> defaultActivityCommandServer) 允许用户配置"/活动"指令的默认目标服务器
+4. 新增配置项(arona-notify.yml -> defaultActivityCommandServer) 允许用户配置"/活动"指令的默认目标服务器
+5. 新增配置项(arona.yml -> managerGroup)允许用户配置管理员以便在线更改服务配置
+6. 新增配置项(arona.yml -> permissionDeniedMessage)允许用户配置非机器人管理员在尝试执行管理员权限的指令时回复的消息
+7. 移除各配置文件中的enable配置项
+8. 新增配置文件(arona-service.yml)统一管理各模块的开关
+
+升级比做指南：
+
+1. 配置(arona.yml -> managerGroup)，以赋予用户使用管理员命令的权限，此后arona将以该配置作为管理权限，而不是通过是否为群主或群管理来判断机器人的管理权限
+2. 编辑arona-service.yml配置文件，重新配置各模块的功能开启与否
 
 2022-07-05 v0.1.1 修复国际服总力站没有结束时间的问题
 

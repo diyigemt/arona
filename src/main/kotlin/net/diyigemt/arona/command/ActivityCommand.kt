@@ -2,26 +2,20 @@ package net.diyigemt.arona.command
 
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.entity.Activity
+import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.util.ActivityUtil
 import net.diyigemt.arona.util.GeneralUtils
-import net.diyigemt.arona.util.MessageUtil
-import net.diyigemt.arona.util.TimeUtil.calcTime
 import net.mamoe.mirai.console.command.CompositeCommand
-import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.UserCommandSender
-import net.mamoe.mirai.console.command.descriptor.ExperimentalCommandDescriptors
-import net.mamoe.mirai.console.util.ConsoleExperimentalApi
 import net.mamoe.mirai.contact.Contact
-import org.jsoup.Jsoup
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.math.floor
 
 object ActivityCommand : CompositeCommand(
   Arona,"active", "活动",
   description = "通过bili wiki获取活动列表"
-) {
-
+), AronaService {
+  init {
+    registerService()
+  }
   @SubCommand("en")
   @Description("查看国际服活动")
   suspend fun UserCommandSender.activities() {
@@ -30,7 +24,7 @@ object ActivityCommand : CompositeCommand(
 
   @SubCommand("jp")
   @Description("查看日服活动")
-  suspend fun UserCommandSender.activities_jp() {
+  suspend fun UserCommandSender.activitiesJP() {
     sendJP(subject)
   }
 
@@ -56,6 +50,13 @@ object ActivityCommand : CompositeCommand(
 
   private suspend fun send(subject: Contact, activities: Pair<List<Activity>, List<Activity>>) {
     subject.sendMessage(ActivityUtil.constructMessage(activities))
+  }
+
+  override val id: Int = 1
+  override val name: String = "活动查询"
+  override var enable: Boolean = true
+  override fun init() {
+    registerService()
   }
 
 }

@@ -2,7 +2,7 @@ package net.diyigemt.arona.extension
 
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.command.ActivityCommand
-import net.diyigemt.arona.config.AronaConfig
+import net.diyigemt.arona.config.AronaNotifyConfig
 import net.diyigemt.arona.entity.ServerLocale
 import net.diyigemt.arona.interfaces.CommandInterceptor
 import net.diyigemt.arona.util.GeneralUtils
@@ -20,7 +20,7 @@ object ActivityCommandInterceptor: CommandInterceptor() {
     if (message.contentToString() != ACTIVITY_COMMAND) return null
     if ((caller is UserCommandSender) and GeneralUtils.checkService(caller.subject)) {
       val subject = caller.subject!!
-      if (AronaConfig.defaultActivityCommandServer == ServerLocale.JP) {
+      if (AronaNotifyConfig.defaultActivityCommandServer == ServerLocale.JP) {
         kotlin.runCatching {
           Arona.runSuspend {
             ActivityCommand.sendJP(subject)

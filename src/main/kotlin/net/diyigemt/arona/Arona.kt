@@ -32,6 +32,8 @@ import net.mamoe.mirai.event.GlobalEventChannel
 import net.mamoe.mirai.event.events.BotOnlineEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
 import net.mamoe.mirai.event.events.NudgeEvent
+import net.mamoe.mirai.message.code.MiraiCode
+import net.mamoe.mirai.message.data.MessageChain
 import net.mamoe.mirai.utils.info
 
 object Arona : KotlinPlugin(
@@ -48,7 +50,7 @@ object Arona : KotlinPlugin(
       }.subscribeOnce<BotOnlineEvent> {
         arona = it.bot
         if (AronaConfig.sendOnlineMessage) {
-          sendMessage(AronaConfig.onlineMessage)
+          sendMessage(MiraiCode.deserializeMiraiCode(AronaConfig.onlineMessage))
         }
       }
       if (AronaNudgeConfig.enable) {
@@ -109,11 +111,22 @@ object Arona : KotlinPlugin(
   }
   fun sendExitMessage() {
     if (AronaConfig.sendOfflineMessage) {
-      sendMessage(AronaConfig.offlineMessage)
+      sendMessage(MiraiCode.deserializeMiraiCode(AronaConfig.offlineMessage))
     }
   }
 
   fun sendMessage(message: String) {
+    runBlocking {
+      withContext(coroutineContext) {
+        AronaConfig.groups.forEach {
+          val group =  arona.groups[it] ?: return@forEach
+          group.sendMessage(message)
+        }
+      }
+    }
+  }
+
+  fun sendMessage(message: MessageChain) {
     runBlocking {
       withContext(coroutineContext) {
         AronaConfig.groups.forEach {

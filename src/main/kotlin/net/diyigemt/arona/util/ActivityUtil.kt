@@ -248,9 +248,8 @@ object ActivityUtil {
       .map { at -> "${at.content}     ${at.time}\n" }
       .reduceOrNull { prv, cur -> prv + cur }
     val pendingString = activities.second
-      .map { at -> "${at.content}     ${at.time}\n" }
-      .reduceOrNull { prv, cur -> prv + cur }
-      ?.let { it.take(it.length - 1) }
+      .map { at -> "${at.content}     ${at.time}" }
+      .reduceOrNull { prv, cur -> "$prv\n$cur" }
     return "正在进行:\n${activeString ?: "无\n"}即将开始:\n${pendingString ?: '无'}"
   }
 

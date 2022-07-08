@@ -21,7 +21,7 @@ object GachaMultiCommand : SimpleCommand(
 ) {
 
   @Handler
-  suspend fun UserCommandSender.gacha_multi() {
+  suspend fun UserCommandSender.gachaMulti() {
     if (!GeneralUtils.checkService(subject)) return
     val userId = user.id
     val checkTime = GachaUtil.checkTime(userId)

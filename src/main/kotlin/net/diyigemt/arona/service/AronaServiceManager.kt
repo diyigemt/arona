@@ -56,7 +56,16 @@ object AronaServiceManager {
     return disable(id.toString())
   }
 
-  private fun findServiceByName(name: String): AronaService? = MAP[name]
+  fun getAllService(): List<AronaService> = MAP.filter { entry -> checkNameIsInt(entry.key) }.values.toList()
+
+  private fun checkNameIsInt(name: String): Boolean = try {
+    name.toInt()
+    true
+  } catch (_: Exception) {
+    false
+  }
+
+  fun findServiceByName(name: String): AronaService? = MAP[name]
 
   private fun findServiceById(id: Int): AronaService? = MAP[id.toString()]
 

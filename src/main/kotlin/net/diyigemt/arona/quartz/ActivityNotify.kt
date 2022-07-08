@@ -7,6 +7,8 @@ import net.diyigemt.arona.entity.ActivityType
 import net.diyigemt.arona.entity.ServerLocale
 import net.diyigemt.arona.interfaces.InitializedFunction
 import net.diyigemt.arona.util.ActivityUtil
+import net.diyigemt.arona.util.MessageUtil
+import net.mamoe.mirai.message.code.MiraiCode
 import org.quartz.InterruptableJob
 import org.quartz.Job
 import org.quartz.JobExecutionContext
@@ -61,10 +63,14 @@ object ActivityNotify: InitializedFunction() {
       val enMessage = ActivityUtil.constructMessage(en)
       if (AronaNotifyConfig.enableEveryDay) {
         if (AronaNotifyConfig.enableJP) {
-          Arona.sendMessage("${AronaNotifyConfig.notifyStringJP}\n$jpMessage")
+          Arona.sendMessage(
+            MessageUtil.deserializeMiraiCodeAndAddString(AronaNotifyConfig.notifyStringJP, "\n$jpMessage")
+          )
         }
         if (AronaNotifyConfig.enableEN) {
-          Arona.sendMessage("${AronaNotifyConfig.notifyStringEN}\n$enMessage")
+          Arona.sendMessage(
+            MessageUtil.deserializeMiraiCodeAndAddString(AronaNotifyConfig.notifyStringEN, "\n$enMessage")
+          )
         }
       }
     }
@@ -158,7 +164,7 @@ object ActivityNotify: InitializedFunction() {
         .map { at -> "${at.content}\n" }
         .reduceOrNull { prv, cur -> prv + cur }
       val serverName = if (server) "日服" else "国际服"
-      val serverString = if (server) AronaNotifyConfig.notifyStringJP else AronaNotifyConfig.notifyStringEN
+      val serverString = MiraiCode.deserializeMiraiCode(if (server) AronaNotifyConfig.notifyStringJP else AronaNotifyConfig.notifyStringEN)
       val settingDropTime = if (AronaNotifyConfig.dropNotify <= 3) (AronaNotifyConfig.dropNotify + 24) else AronaNotifyConfig.dropNotify
       val endTime = if (server or isDropActivity(activity[0])) {
         27 - settingDropTime

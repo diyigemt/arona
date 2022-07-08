@@ -22,6 +22,15 @@ class TestSimple {
   }
 
   @Test
+  fun testParseInt() {
+    try {
+        "123asd".toInt()
+    } catch (_: Exception) {
+      println(123)
+    }
+  }
+
+  @Test
   fun testEnumClass() {
     println(A.B in (A.C .. A.E))
   }

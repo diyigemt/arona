@@ -1,6 +1,7 @@
 package net.diyigemt.arona.extension
 
 import net.diyigemt.arona.Arona
+import net.diyigemt.arona.service.AronaManageService
 import net.diyigemt.arona.service.AronaService
 import net.mamoe.mirai.console.command.CommandManager
 import net.mamoe.mirai.console.command.CommandSender
@@ -36,6 +37,10 @@ private object CommandResolverInterceptor: CommandCallInterceptor {
           caller.sendMessage("功能未启用")
         }
         return InterceptResult(InterceptedReason("功能未启用"))
+      } else if (matchCommand is AronaManageService) {
+        if (!matchCommand.checkAdmin(caller.user, caller.subject)) {
+          return InterceptResult(InterceptedReason("权限不足"))
+        }
       }
     }
     val reason = CommandInterceptorManager.emitInterceptBeforeCall(message, caller)

@@ -3,14 +3,12 @@ package net.diyigemt.arona.util
 import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.User
 import net.mamoe.mirai.message.MessageReceipt
+import net.mamoe.mirai.message.code.MiraiCode
 import net.mamoe.mirai.message.data.At
 import net.mamoe.mirai.message.data.MessageChain
+import net.mamoe.mirai.message.data.MessageChainBuilder
 
 object MessageUtil {
-
-  private const val MessageRecallJobKey = "MessageRecall"
-  private const val JobDataMessageKey = "message"
-
 
   fun at(user: User, msg: MessageChain): MessageChain {
     return At(user).plus(msg)
@@ -34,6 +32,17 @@ object MessageUtil {
 
   fun recall(target: MessageReceipt<Contact>, delay: Long = 1000 * 10) {
     target.recallIn(delay)
+  }
+
+  fun deserializeMiraiCodeAndAddString(source: String, extra: String, contact: Contact? = null): MessageChain = deserializeMiraiCodeAndBuild(source, contact) {
+    it.add(extra)
+    it.build()
+  }
+
+  fun deserializeMiraiCodeAndBuild(source: String, contact: Contact? = null, block: (builder: MessageChainBuilder) -> MessageChain): MessageChain {
+    val builder = MessageChainBuilder()
+    builder.add(MiraiCode.deserializeMiraiCode(source, contact))
+    return block(builder)
   }
 
 }

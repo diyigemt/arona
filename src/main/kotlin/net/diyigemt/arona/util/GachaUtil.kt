@@ -5,7 +5,6 @@ package net.diyigemt.arona.util
 import net.diyigemt.arona.command.cache.GachaCache
 import net.diyigemt.arona.config.AronaGachaConfig
 import net.diyigemt.arona.config.AronaGachaLimitConfig
-import net.diyigemt.arona.constant.GachaConstant
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.gacha.GachaCharacter
 import net.diyigemt.arona.db.gacha.GachaHistory
@@ -13,7 +12,7 @@ import net.diyigemt.arona.db.gacha.GachaHistoryTable
 import org.jetbrains.exposed.sql.and
 
 object GachaUtil {
-
+  const val star = "★"
   fun pickup(): GachaCharacter {
     val maxDot = pow10(AronaGachaConfig.maxDot)
     val star1Rate = (AronaGachaConfig.star1Rate * maxDot).toInt()
@@ -128,7 +127,7 @@ object GachaUtil {
     }
   }!!
 
-  fun resultData2String(result: GachaCharacter) = "${result.name}(${result.star}${GachaConstant.star})${if (hitPickup(result)) "(pick up)" else ""}"
+  fun resultData2String(result: GachaCharacter) = "${result.name}(${result.star}${star})${if (hitPickup(result)) "(pick up)" else ""}"
 
   fun hitPickup(result: GachaCharacter) = GachaCache.star2PickupList.contains(result) || GachaCache.star3PickupList.contains(result)
 

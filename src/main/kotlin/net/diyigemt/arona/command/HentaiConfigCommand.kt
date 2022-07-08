@@ -4,10 +4,13 @@ import net.diyigemt.arona.Arona
 import net.diyigemt.arona.config.AronaHentaiConfig
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.entity.NudgeMessage
+import net.diyigemt.arona.service.AronaManageService
+import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.util.ActivityUtil
 import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.MessageUtil
 import net.diyigemt.arona.util.TimeUtil.calcTime
+import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.UserCommandSender
@@ -22,11 +25,11 @@ import kotlin.math.floor
 object HentaiConfigCommand : CompositeCommand(
   Arona,"hentai", "发情",
   description = "设置发情触发的关键词"
-) {
+), AronaManageService {
 
   @SubCommand("adds")
   @Description("添加一条关键词或者监听对象")
-  suspend fun UserCommandSender.hentai_add_s(action: String, weight: Int = 1) {
+  suspend fun UserCommandSender.hentaiAddString(action: String, weight: Int = 1) {
     if (!GeneralUtils.checkService(subject)) return
     if (!(user as Member).isOperator()) {
       subject.sendMessage(MessageUtil.atAndCTRL(user, "爬, 权限不足"))
@@ -38,7 +41,7 @@ object HentaiConfigCommand : CompositeCommand(
 
   @SubCommand("add")
   @Description("添加监听对象")
-  suspend fun UserCommandSender.hentai_add(target: Member) {
+  suspend fun UserCommandSender.hentaiAdd(target: Member) {
     if (!GeneralUtils.checkService(subject)) return
     if (!(user as Member).isOperator()) {
       subject.sendMessage(MessageUtil.atAndCTRL(user, "爬, 权限不足"))
@@ -54,7 +57,7 @@ object HentaiConfigCommand : CompositeCommand(
 
   @SubCommand("remove")
   @Description("删除监听对象")
-  suspend fun UserCommandSender.hentai_remove(target: Member) {
+  suspend fun UserCommandSender.hentaiRemove(target: Member) {
     if (!GeneralUtils.checkService(subject)) return
     if (!(user as Member).isOperator()) {
       subject.sendMessage(MessageUtil.atAndCTRL(user, "爬, 权限不足"))
@@ -70,7 +73,7 @@ object HentaiConfigCommand : CompositeCommand(
 
   @SubCommand("enable")
   @Description("启动")
-  suspend fun UserCommandSender.hentai_enable() {
+  suspend fun UserCommandSender.hentaiEnable() {
     if (!GeneralUtils.checkService(subject)) return
     if (user !is Member) return
     if (!(user as Member).isOperator()) {
@@ -83,7 +86,7 @@ object HentaiConfigCommand : CompositeCommand(
 
   @SubCommand("disable")
   @Description("退出")
-  suspend fun UserCommandSender.hentai_disable() {
+  suspend fun UserCommandSender.hentaiDisable() {
     if (!GeneralUtils.checkService(subject)) return
     if (user !is Member) return
     if (!(user as Member).isOperator()) {
@@ -92,6 +95,14 @@ object HentaiConfigCommand : CompositeCommand(
     }
     AronaHentaiConfig.enable = false
     subject.sendMessage("变态插件关闭成功")
+  }
+
+  override val id: Int = 2
+  override val name: String = "发情配置"
+  override var enable: Boolean = true
+  override fun init() {
+    registerService()
+    register()
   }
 
 }

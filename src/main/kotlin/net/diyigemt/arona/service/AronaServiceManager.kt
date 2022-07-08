@@ -1,9 +1,13 @@
 package net.diyigemt.arona.service
 
 import net.diyigemt.arona.Arona
+import net.diyigemt.arona.Arona.reload
+import net.diyigemt.arona.command.*
+import net.diyigemt.arona.config.AronaServiceConfig
+import net.diyigemt.arona.interfaces.InitializedFunction
 import kotlin.system.exitProcess
 
-object AronaServiceManager {
+object AronaServiceManager: InitializedFunction() {
 
   private val MAP: MutableMap<String, AronaService> = mapOf<String, AronaService>().toMutableMap()
 
@@ -67,6 +71,13 @@ object AronaServiceManager {
 
   fun findServiceByName(name: String): AronaService? = MAP[name]
 
+  fun saveServiceStatus() {
+    val map = AronaServiceConfig.config
+    MAP.forEach {
+      map[it.value.name] = it.value.enable
+    }
+  }
+
   private fun findServiceById(id: Int): AronaService? = MAP[id.toString()]
 
   private fun registerService(service: AronaService) {
@@ -79,4 +90,22 @@ object AronaServiceManager {
     MAP.remove(service.id.toString())
   }
 
+  override fun init() {
+    AronaConfigCommand.init()
+    GachaConfigCommand.init()
+    HentaiConfigCommand.init()
+    ActivityCommand.init()
+    GachaSingleCommand.init()
+    GachaMultiCommand.init()
+    GachaDogCommand.init()
+    GachaHistoryCommand.init()
+    AronaServiceConfig.reload()
+    AronaServiceConfig.config.forEach {
+      if (it.value) {
+        enable(it.key)
+      } else {
+        disable(it.key)
+      }
+    }
+  }
 }

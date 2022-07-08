@@ -25,7 +25,12 @@ object ActivityNotify: InitializedFunction() {
     // 全局启用标志
     if (!AronaNotifyConfig.enable) return
     // 每天早上8点触发
-    QuartzProvider.createCronTask(ActivityNotifyJob::class.java, "0 0 ${AronaNotifyConfig.everyDayHour} * * ? *", ActivityNotifyJobKey, ActivityNotifyJobKey)
+    QuartzProvider.createCronTask(
+      ActivityNotifyJob::class.java,
+      "0 0 ${AronaNotifyConfig.everyDayHour} * * ? *",
+      ActivityNotifyJobKey,
+      ActivityNotifyJobKey
+    )
     QuartzProvider.triggerTaskWithData(ActivityNotifyJobKey, ActivityNotifyJobKey, mapOf(ActivityNotifyDataInitKey to true))
   }
 

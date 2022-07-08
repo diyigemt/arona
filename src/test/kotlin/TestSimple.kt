@@ -1,5 +1,8 @@
 package org.example.mirai.plugin
 
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
+import org.jsoup.Jsoup
 import org.junit.jupiter.api.Test
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -28,6 +31,23 @@ class TestSimple {
     } catch (_: Exception) {
       println(123)
     }
+  }
+
+  @Test
+  fun testGetVersion() {
+    val get = Jsoup.connect("http://localhost:3000/api/v1/version/")
+      .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
+      .ignoreContentType(true)
+      .get()
+    val parseToJsonElement = Json.parseToJsonElement(get.body().text())
+    val jsonElement = parseToJsonElement.jsonObject["data"]?.jsonObject?.get("version")
+    println(jsonElement.toString().replace("\"", ""))
+  }
+
+  @Test
+  fun testEmptyArrayGet() {
+    val arr = mutableListOf<String>()
+    println(arr[0] ?: return)
   }
 
   @Test

@@ -3,6 +3,7 @@ package net.diyigemt.arona.command
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.config.AronaGachaConfig
 import net.diyigemt.arona.db.gacha.GachaCharacter
+import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.util.GachaUtil
 import net.diyigemt.arona.util.GachaUtil.hitPickup
 import net.diyigemt.arona.util.GachaUtil.pickup
@@ -11,6 +12,7 @@ import net.diyigemt.arona.util.GachaUtil.resultData2String
 import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.MessageUtil
 import net.diyigemt.arona.util.MessageUtil.atMessageAndCTRL
+import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.UserCommandSender
 import net.mamoe.mirai.contact.Group
@@ -18,7 +20,7 @@ import net.mamoe.mirai.contact.Group
 object GachaMultiCommand : SimpleCommand(
   Arona,"gacha_multi", "十连",
   description = "模拟十连"
-) {
+), AronaService {
 
   @Handler
   suspend fun UserCommandSender.gachaMulti() {
@@ -51,5 +53,13 @@ object GachaMultiCommand : SimpleCommand(
     if (AronaGachaConfig.revoke) {
       MessageUtil.recall(handler, AronaGachaConfig.revokeTime * 1000L)
     }
+  }
+
+  override val id: Int = 5
+  override val name: String = "抽卡十连"
+  override var enable: Boolean = true
+  override fun init() {
+    registerService()
+    register()
   }
 }

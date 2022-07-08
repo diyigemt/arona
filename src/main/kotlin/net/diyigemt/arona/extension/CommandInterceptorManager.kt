@@ -1,6 +1,6 @@
 package net.diyigemt.arona.extension
 
-import net.diyigemt.arona.interfaces.CommandInterceptor
+import net.diyigemt.arona.command.ActivityCommand
 import net.diyigemt.arona.interfaces.InitializedFunction
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.descriptor.ExperimentalCommandDescriptors
@@ -12,8 +12,8 @@ import net.mamoe.mirai.message.data.Message
 object CommandInterceptorManager: InitializedFunction() {
   private val ITEMS: MutableList<CommandInterceptor> = mutableListOf()
   override fun init() {
+    ITEMS.add(ActivityCommand)
     ITEMS.add(ExitCommandInterceptor)
-    ITEMS.add(ActivityCommandInterceptor)
     ITEMS.sortBy { it.level }
   }
 

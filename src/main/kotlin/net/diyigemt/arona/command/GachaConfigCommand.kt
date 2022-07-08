@@ -9,6 +9,7 @@ import net.diyigemt.arona.db.gacha.GachaHistoryTable
 import net.diyigemt.arona.service.AronaManageService
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.util.GeneralUtils
+import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.console.command.UserCommandSender
 import net.mamoe.mirai.contact.Group
@@ -43,11 +44,12 @@ object GachaConfigCommand : CompositeCommand(
     subject.sendMessage("历史记录清除成功")
   }
 
-  override val id: Int = 2
-  override val name: String = "抽卡"
+  override val id: Int = 1
+  override val name: String = "抽卡配置"
   override var enable: Boolean = true
   override fun init() {
     registerService()
+    register()
   }
 
 }

@@ -1,5 +1,6 @@
 package net.diyigemt.arona.config
 
+import net.diyigemt.arona.Arona.reload
 import net.mamoe.mirai.console.data.AutoSavePluginConfig
 import net.mamoe.mirai.console.data.ValueDescription
 import net.mamoe.mirai.console.data.value
@@ -34,6 +35,7 @@ object AronaGachaConfig: AutoSavePluginConfig("arona-gacha") {
   var maxDot: Int = 10
 
   fun init() {
+    reload()
     maxDot = listOf<Int>(
       getDotPosition(star1Rate.toString()),
       getDotPosition(star2Rate.toString()),

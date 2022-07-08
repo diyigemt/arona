@@ -3,6 +3,7 @@ package net.diyigemt.arona.command
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.service.AronaManageService
 import net.diyigemt.arona.service.AronaServiceManager
+import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.console.command.UserCommandSender
 import net.mamoe.mirai.contact.Contact
@@ -65,6 +66,7 @@ object AronaConfigCommand: CompositeCommand(
   override var enable: Boolean = true
   override fun init() {
     registerService()
+    register()
   }
 
 }

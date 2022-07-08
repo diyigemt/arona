@@ -10,7 +10,7 @@ package net.diyigemt.arona
 
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import net.diyigemt.arona.command.*
+import net.diyigemt.arona.advance.AronaUpdateCheck
 import net.diyigemt.arona.config.*
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.extension.CommandInterceptorManager
@@ -21,13 +21,14 @@ import net.diyigemt.arona.handler.NudgeEventHandler
 import net.diyigemt.arona.interfaces.InitializedFunction
 import net.diyigemt.arona.quartz.ActivityNotify
 import net.diyigemt.arona.quartz.QuartzProvider
+import net.diyigemt.arona.service.AronaServiceManager
 import net.mamoe.mirai.Bot
-import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.descriptor.ExperimentalCommandDescriptors
 import net.mamoe.mirai.console.extension.PluginComponentStorage
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
 import net.mamoe.mirai.console.util.ConsoleExperimentalApi
+import net.mamoe.mirai.contact.NormalMember
 import net.mamoe.mirai.event.GlobalEventChannel
 import net.mamoe.mirai.event.events.BotOnlineEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
@@ -40,7 +41,13 @@ object Arona : KotlinPlugin(
   JvmPluginDescription.loadFromResource()
 ) {
   private lateinit var arona: Bot
-  private val INIT: List<InitializedFunction> = listOf(ActivityNotify, CommandInterceptorManager)
+  private val INIT: List<InitializedFunction> =
+    listOf(
+      AronaServiceManager,
+      ActivityNotify,
+      CommandInterceptorManager,
+      AronaUpdateCheck
+    )
 
   override fun onEnable() {
     init()
@@ -73,20 +80,12 @@ object Arona : KotlinPlugin(
 
   private fun init() {
     AronaConfig.reload()
-    AronaGachaConfig.reload()
     AronaGachaConfig.init()
     AronaNudgeConfig.reload()
     AronaHentaiConfig.reload()
     AronaRepeatConfig.reload()
     AronaNotifyConfig.reload()
     AronaGachaLimitConfig.reload()
-    GachaDogCommand.register()
-    ActivityCommand.register()
-    GachaMultiCommand.register()
-    GachaConfigCommand.register()
-    GachaSingleCommand.register()
-    GachaHistoryCommand.register()
-    HentaiConfigCommand.register()
     DataBaseProvider.start()
     QuartzProvider.start()
     INIT.forEach {
@@ -101,7 +100,9 @@ object Arona : KotlinPlugin(
     AronaHentaiConfig.save()
     AronaRepeatConfig.save()
     AronaNotifyConfig.save()
+    AronaServiceConfig.save()
     AronaGachaLimitConfig.save()
+    AronaServiceManager.saveServiceStatus()
   }
 
   fun runSuspend(block: suspend () -> Unit) = runBlocking {
@@ -132,6 +133,29 @@ object Arona : KotlinPlugin(
         AronaConfig.groups.forEach {
           val group =  arona.groups[it] ?: return@forEach
           group.sendMessage(message)
+        }
+      }
+    }
+  }
+
+  fun sendMessageToAdmin(message: String) {
+    fun getAdmin(id: Long): NormalMember? {
+      AronaConfig.managerGroup.forEach {
+        val admin = arona.groups[it]?.get(id)
+        if (admin != null) return admin
+      }
+      return null
+    }
+    runBlocking {
+      withContext(coroutineContext) {
+        if (AronaConfig.groups.isEmpty() || AronaConfig.managerGroup.isEmpty()) return@withContext
+        val list = mutableListOf<NormalMember>()
+        AronaConfig.managerGroup.forEach {
+          val admin = getAdmin(it) ?: return@forEach
+          list.add(admin)
+        }
+        list.forEach {
+          it.sendMessage(message)
         }
       }
     }

@@ -57,8 +57,11 @@ Please note that for various reasons, developers may **stop updating** or **dele
 4. 新增配置项(arona-notify.yml -> defaultActivityCommandServer) 允许用户配置"/活动"指令的默认目标服务器
 5. 新增配置项(arona.yml -> managerGroup)允许用户配置管理员以便在线更改服务配置
 6. 新增配置项(arona.yml -> permissionDeniedMessage)允许用户配置非机器人管理员在尝试执行管理员权限的指令时回复的消息
-7. 移除各配置文件中的enable配置项
-8. 新增配置文件(arona-service.yml)统一管理各模块的开关
+7. 新增配置项(arona.yml -> autoCheckUpdate)配置arona是否自动检查更新
+8. 新增配置项(arona.yml -> updateCheckTime)配置arona每天自动检查更新的时间
+9. 新增配置项(arona.yml -> sendStatus)配置是否允许arona收集匿名统计信息(仅包括计算机名、第一次开启时间和总使用时长
+11. 移除各配置文件中的enable配置项
+12. 新增配置文件(arona-service.yml)统一管理各模块的开关
 
 升级比做指南：
 

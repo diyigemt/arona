@@ -37,17 +37,17 @@ object ActivityUtil {
       val content = it.getElementsByClass("activity__name").text()
       doInsert(now, parseStart, parseEnd, active, pending, content, contentSourceJP = false)
     }
-    return sortAndPackage(active, pending);
+    return sortAndPackage(active, pending)
   }
 
   fun fetchENActivity(): Pair<List<Activity>, List<Activity>> {
     val fetchActivities = fetchActivities()
     val active = mutableListOf<Activity>()
     val pending = mutableListOf<Activity>()
-    fetchActivities.forEach {
-      val content = it["orig_text"].toString().replace("\\r", "").replace("\\n", "")
+    fetchActivities.forEach { js ->
+      val content = js["orig_text"].toString().replace("\\r", "").replace("\\n", "")
       // N3H3
-      if (content.contains(Regex("[Nn]ormal")) and content.contains(Regex("[Hh]ard"))) {
+      if (content.contains(Regex("[Nn]ormal")) && content.contains(Regex("[Hh]ard"))) {
         val matchEntire = N3H3Plus.find(content)
         if (matchEntire != null && matchEntire.groups[0] != null) {
           val plus = matchEntire.groups[0]!!.value
@@ -57,7 +57,7 @@ object ActivityUtil {
           }
           val nTime = NormalTime.find(content)
           val hTime = HardTime.find(content)
-          if ((nTime != null) and (hTime != null) and (nTime!!.groups.size == 6) and (hTime!!.groups.size == 6)) {
+          if ((nTime != null) && (hTime != null) && (nTime.groups.size == 6) && (hTime.groups.size == 6)) {
             val groupN = nTime.groups
             val groupH = hTime.groups
             val n1 = groupN[1]!!.value
@@ -70,10 +70,10 @@ object ActivityUtil {
             val h4 = groupH[5]!!.value
             val now = Calendar.getInstance().time
             val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
-            val startN = "${year}/${if (n1.toInt() < 10) "0$n1" else n1}/${if (n2.toInt() < 10) "0$n2" else n2} 03:00"
-            val endN = "${year}/${if (n3.toInt() < 10) "0$n3" else n3}/${if (n4.toInt() < 10) "0$n4" else n4} 02:59"
-            val startH = "${year}/${if (h1.toInt() < 10) "0$h1" else h1}/${if (h2.toInt() < 10) "0$h2" else h2} 03:00"
-            val endH = "${year}/${if (h3.toInt() < 10) "0$h3" else h3}/${if (h4.toInt() < 10) "0$h4" else h4} 02:59"
+            val startN = parseDateString3(year, n1, n2)
+            val endN = parseDateString259(year, n3, n4)
+            val startH = parseDateString3(year, h1, h2)
+            val endH = parseDateString259(year, h3, h4)
             val parseStartN = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(startN)
             val parseEndN = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(endN)
             val parseStartH = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(startH)
@@ -87,7 +87,7 @@ object ActivityUtil {
         return@forEach
       }
       // PickUp
-      if (content.contains("PICK") and content.contains("UP") and (content.contains("募集") or content.contains("招募"))) {
+      if (content.contains("PICK") && content.contains("UP") && (content.contains("募集") or content.contains("招募"))) {
         val source = content.substringAfter("PICK UP学生").replace("★", "").replace("＆", "").replace(" ", "")
         val timeSource = content.replace(" ", "")
         val findAll = PickUpRegex.findAll(source).toList()
@@ -96,15 +96,15 @@ object ActivityUtil {
           findAll.forEach {
             val groups = it.groups
             val size = groups.size
-            if (size > (floor((size / 2).toDouble()) * 2)) {
+            student = if (size > (floor((size / 2).toDouble()) * 2)) {
               val extraName = groups[size - 1]!!.value
               val studentName = groups[size - 2]!!.value
               val studentStar = groups[size - 3]?.value ?: 3
-              student = "$student $studentStar★$studentName($extraName)"
+              "$student $studentStar★$studentName($extraName)"
             } else {
               val studentName = groups[size - 2]!!.value
               val studentStar = groups[size - 3]?.value ?: 3
-              student = "$student $studentStar★$studentName"
+              "$student $studentStar★$studentName"
             }
           }
         }
@@ -115,8 +115,8 @@ object ActivityUtil {
           val d1 = findTime.groups[2]!!.value
           val d2 = findTime.groups[4]!!.value
           val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
-          val start = "${year}/${if (m1.toInt() < 10) "0$m1" else m1}/${if (d1.toInt() < 10) "0$d1" else d1} 16:00"
-          val end = "${year}/${if (m2.toInt() < 10) "0$m2" else m2}/${if (d2.toInt() < 10) "0$d2" else d2} 11:00"
+          val start = parseDateString(year, m1, d1, "16:00")
+          val end = parseDateString(year, m2, d2, "11:00")
           val parseStart = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(start)
           val parseEnd = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(end)
           val now = Calendar.getInstance().time
@@ -169,7 +169,15 @@ object ActivityUtil {
         return@forEach
       }
     }
-    return sortAndPackage(active, pending);
+    return sortAndPackage(active, pending)
+  }
+
+  private fun parseDateString259(year: String, date1: String, date2: String) = parseDateString(year, date1, date2, "02:59")
+
+  private fun parseDateString3(year: String, date1: String, date2: String) = parseDateString(year, date1, date2, "03:00")
+
+  private fun parseDateString(year: String, date1: String, date2: String, suffix: String): String {
+    return "${year}/${if (date1.toInt() < 10) "0$date1" else date1}/${if (date2.toInt() < 10) "0$date2" else date2} $suffix"
   }
 
   private fun fetchActivities(): List<JsonObject> {
@@ -240,7 +248,7 @@ object ActivityUtil {
       }
       doInsert(now, parseStart, parseEnd, active, pending, contentSource)
     }
-    return sortAndPackage(active, pending);
+    return sortAndPackage(active, pending)
   }
 
   fun constructMessage(activities: Pair<List<Activity>, List<Activity>>): String {

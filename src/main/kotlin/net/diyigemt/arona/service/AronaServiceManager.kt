@@ -3,8 +3,16 @@ package net.diyigemt.arona.service
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.Arona.reload
 import net.diyigemt.arona.command.*
+import net.diyigemt.arona.config.AronaConfig
 import net.diyigemt.arona.config.AronaServiceConfig
+import net.diyigemt.arona.handler.GroupRepeaterHandler
+import net.diyigemt.arona.handler.HentaiEventHandler
+import net.diyigemt.arona.handler.NudgeEventHandler
 import net.diyigemt.arona.interfaces.InitializedFunction
+import net.diyigemt.arona.util.GeneralUtils
+import net.mamoe.mirai.contact.Contact
+import net.mamoe.mirai.contact.Group
+import net.mamoe.mirai.contact.User
 import kotlin.system.exitProcess
 
 object AronaServiceManager: InitializedFunction() {
@@ -60,6 +68,21 @@ object AronaServiceManager: InitializedFunction() {
     return disable(id.toString())
   }
 
+  fun checkService(service: AronaService, user: User, subject: Contact): String? = when {
+    (service is AronaGroupService) && !GeneralUtils.checkService(subject) -> "非服务群聊"
+    !service.enable -> {
+      Arona.runSuspend {
+        subject.sendMessage("功能未启用")
+      }
+      "功能未启用"
+    }
+    (service is AronaManageService) && (!(service as AronaManageService).checkAdmin(user, subject)) -> {
+      "权限不足"
+    }
+    else -> null
+  }
+
+
   fun getAllService(): List<AronaService> = MAP.filter { entry -> checkNameIsInt(entry.key) }.values.toList()
 
   private fun checkNameIsInt(name: String): Boolean = try {
@@ -99,6 +122,9 @@ object AronaServiceManager: InitializedFunction() {
     GachaMultiCommand.init()
     GachaDogCommand.init()
     GachaHistoryCommand.init()
+    GroupRepeaterHandler.init()
+    HentaiEventHandler.init()
+    NudgeEventHandler.init()
     AronaServiceConfig.reload()
     AronaServiceConfig.config.forEach {
       if (it.value) {

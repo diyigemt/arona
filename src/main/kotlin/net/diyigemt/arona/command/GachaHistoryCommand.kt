@@ -1,6 +1,7 @@
 package net.diyigemt.arona.command
 
 import net.diyigemt.arona.Arona
+import net.diyigemt.arona.service.AronaGroupService
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.util.GachaUtil
 import net.diyigemt.arona.util.GeneralUtils
@@ -13,7 +14,7 @@ import net.mamoe.mirai.contact.nameCardOrNick
 object GachaHistoryCommand : SimpleCommand(
   Arona,"gacha_history", "历史",
   description = "抽卡历史记录"
-), AronaService {
+), AronaGroupService {
 
   @Handler
   suspend fun UserCommandSender.gachaHistory() {

@@ -2,6 +2,7 @@ package net.diyigemt.arona.command
 
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.config.AronaGachaConfig
+import net.diyigemt.arona.service.AronaGroupService
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.util.GachaUtil
 import net.diyigemt.arona.util.GachaUtil.hitPickup
@@ -17,10 +18,10 @@ import net.mamoe.mirai.contact.Group
 object GachaSingleCommand : SimpleCommand(
   Arona,"gacha_one", "单抽",
   description = "单抽一次"
-), AronaService {
+), AronaGroupService {
 
   @Handler
-  suspend fun UserCommandSender.gacha_one() {
+  suspend fun UserCommandSender.gachaOne() {
     if (!GeneralUtils.checkService(subject)) return
     val userId = user.id
     val checkTime = GachaUtil.checkTime(userId, 1)

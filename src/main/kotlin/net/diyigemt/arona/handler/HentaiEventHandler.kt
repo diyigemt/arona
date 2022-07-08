@@ -1,16 +1,11 @@
 package net.diyigemt.arona.handler
 
-import net.diyigemt.arona.Arona
 import net.diyigemt.arona.config.AronaHentaiConfig
-import net.diyigemt.arona.config.AronaNudgeConfig
-import net.diyigemt.arona.entity.NudgeMessage
+import net.diyigemt.arona.service.AronaGroupService
 import net.diyigemt.arona.util.MessageUtil
-import net.mamoe.mirai.contact.Group
-import net.mamoe.mirai.contact.User
 import net.mamoe.mirai.event.events.GroupMessageEvent
-import net.mamoe.mirai.event.events.NudgeEvent
 
-object HentaiEventHandler: AronaEventHandler<GroupMessageEvent> {
+object HentaiEventHandler: AronaEventHandler<GroupMessageEvent>, AronaGroupService {
 
   override suspend fun handle(event: GroupMessageEvent) {
     val enable = AronaHentaiConfig.enable
@@ -34,4 +29,11 @@ object HentaiEventHandler: AronaEventHandler<GroupMessageEvent> {
     }
   }
 
+  override val id: Int = 9
+  override val name: String = "发情"
+  override var enable: Boolean = true
+
+  override fun init() {
+    registerService()
+  }
 }

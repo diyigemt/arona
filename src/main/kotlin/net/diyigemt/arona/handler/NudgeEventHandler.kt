@@ -1,15 +1,23 @@
 package net.diyigemt.arona.handler
 
 import net.diyigemt.arona.config.AronaNudgeConfig
-import net.diyigemt.arona.entity.NudgeMessage
+import net.diyigemt.arona.service.AronaGroupService
+import net.diyigemt.arona.service.AronaService
+import net.diyigemt.arona.service.AronaServiceManager
 import net.diyigemt.arona.util.MessageUtil
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.User
 import net.mamoe.mirai.event.events.NudgeEvent
 
-object NudgeEventHandler: AronaEventHandler<NudgeEvent> {
+object NudgeEventHandler: AronaGroupService {
 
-  override suspend fun handle(event: NudgeEvent) {
+  suspend fun preHandle(event: NudgeEvent) {
+    if (AronaServiceManager.checkService(this, event.from as User, event.subject) == null) {
+      handle(event)
+    }
+  }
+
+  suspend fun handle(event: NudgeEvent) {
     val messageList = AronaNudgeConfig.messageList
     val target = event.target
     val from = event.from
@@ -27,6 +35,14 @@ object NudgeEventHandler: AronaEventHandler<NudgeEvent> {
         index -= msg.weight
       }
     }
+  }
+
+  override val id: Int = 10
+  override val name: String = "摸头回复"
+  override var enable: Boolean = true
+
+  override fun init() {
+    registerService()
   }
 
 }

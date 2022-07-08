@@ -1,6 +1,7 @@
 package net.diyigemt.arona.command
 
 import net.diyigemt.arona.Arona
+import net.diyigemt.arona.service.AronaGroupService
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.util.GachaUtil
 import net.diyigemt.arona.util.GeneralUtils
@@ -13,10 +14,10 @@ import net.mamoe.mirai.contact.nameCardOrNick
 object GachaDogCommand : SimpleCommand(
   Arona,"gacha_dog", "狗叫",
   description = "单抽一次"
-), AronaService {
+), AronaGroupService {
 
   @Handler
-  suspend fun UserCommandSender.gacha_dog() {
+  suspend fun UserCommandSender.gachaDog() {
     if (!GeneralUtils.checkService(subject)) return
     val dogCall = GachaUtil.getDogCall((subject as Group).id).filter { it.dog != 0 }
     if (dogCall.isEmpty()) {

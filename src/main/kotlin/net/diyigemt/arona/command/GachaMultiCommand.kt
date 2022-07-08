@@ -3,6 +3,7 @@ package net.diyigemt.arona.command
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.config.AronaGachaConfig
 import net.diyigemt.arona.db.gacha.GachaCharacter
+import net.diyigemt.arona.service.AronaGroupService
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.util.GachaUtil
 import net.diyigemt.arona.util.GachaUtil.hitPickup
@@ -20,7 +21,7 @@ import net.mamoe.mirai.contact.Group
 object GachaMultiCommand : SimpleCommand(
   Arona,"gacha_multi", "十连",
   description = "模拟十连"
-), AronaService {
+), AronaGroupService {
 
   @Handler
   suspend fun UserCommandSender.gachaMulti() {
@@ -31,7 +32,7 @@ object GachaMultiCommand : SimpleCommand(
       subject.sendMessage(MessageUtil.at(user, "老师,石头不够了哦,明天再来抽吧"))
       return
     }
-    val result = Array<GachaCharacter>(checkTime) { pickup() }
+    val result = Array(checkTime) { pickup() }
     val starMap = result.map { it.star }
     val stars = starMap.reduce { prv, cur -> prv + cur }
     var stars1 = starMap.filter { it == 1 }.size

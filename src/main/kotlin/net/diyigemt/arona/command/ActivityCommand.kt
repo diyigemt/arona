@@ -33,13 +33,13 @@ object ActivityCommand : CompositeCommand(
     sendJP(subject)
   }
 
-  suspend fun sendEN(subject: Contact) {
+  private suspend fun sendEN(subject: Contact) {
     if (!GeneralUtils.checkService(subject)) return
     val enActivity = ActivityUtil.fetchENActivity()
     send(subject, enActivity)
   }
 
-  suspend fun sendJP(subject: Contact) {
+  private suspend fun sendJP(subject: Contact) {
     if (!GeneralUtils.checkService(subject)) return
     var jpActivity = ActivityUtil.fetchJPActivity()
     if (jpActivity.first.isEmpty() && jpActivity.second.isEmpty()) {
@@ -69,12 +69,12 @@ object ActivityCommand : CompositeCommand(
    private val ACTIVITY_COMMAND = "${CommandManager.commandPrefix}活动"
    override fun interceptBeforeCall(message: Message, caller: CommandSender): String? {
      if (message.contentToString() != ACTIVITY_COMMAND) return null
-     if ((caller is UserCommandSender) and GeneralUtils.checkService(caller.subject)) {
-       val subject = caller.subject!!
+     if ((caller is UserCommandSender) && GeneralUtils.checkService(caller.subject)) {
+       val subject = caller.subject
        if (AronaNotifyConfig.defaultActivityCommandServer == ServerLocale.JP) {
          kotlin.runCatching {
            Arona.runSuspend {
-             ActivityCommand.sendJP(subject)
+             sendJP(subject)
            }
          }.onFailure {
            Arona.runSuspend {
@@ -84,7 +84,7 @@ object ActivityCommand : CompositeCommand(
        } else {
          kotlin.runCatching {
            Arona.runSuspend {
-             ActivityCommand.sendEN(subject)
+             sendEN(subject)
            }
          }.onFailure {
            Arona.runSuspend {

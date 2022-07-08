@@ -1,19 +1,19 @@
 package net.diyigemt.arona.handler
 
+import net.diyigemt.arona.service.AronaService
+import net.diyigemt.arona.service.AronaServiceManager
 import net.diyigemt.arona.util.GeneralUtils
 import net.mamoe.mirai.event.Event
 import net.mamoe.mirai.event.events.GroupMessageEvent
+import net.mamoe.mirai.event.events.MessageEvent
 import net.mamoe.mirai.event.events.NudgeEvent
 
-interface AronaEventHandler<in T: Event> {
+interface AronaEventHandler<in T: MessageEvent>: AronaService {
 
   suspend fun preHandle(event: T) {
-    val flag = when(event) {
-      is GroupMessageEvent -> GeneralUtils.checkService(event.subject)
-      is NudgeEvent -> GeneralUtils.checkService(event.subject)
-      else -> true
+    if (AronaServiceManager.checkService(this, event.sender, event.subject) == null) {
+      handle(event)
     }
-    if (flag) handle(event)
   }
   suspend fun handle(event: T)
 }

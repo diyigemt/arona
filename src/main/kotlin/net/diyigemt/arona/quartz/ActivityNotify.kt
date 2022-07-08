@@ -37,7 +37,7 @@ object ActivityNotify: InitializedFunction() {
   class ActivityNotifyJob: Job {
     override fun execute(context: JobExecutionContext?) {
       var jp = ActivityUtil.fetchJPActivity()
-      if (jp.first.isEmpty() and jp.second.isEmpty()) {
+      if (jp.first.isEmpty() && jp.second.isEmpty()) {
         jp = ActivityUtil.fetchJPActivityFromJP()
       }
       val en = ActivityUtil.fetchENActivity()
@@ -118,7 +118,7 @@ object ActivityNotify: InitializedFunction() {
       val extra = extraHAndD(activity, active = false)
       val h = extra.first
       val d = extra.second
-      if ((d == 0) and isMaintenanceActivity(activity)) {
+      if ((d == 0) && isMaintenanceActivity(activity)) {
         insertMaintenanceAlert(activity, h)
       }
       return d * 24 + h < 48

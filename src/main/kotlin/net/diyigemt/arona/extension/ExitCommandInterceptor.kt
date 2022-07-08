@@ -18,7 +18,7 @@ object ExitCommandInterceptor: CommandInterceptor {
   override fun interceptCall(call: CommandCall): Boolean {
     val calleeName = call.calleeName
     val valueArguments = call.valueArguments
-    if (valueArguments.isEmpty() and EXIT_COMMAND.contains(calleeName)) {
+    if (valueArguments.isEmpty() && EXIT_COMMAND.contains(calleeName)) {
       Arona.sendExitMessage()
     }
     return true;

@@ -5,7 +5,6 @@ import net.diyigemt.arona.config.AronaConfig
 import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.User
 import net.mamoe.mirai.message.code.MiraiCode
-import net.mamoe.mirai.message.data.MessageChainBuilder
 
 interface AronaManageService: AronaService {
 

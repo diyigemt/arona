@@ -3,7 +3,6 @@ package net.diyigemt.arona.service
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.Arona.reload
 import net.diyigemt.arona.command.*
-import net.diyigemt.arona.config.AronaConfig
 import net.diyigemt.arona.config.AronaServiceConfig
 import net.diyigemt.arona.handler.GroupRepeaterHandler
 import net.diyigemt.arona.handler.HentaiEventHandler
@@ -11,7 +10,6 @@ import net.diyigemt.arona.handler.NudgeEventHandler
 import net.diyigemt.arona.interfaces.InitializedFunction
 import net.diyigemt.arona.util.GeneralUtils
 import net.mamoe.mirai.contact.Contact
-import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.User
 import kotlin.system.exitProcess
 

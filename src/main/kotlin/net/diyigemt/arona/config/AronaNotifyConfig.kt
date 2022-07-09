@@ -1,6 +1,5 @@
 package net.diyigemt.arona.config
 
-import net.diyigemt.arona.config.AronaConfig.provideDelegate
 import net.diyigemt.arona.entity.ServerLocale
 import net.mamoe.mirai.console.data.AutoSavePluginConfig
 import net.mamoe.mirai.console.data.ValueDescription

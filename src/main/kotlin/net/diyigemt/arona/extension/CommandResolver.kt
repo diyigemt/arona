@@ -1,7 +1,5 @@
 package net.diyigemt.arona.extension
 
-import net.diyigemt.arona.Arona
-import net.diyigemt.arona.service.AronaManageService
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.service.AronaServiceManager
 import net.mamoe.mirai.console.command.CommandManager
@@ -14,8 +12,6 @@ import net.mamoe.mirai.console.command.resolve.InterceptResult
 import net.mamoe.mirai.console.command.resolve.InterceptedReason
 import net.mamoe.mirai.console.extensions.CommandCallInterceptorProvider
 import net.mamoe.mirai.console.util.ConsoleExperimentalApi
-import net.mamoe.mirai.contact.Contact
-import net.mamoe.mirai.contact.User
 import net.mamoe.mirai.message.data.Message
 
 @OptIn(ExperimentalCommandDescriptors::class, ConsoleExperimentalApi::class)

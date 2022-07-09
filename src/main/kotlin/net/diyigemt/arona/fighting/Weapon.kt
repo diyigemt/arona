@@ -1,7 +1,5 @@
 package net.diyigemt.arona.fighting
 
-import kotlin.math.acos
-
 open class Weapon(
   private val star: Int = 0,
   private val level: Int = 0,

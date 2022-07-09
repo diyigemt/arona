@@ -1,12 +1,8 @@
 package net.diyigemt.arona.handler
 
-import net.diyigemt.arona.Arona
 import net.diyigemt.arona.config.AronaRepeatConfig
 import net.diyigemt.arona.service.AronaGroupService
 import net.mamoe.mirai.event.events.GroupMessageEvent
-import net.mamoe.mirai.message.data.PlainText
-import net.mamoe.mirai.message.data.content
-import java.awt.image.BufferedImage
 
 // 复读
 object GroupRepeaterHandler: AronaEventHandler<GroupMessageEvent>, AronaGroupService {

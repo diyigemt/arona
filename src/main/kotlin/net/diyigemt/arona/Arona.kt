@@ -23,8 +23,6 @@ import net.diyigemt.arona.quartz.ActivityNotify
 import net.diyigemt.arona.quartz.QuartzProvider
 import net.diyigemt.arona.service.AronaServiceManager
 import net.mamoe.mirai.Bot
-import net.mamoe.mirai.console.command.CommandManager
-import net.mamoe.mirai.console.command.MemberCommandSender
 import net.mamoe.mirai.console.command.descriptor.ExperimentalCommandDescriptors
 import net.mamoe.mirai.console.extension.PluginComponentStorage
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription

@@ -1,6 +1,5 @@
 package net.diyigemt.arona.config
 
-import net.diyigemt.arona.config.AronaNotifyConfig.provideDelegate
 import net.diyigemt.arona.entity.NudgeMessage
 import net.mamoe.mirai.console.data.AutoSavePluginConfig
 import net.mamoe.mirai.console.data.ValueDescription

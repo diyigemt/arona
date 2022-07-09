@@ -10,6 +10,7 @@ import net.diyigemt.arona.handler.NudgeEventHandler
 import net.diyigemt.arona.interfaces.InitializedFunction
 import net.diyigemt.arona.util.GeneralUtils
 import net.mamoe.mirai.contact.Contact
+import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.User
 import kotlin.system.exitProcess
 
@@ -67,14 +68,23 @@ object AronaServiceManager: InitializedFunction() {
   }
 
   fun checkService(service: AronaService, user: User, subject: Contact): String? = when {
-    (service is AronaGroupService) && !GeneralUtils.checkService(subject) -> "非服务群聊"
+    service is AronaGroupService -> when {
+      subject !is Group -> {
+        Arona.runSuspend {
+          subject.sendMessage("该功能仅限群聊使用")
+        }
+        "该功能仅限群聊使用"
+      }
+      !GeneralUtils.checkService(subject) -> "非服务群聊"
+      else -> null
+    }
     !service.enable -> {
       Arona.runSuspend {
         subject.sendMessage("功能未启用")
       }
       "功能未启用"
     }
-    (service is AronaManageService) && (!(service as AronaManageService).checkAdmin(user, subject)) -> {
+    (service is AronaManageService) && (!service.checkAdmin(user, subject)) -> {
       "权限不足"
     }
     else -> null

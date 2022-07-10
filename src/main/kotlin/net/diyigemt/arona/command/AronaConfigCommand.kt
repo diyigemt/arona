@@ -39,17 +39,22 @@ object AronaConfigCommand: CompositeCommand(
 
   @SubCommand("状态")
   @Description("查看功能模块的状态")
-  suspend fun UserCommandSender.statusService(idOrName: String?) {
-    if (idOrName == null) {
-      sendAllServiceStatus(subject)
-      return
-    }
+  suspend fun UserCommandSender.statusService(idOrName: String) {
     val service = AronaServiceManager.findServiceByName(idOrName)
     if (service != null) {
-      sendMessage("${service.name}${if(service.enable) "启用中" else "已停用"}")
+      sendMessage("${service.name} ${if(service.enable) "启用中" else "已停用"}")
     } else {
       sendMessage("服务未找到")
     }
+  }
+
+  @SubCommand("状态")
+  @Description("全部功能模块的状态")
+  suspend fun UserCommandSender.statusDefault() {
+    val service = AronaServiceManager.getAllService().joinToString("\n") {
+      "${it.name} ${if (it.enable) "启用中" else "已停用"}"
+    }
+    sendMessage(service)
   }
 
   private suspend fun sendAllServiceStatus(contact: Contact) {

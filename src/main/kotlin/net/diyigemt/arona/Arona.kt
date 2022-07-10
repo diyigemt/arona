@@ -49,6 +49,7 @@ object Arona : KotlinPlugin(
       AronaUpdateCheck
     )
 
+  @OptIn(ExperimentalCommandDescriptors::class, ConsoleExperimentalApi::class)
   override fun onEnable() {
     init()
     if (DataBaseProvider.isConnected()) {

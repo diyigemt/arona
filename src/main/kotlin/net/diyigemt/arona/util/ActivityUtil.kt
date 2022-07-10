@@ -55,19 +55,17 @@ object ActivityUtil {
           if (plus.contains("3")) {
             power = 3
           }
-          val nTime = NormalTime.find(content)
-          val hTime = HardTime.find(content)
-          if ((nTime != null) && (hTime != null) && (nTime.groups.size == 6) && (hTime.groups.size == 6)) {
-            val groupN = nTime.groups
-            val groupH = hTime.groups
-            val n1 = groupN[1]!!.value
-            val n2 = groupN[2]!!.value
-            val n3 = groupN[4]!!.value
-            val n4 = groupN[5]!!.value
-            val h1 = groupH[1]!!.value
-            val h2 = groupH[2]!!.value
-            val h3 = groupH[4]!!.value
-            val h4 = groupH[5]!!.value
+          val nTime = NormalTime.find(content)?.groupValues ?: return@forEach
+          val hTime = HardTime.find(content)?.groupValues ?: return@forEach
+          if ((nTime.size == 5) && (hTime.size == 5)) {
+            val n1 = nTime[0]
+            val n2 = nTime[1]
+            val n3 = nTime[3]
+            val n4 = nTime[4]
+            val h1 = hTime[0]
+            val h2 = hTime[1]
+            val h3 = hTime[3]
+            val h4 = hTime[4]
             val now = Calendar.getInstance().time
             val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
             val startN = parseDateString3(year, n1, n2)
@@ -94,26 +92,25 @@ object ActivityUtil {
         var student = "pick up"
         if (findAll.isNotEmpty()) {
           findAll.forEach {
-            val groups = it.groups
+            val groups = it.groupValues
             val size = groups.size
+            val studentName = groups[size - 2]
+            val studentStar = groups[size - 3].ifEmpty { 3 }
             student = if (size > (floor((size / 2).toDouble()) * 2)) {
-              val extraName = groups[size - 1]!!.value
-              val studentName = groups[size - 2]!!.value
-              val studentStar = groups[size - 3]?.value ?: 3
+              val extraName = groups[size - 1]
               "$student $studentStar★$studentName($extraName)"
             } else {
-              val studentName = groups[size - 2]!!.value
-              val studentStar = groups[size - 3]?.value ?: 3
               "$student $studentStar★$studentName"
             }
           }
-        }
-        val findTime = PickUpTime.find(timeSource)
-        if (findTime!!.groups.size >= 5) {
-          val m1 = findTime.groups[1]!!.value
-          val m2 = findTime.groups[3]!!.value
-          val d1 = findTime.groups[2]!!.value
-          val d2 = findTime.groups[4]!!.value
+        } else return@forEach
+        val findTime = PickUpTime.find(timeSource) ?: return@forEach
+        val groupValue = findTime.groupValues
+        if (groupValue.size >= 5) {
+          val m1 = groupValue[1]
+          val m2 = groupValue[3]
+          val d1 = groupValue[2]
+          val d2 = groupValue[4]
           val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
           val start = parseDateString(year, m1, d1, "16:00")
           val end = parseDateString(year, m2, d2, "11:00")
@@ -127,10 +124,11 @@ object ActivityUtil {
       // 维护公告
       if (content.contains("维护公告")) {
         val find = MaintenanceRegex.find(content)
-        if (find != null && find.groups.size >= 4) {
-          val m = find.groups[1]!!.value
-          val d = find.groups[2]!!.value
-          val hour = find.groups[3]!!.value
+        val groupValue = find?.groupValues ?: return@forEach
+        if (groupValue.size >= 4) {
+          val m = groupValue[1]
+          val d = groupValue[2]
+          val hour = groupValue[3]
           val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
           val start = "${year}/${if (m.toInt() < 10) "0$m" else m}/${if (d.toInt() < 10) "0$d" else d} ${if (hour.toInt() < 10) "0$hour" else hour}"
           val parseStart = SimpleDateFormat("yyyy/MM/dd HH").parse(start)
@@ -149,11 +147,12 @@ object ActivityUtil {
       if (content.contains("总力战预告")) {
         val source = content.substringAfter("总力战预告").trim()
         val find = TotalAssault.find(source)
-        if (find != null && find.groups.size >= 5) {
-          val name = find.groups[1]!!.value
-          val terrain = find.groups[2]!!.value
-          val m = find.groups[3]!!.value.toInt()
-          val d = find.groups[4]!!.value.toInt()
+        val groupValue = find?.groupValues ?: return@forEach
+        if (groupValue.size >= 5) {
+          val name = groupValue[1]
+          val terrain = groupValue[2]
+          val m = groupValue[3].toInt()
+          val d = groupValue[4].toInt()
           val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
           val start = "${year}/${if (m < 10) "0$m" else m}/${if (d < 10) "0$d" else d} 16:00"
           val parseStart = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(start)

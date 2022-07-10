@@ -1,7 +1,6 @@
 package org.example.mirai.plugin
 
 import net.diyigemt.arona.Arona
-import net.mamoe.mirai.Bot
 import net.mamoe.mirai.alsoLogin
 import net.mamoe.mirai.console.MiraiConsole
 import net.mamoe.mirai.console.plugin.PluginManager.INSTANCE.enable

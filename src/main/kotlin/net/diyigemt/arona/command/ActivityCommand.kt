@@ -40,7 +40,6 @@ object ActivityCommand : CompositeCommand(
   }
 
   private suspend fun sendJP(subject: Contact) {
-    if (!GeneralUtils.checkService(subject)) return
     var jpActivity = ActivityUtil.fetchJPActivity()
     if (jpActivity.first.isEmpty() && jpActivity.second.isEmpty()) {
       subject.sendMessage("biliwiki寄了, 从wikiru拉取...")

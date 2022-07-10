@@ -1,5 +1,6 @@
 # Project exclude paths
 /.gradle/
+/gradle/wrapper/gradle-wrapper.jar
 /build/
 /.idea/
 /test/
@@ -8,3 +9,10 @@
 /config/
 /plugins/
 /debug-sandbox/*
+
+# Runtime files
+/bots/
+/data/
+/logs/
+/plugin-libraries/
+/plugin-shared-libraries/

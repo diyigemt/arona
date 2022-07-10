@@ -205,50 +205,67 @@ object ActivityUtil {
     return res
   }
 
-  fun fetchJPActivityFromJP(): Pair<List<Activity>, List<Activity>> {
-    val active = mutableListOf<Activity>()
-    val pending = mutableListOf<Activity>()
-    val document = Jsoup.connect("https://bluearchive.wikiru.jp/?%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88%E4%B8%80%E8%A6%A7")
+//  fun fetchJPActivityFromJP(): Pair<List<Activity>, List<Activity>> {
+//    val active = mutableListOf<Activity>()
+//    val pending = mutableListOf<Activity>()
+//    val document = Jsoup.connect("https://bluearchive.wikiru.jp/?%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88%E4%B8%80%E8%A6%A7")
+//      .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
+//      .ignoreContentType(true)
+//      .get()
+//    val body = document.getElementById("body") ?: return Pair(active, pending)
+//    val activities = body.getElementsByClass("list-indent1")
+//    activities.forEach {
+//      val outer = it.getElementsByTag("li")
+//      if (outer.isEmpty()) return@forEach
+//      val target = outer[0]
+//      val containString = target.text().replace("メンテナンス前まで", "11:00")
+//      val timeSource = containString.substringAfterLast("(")
+//      var contentSource = containString
+//        .substringBeforeLast("(")
+//        .replace("・", "·")
+//        .replace("ガイドミッション", "指导任务")
+//        .trim()
+//      val findTime = ActivityJPRegex.find(timeSource)
+//      if (findTime == null || findTime.groups.size < 3) return@forEach
+//      val groups = findTime.groups
+//      val start = groups[1]!!.value
+//      val parseStart: Date = if (groups.filterNotNull().size == 3) {
+//        SimpleDateFormat("yyyy/M/d").parse(start)
+//      } else {
+//        SimpleDateFormat("yyyy/M/d HH:mm").parse("${start}${groups[2]!!.value}")
+//      }
+//      val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
+//      val end = "${year}/${groups[groups.size - 1]!!.value}"
+//      val parseEnd = SimpleDateFormat("yyyy/M/d HH:mm").parse(end)
+//      val now = Calendar.getInstance().time
+//      // 判断是不是特别依赖(经验本钱本)
+//      val special = target.getElementsByTag("img")
+//      if (special.isNotEmpty()) {
+//        val find = Regex("(\\d)").find(special[0].attr("title"))
+//        if (find == null || find.groups.size != 2) return@forEach
+//        val pow = find.groups[1]!!.value.toInt()
+//        contentSource = "特殊作战掉落${pow}倍"
+//      }
+//      doInsert(now, parseStart, parseEnd, active, pending, contentSource)
+//    }
+//    return sortAndPackage(active, pending)
+//  }
+
+  fun fetchJPActivityFromJP(): Pair<List<Activity>, List<Activity>>{
+    val cmd = "diff"
+    val page = "イベント一覧"
+    var res = Jsoup.connect("https://bluearchive.wikiru.jp?cmd=${cmd}&page=${page}")
       .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
       .ignoreContentType(true)
       .get()
-    val body = document.getElementById("body") ?: return Pair(active, pending)
-    val activities = body.getElementsByClass("list-indent1")
-    activities.forEach {
-      val outer = it.getElementsByTag("li")
-      if (outer.isEmpty()) return@forEach
-      val target = outer[0]
-      val containString = target.text().replace("メンテナンス前まで", "11:00")
-      val timeSource = containString.substringAfterLast("(")
-      var contentSource = containString
-        .substringBeforeLast("(")
-        .replace("・", "·")
-        .replace("ガイドミッション", "指导任务")
-        .trim()
-      val findTime = ActivityJPRegex.find(timeSource)
-      if (findTime == null || findTime.groups.size < 3) return@forEach
-      val groups = findTime.groups
-      val start = groups[1]!!.value
-      val parseStart: Date = if (groups.filterNotNull().size == 3) {
-        SimpleDateFormat("yyyy/M/d").parse(start)
-      } else {
-        SimpleDateFormat("yyyy/M/d HH:mm").parse("${start}${groups[2]!!.value}")
-      }
-      val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
-      val end = "${year}/${groups[groups.size - 1]!!.value}"
-      val parseEnd = SimpleDateFormat("yyyy/M/d HH:mm").parse(end)
-      val now = Calendar.getInstance().time
-      // 判断是不是特别依赖(经验本钱本)
-      val special = target.getElementsByTag("img")
-      if (special.isNotEmpty()) {
-        val find = Regex("(\\d)").find(special[0].attr("title"))
-        if (find == null || find.groups.size != 2) return@forEach
-        val pow = find.groups[1]!!.value.toInt()
-        contentSource = "特殊作战掉落${pow}倍"
-      }
-      doInsert(now, parseStart, parseEnd, active, pending, contentSource)
-    }
-    return sortAndPackage(active, pending)
+      .body()
+      .getElementById("body")
+      ?.getElementsByTag("pre")
+      ?.text()
+      ?: return mutableListOf<Activity>() to mutableListOf()
+    res = WikiruUtil.getValidData(res)
+
+    return WikiruUtil.analyze(res)
   }
 
   fun constructMessage(activities: Pair<List<Activity>, List<Activity>>): String {
@@ -306,7 +323,7 @@ object ActivityUtil {
    * @param contentSourceJP 若是日服的活动, 那么数据来源是日服wiki还是b站wiki
    * @param type0 已知的活动类型(国际服才有)
    */
-  private fun doInsert(
+  fun doInsert(
     now: Date,
     parseStart: Date,
     parseEnd: Date,

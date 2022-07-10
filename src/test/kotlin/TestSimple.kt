@@ -2,6 +2,7 @@ package org.example.mirai.plugin
 
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
+import net.diyigemt.arona.util.WikiruUtil
 import org.jsoup.Jsoup
 import org.junit.jupiter.api.Test
 import java.text.SimpleDateFormat
@@ -33,22 +34,22 @@ class TestSimple {
     }
   }
 
-  @Test
-  fun testGetVersion() {
-    val get = Jsoup.connect("http://localhost:3000/api/v1/version/")
-      .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
-      .ignoreContentType(true)
-      .get()
-    val parseToJsonElement = Json.parseToJsonElement(get.body().text())
-    val jsonElement = parseToJsonElement.jsonObject["data"]?.jsonObject?.get("version")
-    println(jsonElement.toString().replace("\"", ""))
-  }
-
-  @Test
-  fun testEmptyArrayGet() {
-    val arr = mutableListOf<String>()
-    println(arr[0] ?: return)
-  }
+//  @Test
+//  fun testGetVersion() {
+//    val get = Jsoup.connect("http://localhost:3000/api/v1/version/")
+//      .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
+//      .ignoreContentType(true)
+//      .get()
+//    val parseToJsonElement = Json.parseToJsonElement(get.body().text())
+//    val jsonElement = parseToJsonElement.jsonObject["data"]?.jsonObject?.get("version")
+//    println(jsonElement.toString().replace("\"", ""))
+//  }
+//
+//  @Test
+//  fun testEmptyArrayGet() {
+//    val arr = mutableListOf<String>()
+//    println(arr[0] ?: return)
+//  }
 
   @Test
   fun testEnumClass() {
@@ -57,6 +58,23 @@ class TestSimple {
 
   enum class A {
     A, B, C, D, E
+  }
+
+  @Test
+  fun testA(){
+    val cmd = "diff"
+    val page = "イベント一覧"
+    var res = Jsoup.connect("https://bluearchive.wikiru.jp?cmd=${cmd}&page=${page}")
+      .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
+      .ignoreContentType(true)
+      .get()
+      .body()
+      .getElementById("body")
+      ?.getElementsByTag("pre")
+      ?.text()!!
+    res = WikiruUtil.getValidData(res)
+    print(WikiruUtil.analyze(res))
+    print("\n")
   }
 
 }

@@ -5,6 +5,7 @@ import net.diyigemt.arona.Arona
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.entity.ActivityType
 import net.diyigemt.arona.entity.ServerLocale
+import net.diyigemt.arona.util.GeneralUtils.clearExtraQute
 import org.jsoup.Jsoup
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -295,13 +296,6 @@ object ActivityUtil {
       result = (result as JsonObject)[it]!!
     }
     return result
-  }
-
-  private fun clearExtraQute(s: String): String {
-    if (s.replace("\"", "").length + 2 == s.length) {
-      return s.replaceFirst("\"", "").substring(0, s.length - 2)
-    }
-    return s
   }
 
   private fun extraActivityJPTypeFromJP(source: String): ActivityType {

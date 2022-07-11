@@ -8,9 +8,10 @@
  */
 package net.diyigemt.arona
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import net.diyigemt.arona.advance.AronaUpdateCheck
+import net.diyigemt.arona.advance.AronaUpdateChecker
 import net.diyigemt.arona.config.*
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.extension.CommandInterceptorManager
@@ -46,7 +47,7 @@ object Arona : KotlinPlugin(
       AronaServiceManager,
       ActivityNotify,
       CommandInterceptorManager,
-      AronaUpdateCheck
+      AronaUpdateChecker
     )
 
   @OptIn(ExperimentalCommandDescriptors::class, ConsoleExperimentalApi::class)
@@ -141,7 +142,7 @@ object Arona : KotlinPlugin(
 
   fun sendMessageToAdmin(message: String) {
     fun getAdmin(id: Long): NormalMember? {
-      AronaConfig.managerGroup.forEach {
+      AronaConfig.groups.forEach {
         val admin = arona.groups[it]?.get(id)
         if (admin != null) return admin
       }
@@ -158,6 +159,15 @@ object Arona : KotlinPlugin(
         list.forEach {
           it.sendMessage(message)
         }
+      }
+    }
+  }
+
+  fun delayAndSendMessageToAdmin(delay: Int, message: String) {
+    runSuspend {
+      withContext(Dispatchers.IO) {
+        Thread.sleep((delay * 1000).toLong())
+        sendMessageToAdmin(message)
       }
     }
   }

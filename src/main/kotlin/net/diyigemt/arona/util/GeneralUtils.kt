@@ -11,4 +11,11 @@ object GeneralUtils {
     else -> false
   }
 
+  fun clearExtraQute(s: String): String {
+    if (s.replace("\"", "").length + 2 == s.length) {
+      return s.replaceFirst("\"", "").substring(0, s.length - 2)
+    }
+    return s
+  }
+
 }

@@ -11,6 +11,7 @@ version = "0.1.0"
 val exposedVersion = "0.38.2"
 val sqliteVersion = "3.36.0.3"
 val quartzVersion = "2.3.2"
+val okhttpVersion = "4.10.0"
 
 repositories {
   maven("https://maven.aliyun.com/repository/public") // 阿里云国内代理仓库
@@ -28,6 +29,9 @@ dependencies {
   implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
   implementation("org.xerial:sqlite-jdbc:$sqliteVersion")
   implementation("org.quartz-scheduler:quartz:$quartzVersion")
+  // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
+  implementation("com.squareup.okhttp3:okhttp:$okhttpVersion")
+
 }
 
 tasks.test {

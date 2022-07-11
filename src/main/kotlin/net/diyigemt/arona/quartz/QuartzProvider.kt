@@ -13,9 +13,8 @@ import java.util.Calendar
 object QuartzProvider: BaseFunctionProvider(Dispatchers.IO) {
 
   private val quartzScheduler: Scheduler = StdSchedulerFactory.getDefaultScheduler().also { it.start() }
-  private const val SimpleDelaySendMessageJobKey: String = "SimpleDelaySendMessageJobKey"
-  private const val SimpleDelaySendMessageJobData: String = "SimpleDelaySendMessageJobData"
-  private const val SimpleDelaySendMessageJobTarget: String = "SimpleDelaySendMessageJobTarget"
+  private const val SimpleDelayJobKey: String = "SimpleDelayJobKey"
+  private const val SimpleDelayJobData: String = "SimpleDelayJobData"
   override val tag: String = "quartz"
 
   fun createSingleTask(jobClass: Class<out Job>, expected: Date, jobKey: String, jobGroup: String, jogData: Map<String, Any>? = mapOf()): Pair<JobKey, TriggerKey> {
@@ -42,6 +41,39 @@ object QuartzProvider: BaseFunctionProvider(Dispatchers.IO) {
     return jobKeys to triggerKey
   }
 
+  fun createRepeatSingleTask(jobClass: Class<out Job>, interval: Int, jobKey: String, jobGroup: String, jogData: Map<String, Any>? = mapOf()): Pair<JobKey, TriggerKey> {
+    val jobKeys = JobKey.jobKey("${jobKey}Job", jobGroup)
+    val triggerKey = TriggerKey.triggerKey("${jobKey}Trigger", jobGroup)
+    val now = Calendar.getInstance()
+    now.get(Calendar.MINUTE).also {
+      if (it > 30) {
+        now.set(Calendar.MINUTE, 0)
+        now.set(Calendar.HOUR_OF_DAY, now.get(Calendar.HOUR_OF_DAY) + 1)
+      } else {
+        now.set(Calendar.MINUTE, 30)
+      }
+    }
+    val job = JobBuilder
+      .newJob(jobClass)
+      .withIdentity(jobKeys)
+      .setJobData(JobDataMap(jogData))
+      .build()
+    val trigger = TriggerBuilder
+      .newTrigger()
+      .withIdentity(triggerKey)
+      .withSchedule(
+        SimpleScheduleBuilder
+          .simpleSchedule()
+          .repeatForever()
+          .withMisfireHandlingInstructionFireNow()
+          .withIntervalInMinutes(interval)
+      )
+      .startAt(now.time)
+      .build()
+    quartzScheduler.scheduleJob(job, trigger)
+    return jobKeys to triggerKey
+  }
+
   fun createCronTask(jobClass: Class<out Job>, expected: String, jobKey: String, jobGroup: String, jogData: Map<String, Any> = mapOf()): Pair<JobKey, TriggerKey> {
     val jobKeys = JobKey.jobKey("${jobKey}Job", jobGroup)
     val triggerKey = TriggerKey.triggerKey("${jobKey}Trigger", jobGroup)
@@ -62,50 +94,33 @@ object QuartzProvider: BaseFunctionProvider(Dispatchers.IO) {
     return jobKeys to triggerKey
   }
 
-  private fun createSimpleDelaySendMessageJob(expected: Date, type: MessageTarget, message: String): Pair<JobKey, TriggerKey> {
-    val dataMap = mapOf(
-      SimpleDelaySendMessageJobTarget to type,
-      SimpleDelaySendMessageJobData to message
-    )
-    return createSingleTask(
-      SimpleDelaySendMessageJob::class.java,
-      expected,
-      SimpleDelaySendMessageJobKey,
-      SimpleDelaySendMessageJobKey,
-      dataMap
-    )
-  }
-
-  fun createSimpleDelaySendMessageJob(delay: Long, type: MessageTarget, message: String): Pair<JobKey, TriggerKey> {
+  fun createSimpleDelayJob(delay: Int, block: () -> Unit): Pair<JobKey, TriggerKey> {
     val now = Calendar.getInstance()
-    now.set(Calendar.SECOND, (now.get(Calendar.SECOND) + delay).toInt())
-    Arona.info(SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(now.time))
-    return createSimpleDelaySendMessageJob(
+    now.set(Calendar.SECOND, now.get(Calendar.SECOND) + delay)
+    return createSingleTask(
+      SimpleDelayJob::class.java,
       now.time,
-      type,
-      message
+      "$SimpleDelayJobKey${now.time.time}",
+      SimpleDelayJobKey,
+      mapOf(
+        SimpleDelayJobData to block
+      )
     )
   }
 
-  enum class MessageTarget {
-    MANAGER_GROUP, SERVICE_GROUP
-  }
-
-  private class SimpleDelaySendMessageJob: Job {
+  @Suppress("UNCHECKED_CAST")
+  class SimpleDelayJob: Job {
     override fun execute(context: JobExecutionContext?) {
-      val message = context?.mergedJobDataMap?.getString(SimpleDelaySendMessageJobData) ?: return
-      val target = context.mergedJobDataMap?.get(SimpleDelaySendMessageJobTarget) ?: return
-      when(target.safeCast<MessageTarget>()) {
-        MessageTarget.MANAGER_GROUP -> Arona.sendMessageToAdmin(message)
-        MessageTarget.SERVICE_GROUP -> Arona.sendMessage(message)
-        null -> {}
-      }
+      val block = context?.mergedJobDataMap?.get(SimpleDelayJobData) ?: return
+      (block as () -> Unit)()
     }
   }
 
   fun triggerTaskWithData(jobKey: String, group: String, data: Map<String, Any>) = quartzScheduler.triggerJob(JobKey.jobKey("${jobKey}Job", group), JobDataMap(data))
 
   fun triggerTask(jobKey: String, group: String) = quartzScheduler.triggerJob(JobKey.jobKey("${jobKey}Job", group))
+
+  fun triggerTask(jobKey: JobKey) = quartzScheduler.triggerJob(jobKey)
 
   fun deleteTask(jobKey: String, group: String): Boolean = deleteTask(JobKey.jobKey("${jobKey}Job", group))
 

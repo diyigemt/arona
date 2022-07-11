@@ -18,13 +18,15 @@ object AronaUpdateChecker: InitializedFunction() {
   private const val AronaUpdateCheckJobKey = "AronaUpdateCheck"
   override fun init() {
     if (!AronaConfig.autoCheckUpdate) return
-    QuartzProvider.createCronTask(
+    val keys = QuartzProvider.createCronTask(
       UpdateCheckJob::class.java,
       "0 0 ${AronaConfig.updateCheckTime} * * ? *",
       AronaUpdateCheckJobKey,
       AronaUpdateCheckJobKey
     )
-    QuartzProvider.triggerTask(AronaUpdateCheckJobKey, AronaUpdateCheckJobKey)
+    QuartzProvider.createSimpleDelayJob(20) {
+      QuartzProvider.triggerTask(keys.first)
+    }
   }
 
   class UpdateCheckJob: Job {
@@ -45,7 +47,8 @@ object AronaUpdateChecker: InitializedFunction() {
         }?.joinToString("\n")
         ?: return
       val concat = "检测到版本更新,当前版本:${Arona.version}, 新版本:${nowVersion}\n更新日志:\n${newFuture}"
-      Arona.delayAndSendMessageToAdmin(20, concat)
+      Arona.sendMessageToAdmin(concat)
+//      Arona.delayAndSendMessageToAdmin(20, concat)
     }
   }
 }

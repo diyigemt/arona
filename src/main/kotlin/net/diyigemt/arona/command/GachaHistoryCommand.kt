@@ -7,8 +7,10 @@ import net.diyigemt.arona.util.GeneralUtils
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.UserCommandSender
+import net.mamoe.mirai.contact.Contact.Companion.uploadImage
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.nameCardOrNick
+import java.io.ByteArrayInputStream
 
 object GachaHistoryCommand : SimpleCommand(
   Arona,"gacha_history", "历史",

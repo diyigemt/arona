@@ -9,9 +9,11 @@
 package net.diyigemt.arona
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import net.diyigemt.arona.advance.AronaUpdateChecker
+import net.diyigemt.arona.advance.NGAImageTranslatePusher
 import net.diyigemt.arona.config.*
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.extension.CommandInterceptorManager
@@ -29,6 +31,7 @@ import net.mamoe.mirai.console.extension.PluginComponentStorage
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
 import net.mamoe.mirai.console.util.ConsoleExperimentalApi
+import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.NormalMember
 import net.mamoe.mirai.event.GlobalEventChannel
 import net.mamoe.mirai.event.events.BotOnlineEvent
@@ -47,7 +50,8 @@ object Arona : KotlinPlugin(
       AronaServiceManager,
       ActivityNotify,
       CommandInterceptorManager,
-      AronaUpdateChecker
+      AronaUpdateChecker,
+      NGAImageTranslatePusher
     )
 
   @OptIn(ExperimentalCommandDescriptors::class, ConsoleExperimentalApi::class)
@@ -88,10 +92,15 @@ object Arona : KotlinPlugin(
     AronaRepeatConfig.reload()
     AronaNotifyConfig.reload()
     AronaGachaLimitConfig.reload()
+    NGAPushConfig.reload()
     DataBaseProvider.start()
     QuartzProvider.start()
-    INIT.forEach {
-      it.init()
+    launch {
+      withContext(Dispatchers.IO) {
+        INIT.forEach {
+          it.init()
+        }
+      }
     }
   }
 
@@ -129,6 +138,18 @@ object Arona : KotlinPlugin(
     }
   }
 
+  fun sendMessageWithFile(block: (group: Contact) -> MessageChain) {
+    runBlocking {
+      withContext(coroutineContext) {
+        AronaConfig.groups.forEach {
+          val group =  arona.groups[it] ?: return@forEach
+          val message = block(group)
+          group.sendMessage(message)
+        }
+      }
+    }
+  }
+
   fun sendMessage(message: MessageChain) {
     runBlocking {
       withContext(coroutineContext) {
@@ -159,15 +180,6 @@ object Arona : KotlinPlugin(
         list.forEach {
           it.sendMessage(message)
         }
-      }
-    }
-  }
-
-  fun delayAndSendMessageToAdmin(delay: Int, message: String) {
-    runSuspend {
-      withContext(Dispatchers.IO) {
-        Thread.sleep((delay * 1000).toLong())
-        sendMessageToAdmin(message)
       }
     }
   }

@@ -30,9 +30,6 @@ object AronaConfig: AutoSavePluginConfig("arona") {
   @ValueDescription("arona下线消息")
   val offlineMessage: String by value("arona摸了")
 
-  @ValueDescription("自动检查更新开关")
-  val autoCheckUpdate: Boolean by value(false)
-
   @ValueDescription("自动检查更新的时间")
   val updateCheckTime: Int by value(8)
 

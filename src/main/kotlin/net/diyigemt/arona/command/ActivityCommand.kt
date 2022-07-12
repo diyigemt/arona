@@ -44,7 +44,9 @@ object ActivityCommand : CompositeCommand(
     if (jpActivity.first.isEmpty() && jpActivity.second.isEmpty()) {
       subject.sendMessage("biliwiki寄了, 从wikiru拉取...")
     }
-    jpActivity = ActivityUtil.fetchJPActivityFromJP()
+    kotlin.runCatching {
+      jpActivity = ActivityUtil.fetchJPActivityFromJP()
+    }
     if (jpActivity.first.isEmpty() && jpActivity.second.isEmpty()) {
       subject.sendMessage("wikiru也寄了")
       return

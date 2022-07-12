@@ -6,9 +6,6 @@ import net.mamoe.mirai.console.data.value
 
 object NGAPushConfig: AutoSavePluginConfig("nga") {
 
-  @ValueDescription("是否启用")
-  val enable: Boolean by value(false)
-
   @ValueDescription("你自己的nga uid")
   val uid: String by value("")
 

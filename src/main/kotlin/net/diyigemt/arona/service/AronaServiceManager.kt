@@ -2,12 +2,16 @@ package net.diyigemt.arona.service
 
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.Arona.reload
+import net.diyigemt.arona.advance.AronaUpdateChecker
+import net.diyigemt.arona.advance.GroupMessageRecorder
+import net.diyigemt.arona.advance.NGAImageTranslatePusher
 import net.diyigemt.arona.command.*
 import net.diyigemt.arona.config.AronaServiceConfig
 import net.diyigemt.arona.handler.GroupRepeaterHandler
 import net.diyigemt.arona.handler.HentaiEventHandler
 import net.diyigemt.arona.handler.NudgeEventHandler
 import net.diyigemt.arona.interfaces.InitializedFunction
+import net.diyigemt.arona.quartz.ActivityNotify
 import net.diyigemt.arona.util.GeneralUtils
 import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.Group
@@ -37,6 +41,7 @@ object AronaServiceManager: InitializedFunction() {
    */
   fun enable(name: String): AronaService? {
     val service = findServiceByName(name) ?: return null
+    service.enable = true
     service.enableService()
     return service
   }
@@ -47,6 +52,7 @@ object AronaServiceManager: InitializedFunction() {
    */
   fun disable(name: String): AronaService? {
     val service = findServiceByName(name) ?: return null
+    service.enable = false
     service.disableService()
     return service
   }
@@ -133,6 +139,10 @@ object AronaServiceManager: InitializedFunction() {
     GroupRepeaterHandler.init()
     HentaiEventHandler.init()
     NudgeEventHandler.init()
+    GroupMessageRecorder.init()
+    ActivityNotify.init()
+    NGAImageTranslatePusher.init()
+    AronaUpdateChecker.init()
     AronaServiceConfig.reload()
     AronaServiceConfig.config.forEach {
       if (it.value) {

@@ -5,16 +5,19 @@ import net.diyigemt.arona.Arona
 import net.diyigemt.arona.config.NGAPushConfig
 import net.diyigemt.arona.interfaces.InitializedFunction
 import net.diyigemt.arona.quartz.QuartzProvider
+import net.diyigemt.arona.service.AronaGroupService
+import net.diyigemt.arona.service.AronaQuartzService
 import net.mamoe.mirai.message.data.MessageChainBuilder
 import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
 import okhttp3.*
 import org.jsoup.Jsoup
 import org.quartz.Job
 import org.quartz.JobExecutionContext
+import org.quartz.JobKey
 import java.io.InputStream
 import java.util.*
 
-object NGAImageTranslatePusher: InitializedFunction() {
+object NGAImageTranslatePusher: AronaQuartzService {
   private const val ImageTranslateCheckJobKey = "ImageTranslateCheck"
   private const val ImageSrcBaseAddress = "https://img.nga.178.com/attachments/"
   private const val ImageTranslateCheckInitKey = "init"
@@ -31,24 +34,10 @@ object NGAImageTranslatePusher: InitializedFunction() {
   )
   private const val ImageRegex = "\\[img][.]/([\\w/-]+[.](jpg|png|JPG|PNG))\\[/img]"
   private var lastFloorTime: String = ""
-  override fun init() {
-    if (!NGAPushConfig.enable) return
-    if (NGAPushConfig.cid == "" && NGAPushConfig.uid == "") {
-      Arona.warning("nga推送配置未初始化,请修改nga.yml配置文件")
-      return
-    }
-    QuartzProvider.createRepeatSingleTask(
-      TranslatePusherJob::class.java,
-      NGAPushConfig.checkInterval,
-      ImageTranslateCheckJobKey,
-      ImageTranslateCheckJobKey
-    )
-    cookies["ngaPassportUid"] = NGAPushConfig.uid
-    cookies["ngaPassportCid"] = NGAPushConfig.cid
-    QuartzProvider.createSimpleDelayJob(20) {
-      QuartzProvider.triggerTaskWithData(ImageTranslateCheckJobKey, ImageTranslateCheckJobKey, mapOf(ImageTranslateCheckInitKey to true))
-    }
-  }
+  override lateinit var jobKey: JobKey
+  override val id: Int = 13
+  override val name: String = "nga图楼推送"
+  override var enable: Boolean = true
 
   class TranslatePusherJob: Job {
     override fun execute(context: JobExecutionContext?) {
@@ -168,5 +157,25 @@ object NGAImageTranslatePusher: InitializedFunction() {
     override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {}
   }
 
+  override fun init() {
+    registerService()
+  }
 
+  override fun enableService() {
+    if (NGAPushConfig.cid == "" && NGAPushConfig.uid == "") {
+      Arona.warning("nga推送配置未初始化,请修改nga.yml配置文件")
+      return
+    }
+    jobKey = QuartzProvider.createRepeatSingleTask(
+      TranslatePusherJob::class.java,
+      NGAPushConfig.checkInterval,
+      ImageTranslateCheckJobKey,
+      ImageTranslateCheckJobKey
+    ).first
+    cookies["ngaPassportUid"] = NGAPushConfig.uid
+    cookies["ngaPassportCid"] = NGAPushConfig.cid
+    QuartzProvider.createSimpleDelayJob(20) {
+      QuartzProvider.triggerTaskWithData(jobKey, mapOf(ImageTranslateCheckInitKey to true))
+    }
+  }
 }

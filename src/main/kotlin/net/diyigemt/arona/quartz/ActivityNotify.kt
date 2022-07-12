@@ -5,37 +5,27 @@ import net.diyigemt.arona.config.AronaNotifyConfig
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.entity.ActivityType
 import net.diyigemt.arona.entity.ServerLocale
-import net.diyigemt.arona.interfaces.InitializedFunction
+import net.diyigemt.arona.service.AronaQuartzService
 import net.diyigemt.arona.util.ActivityUtil
 import net.diyigemt.arona.util.MessageUtil
 import net.mamoe.mirai.message.code.MiraiCode
 import org.quartz.InterruptableJob
 import org.quartz.Job
 import org.quartz.JobExecutionContext
+import org.quartz.JobKey
 import java.text.SimpleDateFormat
 import java.util.*
 
-object ActivityNotify: InitializedFunction() {
+object ActivityNotify: AronaQuartzService {
   private const val ActivityNotifyJobKey = "ActivityNotify"
   private const val ActivityNotifyDataInitKey = "init"
   private const val ActivityNotifyOneHour = "ActivityNotifyOneHour"
   private const val ActivityKey = "activity"
   private const val MaintenanceKey = "maintenance"
-  override fun init() {
-    // 全局启用标志
-    if (!AronaNotifyConfig.enable) return
-    // 每天早上8点触发
-    QuartzProvider.createCronTask(
-      ActivityNotifyJob::class.java,
-      "0 0 ${AronaNotifyConfig.everyDayHour} * * ? *",
-      ActivityNotifyJobKey,
-      ActivityNotifyJobKey
-    )
-    QuartzProvider.createSimpleDelayJob(20) {
-      QuartzProvider.triggerTaskWithData(ActivityNotifyJobKey, ActivityNotifyJobKey, mapOf(ActivityNotifyDataInitKey to true))
-    }
-  }
-
+  override lateinit var jobKey: JobKey
+  override val id: Int = 12
+  override val name: String = "活动推送"
+  override var enable: Boolean = true
   class ActivityNotifyJob: Job {
     override fun execute(context: JobExecutionContext?) {
       var jp = ActivityUtil.fetchJPActivity()
@@ -207,6 +197,23 @@ object ActivityNotify: InitializedFunction() {
   private fun isJPServer(activity: List<Activity>) = isJPServer(activity[0])
 
   private fun isJPServer(activity: Activity) = activity.serverLocale == ServerLocale.JP
+
+  override fun init() {
+    registerService()
+  }
+
+  override fun enableService() {
+    // 每天早上8点触发
+    jobKey = QuartzProvider.createCronTask(
+      ActivityNotifyJob::class.java,
+      "0 0 ${AronaNotifyConfig.everyDayHour} * * ? *",
+      ActivityNotifyJobKey,
+      ActivityNotifyJobKey
+    ).first
+    QuartzProvider.createSimpleDelayJob(20) {
+      QuartzProvider.triggerTaskWithData(jobKey, mapOf(ActivityNotifyDataInitKey to true))
+    }
+  }
 }
 
 // 每日防侠提醒类型

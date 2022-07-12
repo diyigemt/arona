@@ -11,10 +11,6 @@ interface AronaService {
   fun registerService() {
     AronaServiceManager.register(this)
   }
-  fun enableService() {
-    enable = true
-  }
-  fun disableService() {
-    enable = false
-  }
+  fun enableService() {}
+  fun disableService() {}
 }

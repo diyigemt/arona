@@ -7,26 +7,24 @@ import net.diyigemt.arona.Arona
 import net.diyigemt.arona.config.AronaConfig
 import net.diyigemt.arona.interfaces.InitializedFunction
 import net.diyigemt.arona.quartz.QuartzProvider
+import net.diyigemt.arona.service.AronaQuartzService
 import net.diyigemt.arona.util.GeneralUtils.clearExtraQute
 import net.mamoe.mirai.console.plugin.version
 import net.mamoe.mirai.console.util.SemVersion
 import org.jsoup.Jsoup
 import org.quartz.Job
 import org.quartz.JobExecutionContext
+import org.quartz.JobKey
 
-object AronaUpdateChecker: InitializedFunction() {
+object AronaUpdateChecker: AronaQuartzService {
   private const val AronaUpdateCheckJobKey = "AronaUpdateCheck"
+  override lateinit var jobKey: JobKey
+  override val id: Int = 14
+  override val name: String = "自动更新检查"
+  override var enable: Boolean = true
+
   override fun init() {
-    if (!AronaConfig.autoCheckUpdate) return
-    val keys = QuartzProvider.createCronTask(
-      UpdateCheckJob::class.java,
-      "0 0 ${AronaConfig.updateCheckTime} * * ? *",
-      AronaUpdateCheckJobKey,
-      AronaUpdateCheckJobKey
-    )
-    QuartzProvider.createSimpleDelayJob(20) {
-      QuartzProvider.triggerTask(keys.first)
-    }
+    registerService()
   }
 
   class UpdateCheckJob: Job {
@@ -48,6 +46,18 @@ object AronaUpdateChecker: InitializedFunction() {
         ?: return
       val concat = "检测到版本更新,当前版本:${Arona.version}, 新版本:${nowVersion}\n更新日志:\n${newFuture}"
       Arona.sendMessageToAdmin(concat)
+    }
+  }
+
+  override fun enableService() {
+    jobKey = QuartzProvider.createCronTask(
+      UpdateCheckJob::class.java,
+      "0 0 ${AronaConfig.updateCheckTime} * * ? *",
+      AronaUpdateCheckJobKey,
+      AronaUpdateCheckJobKey
+    ).first
+    QuartzProvider.createSimpleDelayJob(20) {
+      QuartzProvider.triggerTask(jobKey)
     }
   }
 }

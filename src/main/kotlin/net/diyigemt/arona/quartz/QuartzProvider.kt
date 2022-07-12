@@ -116,6 +116,8 @@ object QuartzProvider: BaseFunctionProvider(Dispatchers.IO) {
     }
   }
 
+  fun triggerTaskWithData(jobKey: JobKey, data: Map<String, Any>) = quartzScheduler.triggerJob(jobKey, JobDataMap(data))
+
   fun triggerTaskWithData(jobKey: String, group: String, data: Map<String, Any>) = quartzScheduler.triggerJob(JobKey.jobKey("${jobKey}Job", group), JobDataMap(data))
 
   fun triggerTask(jobKey: String, group: String) = quartzScheduler.triggerJob(JobKey.jobKey("${jobKey}Job", group))

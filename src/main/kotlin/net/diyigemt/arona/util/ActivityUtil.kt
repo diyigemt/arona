@@ -21,7 +21,7 @@ object ActivityUtil {
   private val PickUpRegex = Regex("(\\d)?([\\u4e00-\\u9fa5A-z]+)(\\([\\u4e00-\\u9fa5A-z]+\\))?")
   private val PickUpTime = Regex("(\\d+)/(\\d+).*?[–-](\\d+)/(\\d+)")
   private val MaintenanceRegex = Regex("(\\d+)月(\\d+)日.*?[上下]午(\\d+)点")
-  private val TotalAssault = Regex("([\\u4e00-\\u9fa5A-z. \\d]+) ?[（(]([\\u4e00-\\u9fa5A-z]+)[)）].*?(\\d+)/(\\d+)")
+  private val TotalAssault = Regex("([\\u4e00-\\u9fa5A-z. \\d]+) ?[（(]([\\u4e00-\\u9fa5A-z]+)[)）].*?(\\d+)[/月](\\d+)")
   private val ActivityJPRegex = Regex("(\\d+/\\d+/\\d+)( \\d+:\\d+)? ～ (\\d+/\\d+ \\d+:\\d+)")
   private const val WikiruCmd = "diff"
   private const val WikiruPage = "イベント一覧"
@@ -265,7 +265,9 @@ object ActivityUtil {
       ?: return mutableListOf<Activity>() to mutableListOf()
     res = WikiruUtil.getValidData(res)
     val parse = WikiruUtil.analyze(res)
-    fetchJPMaintenanceActivityFromJP(parse.first, parse.second)
+    kotlin.runCatching {
+      fetchJPMaintenanceActivityFromJP(parse.first, parse.second)
+    }
     return parse
   }
 

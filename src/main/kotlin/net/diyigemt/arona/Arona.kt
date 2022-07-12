@@ -21,7 +21,6 @@ import net.diyigemt.arona.handler.GroupRepeaterHandler
 import net.diyigemt.arona.handler.HentaiEventHandler
 import net.diyigemt.arona.handler.NudgeEventHandler
 import net.diyigemt.arona.interfaces.InitializedFunction
-import net.diyigemt.arona.quartz.ActivityNotify
 import net.diyigemt.arona.quartz.QuartzProvider
 import net.diyigemt.arona.service.AronaServiceManager
 import net.mamoe.mirai.Bot
@@ -47,9 +46,6 @@ object Arona : KotlinPlugin(
   private val INIT: List<InitializedFunction> =
     listOf(
       AronaServiceManager,
-      ActivityNotify,
-      AronaUpdateChecker,
-      NGAImageTranslatePusher
     )
 
   @OptIn(ExperimentalCommandDescriptors::class, ConsoleExperimentalApi::class)

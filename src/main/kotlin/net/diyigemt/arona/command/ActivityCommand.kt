@@ -62,6 +62,7 @@ object ActivityCommand : CompositeCommand(
   override var enable: Boolean = true
   override fun init() {
     registerService()
+    registerInterceptor()
     register()
   }
 
@@ -97,8 +98,4 @@ object ActivityCommand : CompositeCommand(
        return null
      }
    }
-
-  override fun initInterceptor() {
-    registerInterceptor()
-  }
 }

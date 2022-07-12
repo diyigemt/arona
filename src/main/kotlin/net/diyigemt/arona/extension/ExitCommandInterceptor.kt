@@ -1,6 +1,7 @@
 package net.diyigemt.arona.extension
 
 import net.diyigemt.arona.Arona
+import net.diyigemt.arona.interfaces.InitializedFunction
 import net.mamoe.mirai.console.command.CommandManager
 import net.mamoe.mirai.console.command.descriptor.ExperimentalCommandDescriptors
 import net.mamoe.mirai.console.command.parse.CommandCall
@@ -22,9 +23,5 @@ object ExitCommandInterceptor: CommandInterceptor {
       Arona.sendExitMessage()
     }
     return true;
-  }
-
-  override fun initInterceptor() {
-    registerInterceptor()
   }
 }

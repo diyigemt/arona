@@ -13,7 +13,4 @@ interface CommandInterceptor {
   fun registerInterceptor() {
     CommandInterceptorManager.registerItem(this)
   }
-
-  // register me
-  fun initInterceptor()
 }

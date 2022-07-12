@@ -16,7 +16,9 @@ import net.diyigemt.arona.advance.AronaUpdateChecker
 import net.diyigemt.arona.advance.NGAImageTranslatePusher
 import net.diyigemt.arona.config.*
 import net.diyigemt.arona.db.DataBaseProvider
+import net.diyigemt.arona.extension.CommandInterceptorManager
 import net.diyigemt.arona.extension.CommandResolver
+import net.diyigemt.arona.extension.ExitCommandInterceptor
 import net.diyigemt.arona.handler.GroupRepeaterHandler
 import net.diyigemt.arona.handler.HentaiEventHandler
 import net.diyigemt.arona.handler.NudgeEventHandler
@@ -46,6 +48,7 @@ object Arona : KotlinPlugin(
   private val INIT: List<InitializedFunction> =
     listOf(
       AronaServiceManager,
+      CommandInterceptorManager
     )
 
   @OptIn(ExperimentalCommandDescriptors::class, ConsoleExperimentalApi::class)

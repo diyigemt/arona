@@ -100,7 +100,7 @@ object QuartzProvider: BaseFunctionProvider(Dispatchers.IO) {
     return createSingleTask(
       SimpleDelayJob::class.java,
       now.time,
-      "$SimpleDelayJobKey${now.time.time}",
+      "$SimpleDelayJobKey${UUID.randomUUID()}",
       SimpleDelayJobKey,
       mapOf(
         SimpleDelayJobData to block

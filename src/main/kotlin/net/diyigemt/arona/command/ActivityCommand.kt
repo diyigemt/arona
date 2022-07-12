@@ -34,7 +34,6 @@ object ActivityCommand : CompositeCommand(
   }
 
   private suspend fun sendEN(subject: Contact) {
-    if (!GeneralUtils.checkService(subject)) return
     val enActivity = ActivityUtil.fetchENActivity()
     send(subject, enActivity)
   }

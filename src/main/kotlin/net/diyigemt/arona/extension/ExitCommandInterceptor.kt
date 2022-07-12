@@ -23,4 +23,8 @@ object ExitCommandInterceptor: CommandInterceptor {
     }
     return true;
   }
+
+  override fun initInterceptor() {
+    registerInterceptor()
+  }
 }

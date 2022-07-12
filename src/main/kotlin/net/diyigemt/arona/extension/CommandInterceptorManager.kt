@@ -1,7 +1,5 @@
 package net.diyigemt.arona.extension
 
-import net.diyigemt.arona.command.ActivityCommand
-import net.diyigemt.arona.interfaces.InitializedFunction
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.descriptor.ExperimentalCommandDescriptors
 import net.mamoe.mirai.console.command.parse.CommandCall
@@ -9,11 +7,10 @@ import net.mamoe.mirai.console.util.ConsoleExperimentalApi
 import net.mamoe.mirai.message.data.Message
 
 @OptIn(ExperimentalCommandDescriptors::class, ConsoleExperimentalApi::class)
-object CommandInterceptorManager: InitializedFunction() {
+object CommandInterceptorManager {
   private val ITEMS: MutableList<CommandInterceptor> = mutableListOf()
-  override fun init() {
-    ITEMS.add(ActivityCommand)
-    ITEMS.add(ExitCommandInterceptor)
+  fun registerItem(item: CommandInterceptor) {
+    ITEMS.add(item)
     ITEMS.sortBy { it.level }
   }
 

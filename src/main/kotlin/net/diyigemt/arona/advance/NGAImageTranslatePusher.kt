@@ -17,6 +17,7 @@ import java.util.*
 object NGAImageTranslatePusher: InitializedFunction() {
   private const val ImageTranslateCheckJobKey = "ImageTranslateCheck"
   private const val ImageSrcBaseAddress = "https://img.nga.178.com/attachments/"
+  private const val ImageTranslateCheckInitKey = "init"
   private val cookies = mutableMapOf(
     "ngaPassportUid" to "",
     "ngaPassportCid" to "",
@@ -25,9 +26,10 @@ object NGAImageTranslatePusher: InitializedFunction() {
   )
   private val users = mapOf(
     "42382305" to "xiwang399",
-    "40785736" to "安kuzuha"
+    "40785736" to "安kuzuha",
+    "64124793" to "星泠鑫"
   )
-  private const val ImageRegex = "\\[img][.]/([\\w/-]+[.]jpg)\\[/img]"
+  private const val ImageRegex = "\\[img][.]/([\\w/-]+[.](jpg|png|JPG|PNG))\\[/img]"
   private var lastFloorTime: String = ""
   override fun init() {
     if (!NGAPushConfig.enable) return
@@ -44,13 +46,12 @@ object NGAImageTranslatePusher: InitializedFunction() {
     cookies["ngaPassportUid"] = NGAPushConfig.uid
     cookies["ngaPassportCid"] = NGAPushConfig.cid
     QuartzProvider.createSimpleDelayJob(20) {
-      QuartzProvider.triggerTask(key.first)
+      QuartzProvider.triggerTaskWithData(key.first.name, key.first.group, mapOf(ImageTranslateCheckInitKey to true))
     }
   }
 
   class TranslatePusherJob: Job {
     override fun execute(context: JobExecutionContext?) {
-      Arona.warning("hello")
       val fetchNGA = fetchNGA().also {
         if (it.isEmpty()) {
           Arona.warning("arona获取nga图楼信息失败,请检查配置文件是否有误")
@@ -62,11 +63,17 @@ object NGAImageTranslatePusher: InitializedFunction() {
       }.also {
         if (it.isEmpty()) return
       }
+      val init = context?.mergedJobDataMap?.getBooleanValue(ImageTranslateCheckInitKey) ?: false
+      if (init) {
+        lastFloorTime = pending[0].time
+        return
+      }
       pending.map { floor ->
         Arona.sendMessageWithFile {
           val builder = MessageChainBuilder()
           val userName = users[floor.uid]
-          builder.add("$userName\n")
+          builder.add("$userName(${floor.uid}):\n")
+          builder.add("${floor.content}\n")
           runBlocking {
             floor.images.forEach { href ->
               val i = fetchImageFromNGA(href)?.toExternalResource() ?: return@forEach
@@ -87,6 +94,7 @@ object NGAImageTranslatePusher: InitializedFunction() {
   private data class NGAFloor(
     val uid: String,
     val time: String,
+    val content: String,
     val images: List<String>
   )
 
@@ -106,13 +114,14 @@ object NGAImageTranslatePusher: InitializedFunction() {
     mainContent.removeAt(0)
     mainContent.forEach {
       val user = it.getElementsByClass("posterinfo")[0]?.getElementsByTag("a")?.get(0)?.attr("href")?.substringAfter("uid=") ?: return@forEach
+      if (!users.containsKey(user)) return@forEach
       val time = it.getElementsByClass("postInfo")[0]?.getElementsByTag("span")?.text() ?: return@forEach
       val content = it.getElementsByClass("postcontent")[0]?.text() ?: return@forEach
-      if (!users.containsKey(user)) return@forEach
       val reg = Regex(ImageRegex)
-      val findAll = reg.findAll(content)
+      val findAll = reg.findAll(content).toList().also { all -> if (all.isEmpty()) return@forEach }
       val imgSrc = mutableListOf<String>()
-      if (findAll.toList().isEmpty()) return@forEach
+      // 有图才爬内容
+      val content0 = content.substringBefore("[")
       findAll
         .filter {
             mr -> mr.groups.size >= 2
@@ -122,7 +131,7 @@ object NGAImageTranslatePusher: InitializedFunction() {
         }.forEach {
             mr -> imgSrc.add(mr)
         }
-      res.add(NGAFloor(user, time, imgSrc))
+      res.add(NGAFloor(user, time, content0, imgSrc))
     }
     return res
   }

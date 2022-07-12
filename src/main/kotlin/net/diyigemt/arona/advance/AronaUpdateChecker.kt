@@ -48,7 +48,6 @@ object AronaUpdateChecker: InitializedFunction() {
         ?: return
       val concat = "检测到版本更新,当前版本:${Arona.version}, 新版本:${nowVersion}\n更新日志:\n${newFuture}"
       Arona.sendMessageToAdmin(concat)
-//      Arona.delayAndSendMessageToAdmin(20, concat)
     }
   }
 }

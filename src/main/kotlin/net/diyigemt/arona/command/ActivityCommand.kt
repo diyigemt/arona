@@ -96,4 +96,8 @@ object ActivityCommand : CompositeCommand(
        return null
      }
    }
- }
+
+  override fun initInterceptor() {
+    registerInterceptor()
+  }
+}

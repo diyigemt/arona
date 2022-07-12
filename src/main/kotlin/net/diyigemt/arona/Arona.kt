@@ -16,7 +16,6 @@ import net.diyigemt.arona.advance.AronaUpdateChecker
 import net.diyigemt.arona.advance.NGAImageTranslatePusher
 import net.diyigemt.arona.config.*
 import net.diyigemt.arona.db.DataBaseProvider
-import net.diyigemt.arona.extension.CommandInterceptorManager
 import net.diyigemt.arona.extension.CommandResolver
 import net.diyigemt.arona.handler.GroupRepeaterHandler
 import net.diyigemt.arona.handler.HentaiEventHandler
@@ -49,7 +48,6 @@ object Arona : KotlinPlugin(
     listOf(
       AronaServiceManager,
       ActivityNotify,
-      CommandInterceptorManager,
       AronaUpdateChecker,
       NGAImageTranslatePusher
     )

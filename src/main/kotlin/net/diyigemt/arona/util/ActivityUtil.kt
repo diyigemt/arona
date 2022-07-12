@@ -23,6 +23,8 @@ object ActivityUtil {
   private val MaintenanceRegex = Regex("(\\d+)月(\\d+)日.*?[上下]午(\\d+)点")
   private val TotalAssault = Regex("([\\u4e00-\\u9fa5A-z. \\d]+) ?[（(]([\\u4e00-\\u9fa5A-z]+)[)）].*?(\\d+)/(\\d+)")
   private val ActivityJPRegex = Regex("(\\d+/\\d+/\\d+)( \\d+:\\d+)? ～ (\\d+/\\d+ \\d+:\\d+)")
+  private const val WikiruCmd = "diff"
+  private const val WikiruPage = "イベント一覧"
   fun fetchJPActivity(): Pair<List<Activity>, List<Activity>> {
     val document = Jsoup.connect("https://wiki.biligame.com/bluearchive/%E9%A6%96%E9%A1%B5").get()
     val activities = document.getElementsByClass("activity")
@@ -252,9 +254,7 @@ object ActivityUtil {
 //  }
 
   fun fetchJPActivityFromJP(): Pair<List<Activity>, List<Activity>>{
-    val cmd = "diff"
-    val page = "イベント一覧"
-    var res = Jsoup.connect("https://bluearchive.wikiru.jp?cmd=${cmd}&page=${page}")
+    var res = Jsoup.connect("https://bluearchive.wikiru.jp?cmd=${WikiruCmd}&page=${WikiruPage}")
       .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
       .ignoreContentType(true)
       .get()
@@ -264,8 +264,36 @@ object ActivityUtil {
       ?.text()
       ?: return mutableListOf<Activity>() to mutableListOf()
     res = WikiruUtil.getValidData(res)
+    val parse = WikiruUtil.analyze(res)
+    fetchJPMaintenanceActivityFromJP(parse.first, parse.second)
+    return parse
+  }
 
-    return WikiruUtil.analyze(res)
+  private fun fetchJPMaintenanceActivityFromJP(active: MutableList<Activity>, pending: MutableList<Activity>) {
+    val res = Jsoup.connect("https://bluearchive.wikiru.jp/?%E3%83%96%E3%83%AB%E3%83%BC%E3%82%A2%E3%83%BC%E3%82%AB%E3%82%A4%E3%83%96%EF%BC%88%E3%83%96%E3%83%AB%E3%82%A2%E3%82%AB%EF%BC%89%E6%94%BB%E7%95%A5+Wiki")
+      .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
+      .ignoreContentType(true)
+      .get()
+      .body()
+      .getElementById("body")
+      ?: return
+    val tags = res.getElementsByTag("strong")
+      .toList()
+      .filter {
+        it.text().contains("メンテナンス")
+      }.also {
+        if (it.isEmpty() || it.size != 3) return
+      }
+    val currentTag = tags[1].parents().parents().text()
+    // 没有维护信息
+    if (currentTag.contains("ありません")) return
+    val timeString = currentTag.substringAfter("\n").substringBefore(" ~")
+    val start = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(timeString)
+    val now = Calendar.getInstance()
+    val end = now.clone() as Calendar
+    end.time = start
+    end.set(Calendar.HOUR_OF_DAY, 16)
+    doInsert(now.time, start, end.time, active, pending, "游戏维护")
   }
 
   fun constructMessage(activities: Pair<List<Activity>, List<Activity>>): String {
@@ -299,7 +327,10 @@ object ActivityUtil {
   }
 
   private fun extraActivityJPTypeFromJP(source: String): ActivityType {
-    return ActivityType.NULL
+    return when {
+      source.contains("游戏维护") -> ActivityType.MAINTENANCE
+      else -> ActivityType.NULL
+    }
   }
 
   private fun extraActivityJPTypeFromCN(source: String): ActivityType {
@@ -313,6 +344,7 @@ object ActivityUtil {
    * @param parseEnd 活动结束时间
    * @param active 正在进行的活动列表
    * @param pending 即将开始的活动列表
+   * @param contentSource 活动内容
    * @param contentSourceJP 若是日服的活动, 那么数据来源是日服wiki还是b站wiki
    * @param type0 已知的活动类型(国际服才有)
    */

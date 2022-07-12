@@ -31,31 +31,33 @@ object ActivityNotify: InitializedFunction() {
       ActivityNotifyJobKey,
       ActivityNotifyJobKey
     )
-    QuartzProvider.triggerTaskWithData(ActivityNotifyJobKey, ActivityNotifyJobKey, mapOf(ActivityNotifyDataInitKey to true))
+    QuartzProvider.createSimpleDelayJob(20) {
+      QuartzProvider.triggerTaskWithData(ActivityNotifyJobKey, ActivityNotifyJobKey, mapOf(ActivityNotifyDataInitKey to true))
+    }
   }
 
   class ActivityNotifyJob: Job {
     override fun execute(context: JobExecutionContext?) {
       var jp = ActivityUtil.fetchJPActivity()
       if (jp.first.isEmpty() && jp.second.isEmpty()) {
-        jp = ActivityUtil.fetchJPActivityFromJP()
+        kotlin.runCatching {
+          jp = ActivityUtil.fetchJPActivityFromJP()
+        }
       }
       val en = ActivityUtil.fetchENActivity()
       val alertListJP = mutableListOf<Activity>()
       val alertListEN = mutableListOf<Activity>()
-      jp.first
+      val filterJP = jp.first
         .filter {
           filterActive(it, alertListJP)
-        }
-      jp.second
+        } to jp.second
         .filter {
           filterPending(it)
         }
-      en.first
+      val filterEN = en.first
         .filter {
           filterActive(it, alertListEN)
-        }
-      en.second
+        } to en.second
         .filter {
           filterPending(it)
         }
@@ -64,8 +66,8 @@ object ActivityNotify: InitializedFunction() {
       // 初始化不显示信息
       val init = context?.mergedJobDataMap?.getBoolean(ActivityNotifyDataInitKey) ?: false
       if (init) return
-      val jpMessage = ActivityUtil.constructMessage(jp)
-      val enMessage = ActivityUtil.constructMessage(en)
+      val jpMessage = ActivityUtil.constructMessage(filterJP)
+      val enMessage = ActivityUtil.constructMessage(filterEN)
       if (AronaNotifyConfig.enableEveryDay) {
         if (AronaNotifyConfig.enableJP) {
           Arona.sendMessage(
@@ -121,7 +123,7 @@ object ActivityNotify: InitializedFunction() {
       if ((d == 0) && isMaintenanceActivity(activity)) {
         insertMaintenanceAlert(activity, h)
       }
-      return d * 24 + h < 48
+      return doFilter(d, h)
     }
 
     private fun filterActive(activity: Activity, list: MutableList<Activity>): Boolean {
@@ -131,7 +133,13 @@ object ActivityNotify: InitializedFunction() {
       if (d == 0) {
         list.add(activity)
       }
-      return d * 24 + h < 48
+      return doFilter(d, h)
+    }
+
+    private fun doFilter(d: Int, h: Int): Boolean = when(AronaNotifyConfig.notifyType) {
+      NotifyType.ALL -> true
+      NotifyType.ONLY_24H -> d * 24 + h < 24
+      NotifyType.ONLY_48H -> d * 24 + h < 48
     }
 
     private fun extraHAndD(activity: Activity, active: Boolean = true): Pair<Int, Int> {
@@ -165,19 +173,21 @@ object ActivityNotify: InitializedFunction() {
             return@let null
           }
         }
+      val serverName = if (server) "日服" else "国际服"
+      if (maintenance != null) {
+        Arona.sendMessage("距离${serverName}维护还有1小时")
+      }
+      // 只有维护信息时
+      if (activity.isEmpty()) return
       val activityString = activity
         .map { at -> "${at.content}\n" }
         .reduceOrNull { prv, cur -> prv + cur }
-      val serverName = if (server) "日服" else "国际服"
       val serverString = MiraiCode.deserializeMiraiCode(if (server) AronaNotifyConfig.notifyStringJP else AronaNotifyConfig.notifyStringEN)
       val settingDropTime = if (AronaNotifyConfig.dropNotify <= 3) (AronaNotifyConfig.dropNotify + 24) else AronaNotifyConfig.dropNotify
-      val endTime = if (server or isDropActivity(activity[0])) {
+      val endTime = if (server || isDropActivity(activity[0])) {
         27 - settingDropTime
       } else {
         1
-      }
-      if (maintenance != null) {
-        Arona.sendMessage("距离${serverName}维护还有1小时")
       }
       Arona.sendMessage("${serverString}\n" +
         "$activityString" +
@@ -197,4 +207,9 @@ object ActivityNotify: InitializedFunction() {
   private fun isJPServer(activity: List<Activity>) = isJPServer(activity[0])
 
   private fun isJPServer(activity: Activity) = activity.serverLocale == ServerLocale.JP
+}
+
+// 每日防侠提醒类型
+enum class NotifyType {
+  ALL, ONLY_24H, ONLY_48H
 }

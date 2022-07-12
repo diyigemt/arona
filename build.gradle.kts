@@ -31,7 +31,8 @@ dependencies {
   implementation("org.quartz-scheduler:quartz:$quartzVersion")
   // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
   implementation("com.squareup.okhttp3:okhttp:$okhttpVersion")
-
+  implementation("org.apache.logging.log4j:log4j-core:2.18.0")
+  implementation("org.slf4j:slf4j-api:1.7.36")
 }
 
 tasks.test {

@@ -15,11 +15,10 @@ object WikiruUtil {
   fun getValidData(raw : String) : String{
     val start = "&size(16){''報酬受け取り期間''};"
     val tmp = raw.substring(raw.indexOf("&size(16){''開催中のイベント''};"), raw.indexOf("#region([[イベント]]一覧)"))
-
     return tmp.removeRange(tmp.indexOf(start) + start.length, tmp.indexOf("&size(16){''開催予定のイベント''};"))
   }
 
-  fun analyze(code : String) : Pair<List<Activity>, List<Activity>>{
+  fun analyze(code : String) : Pair<MutableList<Activity>, MutableList<Activity>>{
     val active : MutableList<Activity> = mutableListOf()
     val pending : MutableList<Activity> = mutableListOf()
     var pointer = 0
@@ -47,10 +46,8 @@ object WikiruUtil {
     val tag = Regex(regex).find(code)
     if (tag != null){
       res = Tags.getInterpreterByTag(tag.value.substring(1, tag.value.length - 1))(code.substring(code.indexOf("("), code.indexOf(";")))
-
       return res
     }
-
     return code
   }
 }

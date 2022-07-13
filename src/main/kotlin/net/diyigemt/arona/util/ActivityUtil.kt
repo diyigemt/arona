@@ -25,14 +25,18 @@ object ActivityUtil {
   private val ActivityJPRegex = Regex("(\\d+/\\d+/\\d+)( \\d+:\\d+)? ～ (\\d+/\\d+ \\d+:\\d+)")
   private const val WikiruCmd = "diff"
   private const val WikiruPage = "イベント一覧"
+  const val ServerMaintenanceStartTimeEN = "11:00"
+  const val ServerMaintenanceStartTimeJP = "10:00"
+  const val ServerMaintenanceEndTimeEN = "15:00"
+  const val ServerMaintenanceEndTimeJP = "16:00"
   fun fetchJPActivity(): Pair<List<Activity>, List<Activity>> {
     val document = Jsoup.connect("https://wiki.biligame.com/bluearchive/%E9%A6%96%E9%A1%B5").get()
     val activities = document.getElementsByClass("activity")
     val active = mutableListOf<Activity>()
     val pending = mutableListOf<Activity>()
     activities.forEach {
-      val startTime = it.attr("data-start").replace("维护后","17:00")
-      val endTime = it.attr("data-end").replace("维护前","11:00")
+      val startTime = it.attr("data-start").replace("维护后",ServerMaintenanceEndTimeJP)
+      val endTime = it.attr("data-end").replace("维护前",ServerMaintenanceStartTimeJP)
       val parseStart = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(startTime)
       val parseEnd = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(endTime)
       val now = Calendar.getInstance().time
@@ -75,10 +79,10 @@ object ActivityUtil {
             val endN = parseDateString259(year, n3, n4)
             val startH = parseDateString3(year, h1, h2)
             val endH = parseDateString259(year, h3, h4)
-            val parseStartN = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(startN)
-            val parseEndN = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(endN)
-            val parseStartH = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(startH)
-            val parseEndH = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(endH)
+            val parseStartN = simpleDateFormatParse(startN)
+            val parseEndN = simpleDateFormatParse(endN)
+            val parseStartH = simpleDateFormatParse(startH)
+            val parseEndH = simpleDateFormatParse(endH)
             val titleN = "Normal${power}倍掉落"
             val titleH = "Hard${power}倍掉落"
             doInsert(now, parseStartN, parseEndN, active, pending, titleN, type0 = ActivityType.N2_3)
@@ -115,10 +119,10 @@ object ActivityUtil {
           val d1 = groupValue[2]
           val d2 = groupValue[4]
           val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
-          val start = parseDateString(year, m1, d1, "16:00")
-          val end = parseDateString(year, m2, d2, "11:00")
-          val parseStart = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(start)
-          val parseEnd = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(end)
+          val start = parseDateString(year, m1, d1, ServerMaintenanceStartTimeEN)
+          val end = parseDateString(year, m2, d2, ServerMaintenanceEndTimeEN)
+          val parseStart = simpleDateFormatParse(start)
+          val parseEnd = simpleDateFormatParse(end)
           val now = Calendar.getInstance().time
           doInsert(now, parseStart, parseEnd, active, pending, student, type0 = ActivityType.PICK_UP)
         }
@@ -133,15 +137,15 @@ object ActivityUtil {
           val d = groupValue[2]
           val hour = groupValue[3]
           val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
-          val start = "${year}/${if (m.toInt() < 10) "0$m" else m}/${if (d.toInt() < 10) "0$d" else d} ${if (hour.toInt() < 10) "0$hour" else hour}"
-          val parseStart = SimpleDateFormat("yyyy/MM/dd HH").parse(start)
+          val start = parseDateString(year, m, d, ServerMaintenanceStartTimeEN)
+          val parseStart = simpleDateFormatParse(start)
           val parseEnd = Calendar.getInstance()
           parseEnd.time = parseStart
-          parseEnd.set(Calendar.HOUR, 16)
-          val now = Calendar.getInstance().time
+          parseEnd.set(Calendar.HOUR, ServerMaintenanceEndTimeEN.substringBefore(":").toInt())
+          val now = Calendar.getInstance()
           val title = "游戏维护"
           if (now.before(parseStart)) {
-            doInsert(now, parseStart, parseEnd.time, active, pending, title, type0 = ActivityType.MAINTENANCE)
+            doInsert(now.time, parseStart, parseEnd.time, active, pending, title, type0 = ActivityType.MAINTENANCE)
           }
         }
         return@forEach
@@ -154,16 +158,16 @@ object ActivityUtil {
         if (groupValue.size >= 5) {
           val name = groupValue[1]
           val terrain = groupValue[2]
-          val m = groupValue[3].toInt()
-          val d = groupValue[4].toInt()
+          val m = groupValue[3]
+          val d = groupValue[4]
           val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
-          val start = "${year}/${if (m < 10) "0$m" else m}/${if (d < 10) "0$d" else d} 16:00"
-          val parseStart = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(start)
+          val start = parseDateString(year, m, d, ServerMaintenanceEndTimeEN)
+          val parseStart = simpleDateFormatParse(start)
           val now = Calendar.getInstance().time
           val title = "总力战 $name($terrain)"
           val parseEnd = Calendar.getInstance()
-          parseEnd.set(Calendar.MONTH, m - 1)
-          parseEnd.set(Calendar.DAY_OF_MONTH, d)
+          parseEnd.set(Calendar.MONTH, m.toInt() - 1)
+          parseEnd.set(Calendar.DAY_OF_MONTH, d.toInt())
           parseEnd.set(Calendar.DAY_OF_MONTH, parseEnd.get(Calendar.DAY_OF_MONTH) + 6)
           parseEnd.set(Calendar.HOUR_OF_DAY, 23)
           doInsert(now, parseStart, parseEnd.time, active, pending, title, type0 = ActivityType.DECISIVE_BATTLE)
@@ -180,6 +184,10 @@ object ActivityUtil {
 
   private fun parseDateString(year: String, date1: String, date2: String, suffix: String): String {
     return "${year}/${if (date1.toInt() < 10) "0$date1" else date1}/${if (date2.toInt() < 10) "0$date2" else date2} $suffix"
+  }
+
+  private fun simpleDateFormatParse(date: String, formatter: String = "yyyy/MM/dd HH:mm"): Date {
+    return SimpleDateFormat(formatter).parse(date)
   }
 
   private fun fetchActivities(): List<JsonObject> {
@@ -294,7 +302,7 @@ object ActivityUtil {
     val now = Calendar.getInstance()
     val end = now.clone() as Calendar
     end.time = start
-    end.set(Calendar.HOUR_OF_DAY, 16)
+    end.set(Calendar.HOUR_OF_DAY, ServerMaintenanceEndTimeJP.substringBefore(":").toInt())
     doInsert(now.time, start, end.time, active, pending, "游戏维护")
   }
 
@@ -331,6 +339,9 @@ object ActivityUtil {
   private fun extraActivityJPTypeFromJP(source: String): ActivityType {
     return when {
       source.contains("游戏维护") -> ActivityType.MAINTENANCE
+      source.contains("合同火力演習") -> ActivityType.JOINT_EXERCISES
+      source.contains("特殊作戦") -> ActivityType.KABALA
+      source.contains("報酬2倍")
       else -> ActivityType.NULL
     }
   }

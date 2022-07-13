@@ -25,8 +25,8 @@ object WikiruUtil {
     while (pointer != -1){
       val name = scriptDecoder(code.substring(code.indexOf("[[", pointer) + 2, code.indexOf(">", pointer)))
       pointer =code.indexOf("]]", pointer)
-      val time = code.substring(code.indexOf("(", pointer) + 1, code.indexOf(")", pointer))
-      val timeStart = SimpleDateFormat("yyyy/M/d").parse(time)
+      val time = code.substring(code.indexOf("(", pointer) + 1, code.indexOf(")", pointer)).replace("メンテナンス後", ActivityUtil.ServerMaintenanceEndTimeJP)
+      val timeStart = SimpleDateFormat("yyyy/M/d HH:mm").parse(time)
       val timeEnd = SimpleDateFormat("M/d HH:mm").parse(time.substring(time.indexOf("～") + 1))
       timeEnd.year = Calendar.getInstance().get(Calendar.YEAR) - 1900
 

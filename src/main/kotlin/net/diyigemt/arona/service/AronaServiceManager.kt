@@ -90,6 +90,8 @@ object AronaServiceManager: InitializedFunction() {
       }
       "功能未启用"
     }
+    // 防止在非服务群聊中也执行非群服务指令
+    subject is Group && !GeneralUtils.checkService(subject) -> "非服务群聊"
     (service is AronaManageService) && (!service.checkAdmin(user, subject)) -> {
       "权限不足"
     }

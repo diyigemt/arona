@@ -3,9 +3,7 @@ package net.diyigemt.arona.advance
 import kotlinx.coroutines.runBlocking
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.config.NGAPushConfig
-import net.diyigemt.arona.interfaces.InitializedFunction
 import net.diyigemt.arona.quartz.QuartzProvider
-import net.diyigemt.arona.service.AronaGroupService
 import net.diyigemt.arona.service.AronaQuartzService
 import net.mamoe.mirai.message.data.MessageChainBuilder
 import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
@@ -17,7 +15,7 @@ import org.quartz.JobKey
 import java.io.InputStream
 import java.util.*
 
-object NGAImageTranslatePusher: AronaQuartzService {
+object NGAImageTranslatePusher : AronaQuartzService {
   private const val ImageTranslateCheckJobKey = "ImageTranslateCheck"
   private const val ImageSrcBaseAddress = "https://img.nga.178.com/attachments/"
   private const val ImageTranslateCheckInitKey = "init"
@@ -39,7 +37,7 @@ object NGAImageTranslatePusher: AronaQuartzService {
   override val name: String = "nga图楼推送"
   override var enable: Boolean = true
 
-  class TranslatePusherJob: Job {
+  class TranslatePusherJob : Job {
     override fun execute(context: JobExecutionContext?) {
       val fetchNGA = fetchNGA().also {
         if (it.isEmpty()) {
@@ -102,7 +100,9 @@ object NGAImageTranslatePusher: AronaQuartzService {
     if (mainContent.size < 2) return res
     mainContent.removeAt(0)
     mainContent.forEach {
-      val user = it.getElementsByClass("posterinfo")[0]?.getElementsByTag("a")?.get(0)?.attr("href")?.substringAfter("uid=") ?: return@forEach
+      val user =
+        it.getElementsByClass("posterinfo")[0]?.getElementsByTag("a")?.get(0)?.attr("href")?.substringAfter("uid=")
+          ?: return@forEach
       if (!users.containsKey(user)) return@forEach
       val time = it.getElementsByClass("postInfo")[0]?.getElementsByTag("span")?.text() ?: return@forEach
       val content = it.getElementsByClass("postcontent")[0]?.text() ?: return@forEach
@@ -112,13 +112,13 @@ object NGAImageTranslatePusher: AronaQuartzService {
       // 有图才爬内容
       val content0 = content.substringBefore("[")
       findAll
-        .filter {
-            mr -> mr.groups.size >= 2
+        .filter { mr ->
+          mr.groups.size >= 2
         }
-        .map {
-            mr -> mr.groupValues[1]
-        }.forEach {
-            mr -> imgSrc.add(mr)
+        .map { mr ->
+          mr.groupValues[1]
+        }.forEach { mr ->
+          imgSrc.add(mr)
         }
       res.add(NGAFloor(user, time, content0, imgSrc))
     }
@@ -131,7 +131,10 @@ object NGAImageTranslatePusher: AronaQuartzService {
     val client = builder.build()
     val request = Request.Builder()
       .url("${ImageSrcBaseAddress}${href}")
-      .addHeader("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
+      .addHeader(
+        "user-agent",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36"
+      )
       .get()
       .build()
     val response = client.newCall(request).execute()
@@ -141,7 +144,7 @@ object NGAImageTranslatePusher: AronaQuartzService {
     return null
   }
 
-  private class CookieJarImp: CookieJar {
+  private class CookieJarImp : CookieJar {
     override fun loadForRequest(url: HttpUrl): List<Cookie> {
       return cookies.entries.map {
         val builder = Cookie.Builder()

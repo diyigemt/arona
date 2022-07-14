@@ -53,6 +53,8 @@ object QuartzProvider: BaseFunctionProvider(Dispatchers.IO) {
         now.set(Calendar.MINUTE, 30)
       }
     }
+    now.set(Calendar.SECOND, 0)
+    now.set(Calendar.MILLISECOND, 0)
     val job = JobBuilder
       .newJob(jobClass)
       .withIdentity(jobKeys)

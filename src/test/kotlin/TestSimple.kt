@@ -64,16 +64,17 @@ class TestSimple {
   fun testA(){
     val cmd = "diff"
     val page = "イベント一覧"
-    var res = Jsoup.connect("https://bluearchive.wikiru.jp?cmd=${cmd}&page=${page}")
+    val res = Jsoup.connect("https://bluearchive.wikiru.jp?cmd=${cmd}&page=${page}")
       .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
       .ignoreContentType(true)
       .get()
       .body()
       .getElementById("body")
-      ?.getElementsByTag("pre")
-      ?.text()!!
-    res = WikiruUtil.getValidData(res)
-    print(WikiruUtil.analyze(res))
+      ?.getElementsByTag("pre")!!
+      res.select(".diff_removed").remove()
+
+    val str = WikiruUtil.getValidData(res.text())
+    print(WikiruUtil.analyze(str))
     print("\n")
   }
 

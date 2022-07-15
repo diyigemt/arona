@@ -14,8 +14,15 @@ import java.util.*
 object WikiruUtil {
   fun getValidData(raw : String) : String{
     val start = "&size(16){''報酬受け取り期間''};"
-    val tmp = raw.substring(raw.indexOf("&size(16){''開催中のイベント''};"), raw.indexOf("#region([[イベント]]一覧)"))
-    return tmp.removeRange(tmp.indexOf(start) + start.length, tmp.indexOf("&size(16){''開催予定のイベント''};"))
+    var tmp = raw.substring(raw.indexOf("&size(16){''開催中のイベント''};"), raw.indexOf("#region([[イベント]]一覧)"))
+    tmp = tmp.removeRange(tmp.indexOf(start) + start.length, tmp.indexOf("&size(16){''開催予定のイベント''};"))
+    val regex = """//.*\n"""
+    val tag = Regex(regex).find(tmp)
+    if(tag != null){
+      tmp = tmp.substring(0, tag.range.first) + tmp.substring(tag.range.last)
+    }
+
+    return tmp
   }
 
   fun analyze(code : String) : Pair<MutableList<Activity>, MutableList<Activity>>{
@@ -31,7 +38,7 @@ object WikiruUtil {
       timeEnd.year = Calendar.getInstance().get(Calendar.YEAR) - 1900
 
       ActivityUtil.doInsert(Calendar.getInstance().time, timeStart, timeEnd, active, pending, name)
-      pointer = code.indexOf(")\n\n", pointer)
+      pointer = code.indexOf(")\n", pointer)
       pointer = code.indexOf("-", pointer)
     }
     active.sortByDescending { it.type.level }

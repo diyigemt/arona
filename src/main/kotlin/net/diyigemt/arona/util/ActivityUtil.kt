@@ -269,10 +269,10 @@ object ActivityUtil {
       .body()
       .getElementById("body")
       ?.getElementsByTag("pre")
-      ?.text()
       ?: return mutableListOf<Activity>() to mutableListOf()
-    res = WikiruUtil.getValidData(res)
-    val parse = WikiruUtil.analyze(res)
+    res.select(".diff_removed").remove()
+    val str = WikiruUtil.getValidData(res.text())
+    val parse = WikiruUtil.analyze(str)
     kotlin.runCatching {
       fetchJPMaintenanceActivityFromJP(parse.first, parse.second)
     }

@@ -8,9 +8,6 @@ import net.mamoe.mirai.console.data.value
 
 object AronaNotifyConfig: AutoSavePluginConfig("arona-notify") {
 
-  @ValueDescription("是否启用防侠提醒")
-  val enable: Boolean by value(true)
-
   @ValueDescription("是否启用每日防侠提醒")
   val enableEveryDay: Boolean by value(true)
 

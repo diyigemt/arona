@@ -145,6 +145,7 @@ object AronaServiceManager: InitializedFunction() {
     ActivityNotify.init()
     NGAImageTranslatePusher.init()
     AronaUpdateChecker.init()
+//    TransferCommand.init()
     AronaServiceConfig.reload()
     AronaServiceConfig.config.forEach {
       if (it.value) {

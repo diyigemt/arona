@@ -342,6 +342,7 @@ object ActivityUtil {
       source.contains("合同火力演習") -> ActivityType.JOINT_EXERCISES
       source.contains("特殊作戦") -> ActivityType.KABALA
       source.contains("報酬2倍") -> ActivityType.SPECIAL_DROP
+      source.contains("総力戦") -> ActivityType.DECISIVE_BATTLE
       else -> ActivityType.NULL
     }
   }

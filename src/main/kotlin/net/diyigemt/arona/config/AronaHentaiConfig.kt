@@ -12,8 +12,6 @@ object AronaHentaiConfig: AutoSavePluginConfig("arona-hentai") {
   var listen: MutableList<Long> by value()
   @ValueDescription("返回被骂的信息")
   var messageList: MutableList<NudgeMessage> by value()
-  @ValueDescription("是否启用")
-  var enable: Boolean by value(false)
 
   /**
    * 优先级 默认为高

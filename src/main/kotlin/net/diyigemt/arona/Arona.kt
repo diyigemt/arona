@@ -63,10 +63,8 @@ object Arona : KotlinPlugin(
           sendMessage(MiraiCode.deserializeMiraiCode(AronaConfig.onlineMessage))
         }
       }
-      if (AronaNudgeConfig.enable) {
-        GlobalEventChannel.subscribeAlways<NudgeEvent>(priority = AronaNudgeConfig.priority) {
-          NudgeEventHandler.preHandle(this)
-        }
+      GlobalEventChannel.subscribeAlways<NudgeEvent>(priority = AronaNudgeConfig.priority) {
+        NudgeEventHandler.preHandle(this)
       }
       GlobalEventChannel.subscribeAlways<GroupMessageEvent> {
         GroupRepeaterHandler.preHandle(this)

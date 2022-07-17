@@ -4,7 +4,8 @@ data class Activity(
   val content: String,
   val time: String,
   val type: ActivityType = ActivityType.NULL,
-  val serverLocale: ServerLocale = ServerLocale.JP
+  val serverLocale: ServerLocale = ServerLocale.JP,
+  val katakana: String = ""
 )
 
 enum class ServerLocale {

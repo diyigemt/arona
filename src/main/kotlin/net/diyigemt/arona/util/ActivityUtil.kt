@@ -369,6 +369,7 @@ object ActivityUtil {
     active: MutableList<Activity>,
     pending: MutableList<Activity>,
     contentSource: String,
+    katakana: String = "",
     contentSourceJP: Boolean = true,
     type0: ActivityType? = null
   ) {
@@ -379,7 +380,8 @@ object ActivityUtil {
           contentSource,
           TimeUtil.calcTime(now, parseStart, true),
           type,
-          locale(type0)
+          locale(type0),
+          katakana
         )
       )
     } else if (now.before(parseEnd)) {
@@ -388,7 +390,8 @@ object ActivityUtil {
           contentSource,
           TimeUtil.calcTime(now, parseEnd, false),
           type,
-          locale(type0)
+          locale(type0),
+          katakana
         )
       )
     }

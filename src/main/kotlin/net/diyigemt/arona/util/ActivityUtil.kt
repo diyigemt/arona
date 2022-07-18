@@ -336,8 +336,10 @@ object ActivityUtil {
     return result
   }
 
-  private fun extraActivityJPTypeFromJPAndTranslate(activity: Activity) {
-    val source = activity.content.replace("キャンペーン", "") // キャンペーン->活动
+  private fun extraActivityJPTypeFromJPAndTranslate(activity: Activity): Activity {
+    val source = activity.content
+      .replace("キャンペーン", "") // キャンペーン->活动
+      .replace("スケジュール", "课程表") // 课程表
     activity.type = when {
       source.contains("游戏维护") -> {
         ActivityType.MAINTENANCE
@@ -351,17 +353,15 @@ object ActivityUtil {
       }
       source.contains("総力戦") -> {
         activity.content = source.replace("ビナー", "bina")
-        activity.content = source.replace("ヒエロニムス", "bina")
+        activity.content = source.replace("ヒエロニムス", "主教")
         activity.content = source.replace("KAITEN FX Mk.0", "bina")
-        activity.content = source.replace("シロ＆クロ", "bina")
-        activity.content = source.replace("ペロロジラ", "bina")
-        activity.content = source.replace("ケセド", "bina")
-        activity.content = source.replace("ホド", "bina")
-        activity.content = source.replace("ペロロジラ", "bina")
-        activity.content = source.replace("ケセド", "bina")
+        activity.content = source.replace("シロ＆クロ", "黑白")
+        activity.content = source.replace("ペロロジラ", "佩罗洛斯拉")
+        activity.content = source.replace("ケセド", "Kesed(球)")
+        activity.content = source.replace("ホド", "Hod")
         ActivityType.DECISIVE_BATTLE
       }
-      source.contains("報酬2倍") -> {
+      source.contains("報酬2倍") || source.contains("報酬3倍") -> {
         activity.content = source.replace("ハード", "H")
         activity.content = source.replace("ノーマル", "N")
         ActivityType.SPECIAL_DROP
@@ -373,15 +373,17 @@ object ActivityUtil {
         ActivityType.COLLEGE_EXCHANGE_DROP
       }
       source.contains("スケジュール") -> {
-        activity.content = source.replace("スケジュール", "课程表")
+        activity.content = source
         ActivityType.SCHEDULE
       }
-      else -> ActivityType.NULL
+      else -> ActivityType.ACTIVITY
     }
+    return activity
   }
 
-  private fun extraActivityJPTypeFromCN(activity: Activity) {
+  private fun extraActivityJPTypeFromCN(activity: Activity): Activity {
     val source = activity.content
+    return activity
   }
 
   /**
@@ -407,7 +409,7 @@ object ActivityUtil {
     contentSourceJP: Boolean = true,
     type0: ActivityType? = null
   ) {
-    val activity = Activity(
+    var activity = Activity(
       contentSource,
       TimeUtil.calcTime(now, parseStart, true),
       serverLocale = locale(type0),
@@ -416,7 +418,7 @@ object ActivityUtil {
     if (type0 != null) {
       activity.type = type0
     } else {
-      if (contentSourceJP) {
+      activity = if (contentSourceJP) {
         extraActivityJPTypeFromJPAndTranslate(activity)
       } else {
         extraActivityJPTypeFromCN(activity)

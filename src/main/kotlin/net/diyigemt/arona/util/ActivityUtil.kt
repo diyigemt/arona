@@ -336,19 +336,52 @@ object ActivityUtil {
     return result
   }
 
-  private fun extraActivityJPTypeFromJP(source: String): ActivityType {
-    return when {
-      source.contains("游戏维护") -> ActivityType.MAINTENANCE
-      source.contains("合同火力演習") -> ActivityType.JOINT_EXERCISES
-      source.contains("特殊作戦") -> ActivityType.KABALA
-      source.contains("報酬2倍") -> ActivityType.SPECIAL_DROP
-      source.contains("総力戦") -> ActivityType.DECISIVE_BATTLE
+  private fun extraActivityJPTypeFromJPAndTranslate(activity: Activity) {
+    val source = activity.content.replace("キャンペーン", "") // キャンペーン->活动
+    activity.type = when {
+      source.contains("游戏维护") -> {
+        ActivityType.MAINTENANCE
+      }
+      source.contains("合同火力演習") -> {
+        ActivityType.JOINT_EXERCISES
+      }
+      source.contains("特殊作戦") -> {
+        activity.content = source.replace("デカグラマトン", "十字神明")
+        ActivityType.KABALA
+      }
+      source.contains("総力戦") -> {
+        activity.content = source.replace("ビナー", "bina")
+        activity.content = source.replace("ヒエロニムス", "bina")
+        activity.content = source.replace("KAITEN FX Mk.0", "bina")
+        activity.content = source.replace("シロ＆クロ", "bina")
+        activity.content = source.replace("ペロロジラ", "bina")
+        activity.content = source.replace("ケセド", "bina")
+        activity.content = source.replace("ホド", "bina")
+        activity.content = source.replace("ペロロジラ", "bina")
+        activity.content = source.replace("ケセド", "bina")
+        ActivityType.DECISIVE_BATTLE
+      }
+      source.contains("報酬2倍") -> {
+        activity.content = source.replace("ハード", "H")
+        activity.content = source.replace("ノーマル", "N")
+        ActivityType.SPECIAL_DROP
+      }
+      source.contains("指名手配") -> {
+        ActivityType.WANTED_DROP
+      }
+      source.contains("学園交流会") -> {
+        ActivityType.COLLEGE_EXCHANGE_DROP
+      }
+      source.contains("スケジュール") -> {
+        activity.content = source.replace("スケジュール", "课程表")
+        ActivityType.SCHEDULE
+      }
       else -> ActivityType.NULL
     }
   }
 
-  private fun extraActivityJPTypeFromCN(source: String): ActivityType {
-    return ActivityType.NULL
+  private fun extraActivityJPTypeFromCN(activity: Activity) {
+    val source = activity.content
   }
 
   /**
@@ -359,6 +392,7 @@ object ActivityUtil {
    * @param active 正在进行的活动列表
    * @param pending 即将开始的活动列表
    * @param contentSource 活动内容
+   * @param katakana 额外帮助判断活动类型的内容
    * @param contentSourceJP 若是日服的活动, 那么数据来源是日服wiki还是b站wiki
    * @param type0 已知的活动类型(国际服才有)
    */
@@ -373,27 +407,26 @@ object ActivityUtil {
     contentSourceJP: Boolean = true,
     type0: ActivityType? = null
   ) {
-    val type = type0 ?: if (contentSourceJP) extraActivityJPTypeFromJP(contentSource) else extraActivityJPTypeFromCN(contentSource)
+    val activity = Activity(
+      contentSource,
+      TimeUtil.calcTime(now, parseStart, true),
+      serverLocale = locale(type0),
+      katakana = katakana
+    )
+    if (type0 != null) {
+      activity.type = type0
+    } else {
+      if (contentSourceJP) {
+        extraActivityJPTypeFromJPAndTranslate(activity)
+      } else {
+        extraActivityJPTypeFromCN(activity)
+      }
+    }
     if (now.before(parseStart)) {
-      pending.add(
-        Activity(
-          contentSource,
-          TimeUtil.calcTime(now, parseStart, true),
-          type,
-          locale(type0),
-          katakana
-        )
-      )
+      pending.add(activity)
     } else if (now.before(parseEnd)) {
-      active.add(
-        Activity(
-          contentSource,
-          TimeUtil.calcTime(now, parseEnd, false),
-          type,
-          locale(type0),
-          katakana
-        )
-      )
+      activity.time = TimeUtil.calcTime(now, parseEnd, false)
+      active.add(activity)
     }
   }
 

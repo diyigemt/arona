@@ -78,4 +78,9 @@ class TestSimple {
     print("\n")
   }
 
+  @Test
+  fun testJPText() {
+    println("ビナー".replace("ー", "1"))
+  }
+
 }

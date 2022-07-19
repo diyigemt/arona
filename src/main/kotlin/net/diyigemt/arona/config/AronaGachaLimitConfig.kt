@@ -13,8 +13,8 @@ object AronaGachaLimitConfig: AutoSavePluginConfig("arona-gacha-limit") {
   @ValueDescription("上次更新记录")
   var lastUpdate: Int by value()
 
-  @ValueDescription("每日限制次数")
-  var limit: Int by value(0)
+  @ValueDescription("每日限制次数, 0表示不限制")
+  val limit: Int by value(0)
 
   fun update() {
     val today = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)

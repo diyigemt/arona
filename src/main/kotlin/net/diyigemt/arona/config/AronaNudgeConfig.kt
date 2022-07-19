@@ -17,6 +17,6 @@ object AronaNudgeConfig: AutoSavePluginConfig("arona-nudge") {
    */
   @ValueDescription("事件优先级 从高到低可选 HIGHEST, HIGH, NORMAL, LOW, LOWEST, MONITOR\n" +
     "设置后需要重启插件生效")
-  var priority: EventPriority by value(EventPriority.HIGH)
+  val priority: EventPriority by value(EventPriority.HIGH)
 
 }

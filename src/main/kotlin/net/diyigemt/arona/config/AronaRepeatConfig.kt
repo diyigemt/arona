@@ -7,6 +7,6 @@ import net.mamoe.mirai.console.data.value
 object AronaRepeatConfig: AutoSavePluginConfig("arona-repeat") {
 
   @ValueDescription("复读次数")
-  var times: Int by value(3)
+  val times: Int by value(3)
 
 }

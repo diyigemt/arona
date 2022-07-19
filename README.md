@@ -296,6 +296,7 @@ arona总的配置。
 | sendOfflineMessage      | Boolean      | 是否发送arona下线消息                                        |
 | offlineMessage          | String       | 下线消息内容                                                 |
 | updateCheckTime         | Int          | 每日检查更新的时间(24小时制)                                 |
+| updateUrl               | String       | 获取更新的地址(一般不用改)                                   |
 | sendStatus              | Boolean      | 是否允许arona收集匿名统计信息(未实装)                        |
 
 ### 2.arona-service.yml<a id="service-names"> </a>

@@ -29,7 +29,7 @@ object AronaUpdateChecker: AronaQuartzService {
 
   class UpdateCheckJob: Job {
     override fun execute(context: JobExecutionContext?) {
-      val get = Jsoup.connect("http://localhost:3000/api/v1/version/")
+      val get = Jsoup.connect(AronaConfig.updateUrl)
         .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
         .ignoreContentType(true)
         .get()

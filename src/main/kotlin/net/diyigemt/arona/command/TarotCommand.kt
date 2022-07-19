@@ -54,6 +54,7 @@ object TarotCommand : SimpleCommand(
         query {
           record[0].day = today
         }
+        return
       }
       // 写入数据库
       query {

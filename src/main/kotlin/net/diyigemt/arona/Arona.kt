@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import net.diyigemt.arona.Arona.save
 import net.diyigemt.arona.advance.AronaUpdateChecker
 import net.diyigemt.arona.advance.NGAImageTranslatePusher
 import net.diyigemt.arona.config.*
@@ -88,6 +89,7 @@ object Arona : KotlinPlugin(
     AronaNotifyConfig.reload()
     AronaGachaLimitConfig.reload()
     NGAPushConfig.reload()
+    AronaTarotConfig.reload()
     DataBaseProvider.start()
     QuartzProvider.start()
     launch {
@@ -108,6 +110,7 @@ object Arona : KotlinPlugin(
     AronaNotifyConfig.save()
     AronaServiceConfig.save()
     AronaGachaLimitConfig.save()
+    AronaTarotConfig.save()
     AronaServiceManager.saveServiceStatus()
   }
 

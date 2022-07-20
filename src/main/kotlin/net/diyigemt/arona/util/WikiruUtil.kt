@@ -18,10 +18,19 @@ object WikiruUtil {
     val start = "&size(16){''報酬受け取り期間''};"
     var tmp = raw.substring(raw.indexOf("&size(16){''開催中のイベント''};"), raw.indexOf("#region([[イベント]]一覧)"))
     tmp = tmp.removeRange(tmp.indexOf(start) + start.length, tmp.indexOf("&size(16){''開催予定のイベント''};"))
+
+    //过滤注释
     val regex = """//.*\n"""
     val tag = Regex(regex).find(tmp)
     if(tag != null){
       tmp = tmp.substring(0, tag.range.first) + tmp.substring(tag.range.last)
+    }
+
+    //过滤不正规的脚本格式 [[]]
+    val regex2 = """\n\[\[.*]]"""
+    val res = Regex(regex2).find(tmp)
+    if(res != null){
+      tmp = tmp.removeRange(res.range.first, res.range.last)
     }
 
     return tmp
@@ -33,22 +42,23 @@ object WikiruUtil {
     var pointer = 0
     while (pointer != -1){
       val name = scriptDecoder(code.substring(code.indexOf("-", pointer), code.indexOf("\n", code.indexOf("-", pointer) + 2)))
-      val katakanaName = Regex(katakanaRegex).findAll(name)
-      var test = Regex(katakanaRegex).find(name)?.value
-      if(test == null){
-        test = ""
+      var katakana = Regex(katakanaRegex).find(name)?.value
+      if(katakana == null){
+        katakana = ""
       }
-      val res = katakanaName.toList()
-//      for(i in res){
-//        print(i.value + "\n")
-//      }
       pointer =code.indexOf("\n", pointer)
-      val time = code.substring(code.indexOf("(", pointer) + 1, code.indexOf(")", pointer)).replace("メンテナンス後", ActivityUtil.ServerMaintenanceEndTimeJP)
-      val timeStart = SimpleDateFormat("yyyy/M/d HH:mm").parse(time)
-      val timeEnd = SimpleDateFormat("M/d HH:mm").parse(time.substring(time.indexOf("～") + 1))
-      timeEnd.year = Calendar.getInstance().get(Calendar.YEAR) - 1900
+      val timeRegex = """\(\d{4}.*\)"""
+      var time = Regex(timeRegex).find(code, pointer)?.value?.replace("メンテナンス後", ActivityUtil.ServerMaintenanceEndTimeJP)
+      var timeStart = Date()
+      var timeEnd = Date()
+      if(time != null){
+        time = time.substring(1, time.length)
+        timeStart = SimpleDateFormat("yyyy/M/d HH:mm").parse(time)
+        timeEnd = SimpleDateFormat("M/d HH:mm").parse(time.substring(time.indexOf("～") + 1))
+        timeEnd.year = Calendar.getInstance().get(Calendar.YEAR) - 1900
+      }
 
-      ActivityUtil.doInsert(Calendar.getInstance().time, timeStart, timeEnd, active, pending, name, test)
+      ActivityUtil.doInsert(Calendar.getInstance().time, timeStart, timeEnd, active, pending, name, katakana)
       pointer = code.indexOf(")\n", pointer)
       pointer = code.indexOf("-", pointer)
     }
@@ -67,8 +77,6 @@ object WikiruUtil {
       Tags.getInterpreterByTag(tag.value.substring(1, tag.value.length - 1))(code.substring(code.indexOf("("), code.indexOf(";")))
     }
     else{
-//      res = Regex(nameRegex).find(code)?.value.toString()
-//      res = code.substring(code.indexOf("[[") + 2, code.indexOf(">"))
       if(code.indexOf(">") != -1){
         code.substring(code.indexOf("-[[") + 3, code.indexOf(">"))
       }

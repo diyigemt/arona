@@ -129,17 +129,23 @@ arona是基于mirai-console的插件。
 
 <details>
     <summary>NGA图楼推送:</summary>
-    <img src="static/5.jpg" />
+    <img src="static/6.jpg" />
 </details>
 
 <details>
     <summary>塔罗牌:</summary>
-    <img src="static/5.jpg" />
+    <img src="static/7.jpg" />
 </details>
 
 <details>
     <summary>不停机管理:</summary>
-    <img src="static/5.jpg" />
+    <img src="static/8-1.jpg" />
+    <img src="static/8-2.jpg" />
+</details>
+
+<details>
+    <summary>更新检查:</summary>
+    <img src="static/9.jpg" />
 </details>
 
 ## 使用方法

@@ -16,8 +16,8 @@ enum class ActivityType(var level: Int) {
   N2_3(2),
   H2_3(2),
   SPECIAL_DROP(2), // 特别作战(钱本经验本)
-  WANTED_DROP(2), //悬赏通缉
-  COLLEGE_EXCHANGE_DROP(2), //学院交流
+  WANTED_DROP(2), // 悬赏通缉
+  COLLEGE_EXCHANGE_DROP(2), // 学院交流
   DECISIVE_BATTLE(3), // 总力战
   JOINT_EXERCISES(2), // 合同火力演习
   PICK_UP(2), // 卡池

@@ -339,7 +339,7 @@ object ActivityUtil {
   private fun extraActivityJPTypeFromJPAndTranslate(activity: Activity): Activity {
     val source = activity.content
       .replace("キャンペーン", "") // キャンペーン->活动
-      .replace("スケジュール", "课程表") // 课程表
+      .replace("&br;", "") // 多余的html换行符
     activity.type = when {
       source.contains("游戏维护") -> {
         ActivityType.MAINTENANCE
@@ -373,10 +373,14 @@ object ActivityUtil {
         ActivityType.COLLEGE_EXCHANGE_DROP
       }
       source.contains("スケジュール") -> {
-        activity.content = source
+        activity.content = source.replace("スケジュール", "课程表") // 课程表
         ActivityType.SCHEDULE
       }
-      else -> ActivityType.ACTIVITY
+      else -> {
+        activity.content = source.replace("_バナー", "") // banner
+          .replace("ログインボーナス", "登录奖励")
+        ActivityType.ACTIVITY
+      }
     }
     return activity
   }

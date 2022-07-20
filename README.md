@@ -50,7 +50,7 @@ Please note that for various reasons, developers may **stop updating** or **dele
 
 ## 更新日志
 
-2022-07-19 v1.0.0
+2022-07-19 v1.0.0-M1
 
 1. 添加新配置项(arona-gacha.yml -> revokeTime) 允许用户配置抽卡结果撤回时间
 2. 防侠预警添加维护预警
@@ -75,7 +75,7 @@ Please note that for various reasons, developers may **stop updating** or **dele
 本节供从v0.1.1升级到v1.0.0-M1的用户阅读
 
 1. 从release下载最新版本的arona文件替换原有在plugins文件夹中的文件
-2. 下载并解压release中的`数据库迁移.zip`，运行其中的`数据库迁移.exe`文件，选中已有的`arona.db`数据库文件进行数据库更新(主要是插入与塔罗牌有关是数据，并不会影响已有的数据)**注意**，即使不会影响已保存的数据库数据，仍建议在进行此操作前对数据库文件进行备份
+2. 下载并解压release中的`default.zip`，运行其中的`数据库迁移.exe`文件，选中已有的`arona.db`数据库文件进行数据库更新(主要是插入与塔罗牌有关是数据，并不会影响已有的数据)**注意**，即使不会影响已保存的数据库数据，仍建议在进行此操作前对数据库文件进行备份
 3. 运行`mirai-console`，使arona在`./config`文件夹下生成新的配置文件
 4. **停止**`mirai-console`
 5. 在`arona-service.yml`文件中配置各模块的开关

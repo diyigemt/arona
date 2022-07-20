@@ -74,6 +74,12 @@ object AronaServiceManager: InitializedFunction() {
   }
 
   fun checkService(service: AronaService, user: User, subject: Contact): String? = when {
+    !service.enable -> {
+      Arona.runSuspend {
+        subject.sendMessage("功能未启用")
+      }
+      "功能未启用"
+    }
     service is AronaGroupService -> when {
       subject !is Group -> {
         Arona.runSuspend {
@@ -83,12 +89,6 @@ object AronaServiceManager: InitializedFunction() {
       }
       !GeneralUtils.checkService(subject) -> "非服务群聊"
       else -> null
-    }
-    !service.enable -> {
-      Arona.runSuspend {
-        subject.sendMessage("功能未启用")
-      }
-      "功能未启用"
     }
     // 防止在非服务群聊中也执行非群服务指令
     subject is Group && !GeneralUtils.checkService(subject) -> "非服务群聊"
@@ -145,6 +145,8 @@ object AronaServiceManager: InitializedFunction() {
     ActivityNotify.init()
     NGAImageTranslatePusher.init()
     AronaUpdateChecker.init()
+    TarotCommand.init()
+//    TransferCommand.init()
     AronaServiceConfig.reload()
     AronaServiceConfig.config.forEach {
       if (it.value) {

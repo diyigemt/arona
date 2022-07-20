@@ -8,8 +8,6 @@ import net.mamoe.mirai.event.events.GroupMessageEvent
 object HentaiEventHandler: AronaEventHandler<GroupMessageEvent>, AronaGroupService {
 
   override suspend fun handle(event: GroupMessageEvent) {
-    val enable = AronaHentaiConfig.enable
-    if (!enable) return
     val source = event.message.contentToString()
     if (!(source.contains("老婆") || source.contains("老公"))) return
     val messageList = AronaHentaiConfig.messageList

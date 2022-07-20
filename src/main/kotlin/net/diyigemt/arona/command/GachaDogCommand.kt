@@ -3,7 +3,6 @@ package net.diyigemt.arona.command
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.service.AronaGroupService
 import net.diyigemt.arona.util.GachaUtil
-import net.diyigemt.arona.util.GeneralUtils
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.UserCommandSender
@@ -17,7 +16,6 @@ object GachaDogCommand : SimpleCommand(
 
   @Handler
   suspend fun UserCommandSender.gachaDog() {
-    if (!GeneralUtils.checkService(subject)) return
     val dogCall = GachaUtil.getDogCall((subject as Group).id).filter { it.dog != 0 }
     if (dogCall.isEmpty()) {
       subject.sendMessage("还没有老师抽出来哦")

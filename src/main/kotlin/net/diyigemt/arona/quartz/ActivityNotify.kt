@@ -89,7 +89,7 @@ object ActivityNotify: AronaQuartzService {
     private fun insertAlert(activity: MutableList<Activity>) {
       if (activity.isEmpty()) return
       val instance = Calendar.getInstance()
-      val dropActivities = activity.filter { isDropActivity(it) }
+      val dropActivities = activity.filter { isMidnightEndActivity(it) }
       activity.removeAll(dropActivities)
       // 非双倍掉落提醒
       if (activity.isNotEmpty()) {
@@ -174,7 +174,7 @@ object ActivityNotify: AronaQuartzService {
         .reduceOrNull { prv, cur -> prv + cur }
       val serverString = MiraiCode.deserializeMiraiCode(if (server) AronaNotifyConfig.notifyStringJP else AronaNotifyConfig.notifyStringEN)
       val settingDropTime = if (AronaNotifyConfig.dropNotify <= 3) (AronaNotifyConfig.dropNotify + 24) else AronaNotifyConfig.dropNotify
-      val endTime = if (server || isDropActivity(activity[0])) {
+      val endTime = if (server || isMidnightEndActivity(activity[0])) {
         27 - settingDropTime
       } else {
         1
@@ -190,7 +190,8 @@ object ActivityNotify: AronaQuartzService {
     }
   }
 
-  private fun isDropActivity(activity: Activity): Boolean = activity.type in (ActivityType.N2_3 .. ActivityType.COLLEGE_EXCHANGE_DROP)
+  // 判断是不是双倍掉落(一般在3点结束,其实总力战也是,所以放一起了)
+  private fun isMidnightEndActivity(activity: Activity): Boolean = activity.type in (ActivityType.N2_3 .. ActivityType.DECISIVE_BATTLE)
 
   private fun isMaintenanceActivity(activity: Activity): Boolean = activity.type == ActivityType.MAINTENANCE
 

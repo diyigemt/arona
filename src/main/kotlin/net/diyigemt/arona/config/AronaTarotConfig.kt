@@ -4,9 +4,9 @@ import net.mamoe.mirai.console.data.AutoSavePluginConfig
 import net.mamoe.mirai.console.data.ValueDescription
 import net.mamoe.mirai.console.data.value
 
-object AronaRepeatConfig: AutoSavePluginConfig("arona-repeat") {
+object AronaTarotConfig: AutoSavePluginConfig("arona-tarot") {
 
-  @ValueDescription("复读次数")
-  val times: Int by value(3)
+  @ValueDescription("塔罗牌每天是否只能抽一张(多次抽取结果相同)")
+  val dayOne: Boolean by value(false)
 
 }

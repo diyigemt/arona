@@ -8,13 +8,10 @@ import net.mamoe.mirai.console.data.value
 
 object AronaNotifyConfig: AutoSavePluginConfig("arona-notify") {
 
-  @ValueDescription("是否启用防侠提醒")
-  val enable: Boolean by value(true)
-
   @ValueDescription("是否启用每日防侠提醒")
   val enableEveryDay: Boolean by value(true)
 
-  @ValueDescription("每日提醒类型,可选ALL(提醒所有时段),ONLY_24H(仅提醒24小时内),ONLY_48H(...)")
+  @ValueDescription("每日提醒类型,可选ALL(提醒所有时段),ONLY_24H(仅提醒24小时内),ONLY_48H(仅提醒48小时内)")
   val notifyType: NotifyType by value(NotifyType.ONLY_48H)
 
   @ValueDescription("每日防侠提醒的时间(同时也是每日数据更新时间)")

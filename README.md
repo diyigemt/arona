@@ -72,7 +72,7 @@ Please note that for various reasons, developers may **stop updating** or **dele
 
 ## 版本迁移指南
 
-本节供从v0.1.1升级到v1.0.0的用户阅读
+本节供从v0.1.1升级到v1.0.0-M1的用户阅读
 
 1. 从release下载最新版本的arona文件替换原有在plugins文件夹中的文件
 2. 下载并解压release中的`数据库迁移.zip`，运行其中的`数据库迁移.exe`文件，选中已有的`arona.db`数据库文件进行数据库更新(主要是插入与塔罗牌有关是数据，并不会影响已有的数据)**注意**，即使不会影响已保存的数据库数据，仍建议在进行此操作前对数据库文件进行备份
@@ -472,13 +472,16 @@ NGA图楼推送配置，具体配置方法可以看[下面](#nga-config)
 
 目前数据库中记录了5个池子，它们的id的对应内容为：
 
-| id   | 内容        |
-| ---- | ----------- |
-| 1    | 普池        |
-| 2    | 初音池      |
-| 3    | 公主池      |
-| 4    | nnm大狐狸池 |
-| 5    | 亚子池      |
+| id   | 内容           |
+| ---- | -------------- |
+| 1    | 普池           |
+| 2    | 初音池         |
+| 3    | 公主池         |
+| 4    | nnm大狐狸池    |
+| 5    | 亚子池         |
+| 6    | 小夏池         |
+| 7    | 水大叔池       |
+| 8    | 水千世老板娘池 |
 
 5.Tarot表
 
@@ -516,12 +519,17 @@ NGA图楼推送配置，具体配置方法可以看[下面](#nga-config)
 
 1. 下载任意一个可以编辑SQLite的软件，比如[sqlite-gui](https://github.com/little-brother/sqlite-gui/releases/download/1.7.5/sqlite-gui.1.7.5-x64.zip)
 2. 使用工具栏中的`open`选项打开获取到的池子文件，如下图
-
-![help1](static/help1.JPG)
+<details>
+    <summary>步骤2:</summary>
+    <img src="static/help1.JPG" />
+</details>
 
 3. 双击`Tables`栏中的`GachaCharacters`数据表，编辑新老婆信息
 
-![help1](static/help2.JPG)
+<details>
+    <summary>步骤3:</summary>
+    <img src="static/help2.JPG" />
+</details>
 
 其中`name`为老婆名字;`star`为老婆初始星级；`limit`表示老婆是限定还是常驻，其中1表示限定、0表示常驻；`id`为自动生成，无需填写。
 
@@ -529,21 +537,33 @@ NGA图楼推送配置，具体配置方法可以看[下面](#nga-config)
 
 4. 双击`Tables`栏中的`GachaPools`数据表，编辑新池子信息
 
-![help1](static/help3.JPG)
+<details>
+    <summary>步骤4:</summary>
+    <img src="static/help3.JPG" />
+</details>
 
 同上，只需要填入`name`作为新池子的名字即可。
 
 5. 双击`Tables`栏中的`GachaPoolCharacters`数据表，编辑新池子与新老婆的对应关系信息
 
-![help1](static/help4.JPG)
+<details>
+    <summary>步骤5-1:</summary>
+    <img src="static/help4.JPG" />
+</details>
 
 其中`pool_id`为之前新建池子的主键，可以在这里看到
 
-![help1](static/help5.JPG)
+<details>
+    <summary>步骤5-2:</summary>
+    <img src="static/help5.JPG" />
+</details>
 
 同理，`character_id`为之前新建的老婆信息的主键
 
-![help1](static/help6.JPG)
+<details>
+    <summary>步骤5-3:</summary>
+    <img src="static/help6.JPG" />
+</details>
 
 **特别的**，一个池子可以有多个pickup，因此可以根据需要在`GachaPoolCharacters`对同一个池子添加多条数据。
 

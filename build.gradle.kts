@@ -6,8 +6,8 @@ plugins {
   id("net.mamoe.mirai-console") version "2.11.1"
 }
 
-group = "org.example"
-version = "0.1.0"
+group = "net.diyigemt.arona"
+version = "1.0.0"
 val exposedVersion = "0.38.2"
 val sqliteVersion = "3.36.0.3"
 val quartzVersion = "2.3.2"

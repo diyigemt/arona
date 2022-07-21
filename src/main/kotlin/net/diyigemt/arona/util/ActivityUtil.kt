@@ -340,6 +340,8 @@ object ActivityUtil {
     val source = activity.content
       .replace("キャンペーン", "") // キャンペーン->活动
       .replace("&br;", "") // 多余的html换行符
+      .replace("スケジュール", "课程表") // 课程表
+
     activity.type = when {
       source.contains("游戏维护") -> {
         ActivityType.MAINTENANCE

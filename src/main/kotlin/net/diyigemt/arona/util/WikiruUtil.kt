@@ -60,7 +60,7 @@ object WikiruUtil {
         timeEnd.year = timeStart.year
       }
 
-      ActivityUtil.doInsert(Calendar.getInstance().time, timeStart, timeEnd, active, pending, name, katakana)
+      ActivityUtil.doInsert(Calendar.getInstance().time, timeStart, timeEnd, active, pending, name,"" , katakana)
     }
 
     active.sortByDescending { it.type.level }

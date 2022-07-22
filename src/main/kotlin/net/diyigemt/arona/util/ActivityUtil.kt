@@ -279,6 +279,8 @@ object ActivityUtil {
     return parse
   }
 
+  fun fetchJPActivityFromGameKee() : Pair<List<Activity>, List<Activity>> = GameKeeUtil.getEventData()
+
   private fun fetchJPMaintenanceActivityFromJP(active: MutableList<Activity>, pending: MutableList<Activity>) {
     val res = Jsoup.connect("https://bluearchive.wikiru.jp/?%E3%83%96%E3%83%AB%E3%83%BC%E3%82%A2%E3%83%BC%E3%82%AB%E3%82%A4%E3%83%96%EF%BC%88%E3%83%96%E3%83%AB%E3%82%A2%E3%82%AB%EF%BC%89%E6%94%BB%E7%95%A5+Wiki")
       .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
@@ -411,6 +413,7 @@ object ActivityUtil {
     active: MutableList<Activity>,
     pending: MutableList<Activity>,
     contentSource: String,
+    description : String = "",
     katakana: String = "",
     contentSourceJP: Boolean = true,
     type0: ActivityType? = null
@@ -419,7 +422,8 @@ object ActivityUtil {
       contentSource,
       TimeUtil.calcTime(now, parseStart, true),
       serverLocale = locale(type0),
-      katakana = katakana
+      katakana = katakana,
+      description = description
     )
     if (type0 != null) {
       activity.type = type0

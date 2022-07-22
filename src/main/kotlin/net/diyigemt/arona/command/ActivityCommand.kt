@@ -41,15 +41,24 @@ object ActivityCommand : CompositeCommand(
   private suspend fun sendJP(subject: Contact) {
     var jpActivity = ActivityUtil.fetchJPActivity()
     if (jpActivity.first.isEmpty() && jpActivity.second.isEmpty()) {
-      subject.sendMessage("biliwiki寄了, 从wikiru拉取...")
+      subject.sendMessage("biliwiki寄了, 从GameKee拉取...")
     }
+
     kotlin.runCatching {
-      jpActivity = ActivityUtil.fetchJPActivityFromJP()
+      jpActivity = ActivityUtil.fetchJPActivityFromGameKee()
     }
     if (jpActivity.first.isEmpty() && jpActivity.second.isEmpty()) {
-      subject.sendMessage("wikiru也寄了")
-      return
+      subject.sendMessage("GameKee寄了,从Wikiru拉取...")
+
+      kotlin.runCatching {
+        jpActivity = ActivityUtil.fetchJPActivityFromJP()
+      }
+      if (jpActivity.first.isEmpty() && jpActivity.second.isEmpty()) {
+        subject.sendMessage("wikiru也寄了")
+        return
+      }
     }
+
     send(subject, jpActivity)
   }
 

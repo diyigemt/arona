@@ -2,6 +2,7 @@ package org.example.mirai.plugin
 
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
+import net.diyigemt.arona.util.GameKeeUtil
 import net.diyigemt.arona.util.WikiruUtil
 import org.jsoup.Jsoup
 import org.junit.jupiter.api.Test
@@ -81,6 +82,12 @@ class TestSimple {
   @Test
   fun testJPText() {
     println("ビナー".replace("ー", "1"))
+  }
+
+  @Test
+  fun testB(){
+    val res = GameKeeUtil.getEventData()
+    print(res)
   }
 
 }

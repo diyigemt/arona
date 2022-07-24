@@ -7,7 +7,6 @@ import net.diyigemt.arona.entity.ServerLocale
 import net.diyigemt.arona.extension.CommandInterceptor
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.util.ActivityUtil
-import net.diyigemt.arona.util.GeneralUtils
 import net.mamoe.mirai.console.command.CommandManager
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.CommandSender
@@ -39,26 +38,7 @@ object ActivityCommand : CompositeCommand(
   }
 
   private suspend fun sendJP(subject: Contact) {
-    var jpActivity = ActivityUtil.fetchJPActivity()
-    if (jpActivity.first.isEmpty() && jpActivity.second.isEmpty()) {
-      subject.sendMessage("biliwiki寄了, 从GameKee拉取...")
-    }
-
-    kotlin.runCatching {
-      jpActivity = ActivityUtil.fetchJPActivityFromGameKee()
-    }
-    if (jpActivity.first.isEmpty() && jpActivity.second.isEmpty()) {
-      subject.sendMessage("GameKee寄了,从Wikiru拉取...")
-
-      kotlin.runCatching {
-        jpActivity = ActivityUtil.fetchJPActivityFromJP()
-      }
-      if (jpActivity.first.isEmpty() && jpActivity.second.isEmpty()) {
-        subject.sendMessage("wikiru也寄了")
-        return
-      }
-    }
-
+    val jpActivity = ActivityUtil.fetchJPActivity()
     send(subject, jpActivity)
   }
 

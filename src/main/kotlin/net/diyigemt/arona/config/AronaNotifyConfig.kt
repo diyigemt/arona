@@ -2,6 +2,7 @@ package net.diyigemt.arona.config
 
 import net.diyigemt.arona.entity.ServerLocale
 import net.diyigemt.arona.quartz.NotifyType
+import net.diyigemt.arona.util.ActivityUtil
 import net.mamoe.mirai.console.data.AutoSavePluginConfig
 import net.mamoe.mirai.console.data.ValueDescription
 import net.mamoe.mirai.console.data.value
@@ -34,5 +35,8 @@ object AronaNotifyConfig: AutoSavePluginConfig("arona-notify") {
 
   @ValueDescription("\"/活动\"指令的默认目标服务器,可选值为 \"JP\"和\"GLOBAL\"")
   val defaultActivityCommandServer: ServerLocale by value(ServerLocale.JP)
+
+  @ValueDescription("\"/活动 jp\"指令的默认数据源,可选值为 \"B_WIKI\", \"WIKI_RU\", 和\"GAME_KEE\"")
+  val defaultJPActivitySource: ActivityUtil.ActivityJPSource by value(ActivityUtil.ActivityJPSource.GAME_KEE)
 
 }

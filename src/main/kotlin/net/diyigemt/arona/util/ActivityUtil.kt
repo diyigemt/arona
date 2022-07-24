@@ -2,6 +2,7 @@ package net.diyigemt.arona.util
 
 import kotlinx.serialization.json.*
 import net.diyigemt.arona.Arona
+import net.diyigemt.arona.config.AronaNotifyConfig
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.entity.ActivityType
 import net.diyigemt.arona.entity.ServerLocale
@@ -29,7 +30,7 @@ object ActivityUtil {
   const val ServerMaintenanceStartTimeJP = "10:00"
   const val ServerMaintenanceEndTimeEN = "15:00"
   const val ServerMaintenanceEndTimeJP = "16:00"
-  fun fetchJPActivity(): Pair<List<Activity>, List<Activity>> {
+  fun fetchJPActivityFromCN(): Pair<List<Activity>, List<Activity>> {
     val document = Jsoup.connect("https://wiki.biligame.com/bluearchive/%E9%A6%96%E9%A1%B5").get()
     val activities = document.getElementsByClass("activity")
     val active = mutableListOf<Activity>()
@@ -42,7 +43,7 @@ object ActivityUtil {
       val now = Calendar.getInstance().time
       if (now.after(parseEnd)) return@forEach
       val content = it.getElementsByClass("activity__name").text()
-      doInsert(now, parseStart, parseEnd, active, pending, content, contentSourceJP = false)
+      doInsert(now, parseStart, parseEnd, active, pending, content, contentSourceJP = ActivityJPSource.B_WIKI)
     }
     return sortAndPackage(active, pending)
   }
@@ -279,7 +280,32 @@ object ActivityUtil {
     return parse
   }
 
-  fun fetchJPActivityFromGameKee() : Pair<List<Activity>, List<Activity>> = GameKeeUtil.getEventData()
+  fun fetchJPActivityFromGameKee(): Pair<List<Activity>, List<Activity>> = GameKeeUtil.getEventData()
+
+  fun fetchJPActivity(): Pair<List<Activity>, List<Activity>> {
+    val list = mutableListOf(
+      ActivityUtil::fetchJPActivityFromCN,
+      ActivityUtil::fetchJPActivityFromJP,
+      ActivityUtil::fetchJPActivityFromGameKee
+    )
+    val targetFunction = when(AronaNotifyConfig.defaultJPActivitySource) {
+      ActivityJPSource.B_WIKI -> ActivityUtil::fetchJPActivityFromCN
+      ActivityJPSource.WIKI_RU -> ActivityUtil::fetchJPActivityFromJP
+      ActivityJPSource.GAME_KEE -> ActivityUtil::fetchJPActivityFromGameKee
+    }
+    list.remove(targetFunction)
+    var result = kotlin.runCatching {
+      targetFunction.call()
+    }
+    var data = result.getOrDefault(listOf<Activity>() to listOf())
+    if (result.isSuccess && (data.first.isNotEmpty() || data.second.isNotEmpty())) return data
+    for (function in list) {
+      result = runCatching(function)
+      data = result.getOrDefault(listOf<Activity>() to listOf())
+      if (data.first.isNotEmpty() || data.second.isNotEmpty()) break
+    }
+    return data
+  }
 
   private fun fetchJPMaintenanceActivityFromJP(active: MutableList<Activity>, pending: MutableList<Activity>) {
     val res = Jsoup.connect("https://bluearchive.wikiru.jp/?%E3%83%96%E3%83%AB%E3%83%BC%E3%82%A2%E3%83%BC%E3%82%AB%E3%82%A4%E3%83%96%EF%BC%88%E3%83%96%E3%83%AB%E3%82%A2%E3%82%AB%EF%BC%89%E6%94%BB%E7%95%A5+Wiki")
@@ -394,6 +420,25 @@ object ActivityUtil {
     return activity
   }
 
+  private fun extraActivityJPTypeFromGameKee(activity: Activity): Activity {
+    val source = activity.content
+      .replace("【日服】", "")
+      .replace("【日服卡池】", "")
+    when {
+      source.contains("卡池") -> activity.type = ActivityType.PICK_UP
+      source.contains("指名手配") -> activity.type = ActivityType.WANTED_DROP
+      source.contains("学院交流") -> activity.type = ActivityType.COLLEGE_EXCHANGE_DROP
+      source.contains("特别依赖") -> activity.type = ActivityType.SPECIAL_DROP
+      source.contains("日程") -> activity.type = ActivityType.SCHEDULE
+      source.contains("总力战") -> activity.type = ActivityType.DECISIVE_BATTLE
+      source.contains("任务（Nor") -> activity.type = ActivityType.N2_3
+      source.contains("任务（Har") -> activity.type = ActivityType.H2_3
+      source.contains("合同火力演习") -> activity.type = ActivityType.JOINT_EXERCISES
+    }
+    activity.content = source
+    return activity
+  }
+
   /**
    * 插入活动并对活动进行分类
    * @param now 当前时间
@@ -403,7 +448,7 @@ object ActivityUtil {
    * @param pending 即将开始的活动列表
    * @param contentSource 活动内容
    * @param katakana 额外帮助判断活动类型的内容
-   * @param contentSourceJP 若是日服的活动, 那么数据来源是日服wiki还是b站wiki
+   * @param contentSourceJP 若是日服的活动, 那么数据来源是日服wiki还是b站wiki或者game_kee
    * @param type0 已知的活动类型(国际服才有)
    */
   fun doInsert(
@@ -413,9 +458,9 @@ object ActivityUtil {
     active: MutableList<Activity>,
     pending: MutableList<Activity>,
     contentSource: String,
-    description : String = "",
+    description: String = "",
     katakana: String = "",
-    contentSourceJP: Boolean = true,
+    contentSourceJP: ActivityJPSource = ActivityJPSource.GAME_KEE,
     type0: ActivityType? = null
   ) {
     var activity = Activity(
@@ -428,10 +473,10 @@ object ActivityUtil {
     if (type0 != null) {
       activity.type = type0
     } else {
-      activity = if (contentSourceJP) {
-        extraActivityJPTypeFromJPAndTranslate(activity)
-      } else {
-        extraActivityJPTypeFromCN(activity)
+      activity = when (contentSourceJP) {
+        ActivityJPSource.B_WIKI -> extraActivityJPTypeFromCN(activity)
+        ActivityJPSource.WIKI_RU -> extraActivityJPTypeFromJPAndTranslate(activity)
+        ActivityJPSource.GAME_KEE -> extraActivityJPTypeFromGameKee(activity)
       }
     }
     if (now.before(parseStart)) {
@@ -443,5 +488,9 @@ object ActivityUtil {
   }
 
   private fun locale(type: ActivityType?): ServerLocale = if (type == null) ServerLocale.JP else ServerLocale.GLOBAL
+
+  enum class ActivityJPSource {
+    B_WIKI, WIKI_RU, GAME_KEE
+  }
 
 }

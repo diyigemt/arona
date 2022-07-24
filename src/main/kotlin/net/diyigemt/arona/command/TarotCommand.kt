@@ -15,6 +15,7 @@ import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.User
 import net.mamoe.mirai.contact.nameCardOrNick
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.update
 import java.util.Calendar
 
 object TarotCommand : SimpleCommand(
@@ -51,8 +52,8 @@ object TarotCommand : SimpleCommand(
     send(user, subject, tarot, positive)
     if (AronaTarotConfig.dayOne) {
       if (record.isNotEmpty()) {
-        query {
-          record[0].day = today
+        TarotRecordTable.update({ (TarotRecordTable.id eq userId) and (TarotRecordTable.group eq group0) }) {
+          it[day] = today
         }
         return
       }

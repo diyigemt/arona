@@ -46,7 +46,7 @@ object WikiruUtil {
     val eventList = Regex(scriptRegex).findAll(code)
     for(i in eventList){
       val name = scriptDecoder(i.value.substring(i.value.indexOf("-"), i.value.indexOf("\n")))
-      val katakana = Regex(katakanaRegex).find(name)?.value ?: ""
+      val katakana0 = Regex(katakanaRegex).find(name)?.value ?: ""
 
       var timeStart = Date()
       var timeEnd = Date()
@@ -60,7 +60,7 @@ object WikiruUtil {
         timeEnd.year = timeStart.year
       }
 
-      ActivityUtil.doInsert(Calendar.getInstance().time, timeStart, timeEnd, active, pending, name,"" , katakana)
+      ActivityUtil.doInsert(Calendar.getInstance().time, timeStart, timeEnd, active, pending, name, katakana = katakana0, contentSourceJP = ActivityUtil.ActivityJPSource.WIKI_RU)
     }
 
     active.sortByDescending { it.type.level }

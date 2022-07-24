@@ -10,7 +10,7 @@ class TestActivityNotify {
 
   @Test
   fun testA() {
-    var jp = ActivityUtil.fetchJPActivity()
+    var jp = ActivityUtil.fetchJPActivityFromCN()
     if (jp.first.isEmpty() and jp.second.isEmpty()) {
       jp = ActivityUtil.fetchJPActivityFromJP()
     }

@@ -36,7 +36,8 @@ object GameKeeUtil {
         active,
         pending,
         i.title,
-        i.description
+        description = i.description,
+        contentSourceJP = ActivityUtil.ActivityJPSource.GAME_KEE
       )
     }
 

@@ -28,12 +28,7 @@ object ActivityNotify: AronaQuartzService {
   override var enable: Boolean = true
   class ActivityNotifyJob: Job {
     override fun execute(context: JobExecutionContext?) {
-      var jp = ActivityUtil.fetchJPActivity()
-      if (jp.first.isEmpty() && jp.second.isEmpty()) {
-        kotlin.runCatching {
-          jp = ActivityUtil.fetchJPActivityFromJP()
-        }
-      }
+      val jp: Pair<List<Activity>, List<Activity>> = ActivityUtil.fetchJPActivity()
       val en = ActivityUtil.fetchENActivity()
       val alertListJP = mutableListOf<Activity>()
       val alertListEN = mutableListOf<Activity>()
@@ -136,10 +131,7 @@ object ActivityNotify: AronaQuartzService {
       val now = Calendar.getInstance()
       val pattern = if (active) "dd天HH小时后结束" else "dd天HH小时后开始"
       now.time = SimpleDateFormat(pattern).parse(activity.time)
-      val d = when(now.get(Calendar.DAY_OF_MONTH)) {
-        in (0 .. 15) -> now.get(Calendar.DAY_OF_MONTH)
-        else -> 0
-      }
+      val d = now.get(Calendar.DAY_OF_MONTH)
       val h = now.get(Calendar.HOUR_OF_DAY)
       return h to d
     }

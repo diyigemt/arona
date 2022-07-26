@@ -52,8 +52,10 @@ object TarotCommand : SimpleCommand(
     send(user, subject, tarot, positive)
     if (AronaTarotConfig.dayOne) {
       if (record.isNotEmpty()) {
-        TarotRecordTable.update({ (TarotRecordTable.id eq userId) and (TarotRecordTable.group eq group0) }) {
-          it[day] = today
+        query {
+          TarotRecordTable.update({ (TarotRecordTable.id eq userId) and (TarotRecordTable.group eq group0) }) {
+            it[day] = today
+          }
         }
         return
       }

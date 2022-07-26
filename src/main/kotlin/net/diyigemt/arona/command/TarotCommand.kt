@@ -45,16 +45,17 @@ object TarotCommand : SimpleCommand(
       }
     }
     val tarotIndex = (1 .. TarotCount).random()
-    val tarot = query {
+    val tarot0 = query {
       Tarot.findById(tarotIndex)
     }!!
     val positive = (0 .. 1).random() == 0
-    send(user, subject, tarot, positive)
+    send(user, subject, tarot0, positive)
     if (AronaTarotConfig.dayOne) {
       if (record.isNotEmpty()) {
         query {
           TarotRecordTable.update({ (TarotRecordTable.id eq userId) and (TarotRecordTable.group eq group0) }) {
             it[day] = today
+            it[tarot] = tarotIndex
           }
         }
         return

@@ -15,4 +15,7 @@ object NGAPushConfig: AutoSavePluginConfig("nga") {
   @ValueDescription("扫描周期(单位min)")
   val checkInterval: Int by value(30)
 
+  @ValueDescription("已发送的缓存")
+  val cache: MutableList<Pair<String, String>> by value()
+
 }

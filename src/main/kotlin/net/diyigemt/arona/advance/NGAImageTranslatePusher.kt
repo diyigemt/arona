@@ -9,6 +9,7 @@ import net.mamoe.mirai.message.data.MessageChainBuilder
 import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
 import okhttp3.*
 import org.jsoup.Jsoup
+import org.jsoup.select.NodeFilter
 import org.quartz.Job
 import org.quartz.JobExecutionContext
 import org.quartz.JobKey
@@ -82,7 +83,8 @@ object NGAImageTranslatePusher : AronaQuartzService {
     val uid: String,
     val time: String,
     val content: String,
-    val images: List<String>
+    val images: List<String>,
+    val postId: String
   )
 
   private fun fetchNGA(): List<NGAFloor> {
@@ -120,7 +122,8 @@ object NGAImageTranslatePusher : AronaQuartzService {
         }.forEach { mr ->
           imgSrc.add(mr)
         }
-      res.add(NGAFloor(user, time, content0, imgSrc))
+      val postId = it.getElementsByTag("a").filter { node, _ -> return@filter if (node.attr("id").contains("Anchor")) NodeFilter.FilterResult.CONTINUE else NodeFilter.FilterResult.SKIP_ENTIRELY }
+      res.add(NGAFloor(user, time, content0, imgSrc, postId[0]?.attr("id") ?: ""))
     }
     return res
   }

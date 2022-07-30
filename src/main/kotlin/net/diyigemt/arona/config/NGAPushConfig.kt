@@ -15,7 +15,16 @@ object NGAPushConfig: AutoSavePluginConfig("nga") {
   @ValueDescription("扫描周期(单位min)")
   val checkInterval: Int by value(30)
 
+  @ValueDescription("要监听的发送者uid以及nga昵称")
+  val watch: MutableMap<String, String> by value(
+    mutableMapOf(
+      "42382305" to "xiwang399",
+      "40785736" to "安kuzuha",
+      "64124793" to "星泠鑫"
+    )
+  )
+
   @ValueDescription("已发送的缓存")
-  val cache: MutableList<Pair<String, String>> by value()
+  val cache: MutableList<String> by value()
 
 }

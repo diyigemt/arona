@@ -26,13 +26,9 @@ object NGAImageTranslatePusher : AronaQuartzService {
     "lastvisit" to "",
     "lastpath" to ""
   )
-  private val users = mapOf(
-    "42382305" to "xiwang399",
-    "40785736" to "安kuzuha",
-    "64124793" to "星泠鑫"
-  )
   private const val ImageRegex = "\\[img][.]/([\\w/-]+[.](jpg|png|JPG|PNG))\\[/img]"
   private var lastFloorTime: String = ""
+  private const val maxCache: Int = 5
   override lateinit var jobKey: JobKey
   override val id: Int = 13
   override val name: String = "nga图楼推送"
@@ -46,12 +42,14 @@ object NGAImageTranslatePusher : AronaQuartzService {
           return
         }
       }
+      val cache = NGAPushConfig.cache
       val pending = fetchNGA.filter {
-        it.time > lastFloorTime
+        it.time > lastFloorTime || !cache.contains(it.postId)
       }.also {
         if (it.isEmpty()) return
       }
       val init = context?.mergedJobDataMap?.getBooleanValue(ImageTranslateCheckInitKey) ?: false
+      updateCache(cache, pending)
       if (init) {
         lastFloorTime = pending[0].time
         return
@@ -59,7 +57,7 @@ object NGAImageTranslatePusher : AronaQuartzService {
       pending.map { floor ->
         Arona.sendMessageWithFile {
           val builder = MessageChainBuilder()
-          val userName = users[floor.uid]
+          val userName = NGAPushConfig.watch[floor.uid]
           builder.add("$userName(${floor.uid}):\n")
           builder.add("${floor.content}\n")
           runBlocking {
@@ -76,6 +74,15 @@ object NGAImageTranslatePusher : AronaQuartzService {
         Thread.sleep(2000)
       }
       lastFloorTime = pending[0].time
+    }
+  }
+
+  private fun updateCache(cache: MutableList<String>, now: List<NGAFloor>) {
+    if (cache.size >= maxCache) {
+      cache.clear()
+    }
+    now.forEach {
+      cache.add(it.postId)
     }
   }
 
@@ -105,7 +112,7 @@ object NGAImageTranslatePusher : AronaQuartzService {
       val user =
         it.getElementsByClass("posterinfo")[0]?.getElementsByTag("a")?.get(0)?.attr("href")?.substringAfter("uid=")
           ?: return@forEach
-      if (!users.containsKey(user)) return@forEach
+      if (!NGAPushConfig.watch.containsKey(user)) return@forEach
       val time = it.getElementsByClass("postInfo")[0]?.getElementsByTag("span")?.text() ?: return@forEach
       val content = it.getElementsByClass("postcontent")[0]?.text() ?: return@forEach
       val reg = Regex(ImageRegex)

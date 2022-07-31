@@ -27,4 +27,7 @@ object NGAPushConfig: AutoSavePluginConfig("nga") {
   @ValueDescription("已发送的缓存")
   val cache: MutableList<String> by value()
 
+  @ValueDescription("上一次清除缓存的时间")
+  var cacheDay: Int by value()
+
 }

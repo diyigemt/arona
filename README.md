@@ -50,6 +50,12 @@ Please note that for various reasons, developers may **stop updating** or **dele
 
 ## 更新日志
 
+2022-07-31 v1.0.1
+
+1. 修复nga图楼推送由于卡审核跳过某些楼层的问题
+2. 日服推送新增配置项defaultJPActivitySource，允许用户指定默认数据源
+3. 修复塔罗牌在某些情况下同一天结果不一致的问题
+
 2022-07-21 v1.0.0
 
 1. 修复一些由于wikiru规则更新导致的日服活动信息乱码的问题
@@ -378,7 +384,8 @@ arona总的配置。
 | enableEN                     | Boolean | 是否启用国际服防侠提醒                                       |
 | notifyStringEN               | Int     | 国际服防侠提醒开头文字                                       |
 | dropNotify                   | Int     | 双倍掉落防侠提醒的时间(因为一般是晚上3点结束)                |
-| defaultActivityCommandServer | String  | "/活动"指令的默认目标服务器,可选值为 "JP"和"GLOBAL"          |
+| defaultActivityCommandServer | Enum    | "/活动"指令的默认目标服务器,可选值为 "JP"和"GLOBAL"          |
+| defaultJPActivitySource      | Enum    | "/活动 jp"指令的默认数据源,可选值为 "B_WIKI", "WIKI_RU", 和"GAME_KEE" |
 
 假如`defaultActivityCommandServer`配置为`JP`，那么直接执行`/活动`指令也可以得到和执行`/活动 jp`一致的效果<a id="default-activity"> </a>
 
@@ -423,6 +430,9 @@ NGA图楼推送配置，具体配置方法可以看[下面](#nga-config)
 | uid      | String                    | 你自己的nga uid |
 | cid | String | 你自己的nga cid |
 | checkInterval | Int                | 扫描周期，单位min |
+| watch | Map<Int, String> | 监听的nga cid(无须修改) |
+| cache | List<String> | 已经推送过的楼层缓存(无须修改) |
+| cacheDay | Int | 上一次清除缓存的时间(无须修改) |
 
 
 ## 数据库详解
@@ -611,6 +621,8 @@ cid:这个就比较复杂了，首先你需要知道你所使用的浏览器如�
 [碧蓝档案wiki](https://wiki.biligame.com/bluearchive/%E9%A6%96%E9%A1%B5)(日服活动信息来源1)
 
 [碧蓝档案wikiru](https://bluearchive.wikiru.jp/)(日服活动信息来源2)
+
+[碧蓝档案GameKee](https://ba.gamekee.com/)(日服活动信息来源3)
 
 [mirai](https://github.com/mamoe/mirai)(技术支持)
 

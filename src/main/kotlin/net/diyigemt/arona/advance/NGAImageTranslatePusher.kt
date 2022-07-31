@@ -15,6 +15,7 @@ import org.quartz.JobExecutionContext
 import org.quartz.JobKey
 import java.io.InputStream
 import java.util.*
+import kotlin.math.abs
 
 object NGAImageTranslatePusher : AronaQuartzService {
   private const val ImageTranslateCheckJobKey = "ImageTranslateCheck"
@@ -27,8 +28,7 @@ object NGAImageTranslatePusher : AronaQuartzService {
     "lastpath" to ""
   )
   private const val ImageRegex = "\\[img][.]/([\\w/-]+[.](jpg|png|JPG|PNG))\\[/img]"
-  private var lastFloorTime: String = ""
-  private const val maxCache: Int = 5
+  private const val maxCache: Int = 3
   override lateinit var jobKey: JobKey
   override val id: Int = 13
   override val name: String = "nga图楼推送"
@@ -44,14 +44,14 @@ object NGAImageTranslatePusher : AronaQuartzService {
       }
       val cache = NGAPushConfig.cache
       val pending = fetchNGA.filter {
-        it.time > lastFloorTime || !cache.contains(it.postId)
+        !cache.contains(it.postId)
       }.also {
         if (it.isEmpty()) return
       }
-      val init = context?.mergedJobDataMap?.getBooleanValue(ImageTranslateCheckInitKey) ?: false
       updateCache(cache, pending)
+      val init = context?.mergedJobDataMap?.getBooleanValue(ImageTranslateCheckInitKey) ?: false
       if (init) {
-        lastFloorTime = pending[0].time
+        NGAPushConfig.cacheDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
         return
       }
       pending.map { floor ->
@@ -73,12 +73,12 @@ object NGAImageTranslatePusher : AronaQuartzService {
         // 降低发送频率
         Thread.sleep(2000)
       }
-      lastFloorTime = pending[0].time
     }
   }
 
   private fun updateCache(cache: MutableList<String>, now: List<NGAFloor>) {
-    if (cache.size >= maxCache) {
+    val nowDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+    if (abs(nowDay - NGAPushConfig.cacheDay) >= maxCache) {
       cache.clear()
     }
     now.forEach {
@@ -108,7 +108,7 @@ object NGAImageTranslatePusher : AronaQuartzService {
     val mainContent = body.getElementsByClass("forumbox")
     if (mainContent.size < 2) return res
     mainContent.removeAt(0)
-    mainContent.forEach {
+    mainContent.forEach { it ->
       val user =
         it.getElementsByClass("posterinfo")[0]?.getElementsByTag("a")?.get(0)?.attr("href")?.substringAfter("uid=")
           ?: return@forEach
@@ -129,8 +129,14 @@ object NGAImageTranslatePusher : AronaQuartzService {
         }.forEach { mr ->
           imgSrc.add(mr)
         }
-      val postId = it.getElementsByTag("a").filter { node, _ -> return@filter if (node.attr("id").contains("Anchor")) NodeFilter.FilterResult.CONTINUE else NodeFilter.FilterResult.SKIP_ENTIRELY }
-      res.add(NGAFloor(user, time, content0, imgSrc, postId[0]?.attr("id") ?: ""))
+      val postIdArr = it.getElementsByTag("a")
+        .map { a -> a.attr("id") }
+        .filter { s -> s.contains("Anchor") && s.contains("pid") }
+        .also {
+          if (it.isEmpty()) return@forEach
+        }
+      val postId = postIdArr[0].replace("pid", "").replace("Anchor", "")
+      res.add(NGAFloor(user, time, content0, imgSrc, postId))
     }
     return res
   }

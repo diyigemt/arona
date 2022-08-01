@@ -65,7 +65,7 @@ object ActivityUtil {
           }
           val nTime = NormalTime.find(content)?.groupValues ?: return@forEach
           val hTime = HardTime.find(content)?.groupValues ?: return@forEach
-          if ((nTime.size == 5) && (hTime.size == 5)) {
+          if ((nTime.size == 6) && (hTime.size == 6)) {
             val n1 = nTime[0]
             val n2 = nTime[1]
             val n3 = nTime[3]

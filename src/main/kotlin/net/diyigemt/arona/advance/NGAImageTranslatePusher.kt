@@ -80,6 +80,7 @@ object NGAImageTranslatePusher : AronaQuartzService {
     val nowDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
     if (abs(nowDay - NGAPushConfig.cacheDay) >= maxCache) {
       cache.clear()
+      NGAPushConfig.cacheDay = nowDay
     }
     now.forEach {
       cache.add(it.postId)

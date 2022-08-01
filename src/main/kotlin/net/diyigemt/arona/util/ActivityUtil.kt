@@ -66,14 +66,14 @@ object ActivityUtil {
           val nTime = NormalTime.find(content)?.groupValues ?: return@forEach
           val hTime = HardTime.find(content)?.groupValues ?: return@forEach
           if ((nTime.size == 6) && (hTime.size == 6)) {
-            val n1 = nTime[0]
-            val n2 = nTime[1]
-            val n3 = nTime[3]
-            val n4 = nTime[4]
-            val h1 = hTime[0]
-            val h2 = hTime[1]
-            val h3 = hTime[3]
-            val h4 = hTime[4]
+            val n1 = nTime[1]
+            val n2 = nTime[2]
+            val n3 = nTime[4]
+            val n4 = nTime[5]
+            val h1 = hTime[1]
+            val h2 = hTime[2]
+            val h3 = hTime[4]
+            val h4 = hTime[5]
             val now = Calendar.getInstance().time
             val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
             val startN = parseDateString3(year, n1, n2)

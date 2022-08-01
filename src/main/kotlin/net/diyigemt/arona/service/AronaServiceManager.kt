@@ -117,6 +117,12 @@ object AronaServiceManager: InitializedFunction() {
     }
   }
 
+  fun disableAll() {
+    AronaServiceConfig.config.forEach {
+      disable(it.key)
+    }
+  }
+
   private fun findServiceById(id: Int): AronaService? = MAP[id.toString()]
 
   private fun registerService(service: AronaService) {
@@ -147,6 +153,7 @@ object AronaServiceManager: InitializedFunction() {
     AronaUpdateChecker.init()
     TarotCommand.init()
 //    TransferCommand.init()
+    EmergencyStopCommand.init()
     AronaServiceConfig.reload()
     AronaServiceConfig.config.forEach {
       if (it.value) {

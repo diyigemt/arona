@@ -3,6 +3,7 @@ package net.diyigemt.arona.extension
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.interfaces.InitializedFunction
 import net.mamoe.mirai.console.command.CommandManager
+import net.mamoe.mirai.console.command.UserCommandSender
 import net.mamoe.mirai.console.command.descriptor.ExperimentalCommandDescriptors
 import net.mamoe.mirai.console.command.parse.CommandCall
 import net.mamoe.mirai.console.util.ConsoleExperimentalApi
@@ -17,11 +18,12 @@ object ExitCommandInterceptor: CommandInterceptor {
   override val level: Int = 1
 
   override fun interceptCall(call: CommandCall): Boolean {
+    if (call.caller is UserCommandSender) return true
     val calleeName = call.calleeName
     val valueArguments = call.valueArguments
     if (valueArguments.isEmpty() && EXIT_COMMAND.contains(calleeName)) {
       Arona.sendExitMessage()
     }
-    return true;
+    return true
   }
 }

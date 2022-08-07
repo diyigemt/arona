@@ -21,6 +21,7 @@ object ActivityUtil {
   private val HardTime = Regex("[Hh]ard.*?(\\d)[月/](\\d+).*?([–-]|~).*?(\\d)[月/](\\d+)")
   private val PickUpRegex = Regex("(\\d)?([\\u4e00-\\u9fa5A-z]+)([(（][\\u4e00-\\u9fa5A-z]+[)）])?")
   private val PickUpTime = Regex("(\\d+)/(\\d+).*?[–-](\\d+)/(\\d+)")
+  private val PickUpReplace = Regex("[(（）)]")
   private val MaintenanceRegex = Regex("(\\d+)月(\\d+)日.*?[上下]午(\\d+)点")
   private val TotalAssault = Regex("([\\u4e00-\\u9fa5A-z. \\d]+) ?[（(]([\\u4e00-\\u9fa5A-z]+)[)）].*?(\\d+)[/月](\\d+)")
   private val ActivityJPRegex = Regex("(\\d+/\\d+/\\d+)( \\d+:\\d+)? ～ (\\d+/\\d+ \\d+:\\d+)")
@@ -107,7 +108,7 @@ object ActivityUtil {
             student = if (size > (floor((size / 2).toDouble()) * 2)) {
               "$student $studentStar★$studentName"
             } else {
-              val extraName = groups[size - 1].replace(Regex("[(（）)]"), "")
+              val extraName = groups[size - 1].replace(PickUpReplace, "")
               "$student $studentStar★$studentName($extraName)"
             }
           }

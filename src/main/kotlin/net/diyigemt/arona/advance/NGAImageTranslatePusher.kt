@@ -9,13 +9,11 @@ import net.mamoe.mirai.message.data.MessageChainBuilder
 import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
 import okhttp3.*
 import org.jsoup.Jsoup
-import org.jsoup.select.NodeFilter
 import org.quartz.Job
 import org.quartz.JobExecutionContext
 import org.quartz.JobKey
 import java.io.InputStream
 import java.util.*
-import kotlin.math.abs
 
 object NGAImageTranslatePusher : AronaQuartzService {
   private const val ImageTranslateCheckJobKey = "ImageTranslateCheck"
@@ -44,14 +42,13 @@ object NGAImageTranslatePusher : AronaQuartzService {
       }
       val cache = NGAPushConfig.cache
       val pending = fetchNGA.filter {
-        !cache.contains(it.postId)
+        !cache.any { c -> c.second == it.postId }
       }.also {
         if (it.isEmpty()) return
       }
       updateCache(cache, pending)
       val init = context?.mergedJobDataMap?.getBooleanValue(ImageTranslateCheckInitKey) ?: false
       if (init) {
-        NGAPushConfig.cacheDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
         return
       }
       pending.map { floor ->
@@ -76,14 +73,11 @@ object NGAImageTranslatePusher : AronaQuartzService {
     }
   }
 
-  private fun updateCache(cache: MutableList<String>, now: List<NGAFloor>) {
+  private fun updateCache(cache: MutableList<Pair<Int, String>>, now: List<NGAFloor>) {
     val nowDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
-    if (abs(nowDay - NGAPushConfig.cacheDay) >= maxCache) {
-      cache.clear()
-      NGAPushConfig.cacheDay = nowDay
-    }
+    cache.removeIf { nowDay - it.first >= maxCache }
     now.forEach {
-      cache.add(it.postId)
+      cache.add(nowDay to it.postId)
     }
   }
 

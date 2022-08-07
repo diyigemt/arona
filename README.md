@@ -431,9 +431,7 @@ NGA图楼推送配置，具体配置方法可以看[下面](#nga-config)
 | cid | String | 你自己的nga cid |
 | checkInterval | Int                | 扫描周期，单位min |
 | watch | Map<Int, String> | 监听的nga cid(无须修改) |
-| cache | List<String> | 已经推送过的楼层缓存(无须修改) |
-| cacheDay | Int | 上一次清除缓存的时间(无须修改) |
-
+| cache | List<Pair<Int, String>> | 已经推送过的楼层缓存(无须修改) |
 
 ## 数据库详解
 

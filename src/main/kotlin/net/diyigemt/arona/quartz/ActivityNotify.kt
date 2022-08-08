@@ -128,11 +128,9 @@ object ActivityNotify: AronaQuartzService {
     }
 
     private fun extraHAndD(activity: Activity, active: Boolean = true): Pair<Int, Int> {
-      val now = Calendar.getInstance()
-      val pattern = if (active) "dd天HH小时后结束" else "dd天HH小时后开始"
-      now.time = SimpleDateFormat(pattern).parse(activity.time)
-      val d = now.get(Calendar.DAY_OF_MONTH)
-      val h = now.get(Calendar.HOUR_OF_DAY)
+      val tmp1 = activity.time.substringBefore("天")
+      val d = tmp1.toInt()
+      val h = activity.time.substringAfter("天").substringBefore("小时").toInt()
       return h to d
     }
 
@@ -183,7 +181,7 @@ object ActivityNotify: AronaQuartzService {
   }
 
   // 判断是不是双倍掉落(一般在3点结束,其实总力战也是,所以放一起了)
-  private fun isMidnightEndActivity(activity: Activity): Boolean = activity.type in (ActivityType.N2_3 .. ActivityType.DECISIVE_BATTLE)
+  private fun isMidnightEndActivity(activity: Activity): Boolean = activity.type in (ActivityType.N2_3 .. ActivityType.JOINT_EXERCISES)
 
   private fun isMaintenanceActivity(activity: Activity): Boolean = activity.type == ActivityType.MAINTENANCE
 

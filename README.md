@@ -50,6 +50,10 @@ Please note that for various reasons, developers may **stop updating** or **dele
 
 ## 更新日志
 
+2022-08-10 v1.0.4
+
+1. 修复防侠失效的问题
+
 2022-08-07 v1.0.3
 
 1. 修复nga推送在缓存刷新后重新推送的问题

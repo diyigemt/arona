@@ -183,7 +183,6 @@ class TestActivity {
     ActivityUtil.fetchENActivity()
   }
 
-  @Test
   fun testJpWiki() {
     val fetchJPActivityFromJP = ActivityUtil.fetchJPActivityFromJP()
     println(fetchJPActivityFromJP.first)

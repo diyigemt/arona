@@ -8,7 +8,6 @@ import java.util.Calendar
 
 class TestActivityNotify {
 
-  @Test
   fun testA() {
     var jp = ActivityUtil.fetchJPActivityFromCN()
     if (jp.first.isEmpty() and jp.second.isEmpty()) {

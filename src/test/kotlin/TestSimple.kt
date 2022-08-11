@@ -61,7 +61,6 @@ class TestSimple {
     A, B, C, D, E
   }
 
-  @Test
   fun testA(){
     val cmd = "diff"
     val page = "イベント一覧"

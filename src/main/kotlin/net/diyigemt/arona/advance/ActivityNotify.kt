@@ -1,10 +1,11 @@
-package net.diyigemt.arona.quartz
+package net.diyigemt.arona.advance
 
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.config.AronaNotifyConfig
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.entity.ActivityType
 import net.diyigemt.arona.entity.ServerLocale
+import net.diyigemt.arona.quartz.QuartzProvider
 import net.diyigemt.arona.service.AronaQuartzService
 import net.diyigemt.arona.util.ActivityUtil
 import net.diyigemt.arona.util.MessageUtil
@@ -13,7 +14,6 @@ import org.quartz.InterruptableJob
 import org.quartz.Job
 import org.quartz.JobExecutionContext
 import org.quartz.JobKey
-import java.text.SimpleDateFormat
 import java.util.*
 
 object ActivityNotify: AronaQuartzService {

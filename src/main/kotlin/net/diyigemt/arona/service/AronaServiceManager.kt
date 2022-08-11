@@ -2,6 +2,7 @@ package net.diyigemt.arona.service
 
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.Arona.reload
+import net.diyigemt.arona.advance.ActivityNotify
 import net.diyigemt.arona.advance.AronaUpdateChecker
 import net.diyigemt.arona.advance.GroupMessageRecorder
 import net.diyigemt.arona.advance.NGAImageTranslatePusher
@@ -11,7 +12,6 @@ import net.diyigemt.arona.handler.GroupRepeaterHandler
 import net.diyigemt.arona.handler.HentaiEventHandler
 import net.diyigemt.arona.handler.NudgeEventHandler
 import net.diyigemt.arona.interfaces.InitializedFunction
-import net.diyigemt.arona.quartz.ActivityNotify
 import net.diyigemt.arona.util.GeneralUtils
 import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.Group

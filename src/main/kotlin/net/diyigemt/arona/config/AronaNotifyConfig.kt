@@ -1,7 +1,7 @@
 package net.diyigemt.arona.config
 
 import net.diyigemt.arona.entity.ServerLocale
-import net.diyigemt.arona.quartz.NotifyType
+import net.diyigemt.arona.advance.NotifyType
 import net.diyigemt.arona.util.ActivityUtil
 import net.mamoe.mirai.console.data.AutoSavePluginConfig
 import net.mamoe.mirai.console.data.ValueDescription

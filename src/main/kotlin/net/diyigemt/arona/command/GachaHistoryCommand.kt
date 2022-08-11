@@ -4,7 +4,9 @@ import net.diyigemt.arona.Arona
 import net.diyigemt.arona.service.AronaGroupService
 import net.diyigemt.arona.util.GachaUtil
 import net.diyigemt.arona.util.GeneralUtils
+import net.diyigemt.arona.util.GeneralUtils.queryTeacherNameFromDB
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
+import net.mamoe.mirai.console.command.MemberCommandSenderOnMessage
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.UserCommandSender
 import net.mamoe.mirai.contact.Contact.Companion.uploadImage
@@ -18,7 +20,7 @@ object GachaHistoryCommand : SimpleCommand(
 ), AronaGroupService {
 
   @Handler
-  suspend fun UserCommandSender.gachaHistory() {
+  suspend fun MemberCommandSenderOnMessage.gachaHistory() {
     if (!GeneralUtils.checkService(subject)) return
     val history = GachaUtil.getHistoryAll((subject as Group).id)
     if (history.isEmpty()) {
@@ -28,9 +30,9 @@ object GachaHistoryCommand : SimpleCommand(
     var ss = "历史排行:\n"
     history
       .map {
-        val nick = (subject as Group)[it.id.value]!!.nameCardOrNick
+        val teacherName = queryTeacherNameFromDB(subject, user)
         val rate = if (it.count3 == 0) 0 else it.points / it.count3
-        "${nick}(${it.id.value}): ${it.points}抽/${it.count3}个3星 = $rate"
+        "${teacherName}(${it.id.value}): ${it.points}抽/${it.count3}个3星 = $rate"
       }
       .subList(0, if (history.size > 6) 6 else history.size)
       .forEachIndexed {

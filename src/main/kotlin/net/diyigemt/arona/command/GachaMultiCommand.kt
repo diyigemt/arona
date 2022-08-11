@@ -9,9 +9,11 @@ import net.diyigemt.arona.util.GachaUtil.pickup
 import net.diyigemt.arona.util.GachaUtil.pickup2
 import net.diyigemt.arona.util.GachaUtil.resultData2String
 import net.diyigemt.arona.util.GeneralUtils
+import net.diyigemt.arona.util.GeneralUtils.queryTeacherNameFromDB
 import net.diyigemt.arona.util.MessageUtil
 import net.diyigemt.arona.util.MessageUtil.atMessageAndCTRL
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
+import net.mamoe.mirai.console.command.MemberCommandSenderOnMessage
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.UserCommandSender
 import net.mamoe.mirai.contact.Group
@@ -22,12 +24,13 @@ object GachaMultiCommand : SimpleCommand(
 ), AronaGroupService {
 
   @Handler
-  suspend fun UserCommandSender.gachaMulti() {
+  suspend fun MemberCommandSenderOnMessage.gachaMulti() {
     if (!GeneralUtils.checkService(subject)) return
     val userId = user.id
     val checkTime = GachaUtil.checkTime(userId)
+    val teacherName = queryTeacherNameFromDB(subject, user)
     if (checkTime <= 0) {
-      subject.sendMessage(MessageUtil.at(user, "老师,石头不够了哦,明天再来抽吧"))
+      subject.sendMessage(MessageUtil.at(user, "${teacherName},石头不够了哦,明天再来抽吧"))
       return
     }
     val result = Array(checkTime) { pickup() }
@@ -45,8 +48,8 @@ object GachaMultiCommand : SimpleCommand(
       .reduceIndexed { index, prv, cur -> if (index == 4) "$prv $cur\n" else "$prv $cur" }
     val hitPickup = result.any { hitPickup(it) }
     val history = GachaUtil.getHistory((subject as Group).id, userId)
-    GachaUtil.updateHistory((subject as Group).id, userId, addPoints = checkTime, addCount3 = stars3, dog = hitPickup)
-    val dog = if (hitPickup) "恭喜老师,出货了呢" else ""
+    GachaUtil.updateHistory(subject.id, userId, addPoints = checkTime, addCount3 = stars3, dog = hitPickup)
+    val dog = if (hitPickup) "恭喜${teacherName},出货了呢" else ""
     val sss = "3星:$stars3 2星:$stars2 1星:$stars1 ${history.points + checkTime} points\n${s}"
     val handler = subject.sendMessage(atMessageAndCTRL(user, dog, sss))
     if (AronaGachaConfig.revoke) {

@@ -7,7 +7,9 @@ import net.diyigemt.arona.db.tarot.Tarot
 import net.diyigemt.arona.db.tarot.TarotRecord
 import net.diyigemt.arona.db.tarot.TarotRecordTable
 import net.diyigemt.arona.service.AronaService
+import net.diyigemt.arona.util.GeneralUtils.queryTeacherNameFromDB
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
+import net.mamoe.mirai.console.command.MemberCommandSenderOnMessage
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.UserCommandSender
 import net.mamoe.mirai.contact.Contact
@@ -24,7 +26,7 @@ object TarotCommand : SimpleCommand(
 ), AronaService {
   private const val TarotCount = 22
   @Handler
-  suspend fun UserCommandSender.tarot() {
+  suspend fun MemberCommandSenderOnMessage.tarot() {
     val group0 = if (subject is Group) subject.id else user.id
     val userId = user.id
     val today = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
@@ -72,10 +74,11 @@ object TarotCommand : SimpleCommand(
     }
   }
 
-  private suspend fun send(user: User, contact: Contact, tarot: Tarot, positive: Boolean) {
+  private suspend fun send(user: User, contact: Group, tarot: Tarot, positive: Boolean) {
     val res = if (positive) tarot.positive else tarot.negative
     val resName = if (positive) "正位" else "逆位"
-    contact.sendMessage("看看${user.nameCardOrNick}抽到了什么:\n${tarot.name}(${resName})\n${res}")
+    val teacherName = queryTeacherNameFromDB(contact, user)
+    contact.sendMessage("看看${teacherName}抽到了什么:\n${tarot.name}(${resName})\n${res}")
   }
 
   override val id: Int = 16

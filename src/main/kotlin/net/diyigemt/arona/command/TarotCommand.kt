@@ -40,7 +40,7 @@ object TarotCommand : SimpleCommand(
         val tarot = query {
           Tarot.findById(tarotRecord.tarot)
         }!!
-        send(user, subject, tarot, tarotRecord.positive)
+        send(user, subject, tarot, !tarotRecord.positive)
         return
       }
     }
@@ -48,7 +48,7 @@ object TarotCommand : SimpleCommand(
     val tarot0 = query {
       Tarot.findById(tarotIndex)
     }!!
-    val positive = (0 .. 1).random() == 0
+    val positive = (1 .. 1000).random() > 500
     send(user, subject, tarot0, positive)
     if (AronaTarotConfig.dayOne) {
       if (record.isNotEmpty()) {

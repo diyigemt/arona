@@ -152,6 +152,7 @@ object AronaServiceManager: InitializedFunction() {
     NGAImageTranslatePusher.init()
     AronaUpdateChecker.init()
     TarotCommand.init()
+    CallMeCommand.init()
 //    TransferCommand.init()
     EmergencyStopCommand.init()
     AronaServiceConfig.reload()

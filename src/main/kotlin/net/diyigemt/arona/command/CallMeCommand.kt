@@ -11,12 +11,10 @@ import net.mamoe.mirai.console.command.MemberCommandSenderOnMessage
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.User
-import net.mamoe.mirai.contact.nameCardOrNick
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 
 object CallMeCommand : SimpleCommand(
-  Arona,"callMe", "叫我",
+  Arona,"call_me", "叫我",
   description = "给自己自定义昵称"
 ), AronaGroupService {
 

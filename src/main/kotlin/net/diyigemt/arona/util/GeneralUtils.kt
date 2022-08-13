@@ -25,9 +25,10 @@ object GeneralUtils {
   }
 
   fun queryTeacherNameFromDB(group: Group, user: User): String {
-    return query {
-      TeacherName.find { (TeacherNameTable.group eq group.id) and (TeacherNameTable.id eq user.id) }
-    }!!.firstOrNull()?.name ?: user.nameCardOrNick
+    val name = query {
+      TeacherName.find { (TeacherNameTable.group eq group.id) and (TeacherNameTable.id eq user.id) }.firstOrNull()
+    }?.name ?: user.nameCardOrNick
+    return if (name.endsWith("老师")) name else "${name}老师"
   }
 
 }

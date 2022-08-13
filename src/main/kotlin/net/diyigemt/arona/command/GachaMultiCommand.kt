@@ -15,8 +15,6 @@ import net.diyigemt.arona.util.MessageUtil.atMessageAndCTRL
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.MemberCommandSenderOnMessage
 import net.mamoe.mirai.console.command.SimpleCommand
-import net.mamoe.mirai.console.command.UserCommandSender
-import net.mamoe.mirai.contact.Group
 
 object GachaMultiCommand : SimpleCommand(
   Arona,"gacha_multi", "十连",
@@ -47,7 +45,7 @@ object GachaMultiCommand : SimpleCommand(
     val s = result.map { resultData2String(it) }
       .reduceIndexed { index, prv, cur -> if (index == 4) "$prv $cur\n" else "$prv $cur" }
     val hitPickup = result.any { hitPickup(it) }
-    val history = GachaUtil.getHistory((subject as Group).id, userId)
+    val history = GachaUtil.getHistory(subject.id, userId)
     GachaUtil.updateHistory(subject.id, userId, addPoints = checkTime, addCount3 = stars3, dog = hitPickup)
     val dog = if (hitPickup) "恭喜${teacherName},出货了呢" else ""
     val sss = "3星:$stars3 2星:$stars2 1星:$stars1 ${history.points + checkTime} points\n${s}"

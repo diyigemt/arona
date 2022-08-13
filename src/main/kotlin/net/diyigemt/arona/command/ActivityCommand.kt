@@ -7,11 +7,8 @@ import net.diyigemt.arona.entity.ServerLocale
 import net.diyigemt.arona.extension.CommandInterceptor
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.util.ActivityUtil
-import net.mamoe.mirai.console.command.CommandManager
+import net.mamoe.mirai.console.command.*
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
-import net.mamoe.mirai.console.command.CommandSender
-import net.mamoe.mirai.console.command.CompositeCommand
-import net.mamoe.mirai.console.command.UserCommandSender
 import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.message.data.Message
 
@@ -59,32 +56,29 @@ object ActivityCommand : CompositeCommand(
    private val ACTIVITY_COMMAND = "${CommandManager.commandPrefix}活动"
    override fun interceptBeforeCall(message: Message, caller: CommandSender): String? {
      if (message.contentToString() != ACTIVITY_COMMAND) return null
-     if (caller is UserCommandSender) {
-       val subject = caller.subject
-       if (AronaNotifyConfig.defaultActivityCommandServer == ServerLocale.JP) {
-         kotlin.runCatching {
-           Arona.runSuspend {
-             sendJP(subject)
-           }
-         }.onFailure {
-           Arona.runSuspend {
-             subject.sendMessage("指令执行失败")
-           }
+     if (caller !is MemberCommandSenderOnMessage) return null
+     val subject = caller.subject
+     if (AronaNotifyConfig.defaultActivityCommandServer == ServerLocale.JP) {
+       kotlin.runCatching {
+         Arona.runSuspend {
+           sendJP(subject)
          }
-       } else {
-         kotlin.runCatching {
-           Arona.runSuspend {
-             sendEN(subject)
-           }
-         }.onFailure {
-           Arona.runSuspend {
-             subject.sendMessage("指令执行失败")
-           }
+       }.onFailure {
+         Arona.runSuspend {
+           subject.sendMessage("指令执行失败")
          }
        }
-       return ""
      } else {
-       return null
+       kotlin.runCatching {
+         Arona.runSuspend {
+           sendEN(subject)
+         }
+       }.onFailure {
+         Arona.runSuspend {
+           subject.sendMessage("指令执行失败")
+         }
+       }
      }
+     return ""
    }
 }

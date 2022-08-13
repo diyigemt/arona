@@ -1,5 +1,6 @@
 package net.diyigemt.arona.extension
 
+import net.diyigemt.arona.command.CallMeCommand
 import net.diyigemt.arona.interfaces.InitializedFunction
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.descriptor.ExperimentalCommandDescriptors

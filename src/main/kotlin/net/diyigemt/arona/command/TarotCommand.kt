@@ -9,16 +9,14 @@ import net.diyigemt.arona.db.tarot.TarotRecordTable
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.util.GeneralUtils.queryTeacherNameFromDB
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
-import net.mamoe.mirai.console.command.MemberCommandSenderOnMessage
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.UserCommandSender
 import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.User
-import net.mamoe.mirai.contact.nameCardOrNick
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.update
-import java.util.Calendar
+import java.util.*
 
 object TarotCommand : SimpleCommand(
   Arona,"tarot", "塔罗牌",
@@ -26,7 +24,7 @@ object TarotCommand : SimpleCommand(
 ), AronaService {
   private const val TarotCount = 22
   @Handler
-  suspend fun MemberCommandSenderOnMessage.tarot() {
+  suspend fun UserCommandSender.tarot() {
     val group0 = if (subject is Group) subject.id else user.id
     val userId = user.id
     val today = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
@@ -74,7 +72,7 @@ object TarotCommand : SimpleCommand(
     }
   }
 
-  private suspend fun send(user: User, contact: Group, tarot: Tarot, positive: Boolean) {
+  private suspend fun send(user: User, contact: Contact, tarot: Tarot, positive: Boolean) {
     val res = if (positive) tarot.positive else tarot.negative
     val resName = if (positive) "正位" else "逆位"
     val teacherName = queryTeacherNameFromDB(contact, user)

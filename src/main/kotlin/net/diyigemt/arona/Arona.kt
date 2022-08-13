@@ -26,20 +26,22 @@ import net.diyigemt.arona.handler.NudgeEventHandler
 import net.diyigemt.arona.interfaces.InitializedFunction
 import net.diyigemt.arona.quartz.QuartzProvider
 import net.diyigemt.arona.service.AronaServiceManager
+import net.diyigemt.arona.util.GeneralUtils
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.descriptor.ExperimentalCommandDescriptors
 import net.mamoe.mirai.console.extension.PluginComponentStorage
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
 import net.mamoe.mirai.console.util.ConsoleExperimentalApi
-import net.mamoe.mirai.contact.Contact
-import net.mamoe.mirai.contact.NormalMember
+import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.event.GlobalEventChannel
 import net.mamoe.mirai.event.events.BotOnlineEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
 import net.mamoe.mirai.event.events.NudgeEvent
 import net.mamoe.mirai.message.code.MiraiCode
+import net.mamoe.mirai.message.code.MiraiCode.deserializeMiraiCode
 import net.mamoe.mirai.message.data.MessageChain
+import net.mamoe.mirai.message.data.MessageChain.Companion.deserializeFromMiraiCode
 import net.mamoe.mirai.utils.info
 
 object Arona : KotlinPlugin(
@@ -182,6 +184,17 @@ object Arona : KotlinPlugin(
         }
       }
     }
+  }
+
+  suspend fun Group.sendTeacherNameMessage(user: UserOrBot, message: String) {
+    val name = GeneralUtils.queryTeacherNameFromDB(this, user)
+    this.sendMessage(message.replace("\${teacherName}", name))
+  }
+
+  suspend fun Group.sendTeacherNameMessage(user: UserOrBot, message: MessageChain) {
+    val name = GeneralUtils.queryTeacherNameFromDB(this, user)
+    val s = message.serializeToMiraiCode().replace("\${teacherName}", name).deserializeMiraiCode()
+    this.sendMessage(s)
   }
 
   fun info(message: String?) = logger.info(message)

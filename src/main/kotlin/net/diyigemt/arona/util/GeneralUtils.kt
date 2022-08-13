@@ -4,10 +4,7 @@ import net.diyigemt.arona.config.AronaConfig
 import net.diyigemt.arona.db.DataBaseProvider.query
 import net.diyigemt.arona.db.name.TeacherName
 import net.diyigemt.arona.db.name.TeacherNameTable
-import net.mamoe.mirai.contact.Contact
-import net.mamoe.mirai.contact.Group
-import net.mamoe.mirai.contact.User
-import net.mamoe.mirai.contact.nameCardOrNick
+import net.mamoe.mirai.contact.*
 import org.jetbrains.exposed.sql.and
 
 object GeneralUtils {
@@ -24,11 +21,11 @@ object GeneralUtils {
     return s
   }
 
-  fun queryTeacherNameFromDB(group: Group, user: User): String {
+  fun queryTeacherNameFromDB(contact: Contact, user: UserOrBot): String {
     val name = query {
-      TeacherName.find { (TeacherNameTable.group eq group.id) and (TeacherNameTable.id eq user.id) }.firstOrNull()
+      TeacherName.find { (TeacherNameTable.group eq contact.id) and (TeacherNameTable.id eq user.id) }.firstOrNull()
     }?.name ?: user.nameCardOrNick
-    return if (name.endsWith("老师")) name else "${name}老师"
+    return if (!name.endsWith("老师") && AronaConfig.endWithSensei) "${name}老师" else name
   }
 
 }

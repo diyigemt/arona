@@ -1,5 +1,6 @@
 package net.diyigemt.arona.handler
 
+import net.diyigemt.arona.Arona.sendTeacherNameMessage
 import net.diyigemt.arona.config.AronaNudgeConfig
 import net.diyigemt.arona.service.AronaGroupService
 import net.diyigemt.arona.service.AronaService
@@ -17,7 +18,7 @@ object NudgeEventHandler: AronaGroupService {
     }
   }
 
-  suspend fun handle(event: NudgeEvent) {
+  private suspend fun handle(event: NudgeEvent) {
     val messageList = AronaNudgeConfig.messageList
     val target = event.target
     val from = event.from
@@ -29,7 +30,7 @@ object NudgeEventHandler: AronaGroupService {
     var index = (0 until total).random()
     for (msg in messageList) {
       if (index < msg.weight) {
-        subject.sendMessage(MessageUtil.atAndCTRL(from as User, msg.message))
+        subject.sendTeacherNameMessage(from, MessageUtil.atAndCTRL(from as User, msg.message))
         return
       } else {
         index -= msg.weight

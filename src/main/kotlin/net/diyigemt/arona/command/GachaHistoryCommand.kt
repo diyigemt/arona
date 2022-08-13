@@ -22,7 +22,7 @@ object GachaHistoryCommand : SimpleCommand(
   @Handler
   suspend fun MemberCommandSenderOnMessage.gachaHistory() {
     if (!GeneralUtils.checkService(subject)) return
-    val history = GachaUtil.getHistoryAll((subject as Group).id)
+    val history = GachaUtil.getHistoryAll(subject.id)
     if (history.isEmpty()) {
       subject.sendMessage("还没有记录哦")
       return

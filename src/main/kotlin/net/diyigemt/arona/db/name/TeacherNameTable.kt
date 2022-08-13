@@ -9,7 +9,7 @@ import org.jetbrains.exposed.sql.Column
 object TeacherNameTable: IdTable<Long>(name = "TeacherName") {
   override val id: Column<EntityID<Long>> = long("qq").entityId()
   val group: Column<Long> = long("group")
-  val name: Column<String> = char("name", 100)
+  val name: Column<String> = char("name", 20)
 
   override val primaryKey: PrimaryKey = PrimaryKey(id, group)
 }

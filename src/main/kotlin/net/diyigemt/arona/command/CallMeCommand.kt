@@ -26,6 +26,10 @@ object CallMeCommand : SimpleCommand(
   @Handler
   suspend fun MemberCommandSenderOnMessage.callMe(name: String) {
     var teacherName = name
+    if (teacherName.length > 20) {
+      subject.sendMessage(MessageUtil.at(user, "太长了, 爬"))
+      return
+    }
     if (!teacherName.endsWith("老师")) teacherName = "${teacherName}老师"
     subject.sendMessage("好的, $teacherName")
     updateTeacherNameToDB(subject, user, teacherName)

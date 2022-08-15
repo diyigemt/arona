@@ -30,9 +30,9 @@ object CallMeCommand : SimpleCommand(
       subject.sendMessage(MessageUtil.at(user, "太长了, 爬"))
       return
     }
+    updateTeacherNameToDB(subject, user, teacherName)
     if (!teacherName.endsWith("老师")) teacherName = "${teacherName}老师"
     subject.sendMessage("好的, $teacherName")
-    updateTeacherNameToDB(subject, user, teacherName)
   }
 
   private fun updateTeacherNameToDB(group0: Group, user0: User, name0: String) {

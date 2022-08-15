@@ -25,7 +25,7 @@ object GachaDogCommand : SimpleCommand(
     }
     var ss = "狗叫排行:\n"
     dogCall.map {
-      val teacherName = GeneralUtils.queryTeacherNameFromDB(subject, user)
+      val teacherName = GeneralUtils.queryTeacherNameFromDB(subject, subject[it.id.value]!!)
       "${teacherName}(${it.id.value}): ${it.dog}抽"
     }.forEachIndexed {
       index, s -> ss += "${index + 1}. $s\n"

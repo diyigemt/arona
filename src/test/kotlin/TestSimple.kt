@@ -6,6 +6,8 @@ import net.diyigemt.arona.util.ActivityUtil
 import net.diyigemt.arona.util.WikiruUtil
 import org.jsoup.Jsoup
 import org.junit.jupiter.api.Test
+import java.awt.Font
+import java.awt.GraphicsEnvironment
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -82,6 +84,7 @@ class TestSimple {
 
   @Test
   fun testDrawImage() {
+    System.setProperty("java.awt.headless", "true")
     val active = listOf(
       Activity("PickUp 春阿鲁 春月", "05天11小时后结束", ActivityType.PICK_UP),
       Activity("总力战[球·室内战]", "05天11小时后结束", ActivityType.DECISIVE_BATTLE),

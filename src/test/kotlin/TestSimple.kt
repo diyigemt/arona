@@ -1,13 +1,15 @@
 package org.example.mirai.plugin
 
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.jsonObject
-import net.diyigemt.arona.util.GameKeeUtil
+import net.diyigemt.arona.entity.Activity
+import net.diyigemt.arona.entity.ActivityType
+import net.diyigemt.arona.util.ActivityUtil
 import net.diyigemt.arona.util.WikiruUtil
 import org.jsoup.Jsoup
 import org.junit.jupiter.api.Test
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import javax.imageio.ImageIO
 
 class TestSimple {
 
@@ -79,14 +81,16 @@ class TestSimple {
   }
 
   @Test
-  fun testJPText() {
-    println("ビナー".replace("ー", "1"))
-  }
-
-  @Test
-  fun testB(){
-    val res = GameKeeUtil.getEventData()
-    print(res)
+  fun testDrawImage() {
+    val active = listOf(
+      Activity("PickUp 春阿鲁 春月", "05天11小时后结束", ActivityType.PICK_UP),
+      Activity("总力战[球·室内战]", "05天11小时后结束", ActivityType.DECISIVE_BATTLE),
+    )
+    val pending = listOf(
+      Activity("特殊作战3倍掉落", "05天11小时后开始", ActivityType.SPECIAL_DROP)
+    )
+    val img = ActivityUtil.createActivityImage(active to pending)
+    ImageIO.write(img, "png", File("test.png"))
   }
 
 }

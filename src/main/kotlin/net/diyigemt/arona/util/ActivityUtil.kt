@@ -8,11 +8,14 @@ import net.diyigemt.arona.entity.ActivityType
 import net.diyigemt.arona.entity.ServerLocale
 import net.diyigemt.arona.util.GeneralUtils.clearExtraQute
 import org.jsoup.Jsoup
+import java.awt.Color
+import java.awt.image.BufferedImage
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.math.floor
+import kotlin.math.max
 
 object ActivityUtil {
 
@@ -489,6 +492,16 @@ object ActivityUtil {
   }
 
   private fun locale(type: ActivityType?): ServerLocale = if (type == null) ServerLocale.JP else ServerLocale.GLOBAL
+
+  fun createActivityImage(activities: Pair<List<Activity>, List<Activity>>, server: ServerLocale = ServerLocale.JP): BufferedImage {
+    val title = "${server.serverName}活动日历"
+    val active = activities.first
+    val pending = activities.second
+    val image = ImageUtil.createCalendarImage(active.size + pending.size, max(active.maxOf { it.content.length }, pending.maxOf { it.content.length }))
+    ImageUtil.init(image, Color.WHITE)
+    ImageUtil.drawTextByLine(image, title, 1, ImageUtil.TextAlign.CENTER)
+    return image
+  }
 
   enum class ActivityJPSource {
     B_WIKI, WIKI_RU, GAME_KEE

@@ -5,7 +5,7 @@ import java.awt.RenderingHints
 import java.awt.image.BufferedImage
 object ImageUtil {
 
-  private const val DEFAULT_ITEM_SIZE: Int = 72
+  private const val DEFAULT_ITEM_SIZE: Int = 144
   fun createCalendarImage(eventLength: Int, titleMaxLength: Int): BufferedImage {
     val width = DEFAULT_ITEM_SIZE * (titleMaxLength + 10) * 0.7
     val height = (eventLength + 2) * DEFAULT_ITEM_SIZE
@@ -33,7 +33,7 @@ object ImageUtil {
   fun drawText(img: BufferedImage, str: String, x: Int, y: Int, align: TextAlign, color: Color) {
     val g = img.graphics
 //    g.font = g.font.deriveFont(Font.BOLD).deriveFont(DEFAULT_ITEM_SIZE.toFloat())
-    g.font = Font("微软雅黑", Font.BOLD, DEFAULT_ITEM_SIZE)
+    g.font = Font(g.font.name, Font.BOLD, DEFAULT_ITEM_SIZE)
     g.color = color
     val width = g.fontMetrics.stringWidth(str)
     when (align) {

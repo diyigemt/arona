@@ -27,7 +27,7 @@ object GeneralUtils {
     val name = query {
       TeacherName.find { (TeacherNameTable.group eq contact.id) and (TeacherNameTable.id eq user.id) }.firstOrNull()
     }?.name ?: user.nameCardOrNick
-    return if (!name.endsWith("老师") && AronaConfig.endWithSensei) "${name}老师" else name
+    return if (AronaConfig.endWithSensei.isNotBlank() && !name.endsWith(AronaConfig.endWithSensei)) "${name}${AronaConfig.endWithSensei}" else name
   }
 
 }

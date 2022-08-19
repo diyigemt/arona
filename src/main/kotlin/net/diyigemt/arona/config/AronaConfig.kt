@@ -36,8 +36,8 @@ object AronaConfig: AutoSavePluginConfig("arona") {
   @ValueDescription("获取更新的地址")
   val updateUrl: String by value("http://arona.diyigemt.net/api/v1/version/")
 
-  @ValueDescription("名称是否自动带上\"老师\"后缀")
-  val endWithSensei: Boolean by value(true)
+  @ValueDescription("名称是否自动带上后缀,默认是\"老师\"")
+  val endWithSensei: String by value("老师")
 
   @ValueDescription("是否允许arona收集匿名统计信息")
   val sendStatus: Boolean by value(false)

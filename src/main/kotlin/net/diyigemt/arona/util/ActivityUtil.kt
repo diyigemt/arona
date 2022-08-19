@@ -434,12 +434,16 @@ object ActivityUtil {
   }
 
   private fun extraActivityJPTypeFromGameKee(activity: Activity): Activity {
-    val source = activity.content
+    var source = activity.content
       .replace("【日服】", "")
-      .replace("【日服卡池】", "")
+      .replace("（", "(")
+      .replace("）", ")")
     activity.type = ActivityType.ACTIVITY
     when {
-      source.contains("卡池") -> activity.type = ActivityType.PICK_UP
+      source.contains("卡池") -> {
+        activity.type = ActivityType.PICK_UP
+        source = source.replace("【日服卡池】", "Pick Up")
+      }
       source.contains("指名手配") -> activity.type = ActivityType.WANTED_DROP
       source.contains("学院交流") -> activity.type = ActivityType.COLLEGE_EXCHANGE_DROP
       source.contains("特别依赖") -> activity.type = ActivityType.SPECIAL_DROP

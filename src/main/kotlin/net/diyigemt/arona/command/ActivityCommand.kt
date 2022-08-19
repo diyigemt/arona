@@ -67,7 +67,7 @@ object ActivityCommand : CompositeCommand(
    private val ACTIVITY_COMMAND = "${CommandManager.commandPrefix}活动"
    override fun interceptBeforeCall(message: Message, caller: CommandSender): String? {
      if (message.contentToString() != ACTIVITY_COMMAND) return null
-     if (caller !is MemberCommandSenderOnMessage) return null
+     if (caller !is UserCommandSender) return null
      val subject = caller.subject
      if (AronaNotifyConfig.defaultActivityCommandServer == ServerLocale.JP) {
        kotlin.runCatching {

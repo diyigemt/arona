@@ -64,7 +64,7 @@ object Arona : KotlinPlugin(
       }.subscribeOnce<BotOnlineEvent> {
         arona = it.bot
         if (AronaConfig.sendOnlineMessage) {
-          sendMessage(MiraiCode.deserializeMiraiCode(AronaConfig.onlineMessage))
+          sendMessage(deserializeMiraiCode(AronaConfig.onlineMessage))
         }
       }
       GlobalEventChannel.subscribeAlways<NudgeEvent>(priority = AronaNudgeConfig.priority) {
@@ -126,7 +126,7 @@ object Arona : KotlinPlugin(
   }
   fun sendExitMessage() {
     if (AronaConfig.sendOfflineMessage) {
-      sendMessage(MiraiCode.deserializeMiraiCode(AronaConfig.offlineMessage))
+      sendMessage(deserializeMiraiCode(AronaConfig.offlineMessage))
     }
   }
 

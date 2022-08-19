@@ -1,5 +1,7 @@
 package net.diyigemt.arona.command
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.config.AronaNotifyConfig
 import net.diyigemt.arona.entity.Activity
@@ -10,7 +12,10 @@ import net.diyigemt.arona.util.ActivityUtil
 import net.mamoe.mirai.console.command.*
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.contact.Contact
+import net.mamoe.mirai.contact.Contact.Companion.uploadImage
 import net.mamoe.mirai.message.data.Message
+import java.io.File
+import javax.imageio.ImageIO
 
 object ActivityCommand : CompositeCommand(
   Arona,"active", "活动",
@@ -31,7 +36,7 @@ object ActivityCommand : CompositeCommand(
 
   private suspend fun sendEN(subject: Contact) {
     val enActivity = ActivityUtil.fetchENActivity()
-    send(subject, enActivity)
+    send(subject, enActivity, ServerLocale.GLOBAL)
   }
 
   private suspend fun sendJP(subject: Contact) {
@@ -39,8 +44,14 @@ object ActivityCommand : CompositeCommand(
     send(subject, jpActivity)
   }
 
-  private suspend fun send(subject: Contact, activities: Pair<List<Activity>, List<Activity>>) {
-    subject.sendMessage(ActivityUtil.constructMessage(activities))
+  private suspend fun send(subject: Contact, activities: Pair<List<Activity>, List<Activity>>, serverLocale: ServerLocale = ServerLocale.JP) {
+    val image0 = ActivityUtil.createActivityImage(activities, serverLocale)
+    val imageFile = File(Arona.dataFolder.absolutePath + "/activity.png")
+    withContext(Dispatchers.IO) {
+      ImageIO.write(image0, "png", imageFile)
+    }
+    val image = subject.uploadImage(imageFile, "png")
+    subject.sendMessage(image)
   }
 
   override val id: Int = 3

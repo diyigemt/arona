@@ -1,51 +1,81 @@
 package net.diyigemt.arona.util
-import java.awt.Color
-import java.awt.Font
-import java.awt.RenderingHints
+import net.diyigemt.arona.util.ActivityUtil.DEFAULT_CALENDAR_FONT_SIZE
+import net.diyigemt.arona.util.ActivityUtil.DEFAULT_CALENDAR_LINE_MARGIN
+import java.awt.*
 import java.awt.image.BufferedImage
+import kotlin.math.max
+
 object ImageUtil {
 
-  private const val DEFAULT_ITEM_SIZE: Int = 144
-  fun createCalendarImage(eventLength: Int, titleMaxLength: Int): BufferedImage {
-    val width = DEFAULT_ITEM_SIZE * (titleMaxLength + 10) * 0.7
-    val height = (eventLength + 2) * DEFAULT_ITEM_SIZE
-    val img = BufferedImage(width.toInt(), height, BufferedImage.TYPE_4BYTE_ABGR)
+  private const val DEFAULT_PADDING: Int = 10
+  fun createCalendarImage(eventLength: Int, contentMaxLength: Int, titleLength: Int = 20, fontSize: Float = DEFAULT_CALENDAR_FONT_SIZE.toFloat()): Pair<BufferedImage, Graphics2D> {
+    val width = fontSize * (max(contentMaxLength, titleLength) + 20) * 0.7
+    val height = (eventLength + 3) * (fontSize + DEFAULT_CALENDAR_LINE_MARGIN) + 2 * DEFAULT_CALENDAR_LINE_MARGIN
+    val img = BufferedImage(width.toInt(), height.toInt(), BufferedImage.TYPE_4BYTE_ABGR)
     val g = img.createGraphics()
     g.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS,
       RenderingHints.VALUE_FRACTIONALMETRICS_ON)
     g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
       RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
-    return img
+    g.font = g.font.deriveFont(Font.PLAIN).deriveFont(fontSize)
+    return img to g
   }
 
-  fun init(img: BufferedImage, color: Color) {
-    val g = img.graphics
+  fun init(group: Pair<BufferedImage, Graphics2D>, color: Color) {
+    val g = group.second
+    val img = group.first
     g.color = color
     g.fillRect(0, 0, img.width, img.height)
   }
 
-  fun drawRoundRect(img: BufferedImage, x: Int, y: Int, w: Int, h: Int, r: Int, color: Color) {
-    val g = img.graphics
+  fun drawRoundRect(group: Pair<BufferedImage, Graphics2D>, x: Int, y: Int, w: Int, h: Int, r: Int, color: Color) {
+    val g = group.second
     g.color = color
     g.fillRoundRect(x, y, w, h, r, r)
   }
 
-  fun drawText(img: BufferedImage, str: String, x: Int, y: Int, align: TextAlign, color: Color) {
-    val g = img.graphics
-//    g.font = g.font.deriveFont(Font.BOLD).deriveFont(DEFAULT_ITEM_SIZE.toFloat())
-    g.font = Font(g.font.name, Font.BOLD, DEFAULT_ITEM_SIZE)
+  fun drawText(
+    group: Pair<BufferedImage, Graphics2D>,
+    str: String,
+    x: Int,
+    y: Int,
+    align: TextAlign = TextAlign.LEFT,
+    color: Color = Color.BLACK,
+    fontWeight: Int = Font.PLAIN
+  ) {
+    val g = group.second
+    val img = group.first
     g.color = color
+    g.font = g.font.deriveFont(fontWeight)
     val width = g.fontMetrics.stringWidth(str)
     when (align) {
-      TextAlign.LEFT -> g.drawString(str, x, y)
-      TextAlign.RIGHT -> g.drawString(str, img.width - width, y)
+      TextAlign.LEFT -> g.drawString(str, x + DEFAULT_PADDING, y)
+      TextAlign.RIGHT -> g.drawString(str, img.width - width - DEFAULT_PADDING, y)
       TextAlign.CENTER -> g.drawString(str, (img.width - x - width) / 2 + x, y)
     }
   }
 
-  fun drawTextByLine(img: BufferedImage, str: String, line: Int, align: TextAlign, color: Color = Color.BLACK) {
-    drawText(img, str, 0, line + DEFAULT_ITEM_SIZE, align, color)
+  fun drawText(
+    group: Pair<BufferedImage, Graphics2D>,
+    str: String,
+    y: Int,
+    align: TextAlign = TextAlign.LEFT,
+    color: Color = Color.BLACK,
+    fontWeight: Int = Font.PLAIN
+  ) {
+    drawText(group, str, 0, y, align, color, fontWeight)
   }
+
+  fun BufferedImage.scale(x: Float, y: Float, color: Color = Color.WHITE): BufferedImage {
+    val width = (this.width * x).toInt()
+    val height = (this.height * y).toInt()
+    val scale = this.getScaledInstance(width, height, Image.SCALE_SMOOTH)
+    val after = BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR)
+    after.graphics.drawImage(scale, 0, 0, color, null)
+    return after
+  }
+
+  fun BufferedImage.scale(scale: Float, color: Color = Color.WHITE) = this.scale(scale, scale, color)
 
   enum class TextAlign {
     LEFT, RIGHT, CENTER

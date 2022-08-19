@@ -6,12 +6,9 @@ import net.diyigemt.arona.util.ActivityUtil
 import net.diyigemt.arona.util.WikiruUtil
 import org.jsoup.Jsoup
 import org.junit.jupiter.api.Test
-import java.awt.Color
-import java.awt.Image
-import java.awt.image.BufferedImage
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.Calendar
+import java.util.*
 import javax.imageio.ImageIO
 
 class TestSimple {
@@ -94,10 +91,7 @@ class TestSimple {
       Activity("特殊作战3倍掉落", "05天11小时后开始", ActivityType.SPECIAL_DROP)
     )
     val img = ActivityUtil.createActivityImage(active to pending)
-    val scale = img.getScaledInstance(img.width / 2, img.height / 2, Image.SCALE_SMOOTH)
-    val after = BufferedImage(img.width / 2, img.height / 2, BufferedImage.TYPE_4BYTE_ABGR)
-    after.graphics.drawImage(scale, 0, 0, Color.WHITE, null)
-    ImageIO.write(after, "png", File("test.png"))
+    ImageIO.write(img, "png", File("test.png"))
   }
 
 }

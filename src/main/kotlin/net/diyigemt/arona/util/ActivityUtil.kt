@@ -7,6 +7,7 @@ import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.entity.ActivityType
 import net.diyigemt.arona.entity.ServerLocale
 import net.diyigemt.arona.util.GeneralUtils.clearExtraQute
+import net.diyigemt.arona.util.ImageUtil.scale
 import org.jsoup.Jsoup
 import java.awt.Color
 import java.awt.image.BufferedImage
@@ -30,10 +31,18 @@ object ActivityUtil {
   private val ActivityJPRegex = Regex("(\\d+/\\d+/\\d+)( \\d+:\\d+)? ～ (\\d+/\\d+ \\d+:\\d+)")
   private const val WikiruCmd = "diff"
   private const val WikiruPage = "イベント一覧"
+  const val DEFAULT_CALENDAR_FONT_SIZE = 144
+  const val DEFAULT_CALENDAR_LINE_MARGIN = 30
   const val ServerMaintenanceStartTimeEN = "11:00"
   const val ServerMaintenanceStartTimeJP = "10:00"
   const val ServerMaintenanceEndTimeEN = "15:00"
   const val ServerMaintenanceEndTimeJP = "16:00"
+  private val ActivityColorMap: Map<Int, Pair<Color, Color>> = mapOf(
+    1 to (Color.WHITE to Color(255, 140, 0)),
+    2 to (Color.WHITE to Color(138, 43, 226)),
+    3 to (Color.WHITE to Color(16, 126, 247)),
+    4 to (Color.WHITE to Color.RED)
+  )
   fun fetchJPActivityFromCN(): Pair<List<Activity>, List<Activity>> {
     val document = Jsoup.connect("https://wiki.biligame.com/bluearchive/%E9%A6%96%E9%A1%B5").get()
     val activities = document.getElementsByClass("activity")
@@ -428,6 +437,7 @@ object ActivityUtil {
     val source = activity.content
       .replace("【日服】", "")
       .replace("【日服卡池】", "")
+    activity.type = ActivityType.ACTIVITY
     when {
       source.contains("卡池") -> activity.type = ActivityType.PICK_UP
       source.contains("指名手配") -> activity.type = ActivityType.WANTED_DROP
@@ -497,10 +507,36 @@ object ActivityUtil {
     val title = "${server.serverName}活动日历"
     val active = activities.first
     val pending = activities.second
-    val image = ImageUtil.createCalendarImage(active.size + pending.size, max(active.maxOf { it.content.length }, pending.maxOf { it.content.length }))
+    val image = ImageUtil.createCalendarImage(max(active.size, 1) + max(pending.size, 1), max(active.maxOfOrNull { it.content.length } ?: 0, pending.maxOfOrNull { it.content.length } ?: 0))
+    var lineIndex = 1
+    fun calcY(offset: Int = 0): Int {
+      return DEFAULT_CALENDAR_FONT_SIZE * (lineIndex + offset) + DEFAULT_CALENDAR_LINE_MARGIN * (lineIndex + offset - 1)
+    }
     ImageUtil.init(image, Color.WHITE)
-    ImageUtil.drawTextByLine(image, title, 1, ImageUtil.TextAlign.CENTER)
-    return image
+    ImageUtil.drawText(image, title, DEFAULT_CALENDAR_FONT_SIZE, ImageUtil.TextAlign.CENTER)
+    lineIndex++
+    ImageUtil.drawText(image, SimpleDateFormat("yyyy/M/d").format(Calendar.getInstance().time), calcY(), ImageUtil.TextAlign.RIGHT)
+    ImageUtil.drawText(image, "正在进行", calcY())
+    lineIndex++
+    fun drawActivity(list: List<Activity>) {
+      if (list.isEmpty()) {
+        ImageUtil.drawText(image, "无", calcY())
+      } else {
+        list.forEach {
+          val y = calcY()
+          val color = ActivityColorMap[it.type.level]!!
+          ImageUtil.drawRoundRect(image, 0, (calcY(-1) + DEFAULT_CALENDAR_LINE_MARGIN * 1.5).toInt(), image.first.width, DEFAULT_CALENDAR_FONT_SIZE + DEFAULT_CALENDAR_LINE_MARGIN / 2, 40, color.second)
+          ImageUtil.drawText(image, it.content, y, color = color.first)
+          ImageUtil.drawText(image, it.time, y, color = color.first, align = ImageUtil.TextAlign.RIGHT)
+          lineIndex++
+        }
+      }
+    }
+    drawActivity(active)
+    ImageUtil.drawText(image, "即将开始", calcY())
+    lineIndex++
+    drawActivity(pending)
+    return image.first.scale(0.2f)
   }
 
   enum class ActivityJPSource {

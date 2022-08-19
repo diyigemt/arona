@@ -51,8 +51,8 @@ object ActivityNotify: AronaQuartzService {
       // 初始化不显示信息
       val init = context?.mergedJobDataMap?.getBoolean(ActivityNotifyDataInitKey) ?: false
       if (init) return
-      val jpMessage = ActivityUtil.constructMessage(filterJP)
-      val enMessage = ActivityUtil.constructMessage(filterEN)
+      val jpMessage = ActivityUtil.createActivityImage(filterJP)
+      val enMessage = ActivityUtil.createActivityImage(filterEN, ServerLocale.GLOBAL)
       if (AronaNotifyConfig.enableEveryDay) {
         if (AronaNotifyConfig.enableJP) {
           Arona.sendMessage(
@@ -153,7 +153,7 @@ object ActivityNotify: AronaQuartzService {
             return@let null
           }
         }
-      val serverName = if (server) "日服" else "国际服"
+      val serverName = ac[0].serverLocale.serverName
       if (maintenance != null) {
         Arona.sendMessage("距离${serverName}维护还有1小时")
       }

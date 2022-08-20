@@ -1,13 +1,15 @@
 plugins {
   val kotlinVersion = "1.6.10"
+  val miraiVersion = "2.11.1"
   kotlin("jvm") version kotlinVersion
   kotlin("plugin.serialization") version kotlinVersion
 
-  id("net.mamoe.mirai-console") version "2.11.1"
+  id("net.mamoe.mirai-console") version miraiVersion
 }
 
 group = "net.diyigemt.arona"
 version = "1.0.5"
+val miraiVersion = "2.11.1"
 val exposedVersion = "0.38.2"
 val sqliteVersion = "3.36.0.3"
 val quartzVersion = "2.3.2"
@@ -34,6 +36,7 @@ dependencies {
   implementation("org.apache.logging.log4j:log4j-core:2.18.0")
   implementation("org.slf4j:slf4j-api:1.7.36")
   implementation("com.google.code.gson:gson:2.9.0")
+  api("net.mamoe", "mirai-logging-log4j2", miraiVersion)
 }
 
 tasks.test {

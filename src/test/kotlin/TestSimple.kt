@@ -91,7 +91,6 @@ class TestSimple {
       Activity("特殊作战3倍掉落", "05天11小时后开始", ActivityType.SPECIAL_DROP)
     )
     val img = ActivityUtil.createActivityImage(active to pending)
-    ImageIO.write(img, "png", File("test.png"))
   }
 
 }

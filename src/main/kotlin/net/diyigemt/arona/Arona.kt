@@ -120,7 +120,7 @@ object Arona : KotlinPlugin(
   }
 
   fun runSuspend(block: suspend () -> Unit) = runBlocking {
-    withContext(Arona.coroutineContext) {
+    withContext(coroutineContext) {
       block()
     }
   }
@@ -141,7 +141,7 @@ object Arona : KotlinPlugin(
     }
   }
 
-  fun sendMessageWithFile(block: (group: Contact) -> MessageChain) {
+  fun sendMessageWithFile(block: suspend (group: Contact) -> MessageChain) {
     runBlocking {
       withContext(coroutineContext) {
         AronaConfig.groups.forEach {
@@ -159,6 +159,17 @@ object Arona : KotlinPlugin(
         AronaConfig.groups.forEach {
           val group =  arona.groups[it] ?: return@forEach
           group.sendMessage(message)
+        }
+      }
+    }
+  }
+
+  fun sendMessage(messageBuilder: (group: Group) -> MessageChain) {
+    runBlocking {
+      withContext(coroutineContext) {
+        AronaConfig.groups.forEach {
+          val group =  arona.groups[it] ?: return@forEach
+          group.sendMessage(messageBuilder(group))
         }
       }
     }

@@ -9,11 +9,13 @@ import net.diyigemt.arona.quartz.QuartzProvider
 import net.diyigemt.arona.service.AronaQuartzService
 import net.diyigemt.arona.util.ActivityUtil
 import net.diyigemt.arona.util.MessageUtil
+import net.mamoe.mirai.contact.Contact.Companion.uploadImage
 import net.mamoe.mirai.message.code.MiraiCode
 import org.quartz.InterruptableJob
 import org.quartz.Job
 import org.quartz.JobExecutionContext
 import org.quartz.JobKey
+import java.io.File
 import java.util.*
 
 object ActivityNotify: AronaQuartzService {
@@ -51,18 +53,25 @@ object ActivityNotify: AronaQuartzService {
       // 初始化不显示信息
       val init = context?.mergedJobDataMap?.getBoolean(ActivityNotifyDataInitKey) ?: false
       if (init) return
-      val jpMessage = ActivityUtil.createActivityImage(filterJP)
-      val enMessage = ActivityUtil.createActivityImage(filterEN, ServerLocale.GLOBAL)
       if (AronaNotifyConfig.enableEveryDay) {
         if (AronaNotifyConfig.enableJP) {
-          Arona.sendMessage(
-            MessageUtil.deserializeMiraiCodeAndAddString(AronaNotifyConfig.notifyStringJP, "\n$jpMessage")
-          )
+          val jpMessage = ActivityUtil.createActivityImage(filterJP)
+          sendMessage(jpMessage, AronaNotifyConfig.notifyStringJP)
         }
         if (AronaNotifyConfig.enableEN) {
-          Arona.sendMessage(
-            MessageUtil.deserializeMiraiCodeAndAddString(AronaNotifyConfig.notifyStringEN, "\n$enMessage")
-          )
+          val enMessage = ActivityUtil.createActivityImage(filterEN, ServerLocale.GLOBAL)
+          sendMessage(enMessage, AronaNotifyConfig.notifyStringEN)
+        }
+      }
+    }
+
+    private fun sendMessage(imageFile: File, source: String) {
+      Arona.sendMessageWithFile() { group ->
+        val image = group.uploadImage(imageFile, "png")
+        MessageUtil.deserializeMiraiCodeAndBuild(source, group) {
+          it.add("\n")
+          it.add(image)
+          it.build()
         }
       }
     }

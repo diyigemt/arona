@@ -10,11 +10,12 @@ import net.diyigemt.arona.util.GeneralUtils.clearExtraQute
 import net.diyigemt.arona.util.ImageUtil.scale
 import org.jsoup.Jsoup
 import java.awt.Color
-import java.awt.image.BufferedImage
+import java.io.File
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
+import javax.imageio.ImageIO
 import kotlin.math.floor
 import kotlin.math.max
 
@@ -507,7 +508,7 @@ object ActivityUtil {
 
   private fun locale(type: ActivityType?): ServerLocale = if (type == null) ServerLocale.JP else ServerLocale.GLOBAL
 
-  fun createActivityImage(activities: Pair<List<Activity>, List<Activity>>, server: ServerLocale = ServerLocale.JP): BufferedImage {
+  fun createActivityImage(activities: Pair<List<Activity>, List<Activity>>, server: ServerLocale = ServerLocale.JP): File {
     val title = "${server.serverName}活动日历"
     val active = activities.first
     val pending = activities.second
@@ -525,6 +526,7 @@ object ActivityUtil {
     fun drawActivity(list: List<Activity>) {
       if (list.isEmpty()) {
         ImageUtil.drawText(image, "无", calcY())
+        lineIndex++
       } else {
         list.forEach {
           val y = calcY()
@@ -540,7 +542,9 @@ object ActivityUtil {
     ImageUtil.drawText(image, "即将开始", calcY())
     lineIndex++
     drawActivity(pending)
-    return image.first.scale(0.2f)
+    val imageFile = File(Arona.dataFolder.absolutePath + "/activity.png")
+    ImageIO.write(image.first.scale(0.2f), "png", imageFile)
+    return imageFile
   }
 
   enum class ActivityJPSource {

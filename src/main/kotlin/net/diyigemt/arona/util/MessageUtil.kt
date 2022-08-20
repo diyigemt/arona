@@ -1,5 +1,6 @@
 package net.diyigemt.arona.util
 
+import net.diyigemt.arona.Arona
 import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.User
 import net.mamoe.mirai.message.MessageReceipt

@@ -11,7 +11,7 @@ import org.quartz.JobKey
  */
 object SchaleDBDataSyncService : AronaQuartzService{
   override lateinit var jobKey: JobKey
-  override val id: Int = 18
+  override val id: Int = 19
   override val name: String = "数据同步服务"
   override var enable: Boolean = true
 
@@ -25,7 +25,13 @@ object SchaleDBDataSyncService : AronaQuartzService{
     registerService()
   }
 
+  // TODO start cron task
   override fun enableService() {
     super.enableService()
+  }
+
+  // TODO cancel cron task
+  override fun disableService() {
+    super.disableService()
   }
 }

@@ -152,10 +152,10 @@ object AronaServiceManager: InitializedFunction() {
     ActivityNotify.init()
     NGAImageTranslatePusher.init()
     AronaUpdateChecker.init()
-    TarotCommand.init()
-    CallMeCommand.init()
 //    TransferCommand.init()
+    TarotCommand.init()
     EmergencyStopCommand.init()
+    CallMeCommand.init()
     SchaleDBDataSyncService.init()
     AronaServiceConfig.reload()
     AronaServiceConfig.config.forEach {

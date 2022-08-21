@@ -50,7 +50,7 @@ Please note that for various reasons, developers may **stop updating** or **dele
 
 ## 更新日志
 
-2022-08-10 v1.0.5
+2022-08-21 v1.0.5
 
 1. 添加配置项arona.yml->endWithSensei允许用户设置称呼系统的后缀，默认是"老师"(保留人设)
 2. 添加指令`/叫我 <string>`允许给自己自定义昵称，阿罗娜将会在抽卡、摸头中称呼你，具体使用请看ReadMe的这里[指令详解 1.6昵称系列](#call_me)

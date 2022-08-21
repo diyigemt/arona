@@ -13,6 +13,7 @@ import net.diyigemt.arona.handler.HentaiEventHandler
 import net.diyigemt.arona.handler.NudgeEventHandler
 import net.diyigemt.arona.interfaces.InitializedFunction
 import net.diyigemt.arona.util.GeneralUtils
+import net.diyigemt.arona.util.scbaleDB.SchaleDBDataSyncService
 import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.User
@@ -155,6 +156,7 @@ object AronaServiceManager: InitializedFunction() {
     CallMeCommand.init()
 //    TransferCommand.init()
     EmergencyStopCommand.init()
+    SchaleDBDataSyncService.init()
     AronaServiceConfig.reload()
     AronaServiceConfig.config.forEach {
       if (it.value) {

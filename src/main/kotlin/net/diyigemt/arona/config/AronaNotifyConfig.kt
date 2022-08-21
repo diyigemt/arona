@@ -39,4 +39,6 @@ object AronaNotifyConfig: AutoSavePluginConfig("arona-notify") {
   @ValueDescription("\"/活动 jp\"指令的默认数据源,可选值为 \"B_WIKI\", \"WIKI_RU\", 和\"GAME_KEE\"")
   val defaultJPActivitySource: ActivityUtil.ActivityJPSource by value(ActivityUtil.ActivityJPSource.GAME_KEE)
 
+  @ValueDescription("\"/活动 en\"指令的默认数据源,可选值为 \"SCHALE_DB\"")
+  val defaultENActivitySource: ActivityUtil.ActivityENSource by value(ActivityUtil.ActivityENSource.SCHALE_DB)
 }

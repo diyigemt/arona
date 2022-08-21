@@ -93,4 +93,12 @@ class TestSimple {
     val img = ActivityUtil.createActivityImage(active to pending)
   }
 
+  @Test
+  fun testSchaleDB(){
+    System.setProperty("proxyHost", "127.0.0.1")
+    System.setProperty("proxyPort", "7890")
+    val res = ActivityUtil.fetchENActivity()
+    print(res)
+  }
+
 }

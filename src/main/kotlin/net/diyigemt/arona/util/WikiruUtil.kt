@@ -10,9 +10,10 @@ import java.util.*
 /**
  *@Author Haythem723
  *@Create 2022/7/9
+ *<h1>听我一句劝，别用这个，前方是地狱</h1>
  */
 
-@Deprecated("已停止维护接口")
+@Deprecated("已停止维护的接口")
 object WikiruUtil {
   fun getValidData(raw : String) : String{
     val start = "&size(16){''報酬受け取り期間''};"

@@ -4,7 +4,7 @@ data class Activity(
   var content: String,
   var time: String,
   var type: ActivityType = ActivityType.NULL,
-  val serverLocale: ServerLocale = ServerLocale.JP,
+  var serverLocale: ServerLocale = ServerLocale.JP,
   val katakana: String = "",
   val description : String = ""
 )

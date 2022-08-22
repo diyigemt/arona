@@ -36,6 +36,7 @@ object ActivityUtil {
   private const val WikiruPage = "イベント一覧"
   const val DEFAULT_CALENDAR_FONT_SIZE = 144
   const val DEFAULT_CALENDAR_LINE_MARGIN = 30
+  const val DEFAULT_IMAGE_SCALE = 0.2F
   const val ServerMaintenanceStartTimeEN = "11:00"
   const val ServerMaintenanceStartTimeJP = "10:00"
   const val ServerMaintenanceEndTimeEN = "15:00"
@@ -574,7 +575,7 @@ object ActivityUtil {
     lineIndex++
     drawActivity(pending)
     val imageFile = File(Arona.dataFolder.absolutePath + "/activity.png")
-    ImageIO.write(image.first.scale(0.2f), "png", imageFile)
+    ImageIO.write(image.first.scale(DEFAULT_IMAGE_SCALE), "png", imageFile)
     return imageFile
   }
 

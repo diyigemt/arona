@@ -1,9 +1,18 @@
 package net.diyigemt.arona.util
+import net.diyigemt.arona.entity.HelperTableColWidth
+import net.diyigemt.arona.entity.StageMapHelperTable
 import net.diyigemt.arona.util.ActivityUtil.DEFAULT_CALENDAR_FONT_SIZE
 import net.diyigemt.arona.util.ActivityUtil.DEFAULT_CALENDAR_LINE_MARGIN
+import net.diyigemt.arona.util.ActivityUtil.DEFAULT_IMAGE_SCALE
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.awt.*
 import java.awt.image.BufferedImage
+import java.io.File
+import java.io.FileOutputStream
+import javax.imageio.ImageIO
 import kotlin.math.max
+import kotlin.math.min
 
 object ImageUtil {
 
@@ -19,6 +28,75 @@ object ImageUtil {
       RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
     g.font = g.font.deriveFont(Font.PLAIN).deriveFont(fontSize)
     return img to g
+  }
+
+  fun createStageMapHelper(imgUrl: String, table: StageMapHelperTable): BufferedImage? {
+    val builder = OkHttpClient.Builder()
+    val client = builder.build()
+    val request = Request.Builder()
+      .url(imgUrl)
+      .addHeader("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
+      .get()
+      .build()
+    val response = client.newCall(request).execute()
+    if (!response.isSuccessful) return null
+    val stream = response.body?.byteStream() ?: return null
+    val baseMap = ImageIO.read(stream)
+    stream.close()
+    // 计算有()备注内容的换行
+    val trueRow = table.content.map { cells ->
+      return@map if (cells.map outer@ { cell ->
+        return@outer if (cell.content.contains("\n")) 2 else 1
+      }.sum() > cells.size) 2 else 1
+    }.sum() + 1
+    val textWidth = table.col * HelperTableColWidth
+    val bigBaseMapHeight = (baseMap.height / DEFAULT_IMAGE_SCALE).toInt() + 2 * DEFAULT_CALENDAR_FONT_SIZE
+    val width = max((baseMap.width / DEFAULT_IMAGE_SCALE).toInt(), textWidth)
+    val height = bigBaseMapHeight + trueRow * (DEFAULT_CALENDAR_FONT_SIZE + DEFAULT_CALENDAR_LINE_MARGIN)
+    val img = BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR)
+    val g = img.createGraphics()
+    g.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS,
+      RenderingHints.VALUE_FRACTIONALMETRICS_ON)
+    g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+      RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
+    g.font = g.font.deriveFont(Font.PLAIN).deriveFont(DEFAULT_CALENDAR_FONT_SIZE.toFloat())
+    val group = img to g
+    val header = table.header
+    val content = table.content
+    val startX = (img.width - textWidth) / 2
+    var currentRow = 0
+    fun calcOffsetX(fontLen: Int, col: Int, span: Int = 1): Int = startX + col * HelperTableColWidth + (HelperTableColWidth * span - fontLen * DEFAULT_CALENDAR_FONT_SIZE) / 2 - DEFAULT_PADDING
+    fun calcOffsetY(row: Int = currentRow, offset: Int = 0): Int = bigBaseMapHeight + DEFAULT_CALENDAR_FONT_SIZE * (row + offset) + DEFAULT_CALENDAR_LINE_MARGIN * (row + offset - 1)
+    // 画表头
+    (0 until table.col).forEach {
+      drawText(group, header[it], calcOffsetX(header[it].length, it), calcOffsetY())
+    }
+    currentRow++
+    // 画内容
+    var col = 0
+    content.forEach {
+      while (col < table.col) {
+        val target = it[col]
+        val contents = target.content
+        if (contents.contains("\n")) {
+          val a = contents.substringBefore("\n")
+          val b = contents.substringAfter("\n")
+          drawText(group, a, calcOffsetX(a.length, col, span = target.colspan), calcOffsetY())
+          currentRow++
+          drawText(group, b, calcOffsetX(b.length, col, span = target.colspan), calcOffsetY())
+          currentRow++
+          continue
+        }
+        drawText(group, target.content, calcOffsetX(target.content.length, col, span = target.colspan), calcOffsetY())
+        col += target.colspan
+      }
+      currentRow++
+      col = 0
+    }
+    val send = img.scale(DEFAULT_IMAGE_SCALE)
+    send.createGraphics().drawImage(baseMap, null, (send.width - baseMap.width) / 2, 0)
+    ImageIO.write(send, "png", File("test.png"))
+    return null
   }
 
   fun init(group: Pair<BufferedImage, Graphics2D>, color: Color) {

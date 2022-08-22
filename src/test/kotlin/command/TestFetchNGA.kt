@@ -77,7 +77,7 @@ object TestFetchNGA {
     fetchImg("${imageSrcBaseAddr}mon_202207/11/n6Q2q-6bc8K2qT3cSsg-k4.jpg")
   }
 
-  fun fetchImg(url: String) {
+  private fun fetchImg(url: String) {
     val builder = OkHttpClient.Builder()
     builder.cookieJar(CookieJarImp())
     val client = builder.build()

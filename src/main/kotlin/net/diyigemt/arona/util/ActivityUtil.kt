@@ -80,7 +80,6 @@ object ActivityUtil {
       targetFunction.call()
     }
     var data = result.getOrDefault(listOf<Activity>() to listOf())
-//    print(result.exceptionOrNull().toString() + "\n")
     if (result.isSuccess && (data.first.isNotEmpty() || data.second.isNotEmpty())) return data
     for (function in list) {
       result = runCatching(function)
@@ -88,9 +87,6 @@ object ActivityUtil {
       if (data.first.isNotEmpty() || data.second.isNotEmpty()) break
     }
     return data
-
-//    return result.getOrDefault(listOf<Activity>() to listOf())
-//    return fetchENActivityFromSchaleDB()
   }
 
 //  fun fetchENActivity(): Pair<List<Activity>, List<Activity>> {

@@ -65,30 +65,35 @@ object ImageUtil {
     val content = table.content
     val startX = (img.width - textWidth) / 2
     var currentRow = 0
-    fun calcOffsetX(fontLen: Int, col: Int, span: Int = 1): Int = startX + col * HelperTableColWidth + (HelperTableColWidth * span - fontLen * DEFAULT_CALENDAR_FONT_SIZE) / 2 - DEFAULT_PADDING
+    fun calcOffsetX(s: String, col: Int, span: Int = 1): Int = startX + col * HelperTableColWidth + (HelperTableColWidth * span - g.fontMetrics.stringWidth(s)) / 2 - DEFAULT_PADDING
     fun calcOffsetY(row: Int = currentRow, offset: Int = 0): Int = bigBaseMapHeight + DEFAULT_CALENDAR_FONT_SIZE * (row + offset) + DEFAULT_CALENDAR_LINE_MARGIN * (row + offset - 1)
     // 画表头
     (0 until table.col).forEach {
-      drawText(group, header[it], calcOffsetX(header[it].length, it), calcOffsetY())
+      drawText(group, header[it], calcOffsetX(header[it], it), calcOffsetY())
     }
     currentRow++
     // 画内容
     var col = 0
     content.forEach {
+      var doubleLineFlag = false
       while (col < table.col) {
         val target = it[col]
         val contents = target.content
-        if (contents.contains("\n")) {
+        if (contents.contains("\n") && contents.length > 12) {
           val a = contents.substringBefore("\n")
           val b = contents.substringAfter("\n")
-          drawText(group, a, calcOffsetX(a.length, col, span = target.colspan), calcOffsetY())
+          drawText(group, a, calcOffsetX(a, col, span = target.colspan), calcOffsetY())
           currentRow++
-          drawText(group, b, calcOffsetX(b.length, col, span = target.colspan), calcOffsetY())
-          currentRow++
-          continue
+          drawText(group, b, calcOffsetX(b, col, span = target.colspan), calcOffsetY())
+          currentRow--
+          doubleLineFlag = true
+        } else {
+          drawText(group, target.content, calcOffsetX(target.content, col, span = target.colspan), calcOffsetY())
         }
-        drawText(group, target.content, calcOffsetX(target.content.length, col, span = target.colspan), calcOffsetY())
         col += target.colspan
+      }
+      if (doubleLineFlag) {
+        currentRow++
       }
       currentRow++
       col = 0

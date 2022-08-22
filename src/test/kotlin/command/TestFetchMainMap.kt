@@ -7,6 +7,7 @@ import net.diyigemt.arona.util.ImageUtil
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jsoup.Jsoup
+import org.jsoup.select.Elements
 import org.junit.jupiter.api.Test
 import java.awt.Image
 import java.awt.image.BufferedImage
@@ -22,8 +23,8 @@ class TestFetchMainMap {
 
   @Test
   fun testFetchStruct() {
-    System.setProperty("proxyHost", "127.0.0.1")
-    System.setProperty("proxyPort", "7890")
+//    System.setProperty("proxyHost", "127.0.0.1")
+//    System.setProperty("proxyPort", "7890")
     val body = Jsoup
       .connect("${baseUrl}15${chapterName}/15-3")
       .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
@@ -45,22 +46,31 @@ class TestFetchMainMap {
     val rows = stepTable.getElementsByTag("tr")
     val tableHeader = mutableListOf("回合")
     val tableContent = mutableListOf<List<StageMapHelperTable.TableCell>>()
-    val header = rows[0].getElementsByTag("th")
-    header.removeAt(0)
-    header.forEach { tableHeader.add(it.text().substringAfter("部隊")) }
-    rows.removeAt(0)
+    // 有多种解法
+    val header: Elements
+    val trueCol: Int
+    if (rows[0].text().contains("別解")) {
+      trueCol = rows.removeAt(0).getElementsByTag("th")[0].attr("colspan").toInt()
+      header = rows.removeAt(0).getElementsByTag("th")
+    } else {
+      header = rows.removeAt(0).getElementsByTag("th")
+      trueCol = header.size
+    }
+    (1 until trueCol).forEach {
+      tableHeader.add(header[it].text().substringAfter("部隊"))
+    }
     var rowIndex = 1
     rows.forEach { row ->
       val td = row.getElementsByTag("td")
       val content = mutableListOf(
         StageMapHelperTable.TableCell("第${rowIndex++}步")
       )
-      td.removeAt(0)
-      td.forEach {
-        val colspan = it.attr("colspan").let { s->
+      (1 until trueCol).forEach {index ->
+        val target = td[index]
+        val colspan = target.attr("colspan").let { s ->
           return@let if (s.isBlank()) 1 else s.toInt()
         }
-        var c = it.text()
+        var c = target.text()
           .replace("を", "向")
           .replace("は上スタートへ", "先向上")
           .replace("は下スタートへ", "先向下")
@@ -77,7 +87,7 @@ class TestFetchMainMap {
       }
       tableContent.add(content)
     }
-    val table = StageMapHelperTable(rows.size + 1, header.size + 1, tableHeader, tableContent)
+    val table = StageMapHelperTable(tableContent.size, tableHeader.size, tableHeader, tableContent)
     ImageUtil.createStageMapHelper(imgUrl, table)
   }
 

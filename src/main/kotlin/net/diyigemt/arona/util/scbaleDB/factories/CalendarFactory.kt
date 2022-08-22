@@ -11,14 +11,14 @@ import net.diyigemt.arona.util.scbaleDB.SchaleDBUtil
  */
 object CalendarFactory {
   fun getEventLocalizationName(eventID : Int) : String{
-    val localizationData: LocalizationDAO = SchaleDBUtil.getLocalizationData()
+    val localizationData: LocalizationDAO = SchaleDBUtil.localizationItem
     val res = localizationData.EventName.getValueById(eventID)
 
     return res ?: ""
   }
 
   fun getCharacterLocalizationName(characterIDList : List<Int>) : String{
-    val studentData: StudentDAO = SchaleDBUtil.getStudentData()
+    val studentData: StudentDAO = SchaleDBUtil.studentItem
     var res = ""
     for (item in characterIDList){
       res += studentData.getStudentNameById(item) + " "
@@ -28,7 +28,7 @@ object CalendarFactory {
   }
 
   fun getRaidLocalizationName(raidID : Int) : String {
-    val raidData: RaidDAO = SchaleDBUtil.getRaidData()
+    val raidData: RaidDAO = SchaleDBUtil.raidItem
     val res = raidData.getRaidNameById(raidID)
 
     return res ?: ""

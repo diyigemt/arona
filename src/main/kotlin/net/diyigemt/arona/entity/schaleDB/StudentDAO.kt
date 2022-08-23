@@ -1,6 +1,7 @@
 package net.diyigemt.arona.entity.schaleDB
 
 import net.diyigemt.arona.util.scbaleDB.factories.BaseFactory
+import java.time.LocalDate
 
 /**
  *@Author hjn
@@ -125,4 +126,9 @@ data class Weapon(
     val MaxHP100: Int,
     val Name: String,
     val StatLevelUpType: String
+)
+
+data class Birthday(
+  val name : String,
+  val date : LocalDate
 )

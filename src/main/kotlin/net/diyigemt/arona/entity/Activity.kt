@@ -26,5 +26,6 @@ enum class ActivityType(val level: Int) {
   PICK_UP(3), // 卡池
   KABALA(2), // 十字神明特殊活动
   MAINTENANCE(4), // 维护
-  ACTIVITY(2) // 普通活动
+  ACTIVITY(2), // 普通活动
+  BIRTHDAY(5) //生日
 }

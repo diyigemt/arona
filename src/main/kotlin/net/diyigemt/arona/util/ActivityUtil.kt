@@ -42,7 +42,8 @@ object ActivityUtil {
     1 to (Color.WHITE to Color(255, 140, 0)),
     2 to (Color.WHITE to Color(138, 43, 226)),
     3 to (Color.WHITE to Color(16, 126, 247)),
-    4 to (Color.WHITE to Color.RED)
+    4 to (Color.WHITE to Color.RED),
+    5 to (Color.WHITE to Color.GREEN)
   )
   fun fetchJPActivityFromCN(): Pair<List<Activity>, List<Activity>> {
     val document = Jsoup.connect("https://wiki.biligame.com/bluearchive/%E9%A6%96%E9%A1%B5").get()
@@ -335,6 +336,9 @@ object ActivityUtil {
     var result = kotlin.runCatching {
       targetFunction.isAccessible = true
       targetFunction.call()
+    }
+    if (result.isFailure) {
+      result.exceptionOrNull()
     }
     var data = result.getOrDefault(listOf<Activity>() to listOf())
     if (result.isSuccess && (data.first.isNotEmpty() || data.second.isNotEmpty())) return data

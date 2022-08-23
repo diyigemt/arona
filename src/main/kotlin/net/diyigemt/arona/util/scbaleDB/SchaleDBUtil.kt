@@ -1,18 +1,13 @@
 package net.diyigemt.arona.util.scbaleDB
 
-import com.google.gson.Gson
-import com.google.gson.JsonParser
-import com.google.gson.reflect.TypeToken
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.entity.ActivityType
-import net.diyigemt.arona.entity.schaleDB.CommonDAO
-import net.diyigemt.arona.entity.schaleDB.LocalizationDAO
-import net.diyigemt.arona.entity.schaleDB.RaidDAO
-import net.diyigemt.arona.entity.schaleDB.StudentDAO
+import net.diyigemt.arona.entity.schaleDB.*
 import net.diyigemt.arona.util.ActivityUtil
 import net.diyigemt.arona.util.scbaleDB.factories.CalendarFactory
-import org.jsoup.Jsoup
-import java.net.URLEncoder
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 /**
@@ -24,6 +19,7 @@ object SchaleDBUtil {
   lateinit var studentItem : StudentDAO
   lateinit var localizationItem : LocalizationDAO
   lateinit var raidItem : RaidDAO
+  var birthdayList : MutableList<Birthday> = mutableListOf()
 
   fun getGlobalEventData(): Pair<MutableList<Activity>, MutableList<Activity>> {
     val active: MutableList<Activity> = mutableListOf()
@@ -65,6 +61,20 @@ object SchaleDBUtil {
         pending,
         CalendarFactory.getRaidLocalizationName(item.raid),
         type0 = ActivityType.DECISIVE_BATTLE
+      )
+    }
+
+    //Birthday
+    if (birthdayList.isEmpty()) SchaleDBDataSyncService.BirthdayJob().getBirthdayList()
+    for (item in birthdayList){
+      ActivityUtil.doInsert(
+        Calendar.getInstance().time,
+        Date.from(item.date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()),
+        Date.from(item.date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()),
+        active,
+        pending,
+        item.name + "的生日",
+        type0 = ActivityType.BIRTHDAY
       )
     }
 

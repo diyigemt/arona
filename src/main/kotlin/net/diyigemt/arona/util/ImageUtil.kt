@@ -6,7 +6,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.awt.*
 import java.awt.image.BufferedImage
-import java.io.File
 import javax.imageio.ImageIO
 import kotlin.math.max
 
@@ -42,7 +41,7 @@ object ImageUtil {
     // 计算有()备注内容的换行
     val trueRow = table.content.map { cells ->
       return@map if (cells.map outer@ { cell ->
-        return@outer if (cell.content.contains("\n")) 2 else 1
+        return@outer if (cell.content.length > DEFAULT_TABLE_SPLIT_LINE * cell.colspan) 2 else 1
       }.sum() > cells.size) 2 else 1
     }.sum() + 3 // 表头一行 + 标题一行 + 最后出处声明
     val textWidth = table.col * HelperTableColWidth
@@ -78,22 +77,32 @@ object ImageUtil {
     content.forEach {
       drawLine(group, tableBorderOffsetLeft, calcOffsetY(offset = -1) + DEFAULT_TABLE_BORDER_PADDING_TOP, tableLineX - DEFAULT_TABLE_BORDER_PADDING_LEFT, ((DEFAULT_TABLE_BORDER_HEIGHT) * 0.5).toInt())
       var doubleLineFlag = false
-      while (col < table.col) {
-        val target = it[col]
-        val contents = target.content
+
+      // 有换行的情况下垂直居中这一列
+      val needWarp =
+        it.any { cell -> cell.content.length > DEFAULT_TABLE_SPLIT_LINE * cell.colspan }
+      val warpOffsetY = if (needWarp) DOUBLE_LINE_OFFSET else 0
+      it.forEach { tableCell ->
+        val contents = tableCell.content
         // 多行过长进行换行
-        if (contents.contains("\n") && contents.length > DEFAULT_TABLE_SPLIT_LINE * target.colspan) {
-          val a = contents.substringBefore("\n")
-          val b = contents.substringAfter("\n")
-          drawTextAlign(group, a, calcOffsetX(a, col, span = target.colspan), calcOffsetY())
+        if (contents.length > DEFAULT_TABLE_SPLIT_LINE * tableCell.colspan) {
+          val delimiter = contents.substring(DEFAULT_TABLE_SPLIT_LINE - 1, DEFAULT_TABLE_SPLIT_LINE)
+          val a = contents.substringBefore(delimiter) + delimiter
+          val b = contents.substringAfter(delimiter)
+          drawTextAlign(group, a, calcOffsetX(a, col, span = tableCell.colspan), calcOffsetY())
           currentRow++
-          drawTextAlign(group, b, calcOffsetX(b, col, span = target.colspan), calcOffsetY())
+          drawTextAlign(group, b, calcOffsetX(b, col, span = tableCell.colspan), calcOffsetY())
           currentRow--
           doubleLineFlag = true
         } else {
-          drawTextAlign(group, target.content, calcOffsetX(target.content, col, span = target.colspan), calcOffsetY())
+          drawTextAlign(
+            group,
+            tableCell.content,
+            calcOffsetX(tableCell.content, col, span = tableCell.colspan),
+            calcOffsetY() + warpOffsetY
+          )
         }
-        col += target.colspan
+        col += tableCell.colspan
       }
       if (doubleLineFlag) {
         currentRow++

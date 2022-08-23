@@ -13,11 +13,8 @@ import org.jsoup.Jsoup
 import java.awt.Color
 import java.io.File
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.imageio.ImageIO
-import kotlin.math.floor
 import kotlin.math.max
 import kotlin.reflect.jvm.isAccessible
 

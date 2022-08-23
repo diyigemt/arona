@@ -13,26 +13,44 @@ import java.awt.Image
 import java.awt.image.BufferedImage
 import java.io.File
 import java.io.FileOutputStream
+import javax.imageio.ImageIO
 
 const val baseUrl = "https://bluearchive.wikiru.jp/?"
 const val baseImageUrl = "https://bluearchive.wikiru.jp/"
-const val chapterName = "%E7%AB%A0"
+const val ChapterName = "%E7%AB%A0"
 const val tableFlag = "rgn_content"
 
 class TestFetchMainMap {
 
   @Test
   fun testFetchStruct() {
-//    System.setProperty("proxyHost", "127.0.0.1")
-//    System.setProperty("proxyPort", "7890")
+    System.setProperty("proxyHost", "127.0.0.1")
+    System.setProperty("proxyPort", "7890")
+    val final = generateMap(2, "H2-1") ?: return
+    ImageIO.write(final, "png", File("test.png"))
+  }
+
+  @Test
+  fun fetchAllMap() {
+    System.setProperty("proxyHost", "127.0.0.1")
+    System.setProperty("proxyPort", "7890")
+    (2 .. 5).forEach {
+      generateSubChapterList(it).forEach { chapter ->
+        val final = generateMap(it, chapter) ?: return
+        ImageIO.write(final, "png", File("./debug-sandbox/map-cache/${chapter}.png"))
+      }
+    }
+  }
+
+  private fun generateMap(chapter: Int, chapterName: String): BufferedImage? {
     val body = Jsoup
-      .connect("${baseUrl}15${chapterName}/15-3")
+      .connect("${baseUrl}${chapter}${ChapterName}/${chapterName}")
       .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
       .ignoreContentType(true)
       .get()
       .body()
     var testIndex = 1
-    val container = body.getElementById("${tableFlag}${testIndex}") ?: return
+    val container = body.getElementById("${tableFlag}${testIndex}") ?: return null
     val stepTable = container.getElementsByClass("style_table").let {
       return@let if (it.size == 0) {
         body.getElementById("${tableFlag}${++testIndex}")!!.getElementsByClass("style_table")[0]
@@ -40,7 +58,18 @@ class TestFetchMainMap {
         it[0]
       }
     }
-    val img = container.getElementsByTag("img")[0] ?: return
+    val img = container.getElementsByTag("img").let {
+      // 攻略太简单了, 没有配图或者有多余配图
+      return@let if (it.size == 0 || it[0].attr("title").isBlank() || !it[0].attr("title").contains("${chapterName}.jpg")) {
+        val ddd = body.getElementsByTag("a").filter { a ->
+          val name = a.attr("title")
+          return@filter name.isNotBlank() && name.contains(chapterName) && a.getElementsByTag("img").isNotEmpty()
+        }
+        ddd[0].getElementsByTag("img")[0]
+      } else {
+        it[0]
+      }
+    }
     val imgUrl = "${baseImageUrl}${img.attr("data-src")}"
     println(imgUrl)
     val rows = stepTable.getElementsByTag("tr")
@@ -74,6 +103,8 @@ class TestFetchMainMap {
           .replace("を", "向")
           .replace("は上スタートへ", "先向上")
           .replace("は下スタートへ", "先向下")
+          .replace("ワープしない", "不传送")
+          .replace("ワープ", "传送")
         if (c.contains("と位置")) {
           val subIndex = c.indexOf("と位置") - 1
           c = c
@@ -88,7 +119,7 @@ class TestFetchMainMap {
       tableContent.add(content)
     }
     val table = StageMapHelperTable(tableContent.size, tableHeader.size, tableHeader, tableContent)
-    ImageUtil.createStageMapHelper(imgUrl, table)
+    return ImageUtil.createStageMapHelper(chapterName, imgUrl, table)
   }
 
   private fun fetchImg(url: String) {

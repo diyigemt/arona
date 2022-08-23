@@ -1,18 +1,14 @@
 package net.diyigemt.arona.util
-import net.diyigemt.arona.entity.HelperTableColWidth
-import net.diyigemt.arona.entity.StageMapHelperTable
+import net.diyigemt.arona.entity.*
 import net.diyigemt.arona.util.ActivityUtil.DEFAULT_CALENDAR_FONT_SIZE
 import net.diyigemt.arona.util.ActivityUtil.DEFAULT_CALENDAR_LINE_MARGIN
-import net.diyigemt.arona.util.ActivityUtil.DEFAULT_IMAGE_SCALE
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.awt.*
 import java.awt.image.BufferedImage
 import java.io.File
-import java.io.FileOutputStream
 import javax.imageio.ImageIO
 import kotlin.math.max
-import kotlin.math.min
 
 object ImageUtil {
 
@@ -30,7 +26,7 @@ object ImageUtil {
     return img to g
   }
 
-  fun createStageMapHelper(imgUrl: String, table: StageMapHelperTable): BufferedImage? {
+  fun createStageMapHelper(banner: String, imgUrl: String, table: StageMapHelperTable): BufferedImage? {
     val builder = OkHttpClient.Builder()
     val client = builder.build()
     val request = Request.Builder()
@@ -48,47 +44,54 @@ object ImageUtil {
       return@map if (cells.map outer@ { cell ->
         return@outer if (cell.content.contains("\n")) 2 else 1
       }.sum() > cells.size) 2 else 1
-    }.sum() + 1
+    }.sum() + 3 // 表头一行 + 标题一行 + 最后出处声明
     val textWidth = table.col * HelperTableColWidth
-    val bigBaseMapHeight = (baseMap.height / DEFAULT_IMAGE_SCALE).toInt() + 2 * DEFAULT_CALENDAR_FONT_SIZE
-    val width = max((baseMap.width / DEFAULT_IMAGE_SCALE).toInt(), textWidth)
-    val height = bigBaseMapHeight + trueRow * (DEFAULT_CALENDAR_FONT_SIZE + DEFAULT_CALENDAR_LINE_MARGIN)
+    val tableLineX = textWidth - DEFAULT_TABLE_BORDER_PADDING_LEFT
+    val bigBaseMapHeight = (baseMap.height / DEFAULT_TABLE_IMAGE_SCALE).toInt() + 2 * DEFAULT_TABLE_FONT_SIZE
+    val width = max((baseMap.width / DEFAULT_TABLE_IMAGE_SCALE).toInt(), textWidth)
+    val height = bigBaseMapHeight + trueRow * (DEFAULT_TABLE_FONT_SIZE + DEFAULT_TABLE_LINE_MARGIN)
     val img = BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR)
     val g = img.createGraphics()
     g.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS,
       RenderingHints.VALUE_FRACTIONALMETRICS_ON)
     g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
       RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
-    g.font = g.font.deriveFont(Font.PLAIN).deriveFont(DEFAULT_CALENDAR_FONT_SIZE.toFloat())
+    g.font = g.font.deriveFont(Font.PLAIN).deriveFont(DEFAULT_TABLE_FONT_SIZE.toFloat())
     val group = img to g
     val header = table.header
     val content = table.content
     val startX = (img.width - textWidth) / 2
     var currentRow = 0
     fun calcOffsetX(s: String, col: Int, span: Int = 1): Int = startX + col * HelperTableColWidth + (HelperTableColWidth * span - g.fontMetrics.stringWidth(s)) / 2 - DEFAULT_PADDING
-    fun calcOffsetY(row: Int = currentRow, offset: Int = 0): Int = bigBaseMapHeight + DEFAULT_CALENDAR_FONT_SIZE * (row + offset) + DEFAULT_CALENDAR_LINE_MARGIN * (row + offset - 1)
+    fun calcOffsetY(row: Int = currentRow, offset: Int = 0): Int = bigBaseMapHeight + DEFAULT_TABLE_FONT_SIZE * (row + offset) + DEFAULT_TABLE_LINE_MARGIN * (row + offset - 1)
+    val tableBorderOffsetLeft = calcOffsetX(DEFAULT_TABLE_WHITE_SPACE, 0) + DEFAULT_TABLE_BORDER_PADDING_TOP
+    drawTextAlign(group, banner, calcOffsetX(banner, 0, header.size), calcOffsetY() + (DEFAULT_TABLE_FONT_SIZE * 0.5).toInt(), fontSize = (DEFAULT_TABLE_FONT_SIZE * 1.5).toFloat())
+    currentRow = 2
     // 画表头
+    drawLine(group, tableBorderOffsetLeft, calcOffsetY(offset = -1), tableLineX - DEFAULT_TABLE_BORDER_PADDING_LEFT, DEFAULT_TABLE_BORDER_HEIGHT)
     (0 until table.col).forEach {
-      drawText(group, header[it], calcOffsetX(header[it], it), calcOffsetY())
+      drawTextAlign(group, header[it], calcOffsetX(header[it], it), calcOffsetY())
     }
     currentRow++
     // 画内容
     var col = 0
     content.forEach {
+      drawLine(group, tableBorderOffsetLeft, calcOffsetY(offset = -1) + DEFAULT_TABLE_BORDER_PADDING_TOP, tableLineX - DEFAULT_TABLE_BORDER_PADDING_LEFT, ((DEFAULT_TABLE_BORDER_HEIGHT) * 0.5).toInt())
       var doubleLineFlag = false
       while (col < table.col) {
         val target = it[col]
         val contents = target.content
-        if (contents.contains("\n") && contents.length > 12) {
+        // 多行过长进行换行
+        if (contents.contains("\n") && contents.length > DEFAULT_TABLE_SPLIT_LINE * target.colspan) {
           val a = contents.substringBefore("\n")
           val b = contents.substringAfter("\n")
-          drawText(group, a, calcOffsetX(a, col, span = target.colspan), calcOffsetY())
+          drawTextAlign(group, a, calcOffsetX(a, col, span = target.colspan), calcOffsetY())
           currentRow++
-          drawText(group, b, calcOffsetX(b, col, span = target.colspan), calcOffsetY())
+          drawTextAlign(group, b, calcOffsetX(b, col, span = target.colspan), calcOffsetY())
           currentRow--
           doubleLineFlag = true
         } else {
-          drawText(group, target.content, calcOffsetX(target.content, col, span = target.colspan), calcOffsetY())
+          drawTextAlign(group, target.content, calcOffsetX(target.content, col, span = target.colspan), calcOffsetY())
         }
         col += target.colspan
       }
@@ -98,10 +101,13 @@ object ImageUtil {
       currentRow++
       col = 0
     }
-    val send = img.scale(DEFAULT_IMAGE_SCALE)
+    // 画表尾
+    drawLine(group, tableBorderOffsetLeft, calcOffsetY(offset = -1) + DEFAULT_TABLE_LINE_MARGIN, tableLineX - DEFAULT_TABLE_BORDER_PADDING_LEFT, DEFAULT_TABLE_BORDER_HEIGHT)
+    // 画数据来源
+    drawTextAlign(group, "数据来源:https://bluearchive.wikiru.jp/", 0, calcOffsetY() - DEFAULT_TABLE_BORDER_HEIGHT, align = TextAlign.RIGHT, fontSize = DEFAULT_TABLE_FONT_SIZE.toFloat() / 2)
+    val send = img.scale(DEFAULT_TABLE_IMAGE_SCALE)
     send.createGraphics().drawImage(baseMap, null, (send.width - baseMap.width) / 2, 0)
-    ImageIO.write(send, "png", File("test.png"))
-    return null
+    return send
   }
 
   fun init(group: Pair<BufferedImage, Graphics2D>, color: Color) {
@@ -117,25 +123,48 @@ object ImageUtil {
     g.fillRoundRect(x, y, w, h, r, r)
   }
 
-  fun drawText(
+  fun drawLine(
+    group: Pair<BufferedImage, Graphics2D>,
+    x: Int,
+    y: Int,
+    w: Int,
+    h: Int,
+    type: LineType = LineType.HORIZON,
+    color: Color = Color.BLACK
+  ) {
+    val g = group.second
+    g.color = color
+    when(type) {
+      LineType.HORIZON -> g.fillRect(x, y, w, h)
+      LineType.VERTICAL -> g.fillRect(x, y, h, w)
+    }
+  }
+
+  fun drawTextAlign(
     group: Pair<BufferedImage, Graphics2D>,
     str: String,
     x: Int,
     y: Int,
     align: TextAlign = TextAlign.LEFT,
     color: Color = Color.BLACK,
-    fontWeight: Int = Font.PLAIN
+    fontWeight: Int = Font.PLAIN,
+    fontSize: Float? = null
   ) {
     val g = group.second
     val img = group.first
+    val cacheFont = g.font
     g.color = color
     g.font = g.font.deriveFont(fontWeight)
+    if (fontSize != null) {
+      g.font = g.font.deriveFont(fontSize)
+    }
     val width = g.fontMetrics.stringWidth(str)
     when (align) {
       TextAlign.LEFT -> g.drawString(str, x + DEFAULT_PADDING, y)
       TextAlign.RIGHT -> g.drawString(str, img.width - width - DEFAULT_PADDING, y)
       TextAlign.CENTER -> g.drawString(str, (img.width - x - width) / 2 + x, y)
     }
+    g.font = cacheFont
   }
 
   fun drawText(
@@ -146,7 +175,7 @@ object ImageUtil {
     color: Color = Color.BLACK,
     fontWeight: Int = Font.PLAIN
   ) {
-    drawText(group, str, 0, y, align, color, fontWeight)
+    drawTextAlign(group, str, 0, y, align, color, fontWeight)
   }
 
   fun BufferedImage.scale(x: Float, y: Float, color: Color = Color.WHITE): BufferedImage {
@@ -162,6 +191,10 @@ object ImageUtil {
 
   enum class TextAlign {
     LEFT, RIGHT, CENTER
+  }
+
+  enum class LineType {
+    HORIZON, VERTICAL
   }
 }
 

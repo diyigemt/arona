@@ -10,6 +10,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.imageio.ImageIO
+import kotlin.math.pow
 
 class TestSimple {
 
@@ -101,4 +102,20 @@ class TestSimple {
     print(res)
   }
 
+  @Test
+  fun testRandom() {
+    val times = 10
+    val sigma = (1 .. 5).map {
+      val record = FloatArray(22) { 0f }
+      (1 .. times).forEach { _ ->
+        record[(1 .. 22).random() - 1]++
+      }
+      val avg = record.sum() / 22
+      val sigma = record.sumOf { (it - avg).pow(2).toDouble() }
+      (sigma / times).pow(0.5)
+    }
+    val avg = sigma.sum() / 5
+    val sigma0 = sigma.sumOf { (it - avg).pow(2) }
+    println((sigma0 / 5).pow(0.5))
+  }
 }

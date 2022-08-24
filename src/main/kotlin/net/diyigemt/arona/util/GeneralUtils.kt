@@ -30,4 +30,8 @@ object GeneralUtils {
     return if (AronaConfig.endWithSensei.isNotBlank() && !name.endsWith(AronaConfig.endWithSensei)) "${name}${AronaConfig.endWithSensei}" else name
   }
 
+  fun randomInt(bound: Int): Int = (System.currentTimeMillis() % bound).toInt()
+
+  fun randomInt2(): Int = System.currentTimeMillis().toString().substring()
+
 }

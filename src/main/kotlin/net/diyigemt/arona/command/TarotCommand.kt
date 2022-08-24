@@ -7,6 +7,7 @@ import net.diyigemt.arona.db.tarot.Tarot
 import net.diyigemt.arona.db.tarot.TarotRecord
 import net.diyigemt.arona.db.tarot.TarotRecordTable
 import net.diyigemt.arona.service.AronaService
+import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.GeneralUtils.queryTeacherNameFromDB
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.SimpleCommand
@@ -44,7 +45,7 @@ object TarotCommand : SimpleCommand(
         return
       }
     }
-    val tarotIndex = (1 .. TarotCount).random()
+    val tarotIndex = GeneralUtils.randomInt(TarotCount) + 1
     val tarot0 = query {
       Tarot.findById(tarotIndex)
     }!!

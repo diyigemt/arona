@@ -32,6 +32,8 @@ object GeneralUtils {
 
   fun randomInt(bound: Int): Int = (System.currentTimeMillis() % bound).toInt()
 
-  fun randomInt2(): Int = System.currentTimeMillis().toString().substring()
+  fun randomInt2(): Boolean = System.currentTimeMillis().toString().let {
+    it.substring(it.length - 1).toInt() % 2 == 0
+  }
 
 }

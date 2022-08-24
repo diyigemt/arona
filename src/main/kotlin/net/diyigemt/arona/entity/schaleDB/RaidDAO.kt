@@ -6,11 +6,11 @@ package net.diyigemt.arona.entity.schaleDB
  */
 data class RaidDAO(
     val Raid: List<Raid>,
-    val SeasonRewardGlobal: List<SeasonRewardGlobal>,
-    val SeasonRewardJp: List<SeasonRewardJp>,
-    val TimeAttack: List<TimeAttack>,
-    val TimeAttackRules: List<TimeAttackRule>,
-    val WorldRaid: List<WorldRaid>
+//    val SeasonRewardGlobal: List<SeasonRewardGlobal>,
+//    val SeasonRewardJp: List<SeasonRewardJp>,
+//    val TimeAttack: List<TimeAttack>,
+//    val TimeAttackRules: List<TimeAttackRule>,
+//    val WorldRaid: List<WorldRaid>
 ){
   fun getRaidNameById(raidID : Int) : String?{
     for(item in this.Raid){

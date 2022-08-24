@@ -1,41 +1,39 @@
 package net.diyigemt.arona.entity.schaleDB
 
-import net.diyigemt.arona.util.scbaleDB.factories.BaseFactory
-
 /**
  *@Author hjn
  *@Create 2022/8/18
  */
 
 data class LocalizationDAO(
-    val AdaptationType: AdaptationType,
-    val ArmorType: ArmorType,
-    val BossFaction: BossFaction,
-    val BuffName: BuffName,
-    val BuffNameLong: BuffNameLong,
-    val BuffTooltip: BuffTooltip,
-    val BuffType: BuffType,
-    val BulletType: BulletType,
-    val Club: Club,
-    val ConquestMap: ConquestMap,
-    val EnemyRank: EnemyRank,
-    val EnemyTags: EnemyTags,
-    val EventName: EventName,
-    val IsLimited: IsLimited,
-    val ItemCategory: ItemCategory,
-    val NodeQuality: NodeQuality,
-    val NodeTier: NodeTier,
-    val School: School,
-    val SchoolLong: SchoolLong,
-    val SquadType: SquadType,
-    val StageTitle: StageTitle,
-    val StageType: StageType,
-    val Stat: Stat,
-    val TacticRole: TacticRole,
-    val TimeAttackStage: TimeAttackStage,
-    val WeaponPartExpBonus: WeaponPartExpBonus,
-    val furniture_set: FurnitureSet,
-    val ui: Ui
+//    val AdaptationType: AdaptationType,
+//    val ArmorType: ArmorType,
+//    val BossFaction: BossFaction,
+//    val BuffName: BuffName,
+//    val BuffNameLong: BuffNameLong,
+//    val BuffTooltip: BuffTooltip,
+//    val BuffType: BuffType,
+//    val BulletType: BulletType,
+//    val Club: Club,
+//    val ConquestMap: ConquestMap,
+//    val EnemyRank: EnemyRank,
+//    val EnemyTags: EnemyTags,
+    val EventName: Map<String, String>,
+//    val IsLimited: Map<String, String>,
+//    val ItemCategory: ItemCategory,
+//    val NodeQuality: Map<String, String>,
+//    val NodeTier: Map<String, String>,
+//    val School: School,
+//    val SchoolLong: SchoolLong,
+//    val SquadType: SquadType,
+//    val StageTitle: StageTitle,
+//    val StageType: StageType,
+//    val Stat: Stat,
+//    val TacticRole: TacticRole,
+//    val TimeAttackStage: TimeAttackStage,
+//    val WeaponPartExpBonus: WeaponPartExpBonus,
+//    val furniture_set: Map<String, String>,
+//    val ui: Ui
 )
 
 data class AdaptationType(
@@ -365,33 +363,6 @@ data class EnemyTags(
     val EnemyXLarge: String
 )
 
-data class EventName(
-    val `10801`: String,
-    val `10802`: String,
-    val `10803`: String,
-    val `701`: String,
-    val `801`: String,
-    val `802`: String,
-    val `803`: String,
-    val `804`: String,
-    val `805`: String,
-    val `806`: String,
-    val `808`: String,
-    val `809`: String,
-    val `810`: String,
-    val `811`: String,
-    val `812`: String,
-    val `813`: String,
-    val `814`: String,
-    val `815`: String,
-    val `816`: String
-): BaseFactory()
-
-data class IsLimited(
-    val `1`: String,
-    val `2`: String
-)
-
 data class ItemCategory(
     val Artifact: String,
     val Background: String,
@@ -433,17 +404,6 @@ data class ItemCategory(
     val WeaponExpGrowthB: String,
     val WeaponExpGrowthC: String,
     val WeaponExpGrowthZ: String
-)
-
-data class NodeQuality(
-    val `1`: String,
-    val `2`: String
-)
-
-data class NodeTier(
-    val `1`: String,
-    val `2`: String,
-    val `3`: String
 )
 
 data class School(
@@ -556,18 +516,6 @@ data class WeaponPartExpBonus(
     val WeaponExpGrowthB: String,
     val WeaponExpGrowthC: String,
     val WeaponExpGrowthZ: String
-)
-
-data class FurnitureSet(
-    val `100`: String,
-    val `101`: String,
-    val `102`: String,
-    val `103`: String,
-    val `104`: String,
-    val `105`: String,
-    val `106`: String,
-    val `107`: String,
-    val `108`: String
 )
 
 data class Ui(

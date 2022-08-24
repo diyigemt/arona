@@ -1,6 +1,5 @@
 package net.diyigemt.arona.util.scbaleDB
 
-import net.diyigemt.arona.Arona
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.entity.ActivityType
 import net.diyigemt.arona.entity.schaleDB.*

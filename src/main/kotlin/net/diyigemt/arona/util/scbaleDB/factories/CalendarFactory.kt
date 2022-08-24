@@ -13,7 +13,7 @@ import net.diyigemt.arona.util.scbaleDB.SchaleDBUtil
 object CalendarFactory {
   fun getEventLocalizationName(eventID : Int) : String{
     val localizationData: LocalizationDAO = SchaleDBUtil.localizationItem
-    val res = localizationData.EventName.getValueById(eventID)
+    val res = localizationData.EventName[eventID.toString()]
 
     return res ?: ""
   }

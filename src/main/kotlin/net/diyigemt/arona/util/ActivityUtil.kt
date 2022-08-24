@@ -321,16 +321,20 @@ object ActivityUtil {
 
   private fun fetchJPActivityFromGameKee(): Pair<List<Activity>, List<Activity>> = GameKeeUtil.getEventData()
 
+  private fun fetchJPActivityFromSchaleDB(): Pair<List<Activity>, List<Activity>> = SchaleDBUtil.getJPEventData()
+
   fun fetchJPActivity(): Pair<List<Activity>, List<Activity>> {
     val list = mutableListOf(
       ActivityUtil::fetchJPActivityFromCN,
       ActivityUtil::fetchJPActivityFromJP,
-      ActivityUtil::fetchJPActivityFromGameKee
+      ActivityUtil::fetchJPActivityFromGameKee,
+      ActivityUtil::fetchJPActivityFromSchaleDB
     )
     val targetFunction = when(AronaNotifyConfig.defaultJPActivitySource) {
       ActivityJPSource.B_WIKI -> ActivityUtil::fetchJPActivityFromCN
       ActivityJPSource.WIKI_RU -> ActivityUtil::fetchJPActivityFromJP
       ActivityJPSource.GAME_KEE -> ActivityUtil::fetchJPActivityFromGameKee
+      ActivityJPSource.SCHALE_DB -> ActivityUtil::fetchJPActivityFromSchaleDB
     }
     list.remove(targetFunction)
     var result = kotlin.runCatching {
@@ -487,6 +491,8 @@ object ActivityUtil {
     return activity
   }
 
+  private fun extraActivityJPTypeFromSchaleDB(activity: Activity) : Activity = activity
+
   /**
    * 插入活动并对活动进行分类
    * @param now 当前时间
@@ -496,7 +502,7 @@ object ActivityUtil {
    * @param pending 即将开始的活动列表
    * @param contentSource 活动内容
    * @param katakana 额外帮助判断活动类型的内容
-   * @param contentSourceJP 若是日服的活动, 那么数据来源是日服wiki还是b站wiki或者game_kee
+   * @param contentSourceJP 若是日服的活动, 那么数据来源是日服wiki还是b站wiki还是game_kee或者Schale_DB
    * @param type0 已知的活动类型(国际服才有)
    */
   fun doInsert(
@@ -525,6 +531,7 @@ object ActivityUtil {
         ActivityJPSource.B_WIKI -> extraActivityJPTypeFromCN(activity)
         ActivityJPSource.WIKI_RU -> extraActivityJPTypeFromJPAndTranslate(activity)
         ActivityJPSource.GAME_KEE -> extraActivityJPTypeFromGameKee(activity)
+        ActivityJPSource.SCHALE_DB -> extraActivityJPTypeFromSchaleDB(activity)
       }
     }
     if (now.before(parseStart)) {
@@ -577,7 +584,7 @@ object ActivityUtil {
   }
 
   enum class ActivityJPSource {
-    B_WIKI, WIKI_RU, GAME_KEE
+    B_WIKI, WIKI_RU, GAME_KEE, SCHALE_DB
   }
 
   enum class ActivityENSource {

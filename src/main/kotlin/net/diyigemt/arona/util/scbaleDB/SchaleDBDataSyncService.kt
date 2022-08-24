@@ -68,7 +68,7 @@ object SchaleDBDataSyncService : AronaQuartzService{
   private fun getRaidData() : RaidDAO = getSchaleDBData(raid)
 
   private inline fun <reified T> getSchaleDBData(url : String) : T{
-    val connection = Jsoup.connect(CN + url)
+    val connection = Jsoup.connect(gitHub + url)
       .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
       .header("Content-Type", "application/json;charset=UTF-8")
       .maxBodySize(0)
@@ -79,10 +79,10 @@ object SchaleDBDataSyncService : AronaQuartzService{
       connection.execute().body()
     }
 
-    //国内镜像源寄了，去GitHub，需要代理
+    //GitHub超时，换国内镜像源，可能信息未及时同步
     if (res.isFailure){
       res = kotlin.runCatching {
-        connection.url(gitHub + url).execute().body()
+        connection.url(CN + url).execute().body()
       }
     }
 

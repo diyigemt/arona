@@ -1,9 +1,13 @@
 package org.example.mirai.plugin
 
+import com.google.gson.Gson
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.entity.ActivityType
+import net.diyigemt.arona.entity.schaleDB.CommonDAO
 import net.diyigemt.arona.util.ActivityUtil
 import net.diyigemt.arona.util.WikiruUtil
+import net.diyigemt.arona.util.scbaleDB.SchaleDBDataSyncService
+import net.diyigemt.arona.util.scbaleDB.SchaleDBUtil
 import org.jsoup.Jsoup
 import org.junit.jupiter.api.Test
 import java.io.File
@@ -98,7 +102,8 @@ class TestSimple {
   fun testSchaleDB(){
     System.setProperty("proxyHost", "127.0.0.1")
     System.setProperty("proxyPort", "7890")
-    val res = ActivityUtil.fetchENActivity()
+    SchaleDBDataSyncService.SchaleDBDataSyncJob().getData()
+    val res = SchaleDBUtil.getJPEventData()
     print(res)
   }
 

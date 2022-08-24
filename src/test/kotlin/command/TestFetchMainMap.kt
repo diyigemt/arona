@@ -25,17 +25,18 @@ class TestFetchMainMap {
 
   @Test
   fun testFetchStruct() {
-//    System.setProperty("proxyHost", "127.0.0.1")
-//    System.setProperty("proxyPort", "7890")
-    val final = generateMap(17, "H17-3") ?: return
-    ImageIO.write(final, "png", File("test.png"))
+    System.setProperty("proxyHost", "127.0.0.1")
+    System.setProperty("proxyPort", "7890")
+    val chapter = "16-2"
+    val final = generateMap(16, chapter) ?: return
+    ImageIO.write(final, "png", File("./debug-sandbox/map-cache/${chapter}.png"))
   }
 
   @Test
   fun fetchAllMap() {
-//    System.setProperty("proxyHost", "127.0.0.1")
-//    System.setProperty("proxyPort", "7890")
-    (1 .. 4).forEach {
+    System.setProperty("proxyHost", "127.0.0.1")
+    System.setProperty("proxyPort", "7890")
+    (6 .. 19).forEach {
       generateSubChapterList(it).forEach { chapter ->
         val final = generateMap(it, chapter) ?: return
         ImageIO.write(final, "png", File("./debug-sandbox/map-cache/${chapter}.png"))
@@ -102,7 +103,20 @@ class TestFetchMainMap {
       trueCol = header.size
     }
     (1 until trueCol).forEach {
-      tableHeader.add(header[it].text().substringAfter("部隊"))
+      val source = header[it].text()
+      val type = source.substringAfter("部隊")
+      val pos = source.substringBefore("部隊")
+        .replace("中央", "中")
+        .let { s ->
+        return@let if (s.contains("ボス")) s.replace("ボス", " 路Boss") else "$s 路"
+      }
+      tableHeader.add(
+        pos + type
+          .replace("戦闘なし", "无战斗")
+          .replace("戦闘無し", "无战斗")
+          .replace("戦闘", "战斗")
+          .replace("配置不要", "无需配置")
+      )
     }
     var rowIndex = 1
     rows.forEach { row ->
@@ -118,22 +132,36 @@ class TestFetchMainMap {
           val subIndex = c.indexOf("と位置") - 1
           c = c
             .replace("と位置変更してからワープ", "交换位置后传送")
+            .replace("と位置変更してから", "交换位置后向")
             .replace("と位置交換して", "交换位置后向")
             .replace("と位置変更して", "交换位置后向")
+            .replace("と位置変更後に", "交换位置后向")
+            .replace("と位置変更後", "交换位置后")
           val a = c.substring(0, subIndex - 1)
           val b = c.substring(subIndex)
           c = "${a}与${b}"
         }
         c = c
+          .replace("戦闘なし", "无战斗")
+          .replace("戦闘無し", "无战斗")
+          .replace("戦闘", "战斗")
           .replace("を", "向")
           .replace("は上スタートへ", "回到上出发点")
           .replace("は下スタートへ", "回到下出发点")
           .replace("は左スタートへ", "回到左出发点")
           .replace("は右スタートへ", "回到右出发点")
+          .replace("下スタートへ", "回到下出发点")
           .replace("自タイルクリックしてワープ", "点击自己脚底进行传送")
           .replace("ワープ後に", "传送后向")
+          .replace("ワープして", "传送至")
           .replace("ワープしない", "不传送")
+          .replace("ワープはしない", "不传送")
           .replace("ワープ", "传送")
+          .replace("配置不要", "无需配置")
+          .replace("行動しない", "不动")
+          .replace("動かない", "不动")
+          .replace("待機", "不动")
+          .replace("は", "向")
         content.add(StageMapHelperTable.TableCell(c, colspan))
       }
       tableContent.add(content)

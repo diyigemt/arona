@@ -19,6 +19,14 @@ data class RaidDAO(
 
     return null
   }
+
+  fun isRaidReleased(raidID: Int) : Boolean{
+    for(item in this.Raid){
+      if(item.Id == raidID) return item.IsReleased[0]
+    }
+
+    return false
+  }
 }
 
 data class Raid(

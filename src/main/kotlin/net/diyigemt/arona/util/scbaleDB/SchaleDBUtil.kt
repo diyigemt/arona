@@ -1,13 +1,12 @@
 package net.diyigemt.arona.util.scbaleDB
 
+import net.diyigemt.arona.Arona
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.entity.ActivityType
 import net.diyigemt.arona.entity.schaleDB.*
 import net.diyigemt.arona.util.ActivityUtil
 import net.diyigemt.arona.util.scbaleDB.factories.CalendarFactory
-import java.time.LocalDate
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 /**
@@ -21,12 +20,16 @@ object SchaleDBUtil {
   lateinit var raidItem : RaidDAO
   var birthdayList : MutableList<Birthday> = mutableListOf()
 
-  fun getGlobalEventData(): Pair<MutableList<Activity>, MutableList<Activity>> {
+  fun getGlobalEventData(): Pair<MutableList<Activity>, MutableList<Activity>> = getData(ServerType.GLOBAL)
+
+  fun getJPEventData(): Pair<MutableList<Activity>, MutableList<Activity>> = getData(ServerType.JP)
+
+  private fun getData(type : ServerType) : Pair<MutableList<Activity>, MutableList<Activity>>{
     val active: MutableList<Activity> = mutableListOf()
     val pending: MutableList<Activity> = mutableListOf()
 
     //Characters
-    for (item in commonItem.regions[1].current_gacha) {
+    for (item in commonItem.regions[type.ordinal].current_gacha) {
       ActivityUtil.doInsert(
         Calendar.getInstance().time,
         Date(item.start * 1000),
@@ -34,12 +37,13 @@ object SchaleDBUtil {
         active,
         pending,
         CalendarFactory.getCharacterLocalizationName(item.characters),
-        type0 = ActivityType.PICK_UP
+        contentSourceJP = if (type == ServerType.JP) ActivityUtil.ActivityJPSource.SCHALE_DB else ActivityUtil.ActivityJPSource.GAME_KEE,
+        type0 = if (type == ServerType.GLOBAL) ActivityType.PICK_UP else null
       )
     }
 
     //Events
-    for (item in commonItem.regions[1].current_events) {
+    for (item in commonItem.regions[type.ordinal].current_events) {
       ActivityUtil.doInsert(
         Calendar.getInstance().time,
         Date(item.start * 1000),
@@ -47,20 +51,25 @@ object SchaleDBUtil {
         active,
         pending,
         CalendarFactory.getEventLocalizationName(item.event),
-        type0 = ActivityType.ACTIVITY
+        contentSourceJP = if (type == ServerType.JP) ActivityUtil.ActivityJPSource.SCHALE_DB else ActivityUtil.ActivityJPSource.GAME_KEE,
+        type0 = if (type == ServerType.GLOBAL) ActivityType.ACTIVITY else null
       )
     }
 
     //Raids
-    for (item in commonItem.regions[1].current_raid) {
+    for (item in commonItem.regions[type.ordinal].current_raid) {
+      val raid = CalendarFactory.getRaidById(item.raid)
+      //未开放的活动不予显示
+      if(raid == null || !raid.IsReleased[0]) continue
       ActivityUtil.doInsert(
         Calendar.getInstance().time,
         Date(item.start * 1000),
         Date(item.end * 1000),
         active,
         pending,
-        CalendarFactory.getRaidLocalizationName(item.raid),
-        type0 = ActivityType.DECISIVE_BATTLE
+        raid.NameCn,
+        contentSourceJP = if (type == ServerType.JP) ActivityUtil.ActivityJPSource.SCHALE_DB else ActivityUtil.ActivityJPSource.GAME_KEE,
+        type0 = if (type == ServerType.GLOBAL) ActivityType.DECISIVE_BATTLE else null
       )
     }
 
@@ -74,10 +83,16 @@ object SchaleDBUtil {
         active,
         pending,
         item.name + "的生日",
-        type0 = ActivityType.BIRTHDAY
+        contentSourceJP = if (type == ServerType.JP) ActivityUtil.ActivityJPSource.SCHALE_DB else ActivityUtil.ActivityJPSource.GAME_KEE,
+        type0 = if (type == ServerType.GLOBAL) ActivityType.BIRTHDAY else null
       )
     }
 
     return active to pending
+  }
+
+  enum class ServerType{
+    JP,
+    GLOBAL
   }
 }

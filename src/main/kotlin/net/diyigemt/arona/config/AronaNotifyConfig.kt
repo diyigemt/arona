@@ -36,7 +36,7 @@ object AronaNotifyConfig: AutoSavePluginConfig("arona-notify") {
   @ValueDescription("\"/活动\"指令的默认目标服务器,可选值为 \"JP\"和\"GLOBAL\"")
   val defaultActivityCommandServer: ServerLocale by value(ServerLocale.JP)
 
-  @ValueDescription("\"/活动 jp\"指令的默认数据源,可选值为 \"B_WIKI\", \"WIKI_RU\", 和\"GAME_KEE\"")
+  @ValueDescription("\"/活动 jp\"指令的默认数据源,可选值为 \"B_WIKI\", \"WIKI_RU\", \"GAME_KEE\"和\"SCHALE_DB\"")
   val defaultJPActivitySource: ActivityUtil.ActivityJPSource by value(ActivityUtil.ActivityJPSource.GAME_KEE)
 
   @ValueDescription("\"/活动 en\"指令的默认数据源,可选值为 \"SCHALE_DB\"")

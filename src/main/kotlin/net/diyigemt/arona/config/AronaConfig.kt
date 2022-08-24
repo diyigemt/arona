@@ -33,7 +33,7 @@ object AronaConfig: AutoSavePluginConfig("arona") {
   @ValueDescription("自动检查更新的时间")
   val updateCheckTime: Int by value(8)
 
-  @ValueDescription("获取更新的地址")
+  @ValueDescription("获取更新的地址(无需修改)")
   val updateUrl: String by value("http://arona.diyigemt.net/api/v1/version/")
 
   @ValueDescription("名称是否自动带上后缀,默认是\"老师\"")
@@ -41,5 +41,8 @@ object AronaConfig: AutoSavePluginConfig("arona") {
 
   @ValueDescription("是否允许arona收集匿名统计信息")
   val sendStatus: Boolean by value(false)
+
+  @ValueDescription("识别id(无需修改)")
+  var uuid: String by value("")
 
 }

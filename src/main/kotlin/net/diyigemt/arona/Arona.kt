@@ -43,11 +43,12 @@ import net.mamoe.mirai.message.code.MiraiCode.deserializeMiraiCode
 import net.mamoe.mirai.message.data.MessageChain
 import net.mamoe.mirai.message.data.MessageChain.Companion.deserializeFromMiraiCode
 import net.mamoe.mirai.utils.info
+import kotlin.io.path.absolutePathString
 
 object Arona : KotlinPlugin(
   JvmPluginDescription.loadFromResource()
 ) {
-  private lateinit var arona: Bot
+  lateinit var arona: Bot
   private val INIT: List<InitializedFunction> =
     listOf(
       AronaServiceManager,
@@ -103,6 +104,7 @@ object Arona : KotlinPlugin(
         }
       }
     }
+//    startUpload() // 上传图片获取mirai-code
   }
 
   override fun onDisable() {
@@ -198,6 +200,8 @@ object Arona : KotlinPlugin(
     }
   }
 
+  fun dataFolderPath(): String = Arona.dataFolderPath.absolutePathString()
+
   suspend fun Group.sendTeacherNameMessage(user: UserOrBot, message: String) {
     val name = GeneralUtils.queryTeacherNameFromDB(this, user)
     this.sendMessage(message.replace("\${teacherName}", name))
@@ -224,5 +228,13 @@ object Arona : KotlinPlugin(
   fun verbose(message: () -> String?) = logger.verbose(message())
 
   fun error(message: () -> String?) = logger.error(message())
+
+  fun startUpload() {
+    QuartzProvider.createSimpleDelayJob(20) {
+      runSuspend {
+        GeneralUtils.uploadChapterHelper()
+      }
+    }
+  }
 
 }

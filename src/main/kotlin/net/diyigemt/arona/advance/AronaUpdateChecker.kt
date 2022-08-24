@@ -29,11 +29,15 @@ object AronaUpdateChecker: AronaQuartzService {
 
   class UpdateCheckJob: Job {
     override fun execute(context: JobExecutionContext?) {
-      val get = Jsoup.connect(AronaConfig.updateUrl)
+      val get = Jsoup.connect(url())
         .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
         .ignoreContentType(true)
-        .get()
-      val text = get.body().text()
+        .header("Authorization", AronaConfig.uuid)
+        .execute()
+      val text = get.body()
+      if (AronaConfig.uuid.isBlank()) {
+        AronaConfig.uuid = get.header("Authorization") ?: ""
+      }
       val parseToJsonElement = Json.parseToJsonElement(text)
       val jsonObject = parseToJsonElement.jsonObject["data"]?.jsonObject ?: return
       val version = jsonObject["version"].toString().replace("\"", "")
@@ -48,6 +52,8 @@ object AronaUpdateChecker: AronaQuartzService {
       Arona.sendMessageToAdmin(concat)
     }
   }
+
+  private fun url(): String = "${AronaConfig.updateUrl}?id=${AronaConfig.uuid}&version=${Arona.version}"
 
   override fun enableService() {
     jobKey = QuartzProvider.createCronTask(

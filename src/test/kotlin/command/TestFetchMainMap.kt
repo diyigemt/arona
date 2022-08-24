@@ -36,7 +36,7 @@ class TestFetchMainMap {
   fun fetchAllMap() {
     System.setProperty("proxyHost", "127.0.0.1")
     System.setProperty("proxyPort", "7890")
-    (6 .. 19).forEach {
+    (2 .. 19).forEach {
       generateSubChapterList(it).forEach { chapter ->
         val final = generateMap(it, chapter) ?: return
         ImageIO.write(final, "png", File("./debug-sandbox/map-cache/${chapter}.png"))
@@ -102,13 +102,16 @@ class TestFetchMainMap {
       header = rows.removeAt(0).getElementsByTag("th")
       trueCol = header.size
     }
+    val headerPrefix = header.size > 2
     (1 until trueCol).forEach {
       val source = header[it].text()
       val type = source.substringAfter("部隊")
       val pos = source.substringBefore("部隊")
         .replace("中央", "中")
         .let { s ->
-        return@let if (s.contains("ボス")) s.replace("ボス", " 路Boss") else "$s 路"
+        return@let if (headerPrefix) {
+          if (s.contains("ボス")) s.replace("ボス", "路Boss ") else "${s}路 "
+        } else ""
       }
       tableHeader.add(
         pos + type

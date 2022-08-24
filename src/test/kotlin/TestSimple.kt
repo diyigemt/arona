@@ -3,13 +3,12 @@ package org.example.mirai.plugin
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.entity.ActivityType
 import net.diyigemt.arona.util.ActivityUtil
+import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.WikiruUtil
 import org.jsoup.Jsoup
 import org.junit.jupiter.api.Test
-import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.imageio.ImageIO
 import kotlin.math.pow
 
 class TestSimple {
@@ -27,15 +26,6 @@ class TestSimple {
     instance.set(Calendar.MONTH, 5)
     instance.set(Calendar.DAY_OF_MONTH, instance.get(Calendar.DAY_OF_MONTH) + 6)
     println(instance.get(Calendar.DAY_OF_MONTH))
-  }
-
-  @Test
-  fun testParseInt() {
-    try {
-        "123asd".toInt()
-    } catch (_: Exception) {
-      println(123)
-    }
   }
 
 //  @Test
@@ -108,7 +98,7 @@ class TestSimple {
     val sigma = (1 .. 5).map {
       val record = FloatArray(22) { 0f }
       (1 .. times).forEach { _ ->
-        record[(1 .. 22).random() - 1]++
+        record[GeneralUtils.randomInt(22)]++
       }
       val avg = record.sum() / 22
       val sigma = record.sumOf { (it - avg).pow(2).toDouble() }
@@ -117,5 +107,17 @@ class TestSimple {
     val avg = sigma.sum() / 5
     val sigma0 = sigma.sumOf { (it - avg).pow(2) }
     println((sigma0 / 5).pow(0.5))
+  }
+
+  @Test
+  fun testRandom2() {
+    var a = 0
+    var b = 0
+    (1 .. 10).forEach { _ ->
+      if (GeneralUtils.randomBoolean()) a++ else b++
+      Thread.sleep((1 .. 10).random().toLong())
+    }
+    println(a)
+    println(b)
   }
 }

@@ -49,7 +49,7 @@ object TarotCommand : SimpleCommand(
     val tarot0 = query {
       Tarot.findById(tarotIndex)
     }!!
-    val positive = GeneralUtils.randomInt2()
+    val positive = GeneralUtils.randomBoolean()
     send(user, subject, tarot0, positive)
     if (AronaTarotConfig.dayOne) {
       if (record.isNotEmpty()) {

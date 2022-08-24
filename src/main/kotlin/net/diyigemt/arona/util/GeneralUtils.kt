@@ -42,16 +42,17 @@ object GeneralUtils {
   }
 
   suspend fun uploadChapterHelper() {
-    val imageFile = File(Arona.dataFolderPath() + "/map-cache").listFiles()?.get(0) ?: return
+    val imageFileList = File(Arona.dataFolderPath() + "/map-cache").listFiles() ?: return
     val g = Arona.arona.groups[1002484182]!!
-    val name = imageFile.name
-    val res = imageFile.toExternalResource("png")
-    val upload = g.uploadImage(res)
-    res.closed
-    Arona.info(res.md5.toString())
-    Arona.info(res.sha1.toString())
-    val msg = g.sendMessage(upload)
-    Arona.info("$name ${msg.source.originalMessage.serializeToMiraiCode()}")
+    imageFileList.forEach {
+      val name = it.name
+      val res = it.toExternalResource("png")
+      val upload = g.uploadImage(res)
+      val msg = g.sendMessage(upload)
+      Arona.info("$name ${msg.source.originalMessage.serializeToMiraiCode()}")
+      res.closed
+      Thread.sleep(1000)
+    }
   }
 
 }

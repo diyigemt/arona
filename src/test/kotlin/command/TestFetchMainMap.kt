@@ -34,9 +34,9 @@ class TestFetchMainMap {
 
   @Test
   fun fetchAllMap() {
-    System.setProperty("proxyHost", "127.0.0.1")
-    System.setProperty("proxyPort", "7890")
-    (2 .. 19).forEach {
+//    System.setProperty("proxyHost", "127.0.0.1")
+//    System.setProperty("proxyPort", "7890")
+    (9 .. 19).forEach {
       generateSubChapterList(it).forEach { chapter ->
         val final = generateMap(it, chapter) ?: return
         ImageIO.write(final, "png", File("./debug-sandbox/map-cache/${chapter}.png"))

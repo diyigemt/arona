@@ -11,6 +11,7 @@ import net.diyigemt.arona.db.DataBaseProvider.query
 import net.diyigemt.arona.db.name.TeacherName
 import net.diyigemt.arona.db.name.TeacherNameTable
 import net.diyigemt.arona.entity.ServerResponse
+import net.mamoe.mirai.console.plugin.version
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.message.data.MessageChainBuilder
 import net.mamoe.mirai.message.data.content
@@ -73,10 +74,7 @@ object GeneralUtils {
   }
 
   fun fetchDataFromServerSource(api: String): Response {
-    return Jsoup.connect("$BACKEND_ADDRESS${api}")
-      .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
-      .ignoreContentType(true)
-      .header("Authorization", AronaConfig.uuid)
+    return baseRequest(api)
       .execute()
   }
 
@@ -91,13 +89,15 @@ object GeneralUtils {
       it.isAccessible = true
       map[it.name] = it.call(null).toString()
     }
-    return Jsoup.connect("$BACKEND_ADDRESS${api}")
-      .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
-      .ignoreContentType(true)
-      .header("Authorization", AronaConfig.uuid)
+    return baseRequest(api)
       .data(map)
       .method(Connection.Method.POST)
       .execute()
   }
 
+  fun baseRequest(api: String): Connection = Jsoup.connect("$BACKEND_ADDRESS${api}")
+    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
+    .ignoreContentType(true)
+    .header("Authorization", AronaConfig.uuid)
+    .header("version", Arona.version.toString())
 }

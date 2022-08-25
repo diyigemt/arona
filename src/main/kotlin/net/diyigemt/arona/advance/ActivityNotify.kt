@@ -17,6 +17,7 @@ import org.quartz.JobExecutionContext
 import org.quartz.JobKey
 import java.io.File
 import java.util.*
+import kotlin.math.max
 
 object ActivityNotify: AronaQuartzService {
   private const val ActivityNotifyJobKey = "ActivityNotify"
@@ -24,10 +25,10 @@ object ActivityNotify: AronaQuartzService {
   private const val ActivityNotifyOneHour = "ActivityNotifyOneHour"
   private const val ActivityKey = "activity"
   private const val MaintenanceKey = "maintenance"
+  private const val DropActivityTime = 22
+  private const val DropEndTime = 24 + 3 - DropActivityTime
   override lateinit var jobKey: JobKey
-  override val id: Int = 12
-  override val name: String = "活动推送"
-  override var enable: Boolean = true
+
   class ActivityNotifyJob: Job {
     override fun execute(context: JobExecutionContext?) {
       val jp: Pair<List<Activity>, List<Activity>> = ActivityUtil.fetchJPActivity()
@@ -96,13 +97,14 @@ object ActivityNotify: AronaQuartzService {
       val dropActivities = activity.filter { isMidnightEndActivity(it) }
       activity.removeAll(dropActivities)
       // 非双倍掉落提醒
+      val nowH = instance.get(Calendar.HOUR_OF_DAY)
       if (activity.isNotEmpty()) {
         val h = extraHAndD(activity[0]).first
-        doInsert(activity, instance.get(Calendar.HOUR_OF_DAY) + h - 1)
+        doInsert(activity, nowH + h - 1)
       }
       // 双倍掉落提醒
       if (dropActivities.isNotEmpty()) {
-        doInsert(dropActivities, AronaNotifyConfig.dropNotify)
+        doInsert(dropActivities, DropActivityTime)
       }
     }
 
@@ -111,7 +113,7 @@ object ActivityNotify: AronaQuartzService {
     }
 
     private fun filterPending(activity: Activity): Boolean {
-      val extra = extraHAndD(activity, active = false)
+      val extra = extraHAndD(activity)
       val h = extra.first
       val d = extra.second
       if ((d == 0) && isMaintenanceActivity(activity)) {
@@ -136,7 +138,7 @@ object ActivityNotify: AronaQuartzService {
       NotifyType.ONLY_48H -> d * 24 + h < 48
     }
 
-    private fun extraHAndD(activity: Activity, active: Boolean = true): Pair<Int, Int> {
+    private fun extraHAndD(activity: Activity): Pair<Int, Int> {
       val tmp1 = activity.time.substringBefore("天")
       val d = tmp1.toInt()
       val h = activity.time.substringAfter("天").substringBefore("小时").toInt()
@@ -172,9 +174,8 @@ object ActivityNotify: AronaQuartzService {
         .map { at -> "${at.content}\n" }
         .reduceOrNull { prv, cur -> prv + cur }
       val serverString = MiraiCode.deserializeMiraiCode(if (server) AronaNotifyConfig.notifyStringJP else AronaNotifyConfig.notifyStringEN)
-      val settingDropTime = if (AronaNotifyConfig.dropNotify <= 3) (AronaNotifyConfig.dropNotify + 24) else AronaNotifyConfig.dropNotify
-      val endTime = if (server || isMidnightEndActivity(activity[0])) {
-        27 - settingDropTime
+      val endTime = if (isMidnightEndActivity(activity[0])) {
+        DropEndTime
       } else {
         1
       }
@@ -214,6 +215,10 @@ object ActivityNotify: AronaQuartzService {
       QuartzProvider.triggerTaskWithData(jobKey, mapOf(ActivityNotifyDataInitKey to true))
     }
   }
+
+  override val id: Int = 12
+  override val name: String = "活动推送"
+  override var enable: Boolean = true
 }
 
 // 每日防侠提醒类型

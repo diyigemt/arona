@@ -50,6 +50,12 @@ Please note that for various reasons, developers may **stop updating** or **dele
 
 ## 更新日志
 
+2022-08-21 v1.0.5
+
+1. 添加配置项arona.yml->endWithSensei允许用户设置称呼系统的后缀，默认是"老师"(保留人设)
+2. 添加指令`/叫我 <string>`允许给自己自定义昵称，阿罗娜将会在抽卡、摸头中称呼你，具体使用请看ReadMe的这里[指令详解 1.6昵称系列](#call_me)
+3. 活动推送现在将会使用图片了，比之前的纯文字版好了不少
+
 2022-08-10 v1.0.4
 
 1. 修复防侠失效的问题
@@ -211,6 +217,7 @@ arona一共提供了如下的指令：
 | net.diyigemt.arona:command.hentai        | 所有   | 管理员           | 配置发情关键词回复      |
 | net.diyigemt.arona:command.config        | 所有   | 管理员           | 配置个服务的开关        |
 | net.diyigemt.arona:command.tarot         | 所有   | 好友/陌生人/群员 | 抽一张塔罗牌            |
+| net.diyigemt.arona:command.call_me       | 仅限群 | 群员             | 设置自己的昵称          |
 
 一些解释：
 
@@ -233,6 +240,7 @@ arona一共提供了如下的指令：
 /permission add * net.diyigemt.arona:command.hentai
 /permission add * net.diyigemt.arona:command.config
 /permission add * net.diyigemt.arona:command.tarot
+/permission add * net.diyigemt.arona:command.call_me
 ```
 
 ## 指令详解
@@ -285,6 +293,24 @@ arona一共提供了如下的指令：
 
 `/塔罗牌` 抽取一张塔罗牌
 
+#### 1.6昵称系列<a id="call_me"> </a>
+
+`/叫我` 查询自己的昵称
+
+`/叫我 <string>` 将自己的昵称设置为string
+
+其中名字替换将会在 1.2抽卡系列、arona-nudge的messageList->message、塔罗牌中进行替换
+
+比如arona-nudge.yml的配置为：
+
+```yaml
+messageList: 
+  - message: '${teacherName}别戳了>_<'
+    weight: 1
+```
+
+那么${teacherName}将会被替换为用户设置的昵称（假设为萝莉控，且arona.yml->endWithSensei配置为"老师"），最终结果为"萝莉控老师别戳了>_<"
+
 ### 2.非主动触发指令
 
 #### 2.1 复读
@@ -329,6 +355,7 @@ arona总的配置。
 | offlineMessage          | String       | 下线消息内容                                                 |
 | updateCheckTime         | Int          | 每日检查更新的时间(24小时制)                                 |
 | updateUrl               | String       | 获取更新的地址(一般不用改)                                   |
+| endWithSensei           | String       | 昵称的后缀，默认为"老师"                                     |
 | sendStatus              | Boolean      | 是否允许arona收集匿名统计信息(未实装)                        |
 
 ### 2.arona-service.yml<a id="service-names"> </a>

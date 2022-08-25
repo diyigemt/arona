@@ -50,6 +50,13 @@ Please note that for various reasons, developers may **stop updating** or **dele
 
 ## 更新日志
 
+2022-08-27 v1.0.6
+
+1. 删除配置项arona-notify->dropNotify 双倍掉落结束时间将固定为晚上22点整
+2. 国际服活动信息来源新增[SchaleDB](https://lonqie.github.io/SchaleDB/)，来源更加稳定
+3. 活动信息新增学生生日信息
+4. 添加指令`/地图 <string>`，提供目前主线所有地图(1-1到H19-3)走格子的图文攻略，具体使用请看[这里](#main-map)
+
 2022-08-21 v1.0.5
 
 1. 添加配置项arona.yml->endWithSensei允许用户设置称呼系统的后缀，默认是"老师"(保留人设)
@@ -146,7 +153,7 @@ arona是基于mirai-console的插件。
 
 <details>
     <summary>活动日历:</summary>
-    <img src="static/3.jpg" />
+    <img src="static/activity.png" />
 </details>
 
 <details>
@@ -182,20 +189,24 @@ arona是基于mirai-console的插件。
 
 ## 使用方法
 
-以下需要
-
 1. 在[releases](https://github.com/diyigemt/arona/releases)下载最新版本的jar包并放入mirai-console的`plugins`目录下；
-2. 启动mirai-console，等到显示如下字样后退出：
+2. 由于图片生成使用到了Java的图形库，如果在Linux环境下部署，需要安装额外的包，以下仅给出apt的安装命令，其他Linux发行版请自行搜索对应包的安装
 
-```bash
-2022-07-02 21:27:03 I/arona: arona database init success.
-2022-07-02 21:27:03 I/arona: arona loaded
-2022-07-02 21:27:04 I/arona: arona gacha module init success.
-```
+   ```shell
+   sudo apt update
+   sudo apt install libxrender-dev
 
-3. 在[releases](https://github.com/diyigemt/arona/releases)下载最新版本的arona.db的SQLite文件并替换掉`./data/net.diyigemt.arona/arona.db`文件；
-4. 在`./config/net.diyigemt.arona/`文件夹下根据自己的喜好编辑arona的配置文件，具体内容将会在下一节解释；
-5. 再次运行mirai-console即可享受arona的服务。
+3. 启动mirai-console，等到显示如下字样后退出：
+
+    ```bash
+    2022-07-02 21:27:03 I/arona: arona database init success.
+    2022-07-02 21:27:03 I/arona: arona loaded
+    2022-07-02 21:27:04 I/arona: arona gacha module init success.
+    ```
+
+4. 在[release 1.0.4](https://github.com/diyigemt/arona/releases/tag/v1.0.4)下载最新版本的arona.db的SQLite文件并替换掉`./data/net.diyigemt.arona/arona.db`文件；
+5. 在`./config/net.diyigemt.arona/`文件夹下根据自己的喜好编辑arona的配置文件，具体内容将会在下一节解释；
+6. 再次运行mirai-console即可享受arona的服务。
 
 **注意**，arona的运行依赖`chat-command`插件，你可以在[这里](https://github.com/project-mirai/chat-command)找到它的下载链接
 **本插件依赖的mirai-console版本为2.11.1**
@@ -218,6 +229,7 @@ arona一共提供了如下的指令：
 | net.diyigemt.arona:command.config        | 所有   | 管理员           | 配置个服务的开关        |
 | net.diyigemt.arona:command.tarot         | 所有   | 好友/陌生人/群员 | 抽一张塔罗牌            |
 | net.diyigemt.arona:command.call_me       | 仅限群 | 群员             | 设置自己的昵称          |
+| net.diyigemt.arona:command.trainer       | 所有   | 群员             | 查看主线地图攻略        |
 
 一些解释：
 
@@ -228,7 +240,7 @@ arona一共提供了如下的指令：
 2. 作用域(所有)、权限控制(管理员)指无论通过何种方法向arona发送信息并被其识别，指令即可触发，前提是你位于`arona.yml`文件中的`managerGroup`字段中
 3. 作用域(仅限群)指只有在群中发送的指令才会被arona响应
 
-如果你不是很了解mirai-console的权限管理机制，你可以直接在mirai-console的界面中运行以下命令来直接激活arona的对应指令权限：
+因为本插件的指令依附于mirai-console，必须现在其中给予指令的执行权限才能在群聊中使用指令，因此如果你不是很了解mirai-console的权限管理机制，你可以直接在mirai-console的界面中运行以下命令来直接激活arona的对应指令权限：
 
 ```bash
 /permission add * net.diyigemt.arona:command.active
@@ -241,6 +253,7 @@ arona一共提供了如下的指令：
 /permission add * net.diyigemt.arona:command.config
 /permission add * net.diyigemt.arona:command.tarot
 /permission add * net.diyigemt.arona:command.call_me
+/permission add * net.diyigemt.arona:command.trainer
 ```
 
 ## 指令详解
@@ -311,6 +324,19 @@ messageList:
 
 那么${teacherName}将会被替换为用户设置的昵称（假设为萝莉控，且arona.yml->endWithSensei配置为"老师"），最终结果为"萝莉控老师别戳了>_<"
 
+#### 1.7主线地图攻略系列<a id="main-map"> </a>
+
+`/攻略 <string>`查看主线地图走格子的图文攻略，大概长这样
+
+<details>
+    <summary>H19-3图文攻略:</summary>
+    <img src="static/main-map.png" />
+</details>
+
+其中`string`内容为1-1至H19-3之间，如查看主线普通地图5-3的攻略，指令为`/攻略 5-3`；
+
+查看主线困难地图H19-3的攻略，指令为`/攻略 H19-3`
+
 ### 2.非主动触发指令
 
 #### 2.1 复读
@@ -353,8 +379,7 @@ arona总的配置。
 | onlineMessage           | String       | 上线消息内容                                                 |
 | sendOfflineMessage      | Boolean      | 是否发送arona下线消息                                        |
 | offlineMessage          | String       | 下线消息内容                                                 |
-| updateCheckTime         | Int          | 每日检查更新的时间(24小时制)                                 |
-| updateUrl               | String       | 获取更新的地址(一般不用改)                                   |
+| updateCheckTime         | Int          | 每日检查更新的时间(24小时制)                                  |
 | endWithSensei           | String       | 昵称的后缀，默认为"老师"                                     |
 | sendStatus              | Boolean      | 是否允许arona收集匿名统计信息(未实装)                        |
 
@@ -381,6 +406,9 @@ arona总的配置。
 | 自动更新检查 | 14 | Boolean       | 是否开启每日更新检查功能 |
 | 合并转发 | 15 | Boolean       | 是否开启多图合并转发功能(暂时没做) |
 | 塔罗牌 | 16 | Boolean       | 是否开启塔罗牌指令    |
+| 自定义昵称 | 18 | Boolean | 是否启用自定义昵称 |
+| 数据同步服务 | 19 | Boolean | 是否自动从SchaleDB同步活动消息 |
+| 地图攻略 | 20 | Boolean | 是否启用地图攻略功能 |
 
 ### 3.arona-gacha.yml
 
@@ -415,7 +443,7 @@ arona总的配置。
 
 防侠通知模块设置。**注意**，时间按24小时计。
 
-除了双倍掉落需要额外配置外，防侠提醒会在活动结束前1个小时进行，因为双倍掉落是在晚上3点结束，2点提醒有点阴间。
+除了双倍掉落提醒时间为晚上22点外，防侠提醒会在活动结束前1个小时进行，因为双倍掉落是在晚上3点结束，2点提醒有点阴间。
 
 | 键                           | 属性    | 作用                                                         |
 | ---------------------------- | ------- | ------------------------------------------------------------ |
@@ -426,7 +454,6 @@ arona总的配置。
 | notifyStringJP               | Int     | 日服防侠提醒开头文字                                         |
 | enableEN                     | Boolean | 是否启用国际服防侠提醒                                       |
 | notifyStringEN               | Int     | 国际服防侠提醒开头文字                                       |
-| dropNotify                   | Int     | 双倍掉落防侠提醒的时间(因为一般是晚上3点结束)                |
 | defaultActivityCommandServer | Enum    | "/活动"指令的默认目标服务器,可选值为 "JP"和"GLOBAL"          |
 | defaultJPActivitySource      | Enum    | "/活动 jp"指令的默认数据源,可选值为 "B_WIKI", "WIKI_RU", 和"GAME_KEE" |
 
@@ -653,20 +680,29 @@ cid:这个就比较复杂了，首先你需要知道你所使用的浏览器如�
 </details>
 将这串复制填入`nga.yml`对应的位置即可
 
+**注意**，如果在NGA执行登出操作这段内容可能会失效，需要停止mirai然后更新配置文件至新的内容
+
 ## 鸣谢
+
+**排名不分先后**
+
+[**Haythem723**](https://github.com/Haythem723)(wikiru、SchaleDB爬取模块)
 
 [超级课程表](https://github.com/StageGuard/SuperCourseTimetableBot)(数据库支持)
 
-[碧蓝档案国际服情报站](https://space.bilibili.com/1585224247)(国际服活动信息来源)
+[碧蓝档案国际服情报站](https://space.bilibili.com/1585224247)(国际服信息来源1)
 
-[碧蓝档案wiki](https://wiki.biligame.com/bluearchive/%E9%A6%96%E9%A1%B5)(日服活动信息来源1)
+[SchaleDB](https://lonqie.github.io/SchaleDB/)(国际服信息来源2)
 
-[碧蓝档案wikiru](https://bluearchive.wikiru.jp/)(日服活动信息来源2)
+[碧蓝档案wiki](https://wiki.biligame.com/bluearchive/%E9%A6%96%E9%A1%B5)(日服信息来源1)
 
-[碧蓝档案GameKee](https://ba.gamekee.com/)(日服活动信息来源3)
+[碧蓝档案wikiru](https://bluearchive.wikiru.jp/)(日服信息来源2)
+
+[碧蓝档案GameKee](https://ba.gamekee.com/)(日服信息来源3)
 
 [mirai](https://github.com/mamoe/mirai)(技术支持)
 
+[公主连结图形化活动日历插件](https://github.com/zyujs/pcr_calendar)(图形化活动通知)
+
 非正常学生研究委员会群友(陪我闲聊)
 
-[**Haythem723**](https://github.com/Haythem723)(wikiru爬取模块)

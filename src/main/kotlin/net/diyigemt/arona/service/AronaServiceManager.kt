@@ -157,6 +157,7 @@ object AronaServiceManager: InitializedFunction() {
     EmergencyStopCommand.init()
     CallMeCommand.init()
     SchaleDBDataSyncService.init()
+    TrainerCommand.init()
     AronaServiceConfig.reload()
     AronaServiceConfig.config.forEach {
       if (it.value) {

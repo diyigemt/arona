@@ -8,6 +8,7 @@ import net.diyigemt.arona.config.AronaConfig
 import net.diyigemt.arona.interfaces.InitializedFunction
 import net.diyigemt.arona.quartz.QuartzProvider
 import net.diyigemt.arona.service.AronaQuartzService
+import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.GeneralUtils.clearExtraQute
 import net.mamoe.mirai.console.plugin.version
 import net.mamoe.mirai.console.util.SemVersion
@@ -27,33 +28,25 @@ object AronaUpdateChecker: AronaQuartzService {
     registerService()
   }
 
+  data class VersionInfo(
+    val version: String,
+    val newFuture: List<String>
+  )
+
   class UpdateCheckJob: Job {
     override fun execute(context: JobExecutionContext?) {
-      val get = Jsoup.connect(url())
-        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
-        .ignoreContentType(true)
-        .header("Authorization", AronaConfig.uuid)
-        .execute()
-      val text = get.body()
-      if (AronaConfig.uuid.isBlank()) {
-        AronaConfig.uuid = get.header("Authorization") ?: ""
-      }
-      val parseToJsonElement = Json.parseToJsonElement(text)
-      val jsonObject = parseToJsonElement.jsonObject["data"]?.jsonObject ?: return
-      val version = jsonObject["version"].toString().replace("\"", "")
-      val nowVersion = SemVersion(version)
+      val response = GeneralUtils.fetchDataFromServer<VersionInfo>("/version")
+      val version = response.data.version
+      val nowVersion = SemVersion(version.replace("v", ""))
       if (Arona.version == nowVersion) return
-      val newFuture = jsonObject["newFuture"]?.jsonArray
-        ?.mapIndexed { index, element ->
-          "${index + 1}.${clearExtraQute(element.toString())}"
-        }?.joinToString("\n")
-        ?: return
+      val newFuture = response.data.newFuture
+        .mapIndexed { index, element ->
+          "${index + 1}. $element}"
+        }.joinToString("\n")
       val concat = "检测到版本更新,当前版本:${Arona.version}, 新版本:${nowVersion}\n更新日志:\n${newFuture}"
       Arona.sendMessageToAdmin(concat)
     }
   }
-
-  private fun url(): String = "${AronaConfig.updateUrl}?id=${AronaConfig.uuid}&version=${Arona.version}"
 
   override fun enableService() {
     jobKey = QuartzProvider.createCronTask(

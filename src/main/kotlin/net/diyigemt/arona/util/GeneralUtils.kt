@@ -1,19 +1,31 @@
 package net.diyigemt.arona.util
 
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import net.diyigemt.arona.Arona
+import net.diyigemt.arona.advance.AronaUpdateChecker
 import net.diyigemt.arona.command.CallMeCommand
 import net.diyigemt.arona.config.AronaConfig
 import net.diyigemt.arona.db.DataBaseProvider.query
 import net.diyigemt.arona.db.name.TeacherName
 import net.diyigemt.arona.db.name.TeacherNameTable
+import net.diyigemt.arona.entity.ServerResponse
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.message.data.MessageChainBuilder
 import net.mamoe.mirai.message.data.content
 import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
 import org.jetbrains.exposed.sql.and
+import org.jsoup.Connection
+import org.jsoup.Connection.Response
+import org.jsoup.Jsoup
 import java.io.File
+import kotlin.reflect.full.memberProperties
+import kotlin.reflect.jvm.isAccessible
 
 object GeneralUtils {
+
+  private const val BACKEND_ADDRESS = "https://arona.diyigemt.net/api/v1"
 
   fun checkService(group: Contact?): Boolean = when(group) {
     is Group -> AronaConfig.groups.contains(group.id)
@@ -53,6 +65,39 @@ object GeneralUtils {
       res.closed
       Thread.sleep(1000)
     }
+  }
+
+  inline fun <reified T> fetchDataFromServer(api: String): ServerResponse<T> {
+    val response = fetchDataFromServerSource(api)
+    return Json.decodeFromString(response.body())
+  }
+
+  fun fetchDataFromServerSource(api: String): Response {
+    return Jsoup.connect("$BACKEND_ADDRESS${api}")
+      .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
+      .ignoreContentType(true)
+      .header("Authorization", AronaConfig.uuid)
+      .execute()
+  }
+
+  inline fun <reified T> sendDataToServer(api: String, data: Any): ServerResponse<T> {
+    val response = sendDataToServerSource(api, data)
+    return Json.decodeFromString(response.body())
+  }
+
+  fun sendDataToServerSource(api: String, data: Any): Response {
+    val map = mutableMapOf<String, String>()
+    data::class.memberProperties.forEach {
+      it.isAccessible = true
+      map[it.name] = it.call(null).toString()
+    }
+    return Jsoup.connect("$BACKEND_ADDRESS${api}")
+      .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
+      .ignoreContentType(true)
+      .header("Authorization", AronaConfig.uuid)
+      .data(map)
+      .method(Connection.Method.POST)
+      .execute()
   }
 
 }

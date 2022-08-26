@@ -1,5 +1,6 @@
 package net.diyigemt.arona.config
 
+import net.diyigemt.arona.advance.NGAImageTranslatePusher
 import net.mamoe.mirai.console.data.AutoSavePluginConfig
 import net.mamoe.mirai.console.data.ValueDescription
 import net.mamoe.mirai.console.data.value
@@ -14,6 +15,9 @@ object NGAPushConfig: AutoSavePluginConfig("nga") {
 
   @ValueDescription("扫描周期(单位min)")
   val checkInterval: Int by value(30)
+
+  @ValueDescription("数据源(主站寄了的时候可以换一下),可选\"MAIN\"(主站)和\"SUB\"(备用站)")
+  val source: NGAImageTranslatePusher.NGASource by value(NGAImageTranslatePusher.NGASource.SUB)
 
   @ValueDescription("要监听的发送者uid以及nga昵称")
   val watch: MutableMap<String, String> by value(

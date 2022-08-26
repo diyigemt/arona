@@ -50,12 +50,16 @@ Please note that for various reasons, developers may **stop updating** or **dele
 
 ## 更新日志
 
-2022-08-27 v1.0.6
+2022-08-27 v1.0.7(饼)
 
 1. 删除配置项arona-notify->dropNotify 双倍掉落结束时间将固定为晚上22点整
 2. 国际服活动信息来源新增[SchaleDB](https://lonqie.github.io/SchaleDB/)，来源更加稳定
 3. 活动信息新增学生生日信息
 4. 添加指令`/地图 <string>`，提供目前主线所有地图(1-1到H19-3)走格子的图文攻略，具体使用请看[这里](#main-map)
+
+2022-08-26 v1.0.6
+
+1. 添加配置项nga.yml->source，可选择nga的数据来源，紧急修复nga主站(ngabbs.com)炸了的问题，默认选择副站
 
 2022-08-21 v1.0.5
 
@@ -500,6 +504,7 @@ NGA图楼推送配置，具体配置方法可以看[下面](#nga-config)
 | uid      | String                    | 你自己的nga uid |
 | cid | String | 你自己的nga cid |
 | checkInterval | Int                | 扫描周期，单位min |
+| source | MAIN / SUB | 配置nga数据来源，可选MAIN或SUB，防止nga炸了 |
 | watch | Map<Int, String> | 监听的nga cid(无须修改) |
 | cache | List<Pair<Int, String>> | 已经推送过的楼层缓存(无须修改) |
 

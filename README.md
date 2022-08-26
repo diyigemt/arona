@@ -50,6 +50,10 @@ Please note that for various reasons, developers may **stop updating** or **dele
 
 ## 更新日志
 
+2022-08-26 v1.0.6
+
+1. 添加配置项nga.yml->source，可选择nga的数据来源，紧急修复nga主站(ngabbs.com)炸了的问题，默认选择副站
+
 2022-08-21 v1.0.5
 
 1. 添加配置项arona.yml->endWithSensei允许用户设置称呼系统的后缀，默认是"老师"(保留人设)
@@ -473,6 +477,7 @@ NGA图楼推送配置，具体配置方法可以看[下面](#nga-config)
 | uid      | String                    | 你自己的nga uid |
 | cid | String | 你自己的nga cid |
 | checkInterval | Int                | 扫描周期，单位min |
+| source | MAIN / SUB | 配置nga数据来源，可选MAIN或SUB，防止nga炸了 |
 | watch | Map<Int, String> | 监听的nga cid(无须修改) |
 | cache | List<Pair<Int, String>> | 已经推送过的楼层缓存(无须修改) |
 

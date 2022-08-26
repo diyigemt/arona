@@ -41,6 +41,7 @@ object NGAImageTranslatePusher : AronaQuartzService {
         }
       }
       val cache = NGAPushConfig.cache
+      val isNew = cache.isEmpty()
       val pending = fetchNGA.filter {
         !cache.any { c -> c.second == it.postId }
       }.also {
@@ -48,7 +49,7 @@ object NGAImageTranslatePusher : AronaQuartzService {
       }
       updateCache(cache, pending)
       val init = context?.mergedJobDataMap?.getBooleanValue(ImageTranslateCheckInitKey) ?: false
-      if (init) {
+      if (init && isNew) {
         return
       }
       pending.map { floor ->
@@ -94,7 +95,7 @@ object NGAImageTranslatePusher : AronaQuartzService {
     val random = Calendar.getInstance().time.time - Random().nextInt(25) + 5
     cookies["lastvisit"] = random.toString()
     cookies["lastpath"] = "/read.php?tid=${cookies["ngaPassportUid"]}"
-    val body = Jsoup.connect("https://ngabbs.com/read.php?tid=30843163")
+    val body = Jsoup.connect("https://${NGAPushConfig.source.url}/read.php?tid=30843163")
       .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
       .ignoreContentType(true)
       .cookies(cookies)
@@ -162,13 +163,17 @@ object NGAImageTranslatePusher : AronaQuartzService {
         return@map builder
           .name(it.key)
           .value(it.value)
-          .domain("ngabbs.com")
+          .domain(NGAPushConfig.source.url)
           .path("/")
           .build()
       }
     }
 
     override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {}
+  }
+
+  enum class NGASource(val url: String) {
+    MAIN("ngabbs.com"), SUB("nga.178.com")
   }
 
   override fun init() {
@@ -180,14 +185,14 @@ object NGAImageTranslatePusher : AronaQuartzService {
       Arona.warning("nga推送配置未初始化,请修改nga.yml配置文件")
       return
     }
+    cookies["ngaPassportUid"] = NGAPushConfig.uid
+    cookies["ngaPassportCid"] = NGAPushConfig.cid
     jobKey = QuartzProvider.createRepeatSingleTask(
       TranslatePusherJob::class.java,
       NGAPushConfig.checkInterval,
       ImageTranslateCheckJobKey,
       ImageTranslateCheckJobKey
     ).first
-    cookies["ngaPassportUid"] = NGAPushConfig.uid
-    cookies["ngaPassportCid"] = NGAPushConfig.cid
     QuartzProvider.createSimpleDelayJob(20) {
       QuartzProvider.triggerTaskWithData(jobKey, mapOf(ImageTranslateCheckInitKey to true))
     }

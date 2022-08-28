@@ -229,10 +229,10 @@ object Arona : KotlinPlugin(
 
   fun error(message: () -> String?) = logger.error(message())
 
-  fun startUpload() {
+  private fun startUpload() {
     QuartzProvider.createSimpleDelayJob(20) {
       runSuspend {
-        GeneralUtils.uploadChapterHelper()
+        GeneralUtils.uploadStudentInfo()
       }
     }
   }

@@ -55,7 +55,15 @@ object GeneralUtils {
   }
 
   suspend fun uploadChapterHelper() {
-    val imageFileList = File(Arona.dataFolderPath() + "/map-cache").listFiles() ?: return
+    doUpload("/map-cache")
+  }
+
+  suspend fun uploadStudentInfo() {
+    doUpload("/student_info")
+  }
+
+  private suspend fun doUpload(path: String) {
+    val imageFileList = File(Arona.dataFolderPath() + path).listFiles() ?: return
     val g = Arona.arona.groups[1002484182]!!
     imageFileList.forEach {
       val name = it.name
@@ -63,8 +71,8 @@ object GeneralUtils {
       val upload = g.uploadImage(res)
       val msg = g.sendMessage(upload)
       Arona.info("$name ${msg.source.originalMessage.serializeToMiraiCode()}")
-      res.closed
       Thread.sleep(1000)
+      res.closed
     }
   }
 

@@ -50,12 +50,12 @@ Please note that for various reasons, developers may **stop updating** or **dele
 
 ## 更新日志
 
-2022-08-27 v1.0.7(饼)
+2022-08-29 v1.0.7-M1(测试版)
 
 1. 删除配置项arona-notify->dropNotify 双倍掉落结束时间将固定为晚上22点整
 2. 国际服活动信息来源新增[SchaleDB](https://lonqie.github.io/SchaleDB/)，来源更加稳定
 3. 活动信息新增学生生日信息
-4. 添加指令`/地图 <string>`，提供目前主线所有地图(1-1到H19-3)走格子的图文攻略，具体使用请看[这里](#main-map)
+4. 添加指令`/攻略<string>`，提供目前主线所有地图(1-1到H19-3)走格子的图文攻略以及巴哈姆特@夜喵貓貓咪喵(asaz5566a)对于目前日服所有已实装学生的评价，具体使用请看[这里](#main-map)
 
 2022-08-26 v1.0.6
 
@@ -233,7 +233,7 @@ arona一共提供了如下的指令：
 | net.diyigemt.arona:command.config        | 所有   | 管理员           | 配置个服务的开关        |
 | net.diyigemt.arona:command.tarot         | 所有   | 好友/陌生人/群员 | 抽一张塔罗牌            |
 | net.diyigemt.arona:command.call_me       | 仅限群 | 群员             | 设置自己的昵称          |
-| net.diyigemt.arona:command.trainer       | 所有   | 群员             | 查看主线地图攻略        |
+| net.diyigemt.arona:command.trainer       | 所有   | 群员             | 查看主线地图和学生攻略  |
 
 一些解释：
 
@@ -294,7 +294,7 @@ arona一共提供了如下的指令：
 
 `/发情 remove {number | @member}` 删除一个发情的监听对象(群友)，其中number为群友qq号，或者直接@群友
 
-#### 1.4不停机配置系列
+#### 1.4 不停机配置系列
 
 其中的string | number可选值可在[这节看到](#service-names)
 
@@ -306,11 +306,11 @@ arona一共提供了如下的指令：
 
 `/配置 状态 `  查询所有功能模块的状态
 
-#### 1.5塔罗牌系列
+#### 1.5 塔罗牌系列
 
 `/塔罗牌` 抽取一张塔罗牌
 
-#### 1.6昵称系列<a id="call_me"> </a>
+#### 1.6 昵称系列<a id="call_me"> </a>
 
 `/叫我` 查询自己的昵称
 
@@ -328,18 +328,28 @@ messageList:
 
 那么${teacherName}将会被替换为用户设置的昵称（假设为萝莉控，且arona.yml->endWithSensei配置为"老师"），最终结果为"萝莉控老师别戳了>_<"
 
-#### 1.7主线地图攻略系列<a id="main-map"> </a>
+#### 1.7 学生与主线地图攻略系列<a id="main-map"> </a>
 
-`/攻略 <string>`查看主线地图走格子的图文攻略，大概长这样
+`/攻略 <string>`查看主线地图走格子或者学生的图文攻略。
+
+其中学生攻略来源于[巴哈姆特@夜喵貓貓咪喵(asaz5566a)](https://wall.gamer.com.tw/user.php?userId=asaz5566a)
+
+大概长这样
 
 <details>
     <summary>H19-3图文攻略:</summary>
     <img src="static/main-map.png" />
 </details>
+<details>
+    <summary>学生攻略:</summary>
+    <img src="static/student-rank.png" />
+</details>
 
-其中`string`内容为1-1至H19-3之间，如查看主线普通地图5-3的攻略，指令为`/攻略 5-3`；
+其中`string`内容为1-1至H19-3之间或者学生的名字/黑话(可能收集不全)，如查看主线普通地图5-3的攻略，指令为`/攻略 5-3`；
 
-查看主线困难地图H19-3的攻略，指令为`/攻略 H19-3`
+查看主线困难地图H19-3的攻略，指令为`/攻略 H19-3`；
+
+查看佑香的攻略，指令为`/攻略 佑香`或者`/攻略 没包人`?。
 
 ### 2.非主动触发指令
 
@@ -692,6 +702,8 @@ cid:这个就比较复杂了，首先你需要知道你所使用的浏览器如�
 **排名不分先后**
 
 [**Haythem723**](https://github.com/Haythem723)(wikiru、SchaleDB爬取模块)
+
+[巴哈姆特@夜喵貓貓咪喵(asaz5566a)](巴哈姆特@夜喵貓貓咪喵(asaz5566a))(学生攻略)
 
 [超级课程表](https://github.com/StageGuard/SuperCourseTimetableBot)(数据库支持)
 

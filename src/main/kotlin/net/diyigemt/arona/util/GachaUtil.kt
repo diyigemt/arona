@@ -4,15 +4,13 @@ package net.diyigemt.arona.util
 
 import net.diyigemt.arona.command.cache.GachaCache
 import net.diyigemt.arona.config.AronaGachaConfig
-import net.diyigemt.arona.config.AronaGachaLimitConfig
 import net.diyigemt.arona.db.DataBaseProvider
-import net.diyigemt.arona.db.gacha.GachaCharacter
-import net.diyigemt.arona.db.gacha.GachaHistory
-import net.diyigemt.arona.db.gacha.GachaHistoryTable
+import net.diyigemt.arona.db.gacha.*
 import org.jetbrains.exposed.sql.and
 
 object GachaUtil {
-  const val star = "★"
+  private const val star = "★"
+
   fun pickup(): GachaCharacter {
     val maxDot = pow10(AronaGachaConfig.maxDot)
     val star1Rate = (AronaGachaConfig.star1Rate * maxDot).toInt()
@@ -60,35 +58,43 @@ object GachaUtil {
       rollList(list)
     }
 
-  fun checkTime(userId: Long, time: Int = 10): Int {
-    AronaGachaLimitConfig.update()
-    val limit = AronaGachaLimitConfig.limit
+  fun checkTime(userId: Long, group: Long, time: Int = 10): Int {
+    GachaLimitTable.update()
+    val limit = AronaGachaConfig.limit
     if (limit == 0) return time
-    val record = AronaGachaLimitConfig.record
-    val filter = record.filter { it.first == userId }
-    if (filter.isEmpty()) {
-      return if ((limit - time) > 0) {
-        record.add(Pair(userId, time))
-        time
-      } else {
-        record.add(Pair(userId, limit))
-        limit
-      }
-    }
-    val target = filter[0]
-    record.remove(target)
-    val history = target.second
+    val record = getLimit(userId, group)
+    val history = record.count
     val time2 = history + time
-    return if ((limit - time2) >= 0) {
-      record.add(Pair(userId, time2))
+    val add = if ((limit - time2) >= 0) {
       time
     } else {
-      record.add(Pair(userId, limit))
       limit - history
+    }
+    updateLimit(userId, group, add)
+    return add
+  }
+
+  private fun getLimit(userId: Long, group0: Long): GachaLimit = DataBaseProvider.query {
+    val findList =
+      GachaLimit.find { (GachaLimitTable.id eq userId) and (GachaLimitTable.group eq group0) }
+        .toList()
+    if (findList.isEmpty()) return@query GachaLimit.new(userId) {
+      group = group0
+      count = 0
+    }
+    findList[0]
+  }!!
+
+  private fun updateLimit(userId: Long, group0: Long, add: Int) {
+    DataBaseProvider.query {
+      val target =
+        GachaLimit.find { (GachaLimitTable.id eq userId) and (GachaLimitTable.group eq group0) }
+          .toList()[0]
+      target.count += add
     }
   }
 
-  fun getHistory(group0: Long, userId: Long, targetPool: Int = AronaGachaConfig.activePool): GachaHistory = DataBaseProvider.query {
+  fun getHistory(userId: Long, group0: Long, targetPool: Int = AronaGachaConfig.activePool): GachaHistory = DataBaseProvider.query {
     val findList =
       GachaHistory.find { (GachaHistoryTable.id eq userId) and (GachaHistoryTable.pool eq targetPool) and (GachaHistoryTable.group eq group0) }
         .toList()
@@ -102,7 +108,7 @@ object GachaUtil {
     findList[0]
   }!!
 
-  fun updateHistory(group: Long, userId: Long, pool: Int = AronaGachaConfig.activePool, addPoints: Int = 10, addCount3: Int = 0, dog: Boolean = false) {
+  fun updateHistory(userId: Long, group: Long, pool: Int = AronaGachaConfig.activePool, addPoints: Int = 10, addCount3: Int = 0, dog: Boolean = false) {
     DataBaseProvider.query {
       val target =
         GachaHistory.find { (GachaHistoryTable.id eq userId) and (GachaHistoryTable.pool eq pool) and (GachaHistoryTable.group eq group) }

@@ -26,11 +26,15 @@ object AronaGachaConfig: AutoSavePluginConfig("arona-gacha") {
   @ValueDescription("当前激活的池子")
   var activePool: Int by value(1)
 
-  @ValueDescription("是否撤回结果信息防止刷屏")
-  val revoke: Boolean by value(true)
-
-  @ValueDescription("撤回时间间隔(单位为秒)")
+  @ValueDescription("撤回结果信息防止刷屏 撤回时间间隔(单位为秒) 为0表示不撤回")
   val revokeTime: Int by value(10)
+
+  @ValueDescription("每日限制次数, 0表示不限制")
+  val limit: Int by value(0)
+
+  @ValueDescription("上次限制更新时间,自动维护")
+  var day: Int by value(0)
+
 
   var maxDot: Int = 10
 

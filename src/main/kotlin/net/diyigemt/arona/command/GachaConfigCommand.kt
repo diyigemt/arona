@@ -3,9 +3,9 @@ package net.diyigemt.arona.command
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.command.cache.GachaCache
 import net.diyigemt.arona.config.AronaGachaConfig
-import net.diyigemt.arona.config.AronaGachaLimitConfig
 import net.diyigemt.arona.db.DataBaseProvider.query
 import net.diyigemt.arona.db.gacha.GachaHistoryTable
+import net.diyigemt.arona.db.gacha.GachaLimitTable
 import net.diyigemt.arona.service.AronaManageService
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.CompositeCommand
@@ -36,8 +36,8 @@ object GachaConfigCommand : CompositeCommand(
     query {
       GachaHistoryTable.deleteWhere { (GachaHistoryTable.pool eq pool) and (GachaHistoryTable.group eq (subject as Group).id) }
     }
-    AronaGachaLimitConfig.forceUpdate()
-    subject.sendMessage("历史记录清除成功")
+    GachaLimitTable.forceUpdate(if (subject is Group) subject.id else null)
+    subject.sendMessage("历史记录重置成功")
   }
 
   override val id: Int = 1

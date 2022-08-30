@@ -2,10 +2,7 @@ package net.diyigemt.arona.db
 
 import net.diyigemt.arona.command.cache.GachaCache
 import net.diyigemt.arona.db.DataBaseProvider.query
-import net.diyigemt.arona.db.gacha.GachaCharacterTable
-import net.diyigemt.arona.db.gacha.GachaHistoryTable
-import net.diyigemt.arona.db.gacha.GachaPoolCharacterTable
-import net.diyigemt.arona.db.gacha.GachaPoolTable
+import net.diyigemt.arona.db.gacha.*
 import net.diyigemt.arona.db.name.TeacherNameTable
 import net.diyigemt.arona.db.tarot.TarotRecordTable
 import net.diyigemt.arona.db.tarot.TarotTable
@@ -20,6 +17,7 @@ object GachaDataBase {
         GachaPoolTable,
         GachaPoolCharacterTable,
         GachaHistoryTable,
+        GachaLimitTable,
         TarotTable,
         TarotRecordTable,
         TeacherNameTable

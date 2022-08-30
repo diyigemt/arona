@@ -50,7 +50,14 @@ Please note that for various reasons, developers may **stop updating** or **dele
 
 ## 更新日志
 
-2022-08-29 v1.0.7-M1(测试版)
+2022-09-03 v1.0.7
+
+1. 删除配置文件arona-gacha-limit.yml，原有的配置项移动到arona-gacha.yml配置文件中
+2. 移除配置项arona-gacha->revoke，将功能移动到arona-gacha->revokeTime中
+3. 将抽卡限制记录信息改用数据库存储
+4. 抽卡配置指令支持配置1 2 3 星和pick up出货率，并可以修改每日限制次数和撤回时间间隔
+
+2022-08-29 v1.0.7-M1
 
 1. 删除配置项arona-notify->dropNotify 双倍掉落结束时间将固定为晚上22点整
 2. 国际服活动信息来源新增[SchaleDB](https://lonqie.github.io/SchaleDB/)，来源更加稳定
@@ -139,6 +146,15 @@ arona是基于mirai-console的插件。
 <details>
     <summary>更新检查:</summary>
     <img src="static/9.jpg" />
+</details>
+<details>
+    <summary>主线地图图文攻略:</summary>
+    <img src="static/main-map.png" />
+</details>
+
+<details>
+    <summary>学生攻略:</summary>
+    <img src="static/student-rank.png" />
 </details>
 
 ## 使用方法
@@ -232,11 +248,33 @@ arona一共提供了如下的指令：
 
 `/历史` 查看抽卡历史记录/几抽1个3星
 
+#### 1.3 抽卡配置系列
+
 `/抽卡 setpool <number>`  设置当前池子为数据库中主键为指定的[number]的池子，如果你不知道这是什么意思，你可以看看[这节](#setpool-config) 
 
 `/抽卡 reset` 重置当前池子的抽卡记录
 
-#### 1.3 发情系列
+`/抽卡 1s <number>` 设置1星出货率
+
+`/抽卡 2s <number>` 设置2星出货率
+
+`/抽卡 3s <number>` 设置3星出货率
+
+`/抽卡 rate <number> <number> <number>` 一并设置1、2、3星出货率
+
+`/抽卡 p2s <number>` 设置2星pick up出货率
+
+`/抽卡 p3s <number>` 设置3星pick up出货率
+
+`/抽卡 time <number>` 设置撤回时间
+
+`/抽卡 limit <number>` 设置每日限制次数
+
+`/抽卡 p3s <number>` 设置3星pick up出货率
+
+**注意** 1、2、3星的出货率支持浮点数且和需要等于100，2、3星pick up出货率不能高于各自的总出货率，否则抽卡功能可能不能正常运行
+
+#### 1.4 发情系列
 
 `/发情 adds <string> [number]`  为发情添加一条回复语句(string)并指定权重为number
 
@@ -244,7 +282,7 @@ arona一共提供了如下的指令：
 
 `/发情 remove {number | @member}` 删除一个发情的监听对象(群友)，其中number为群友qq号，或者直接@群友
 
-#### 1.4 不停机配置系列
+#### 1.5 不停机配置系列
 
 其中的string | number可选值可在[这节看到](#service-names)
 
@@ -256,11 +294,11 @@ arona一共提供了如下的指令：
 
 `/配置 状态 `  查询所有功能模块的状态
 
-#### 1.5 塔罗牌系列
+#### 1.6 塔罗牌系列
 
 `/塔罗牌` 抽取一张塔罗牌
 
-#### 1.6 昵称系列<a id="call_me"> </a>
+#### 1.7 昵称系列<a id="call_me"> </a>
 
 `/叫我` 查询自己的昵称
 
@@ -278,7 +316,7 @@ messageList:
 
 那么${teacherName}将会被替换为用户设置的昵称（假设为萝莉控，且arona.yml->endWithSensei配置为"老师"），最终结果为"萝莉控老师别戳了>_<"
 
-#### 1.7 学生与主线地图攻略系列<a id="main-map"> </a>
+#### 1.8 学生与主线地图攻略系列<a id="main-map"> </a>
 
 `/攻略 <string>`查看主线地图走格子或者学生的图文攻略。
 
@@ -290,6 +328,7 @@ messageList:
     <summary>H19-3图文攻略:</summary>
     <img src="static/main-map.png" />
 </details>
+
 <details>
     <summary>学生攻略:</summary>
     <img src="static/student-rank.png" />
@@ -390,20 +429,11 @@ arona总的配置。
 | star2PickupRate | Float   | 2星限定出率百分比        |
 | star3PickupRate | Float   | 3星限定出率百分比        |
 | activePool      | Int     | 当前激活的池子           |
-| revoke          | Boolean | 是否撤回结果信息防止刷屏 |
-| revokeTime      | Int     | 撤回时间间隔(单位为秒) |
+| revokeTime      | Int     | 撤回结果信息防止刷屏 撤回时间间隔(单位为秒) 为0表示不撤回 |
+| day | Int | 保存上一次更新抽卡信息的日期 |
+| limit | Int | 每天每人最多抽几次，设置为0表示不限制 |
 
-### 4.arona-gacha-limit.yml
-
-抽卡限制模块设置。其中**只需要**配置limit字段，另外两个字段由arona自动维护。
-
-| 键         | 属性                   | 作用                                                |
-| ---------- | ---------------------- | --------------------------------------------------- |
-| record     | List\<Pair\<Long,Int>> | 保存抽卡限制信息，Long为群员QQ号，Int为今天抽卡次数 |
-| lastUpdate | Int                    | 保存上一次更新抽卡信息的日期                        |
-| limit      | Int                    | 每天没人最多抽几次，设置为0表示不限制               |
-
-### 5.arona-notify.yml
+### 4.arona-notify.yml
 
 防侠通知模块设置。**注意**，时间按24小时计。
 
@@ -423,7 +453,7 @@ arona总的配置。
 
 假如`defaultActivityCommandServer`配置为`JP`，那么直接执行`/活动`指令也可以得到和执行`/活动 jp`一致的效果<a id="default-activity"> </a>
 
-### 6.arona-nudge.yml
+### 5.arona-nudge.yml
 
 摸头模块配置。
 
@@ -432,7 +462,7 @@ arona总的配置。
 | messageList | List<Data<String, weight>> | 回复消息列表以及权重            |
 | priority    | EventPriority              | 事件优先级，与mirai-console有关 |
 
-### 7.arona-repeat.yml
+### 6.arona-repeat.yml
 
 复读模块配置。
 
@@ -440,7 +470,7 @@ arona总的配置。
 | ----- | ---- | ---------------------------------- |
 | times | Int  | 当一条消息被重复几次后进行一次复读 |
 
-### 8.arona-hentai.yml
+### 7.arona-hentai.yml
 
 发情回怼模块配置。目前只会对消息内容中含有"老婆"或者"老公"字样的消息进行回复。
 
@@ -451,13 +481,13 @@ arona总的配置。
 | messageList | List<Data<String, weight>> | 回复消息列表以及权重 |
 | listen      | List\<Long>                | 监听的群友QQ号       |
 
-### 9.arona-tarot.yml
+### 8.arona-tarot.yml
 塔罗牌配置。
 | 键          | 属性                       | 作用                 |
 | ----------- | -------------------------- | -------------------- |
 | dayOne      | Boolen                    | 是否每天只能抽一张，为true时一天中同一个人在同一个群中的抽卡结果相同 |
 
-### 10.nga.yml
+### 9.nga.yml
 NGA图楼推送配置，具体配置方法可以看[下面](#nga-config)
 | 键          | 属性                       | 作用                 |
 | ----------- | -------------------------- | -------------------- |
@@ -510,7 +540,7 @@ NGA图楼推送配置，具体配置方法可以看[下面](#nga-config)
 
 | 键     | 属性    | 作用                                              |
 | ------ | ------- | ------------------------------------------------- |
-| qq     | BIGINT  | 主键1，也是群员QQ号                               |
+| qq     | BIGINT  | 主键1，是群员QQ号                                 |
 | group  | BIGINT  | 主键2，群员所在群号                               |
 | pool   | INTEGER | 主键3，外键，指向限定池表主键，区分不同池子的记录 |
 | points | INTEGER | 记录这个池子抽了多少发                            |
@@ -530,7 +560,17 @@ NGA图楼推送配置，具体配置方法可以看[下面](#nga-config)
 | 7    | 水大叔池       |
 | 8    | 水千世老板娘池 |
 
-5.Tarot表
+5.GachaLimit表
+
+保存抽卡限制信息
+
+| 键    | 属性    | 作用                |
+| ----- | ------- | ------------------- |
+| qq    | BIGINT  | 主键1，也是群员QQ号 |
+| group | BIGINT  | 主键2，群员所在群号 |
+| count | INTEGER | 今天抽了几次        |
+
+6.Tarot表
 
 保存塔罗牌信息
 
@@ -541,7 +581,7 @@ NGA图楼推送配置，具体配置方法可以看[下面](#nga-config)
 | positive | TEXT | 正位解释 |
 | negative | TEXT | 逆位解释                            |
 
-6.TarotRecord表
+7.TarotRecord表
 
 保存塔罗牌抽取信息信息，当`arona-tarot.yml->dayOne=false`时不使用
 

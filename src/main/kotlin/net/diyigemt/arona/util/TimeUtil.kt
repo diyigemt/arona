@@ -5,6 +5,8 @@ import kotlin.math.floor
 
 object TimeUtil {
 
+  fun today(): Int = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+
   fun calcTime(now: Date, time: Date, future: Boolean = false): String {
     val hour = floor(((time.time - now.time) / 1000 / 60 / 60).toDouble())
     val day = floor(hour / 24).toInt()

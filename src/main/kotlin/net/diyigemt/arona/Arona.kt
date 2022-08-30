@@ -12,14 +12,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import net.diyigemt.arona.Arona.save
-import net.diyigemt.arona.advance.AronaUpdateChecker
-import net.diyigemt.arona.advance.NGAImageTranslatePusher
 import net.diyigemt.arona.config.*
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.extension.CommandInterceptorManager
 import net.diyigemt.arona.extension.CommandResolver
-import net.diyigemt.arona.extension.ExitCommandInterceptor
 import net.diyigemt.arona.handler.GroupRepeaterHandler
 import net.diyigemt.arona.handler.HentaiEventHandler
 import net.diyigemt.arona.handler.NudgeEventHandler
@@ -33,15 +29,16 @@ import net.mamoe.mirai.console.extension.PluginComponentStorage
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
 import net.mamoe.mirai.console.util.ConsoleExperimentalApi
-import net.mamoe.mirai.contact.*
+import net.mamoe.mirai.contact.Contact
+import net.mamoe.mirai.contact.Group
+import net.mamoe.mirai.contact.NormalMember
+import net.mamoe.mirai.contact.UserOrBot
 import net.mamoe.mirai.event.GlobalEventChannel
 import net.mamoe.mirai.event.events.BotOnlineEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
 import net.mamoe.mirai.event.events.NudgeEvent
-import net.mamoe.mirai.message.code.MiraiCode
 import net.mamoe.mirai.message.code.MiraiCode.deserializeMiraiCode
 import net.mamoe.mirai.message.data.MessageChain
-import net.mamoe.mirai.message.data.MessageChain.Companion.deserializeFromMiraiCode
 import net.mamoe.mirai.utils.info
 import kotlin.io.path.absolutePathString
 
@@ -91,7 +88,6 @@ object Arona : KotlinPlugin(
     AronaHentaiConfig.reload()
     AronaRepeatConfig.reload()
     AronaNotifyConfig.reload()
-    AronaGachaLimitConfig.reload()
     NGAPushConfig.reload()
     AronaTarotConfig.reload()
     AronaEmergencyConfig.reload()
@@ -115,7 +111,6 @@ object Arona : KotlinPlugin(
     AronaRepeatConfig.save()
     AronaNotifyConfig.save()
     AronaServiceConfig.save()
-    AronaGachaLimitConfig.save()
     AronaTarotConfig.save()
     AronaEmergencyConfig.save()
     AronaServiceManager.saveServiceStatus()
@@ -198,6 +193,11 @@ object Arona : KotlinPlugin(
         }
       }
     }
+  }
+
+  // 用以支持消息撤回功能
+  suspend fun Contact.sendMessageSave(msg: String) {
+    this.sendMessage(msg)
   }
 
   fun dataFolderPath(): String = Arona.dataFolderPath.absolutePathString()

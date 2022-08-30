@@ -23,7 +23,8 @@ object GachaSingleCommand : SimpleCommand(
   suspend fun MemberCommandSenderOnMessage.gachaOne() {
     if (!GeneralUtils.checkService(subject)) return
     val userId = user.id
-    val checkTime = GachaUtil.checkTime(userId, 1)
+    val groupId = subject.id
+    val checkTime = GachaUtil.checkTime(userId, groupId)
     val teacherName = queryTeacherNameFromDB(subject, user)
     if (checkTime <= 0) {
       subject.sendMessage(MessageUtil.at(user, "${teacherName},石头不够了哦,明天再来抽吧"))
@@ -31,17 +32,17 @@ object GachaSingleCommand : SimpleCommand(
     }
     val result = pickup()
     val stars = result.star
-    val history = GachaUtil.getHistory(subject.id, userId)
+    val history = GachaUtil.getHistory(userId, groupId)
     var star3 = 0
     if (stars == 3) {
       star3 = 1
     }
     val hitPickup = hitPickup(result)
-    GachaUtil.updateHistory(subject.id, userId, addPoints = 1, addCount3 = star3, dog = hitPickup)
+    GachaUtil.updateHistory(userId, groupId, addPoints = 1, addCount3 = star3, dog = hitPickup)
     val s = "${resultData2String(result)}\n${history.points + 1} points"
     val dog = if (hitPickup) "恭喜${teacherName},出货了呢" else ""
     val handler = subject.sendMessage(MessageUtil.atMessageAndCTRL(user, dog, s))
-    if (AronaGachaConfig.revoke) {
+    if (AronaGachaConfig.revokeTime > 0) {
       MessageUtil.recall(handler, AronaGachaConfig.revokeTime * 1000L)
     }
   }

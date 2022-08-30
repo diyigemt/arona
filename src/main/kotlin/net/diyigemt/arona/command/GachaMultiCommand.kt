@@ -25,7 +25,7 @@ object GachaMultiCommand : SimpleCommand(
   suspend fun MemberCommandSenderOnMessage.gachaMulti() {
     if (!GeneralUtils.checkService(subject)) return
     val userId = user.id
-    val checkTime = GachaUtil.checkTime(userId)
+    val checkTime = GachaUtil.checkTime(userId, subject.id)
     val teacherName = queryTeacherNameFromDB(subject, user)
     if (checkTime <= 0) {
       subject.sendMessage(MessageUtil.at(user, "${teacherName},石头不够了哦,明天再来抽吧"))
@@ -45,12 +45,12 @@ object GachaMultiCommand : SimpleCommand(
     val s = result.map { resultData2String(it) }
       .reduceIndexed { index, prv, cur -> if (index == 4) "$prv $cur\n" else "$prv $cur" }
     val hitPickup = result.any { hitPickup(it) }
-    val history = GachaUtil.getHistory(subject.id, userId)
-    GachaUtil.updateHistory(subject.id, userId, addPoints = checkTime, addCount3 = stars3, dog = hitPickup)
+    val history = GachaUtil.getHistory(userId, subject.id)
+    GachaUtil.updateHistory(userId, subject.id, addPoints = checkTime, addCount3 = stars3, dog = hitPickup)
     val dog = if (hitPickup) "恭喜${teacherName},出货了呢" else ""
     val sss = "3星:$stars3 2星:$stars2 1星:$stars1 ${history.points + checkTime} points\n${s}"
     val handler = subject.sendMessage(atMessageAndCTRL(user, dog, sss))
-    if (AronaGachaConfig.revoke) {
+    if (AronaGachaConfig.revokeTime > 0) {
       MessageUtil.recall(handler, AronaGachaConfig.revokeTime * 1000L)
     }
   }

@@ -28,6 +28,7 @@ object AronaUpdateChecker: AronaQuartzService {
     registerService()
   }
 
+  @kotlinx.serialization.Serializable
   data class VersionInfo(
     val version: String,
     val newFuture: List<String>

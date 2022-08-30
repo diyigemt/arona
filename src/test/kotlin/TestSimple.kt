@@ -1,14 +1,15 @@
 package org.example.mirai.plugin
 
-import com.google.gson.Gson
+import net.diyigemt.arona.Arona
+import net.diyigemt.arona.advance.AronaUpdateChecker
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.entity.ActivityType
-import net.diyigemt.arona.entity.schaleDB.CommonDAO
 import net.diyigemt.arona.util.ActivityUtil
 import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.WikiruUtil
 import net.diyigemt.arona.util.scbaleDB.SchaleDBDataSyncService
 import net.diyigemt.arona.util.scbaleDB.SchaleDBUtil
+import net.mamoe.mirai.console.util.SemVersion
 import org.jsoup.Jsoup
 import org.junit.jupiter.api.Test
 import java.text.SimpleDateFormat
@@ -124,5 +125,20 @@ class TestSimple {
     }
     println(a)
     println(b)
+  }
+
+  @Test
+  fun testVersionCheck() {
+    val cur = SemVersion("1.0.6")
+    val response = GeneralUtils.fetchDataFromServer<AronaUpdateChecker.VersionInfo>("/version")
+    val version = response.data.version
+    val nowVersion = SemVersion(version.replace("v", ""))
+    if (cur == nowVersion) return
+    val newFuture = response.data.newFuture
+      .mapIndexed { index, element ->
+        "${index + 1}. $element"
+      }.joinToString("\n")
+    val concat = "检测到版本更新,当前版本:${cur}, 新版本:${nowVersion}\n更新日志:\n${newFuture}"
+    println(concat)
   }
 }

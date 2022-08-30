@@ -44,8 +44,4 @@ class GachaLimit(id: EntityID<Long>): LongEntity(id) {
   companion object: LongEntityClass<GachaLimit>(GachaLimitTable)
   var group by GachaLimitTable.group
   var count by GachaLimitTable.count
-
-  fun a() {
-
-  }
 }

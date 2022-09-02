@@ -158,6 +158,8 @@ object AronaServiceManager: InitializedFunction() {
     CallMeCommand.init()
     SchaleDBDataSyncService.init()
     TrainerCommand.init()
+    GameNameCommand.init()
+    GameNameSearchCommand.init()
     AronaServiceConfig.reload()
     AronaServiceConfig.config.forEach {
       if (it.value) {

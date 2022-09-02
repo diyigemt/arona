@@ -43,7 +43,7 @@ object DataBaseProvider: BaseFunctionProvider() {
         }
       })
       Arona.info("arona database init success.")
-      GachaDataBase.init()
+      BaseDataBase.init()
     }
   }
 

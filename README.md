@@ -56,6 +56,7 @@ Please note that for various reasons, developers may **stop updating** or **dele
 2. 移除配置项arona-gacha->revoke，将功能移动到arona-gacha->revokeTime中
 3. 将抽卡限制记录信息改用数据库存储
 4. 抽卡配置指令支持配置1 2 3 星和pick up出货率，并可以修改每日限制次数和撤回时间间隔
+5. 添加游戏名记录功能，方便对社团进行管理，具体使用请看[这里](#game-name)
 
 2022-08-29 v1.0.7-M1
 
@@ -187,19 +188,21 @@ arona的运行依赖`chat-command`插件，因此在使用arona的指令之前�
 
 arona一共提供了如下的指令：
 
-| 指令权限组                               | 作用域 | 内置权限控制     | 作用                    |
-| ---------------------------------------- | ------ | ---------------- | ----------------------- |
-| net.diyigemt.arona:command.active        | 所有   | 好友/陌生人/群员 | 获取国际服/日服活动状态 |
-| net.diyigemt.arona:command.gacha         | 所有   | 管理员           | 配置抽卡参数            |
-| net.diyigemt.arona:command.gacha_one     | 仅限群 | 群员             | 单抽                    |
-| net.diyigemt.arona:command.gacha_multi   | 仅限群 | 群员             | 十连                    |
-| net.diyigemt.arona:command.gacha_dog     | 仅限群 | 群员             | 查看pickup最小抽取记录  |
-| net.diyigemt.arona:command.gacha_history | 仅限群 | 群员             | 查看抽卡记录            |
-| net.diyigemt.arona:command.hentai        | 所有   | 管理员           | 配置发情关键词回复      |
-| net.diyigemt.arona:command.config        | 所有   | 管理员           | 配置个服务的开关        |
-| net.diyigemt.arona:command.tarot         | 所有   | 好友/陌生人/群员 | 抽一张塔罗牌            |
-| net.diyigemt.arona:command.call_me       | 仅限群 | 群员             | 设置自己的昵称          |
-| net.diyigemt.arona:command.trainer       | 所有   | 群员             | 查看主线地图和学生攻略  |
+| 指令权限组                                  | 作用域 | 内置权限控制     | 作用                     |
+| ------------------------------------------- | ------ | ---------------- | ------------------------ |
+| net.diyigemt.arona:command.active           | 所有   | 好友/陌生人/群员 | 获取国际服/日服活动状态  |
+| net.diyigemt.arona:command.gacha            | 所有   | 管理员           | 配置抽卡参数             |
+| net.diyigemt.arona:command.gacha_one        | 仅限群 | 群员             | 单抽                     |
+| net.diyigemt.arona:command.gacha_multi      | 仅限群 | 群员             | 十连                     |
+| net.diyigemt.arona:command.gacha_dog        | 仅限群 | 群员             | 查看pickup最小抽取记录   |
+| net.diyigemt.arona:command.gacha_history    | 仅限群 | 群员             | 查看抽卡记录             |
+| net.diyigemt.arona:command.hentai           | 所有   | 管理员           | 配置发情关键词回复       |
+| net.diyigemt.arona:command.config           | 所有   | 管理员           | 配置个服务的开关         |
+| net.diyigemt.arona:command.tarot            | 所有   | 好友/陌生人/群员 | 抽一张塔罗牌             |
+| net.diyigemt.arona:command.call_me          | 仅限群 | 群员             | 设置自己的昵称           |
+| net.diyigemt.arona:command.trainer          | 所有   | 群员             | 查看主线地图和学生攻略   |
+| net.diyigemt.arona:command.game_name        | 所有   | 群员             | 让arona记住你的游戏名    |
+| net.diyigemt.arona:command.game_name_search | 所有   | 群员             | 模糊查询游戏名对应的群友 |
 
 一些解释：
 
@@ -224,6 +227,8 @@ arona一共提供了如下的指令：
 /permission add * net.diyigemt.arona:command.tarot
 /permission add * net.diyigemt.arona:command.call_me
 /permission add * net.diyigemt.arona:command.trainer
+/permission add * net.diyigemt.arona:command.game_name
+/permission add * net.diyigemt.arona:command.game_name_search
 ```
 
 ## 指令详解
@@ -339,6 +344,14 @@ messageList:
 查看主线困难地图H19-3的攻略，指令为`/攻略 H19-3`；
 
 查看佑香的攻略，指令为`/攻略 佑香`或者`/攻略 没包人`?。
+
+#### 1.9 游戏名记录<a id="game-name"> </a>
+
+`/游戏名 string` 将自己的游戏名添加到记录中。
+
+`/[谁叫|谁是] string` 根据提供的字符串模糊查询游戏名包含字符串的群友并@出来。
+
+以上命令也可以通过群私聊机器人调用，此时`谁是`指令将只提供游戏内名称并附上对应qq号。
 
 ### 2.非主动触发指令
 

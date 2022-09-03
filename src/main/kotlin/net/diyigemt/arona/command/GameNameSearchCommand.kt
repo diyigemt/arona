@@ -41,7 +41,6 @@ object GameNameSearchCommand : SimpleCommand(
         if (member == null) {
           builder.add("${it.name} (${it.id.value})\n")
         } else {
-          builder.add(At(member))
           builder.add(PlainText("@${member.nameCardOrNick} (${it.name})"))
           builder.add(PlainText("\n"))
         }

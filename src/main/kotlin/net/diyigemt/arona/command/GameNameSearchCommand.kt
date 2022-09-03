@@ -39,10 +39,10 @@ object GameNameSearchCommand : SimpleCommand(
       res.forEach {
         val member = (subject as Group)[it.id.value]
         if (member == null) {
-          builder.add("${it.name}(${it.id.value})\n")
+          builder.add("${it.name} (${it.id.value})\n")
         } else {
           builder.add(At(member))
-          builder.add(PlainText("(${it.name})"))
+          builder.add(PlainText("@${member.nameCardOrNick} (${it.name})"))
           builder.add(PlainText("\n"))
         }
       }

@@ -31,7 +31,7 @@ object GameNameSearchCommand : SimpleCommand(
       GameName.find { GameNameTable.name like "%$myName%" }.toList()
     }!!
     if (res.isEmpty()) {
-      subject.sendMessage("没有叫 '$myName' 的群友")
+      subject.sendMessage("没有游戏名叫 '$myName' 的群友")
     }
     val builder = MessageChainBuilder()
     builder.add("查询结果:\n")

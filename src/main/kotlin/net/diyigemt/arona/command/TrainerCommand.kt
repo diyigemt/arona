@@ -16,6 +16,14 @@ object TrainerCommand : SimpleCommand(
   private val MapRegex: Regex = Regex("^([1-9]\\d?-[1-5])|(H[1-9]\\d?-[1-3])$")
   @Handler
   suspend fun UserCommandSender.trainer(str: String) {
+    if (str == "阿罗娜" || str == "彩奈") {
+      subject.sendMessage("阿罗娜已经被老师攻略啦>_<")
+      return
+    }
+    if (str == "黑服") {
+      subject.sendMessage("南通爬")
+      return
+    }
     val match = MapRegex.matchEntire(str)
     // 地图攻略
     if  (match != null) {

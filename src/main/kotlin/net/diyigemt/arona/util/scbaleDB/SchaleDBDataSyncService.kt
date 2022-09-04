@@ -2,13 +2,22 @@ package net.diyigemt.arona.util.scbaleDB
 
 import com.google.gson.Gson
 import net.diyigemt.arona.Arona
+import net.diyigemt.arona.db.DB
+import net.diyigemt.arona.db.DataBaseProvider
+import net.diyigemt.arona.db.data.schaledb.MD5
 import net.diyigemt.arona.entity.schaleDB.*
 import net.diyigemt.arona.quartz.QuartzProvider
 import net.diyigemt.arona.service.AronaQuartzService
+import okio.ByteString.Companion.toByteString
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.update
 import org.jsoup.Jsoup
 import org.quartz.Job
 import org.quartz.JobExecutionContext
 import org.quartz.JobKey
+import java.security.MessageDigest
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -31,6 +40,7 @@ object SchaleDBDataSyncService : AronaQuartzService{
   private const val student = "data/cn/students.min.json"
   private const val localization = "data/cn/localization.json"
   private const val raid = "data/raids.min.json"
+  private var resString = ""
 
   class SchaleDBDataSyncJob : Job{
     override fun execute(context: JobExecutionContext?) = getData()
@@ -44,9 +54,7 @@ object SchaleDBDataSyncService : AronaQuartzService{
   }
 
   class BirthdayJob : Job{
-    override fun execute(context: JobExecutionContext?) {
-      getBirthdayList()
-    }
+    override fun execute(context: JobExecutionContext?) = getBirthdayList()
 
     fun getBirthdayList() {
       val formatter = DateTimeFormatter.ofPattern("yyyy/M/d")
@@ -59,15 +67,27 @@ object SchaleDBDataSyncService : AronaQuartzService{
     }
   }
 
-  fun getCommonData(): CommonDAO = getSchaleDBData(common)
+  enum class JSONDataType{
+    COMMON,STUDENT,LOCALIZATION,RAID
+  }
 
-  fun getStudentData(): StudentDAO = getSchaleDBData(student)
+  enum class DataBaseType{
+    STUDENT,EVENT,RAID
+  }
 
-  private fun getLocalizationData(): LocalizationDAO = getSchaleDBData(localization)
+  enum class RemoteType{
+    GITHUB, MIRROR
+  }
 
-  private fun getRaidData() : RaidDAO = getSchaleDBData(raid)
+  private fun getCommonData(): CommonDAO = getSchaleDBData(common, JSONDataType.COMMON.name)
 
-  private inline fun <reified T> getSchaleDBData(url : String) : T{
+  private fun getStudentData(): StudentDAO = getSchaleDBData(student, JSONDataType.STUDENT.name)
+
+  private fun getLocalizationData(): LocalizationDAO = getSchaleDBData(localization, JSONDataType.LOCALIZATION.name)
+
+  private fun getRaidData() : RaidDAO = getSchaleDBData(raid, JSONDataType.RAID.name)
+
+  private inline fun <reified T : BaseDAO> getSchaleDBData(url : String, dataType : String) : T{
     val connection = Jsoup.connect(gitHub + url)
       .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
       .header("Content-Type", "application/json;charset=UTF-8")
@@ -75,25 +95,84 @@ object SchaleDBDataSyncService : AronaQuartzService{
       .timeout(3000)
       .ignoreContentType(true)
 
-    var res = kotlin.runCatching {
+    var isGitHub = true
+    var res = runCatching {
       connection.execute().body()
     }
-
-    //GitHub超时，换国内镜像源，可能信息未及时同步
-    if (res.isFailure){
-      res = kotlin.runCatching {
+    res.onFailure {
+      res = runCatching {
+        isGitHub = false
+        //GitHub超时，换国内镜像源。注：可能信息会因镜像源未及时同步而丢掉
         connection.url(CN + url).execute().body()
+      }.onFailure {
+        Arona.warning("获取数据源失败，请检查网络连接")
       }
     }
 
-    if (res.isFailure) Arona.warning("获取数据源失败，请检查网络连接")
+    resString = ""
+    var isUpdate = false
+    val md5 = MessageDigest.getInstance("MD5").digest(res.getOrDefault("").toByteArray()).toByteString().hex()
+    val query = runCatching {
+      DataBaseProvider.query(DB.DATA.ordinal) { MD5.select(MD5.name eq dataType).first() }
+    }.getOrNull()
+    val dao = Gson().fromJson(res.getOrDefault(""), T::class.java)
+    if (query?.getOrNull(MD5.name) != null){
+      resString += "Source: ${query.getOrNull(MD5.name).toString()}"
+      when(query.getOrNull(MD5.remote)){
+        RemoteType.GITHUB.name -> apply {
+          resString += " from GitHub"
+          if (query.getOrNull(MD5.md5) != md5 && isGitHub){
+            dao.sendToDataBase()
+            updateMD5(dataType, RemoteType.GITHUB.name, md5)
+            isUpdate = true
+          } else resString += " already up to date."
+        }
+        else -> apply {
+          resString += " from mirror"
+          if (query.getOrNull(MD5.md5) != md5){
+            dao.sendToDataBase()
+            updateMD5(dataType, RemoteType.MIRROR.name, md5)
+            isUpdate = true
+          } else resString += " already up to date."
+        }
+      }
+    }else{
+      dao.sendToDataBase()
+      if (isGitHub) updateMD5(dataType, RemoteType.GITHUB.name, md5)
+      else updateMD5(dataType, RemoteType.MIRROR.name, md5)
+      isUpdate = true
+    }
+    Arona.info(resString)
 
-    return Gson().fromJson(res.getOrDefault(""), T::class.java)
+    if (isUpdate) return dao
+
+    return dao.toModel(dao)
   }
 
-  override fun init() {
-    registerService()
+  private fun updateMD5(name : String, remote : String, md5 : String){
+    val query = DataBaseProvider.query(DB.DATA.ordinal) { MD5.select(MD5.name eq name).toList() } ?: return
+    if (query.isEmpty()){
+      resString += " updated."
+      DataBaseProvider.query(DB.DATA.ordinal) {
+        MD5.insert {
+          it[MD5.name] = name
+          it[MD5.remote] = remote
+          it[MD5.md5] = md5
+        }
+      }
+    }
+    else{
+      resString += " added."
+      DataBaseProvider.query(DB.DATA.ordinal) {
+        MD5.update({ MD5.name eq name }) {
+          it[MD5.remote] = remote
+          it[MD5.md5] = md5
+        }
+      }
+    }
   }
+
+  override fun init() = registerService()
 
   // TODO start cron task
   override fun enableService() {
@@ -106,10 +185,10 @@ object SchaleDBDataSyncService : AronaQuartzService{
     ).first
     QuartzProvider.triggerTask(jobKey)
 
-    //生日计算，程序启动5秒后进行，每周一刷新
+    //生日计算，程序启动5秒后进行，每天0点刷新
     birthdayJobKey = QuartzProvider.createCronTask(
       BirthdayJob::class.java,
-      "0 0 0 ? * 1 *",
+      "0 0 0 * * ? *",
       BirthdayJobKey,
       BirthdayJobKey
     ).first

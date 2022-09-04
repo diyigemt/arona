@@ -1,5 +1,12 @@
 package net.diyigemt.arona.entity.schaleDB
 
+import net.diyigemt.arona.db.DB
+import net.diyigemt.arona.db.DataBaseProvider
+import net.diyigemt.arona.db.data.schaledb.Localization
+import org.jetbrains.exposed.sql.deleteAll
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.selectAll
+
 /**
  *@Author hjn
  *@Create 2022/8/18
@@ -18,7 +25,7 @@ data class LocalizationDAO(
 //    val ConquestMap: ConquestMap,
 //    val EnemyRank: EnemyRank,
 //    val EnemyTags: EnemyTags,
-    val EventName: Map<String, String>,
+  var EventName: Map<String, String>,
 //    val IsLimited: Map<String, String>,
 //    val ItemCategory: ItemCategory,
 //    val NodeQuality: Map<String, String>,
@@ -34,7 +41,38 @@ data class LocalizationDAO(
 //    val WeaponPartExpBonus: WeaponPartExpBonus,
 //    val furniture_set: Map<String, String>,
 //    val ui: Ui
-)
+) : BaseDAO{
+  override fun sendToDataBase() {
+    DataBaseProvider.query(DB.DATA.ordinal) { Localization.deleteAll() }
+
+    for (item in EventName){
+      DataBaseProvider.query(DB.DATA.ordinal) {
+        Localization.insert {
+          it[tag] = "EventName"
+          it[eventID] = item.key.toInt()
+          it[value] = item.value
+        }
+      }
+    }
+  }
+
+  override fun <T : BaseDAO> toModel(dao: T): T {
+    dao as LocalizationDAO
+    dao.EventName = mapOf()
+
+    val query = kotlin.runCatching {
+      DataBaseProvider.query(DB.DATA.ordinal) {
+        Localization.selectAll().map { it[Localization.eventID].toString() to it[Localization.value] }
+      }
+    }.getOrNull()?: mutableListOf()
+
+    for (item in query){
+      dao.EventName = dao.EventName.plus(item)
+    }
+
+    return dao
+  }
+}
 
 data class AdaptationType(
     val Indoor: String,

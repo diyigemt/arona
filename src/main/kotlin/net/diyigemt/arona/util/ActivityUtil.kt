@@ -503,7 +503,7 @@ object ActivityUtil {
    * @param contentSource 活动内容
    * @param katakana 额外帮助判断活动类型的内容
    * @param contentSourceJP 若是日服的活动, 那么数据来源是日服wiki还是b站wiki还是game_kee或者Schale_DB
-   * @param type0 已知的活动类型(国际服才有)
+   * @param type0 已知的活动类型(如果已经得知可以直接填，未知请在本方法里注册方法解析出来)
    */
   fun doInsert(
     now: Date,

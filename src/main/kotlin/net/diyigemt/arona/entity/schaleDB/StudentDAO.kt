@@ -1,6 +1,11 @@
 package net.diyigemt.arona.entity.schaleDB
 
-import net.diyigemt.arona.util.scbaleDB.factories.BaseFactory
+import net.diyigemt.arona.db.DB
+import net.diyigemt.arona.db.DataBaseProvider
+import net.diyigemt.arona.db.data.schaledb.Students
+import org.jetbrains.exposed.sql.deleteAll
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.selectAll
 import java.time.LocalDate
 
 /**
@@ -8,13 +13,47 @@ import java.time.LocalDate
  *@Create 2022/8/18
  */
 
-class StudentDAO : ArrayList<StudentDAOItem>(){
+class StudentDAO : ArrayList<StudentDAOItem>(), BaseDAO{
   fun getStudentNameById(studentID : Int) : String? {
     for (item in this){
       if (item.Id == studentID) return item.Name
     }
 
     return null
+  }
+
+  override fun sendToDataBase() {
+    DataBaseProvider.query(DB.DATA.ordinal) { Students.deleteAll() }
+
+    for (student in this){
+      DataBaseProvider.query(DB.DATA.ordinal) {
+        Students.insert {
+          it[studentID] = student.Id
+          it[name] = student.Name
+          it[birthday] = student.BirthDay
+        }
+      }
+    }
+  }
+
+  override fun <T : BaseDAO> toModel(dao: T): T {
+    dao as StudentDAO
+    dao.clear()
+
+    val query = kotlin.runCatching {
+      DataBaseProvider.query(DB.DATA.ordinal) {
+        Students.selectAll().toList()
+      }
+    }.getOrNull()?: mutableListOf()
+
+    for (item in query){
+      val studentID = item.getOrNull(Students.studentID)!!
+      val name = item.getOrNull(Students.name)!!
+      val birthday = item.getOrNull(Students.birthday)!!
+      dao.add(StudentDAOItem(birthday, studentID, name))
+    }
+
+    return dao
   }
 }
 

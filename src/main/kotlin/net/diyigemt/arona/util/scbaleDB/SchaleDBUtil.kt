@@ -19,9 +19,9 @@ object SchaleDBUtil {
   lateinit var raidItem : RaidDAO
   var birthdayList : MutableList<Birthday> = mutableListOf()
 
-  fun getGlobalEventData(): Pair<MutableList<Activity>, MutableList<Activity>> = getData(ServerType.GLOBAL)
+  fun getGlobalEventData(): Pair<MutableList<Activity>, MutableList<Activity>> = getData(ServerType.GLB)
 
-  fun getJPEventData(): Pair<MutableList<Activity>, MutableList<Activity>> = getData(ServerType.JP)
+  fun getJPEventData(): Pair<MutableList<Activity>, MutableList<Activity>> = getData(ServerType.JPN)
 
   private fun getData(type : ServerType) : Pair<MutableList<Activity>, MutableList<Activity>>{
     val active: MutableList<Activity> = mutableListOf()
@@ -36,8 +36,8 @@ object SchaleDBUtil {
         active,
         pending,
         CalendarFactory.getCharacterLocalizationName(item.characters),
-        contentSourceJP = if (type == ServerType.JP) ActivityUtil.ActivityJPSource.SCHALE_DB else ActivityUtil.ActivityJPSource.GAME_KEE,
-        type0 = if (type == ServerType.GLOBAL) ActivityType.PICK_UP else null
+        contentSourceJP = if (type == ServerType.JPN) ActivityUtil.ActivityJPSource.SCHALE_DB else ActivityUtil.ActivityJPSource.GAME_KEE,
+        type0 = ActivityType.PICK_UP
       )
     }
 
@@ -50,8 +50,8 @@ object SchaleDBUtil {
         active,
         pending,
         CalendarFactory.getEventLocalizationName(item.event),
-        contentSourceJP = if (type == ServerType.JP) ActivityUtil.ActivityJPSource.SCHALE_DB else ActivityUtil.ActivityJPSource.GAME_KEE,
-        type0 = if (type == ServerType.GLOBAL) ActivityType.ACTIVITY else null
+        contentSourceJP = if (type == ServerType.JPN) ActivityUtil.ActivityJPSource.SCHALE_DB else ActivityUtil.ActivityJPSource.GAME_KEE,
+        type0 = ActivityType.ACTIVITY
       )
     }
 
@@ -67,8 +67,8 @@ object SchaleDBUtil {
         active,
         pending,
         raid.NameCn,
-        contentSourceJP = if (type == ServerType.JP) ActivityUtil.ActivityJPSource.SCHALE_DB else ActivityUtil.ActivityJPSource.GAME_KEE,
-        type0 = if (type == ServerType.GLOBAL) ActivityType.DECISIVE_BATTLE else null
+        contentSourceJP = if (type == ServerType.JPN) ActivityUtil.ActivityJPSource.SCHALE_DB else ActivityUtil.ActivityJPSource.GAME_KEE,
+        type0 = ActivityType.DECISIVE_BATTLE
       )
     }
 
@@ -82,8 +82,8 @@ object SchaleDBUtil {
         active,
         pending,
         item.name + "的生日",
-        contentSourceJP = if (type == ServerType.JP) ActivityUtil.ActivityJPSource.SCHALE_DB else ActivityUtil.ActivityJPSource.GAME_KEE,
-        type0 = if (type == ServerType.GLOBAL) ActivityType.BIRTHDAY else null
+        contentSourceJP = if (type == ServerType.JPN) ActivityUtil.ActivityJPSource.SCHALE_DB else ActivityUtil.ActivityJPSource.GAME_KEE,
+        type0 = ActivityType.BIRTHDAY
       )
     }
 
@@ -91,7 +91,7 @@ object SchaleDBUtil {
   }
 
   enum class ServerType{
-    JP,
-    GLOBAL
+    JPN,
+    GLB
   }
 }

@@ -9,28 +9,28 @@ import net.mamoe.mirai.console.data.value
 object AronaGachaConfig: AutoSavePluginConfig("arona-gacha") {
 
   @ValueDescription("1星总出率百分比")
-  val star1Rate: Float by value(79F)
+  var star1Rate: Float by value(79F)
 
   @ValueDescription("2星总出率百分比")
-  val star2Rate: Float by value(18.5F)
+  var star2Rate: Float by value(18.5F)
 
   @ValueDescription("3星总出率百分比")
-  val star3Rate: Float by value(2.5F)
+  var star3Rate: Float by value(2.5F)
 
   @ValueDescription("2星限定出率百分比")
-  val star2PickupRate: Float by value(3F)
+  var star2PickupRate: Float by value(3F)
 
   @ValueDescription("3星限定出率百分比")
-  val star3PickupRate: Float by value(0.7F)
+  var star3PickupRate: Float by value(0.7F)
 
   @ValueDescription("当前激活的池子")
   var activePool: Int by value(1)
 
   @ValueDescription("撤回结果信息防止刷屏 撤回时间间隔(单位为秒) 为0表示不撤回")
-  val revokeTime: Int by value(10)
+  var revokeTime: Int by value(10)
 
   @ValueDescription("每日限制次数, 0表示不限制")
-  val limit: Int by value(0)
+  var limit: Int by value(0)
 
   @ValueDescription("上次限制更新时间,自动维护")
   var day: Int by value(0)

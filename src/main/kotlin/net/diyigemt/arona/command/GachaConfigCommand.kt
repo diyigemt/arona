@@ -1,6 +1,7 @@
 package net.diyigemt.arona.command
 
 import net.diyigemt.arona.Arona
+import net.diyigemt.arona.Arona.save
 import net.diyigemt.arona.command.cache.GachaCache
 import net.diyigemt.arona.config.AronaGachaConfig
 import net.diyigemt.arona.db.DataBaseProvider.query
@@ -38,6 +39,41 @@ object GachaConfigCommand : CompositeCommand(
     }
     GachaLimitTable.forceUpdate(if (subject is Group) subject.id else null)
     subject.sendMessage("历史记录重置成功")
+  }
+
+  @SubCommand("1s")
+  @Description("设置1星出货率")
+  suspend fun UserCommandSender.s1(rate: Float) {
+    AronaGachaConfig.star1Rate = rate
+    AronaGachaConfig.save()
+    AronaGachaConfig.init()
+  }
+
+  @SubCommand("2s")
+  @Description("设置2星出货率")
+  suspend fun UserCommandSender.s2(rate: Float) {
+    AronaGachaConfig.star2Rate = rate
+    AronaGachaConfig.init()
+  }
+  @SubCommand("3s")
+  @Description("设置3星出货率")
+  suspend fun UserCommandSender.s3(rate: Float) {
+    AronaGachaConfig.star3Rate = rate
+    AronaGachaConfig.init()
+  }
+
+  @SubCommand("p2s")
+  @Description("设置2星PickUp出货率")
+  suspend fun UserCommandSender.ps2(rate: Float) {
+    AronaGachaConfig.star2PickupRate = rate
+    AronaGachaConfig.init()
+  }
+
+  @SubCommand("p3s")
+  @Description("设置3星PickUp出货率")
+  suspend fun UserCommandSender.ps3(rate: Float) {
+    AronaGachaConfig.star3PickupRate = rate
+    AronaGachaConfig.init()
   }
 
   override val id: Int = 1

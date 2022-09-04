@@ -13,9 +13,14 @@ import org.jsoup.Jsoup
 import java.awt.Color
 import java.io.File
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.imageio.ImageIO
+import kotlin.math.floor
 import kotlin.math.max
+import kotlin.reflect.KFunction
+import kotlin.reflect.KFunction0
 import kotlin.reflect.jvm.isAccessible
 
 object ActivityUtil {
@@ -67,156 +72,183 @@ object ActivityUtil {
 
   fun fetchENActivity(): Pair<List<Activity>, List<Activity>>{
     val list = mutableListOf(
-      ActivityUtil::fetchENActivityFromSchaleDB
+      ActivityUtil::fetchENActivityFromSchaleDB,
+      ActivityUtil::fetchENActivityFromBiliBili
     )
     val targetFunction = when(AronaNotifyConfig.defaultENActivitySource) {
       ActivityENSource.SCHALE_DB -> ActivityUtil::fetchENActivityFromSchaleDB
+      ActivityENSource.BILIBILI -> ActivityUtil::fetchENActivityFromBiliBili
     }
-    list.remove(targetFunction)
+    return doFetch(list, targetFunction)
+  }
+
+  fun fetchJPActivity(): Pair<List<Activity>, List<Activity>> {
+    val list = mutableListOf(
+      ActivityUtil::fetchJPActivityFromCN,
+      ActivityUtil::fetchJPActivityFromJP,
+      ActivityUtil::fetchJPActivityFromGameKee,
+      ActivityUtil::fetchJPActivityFromSchaleDB
+    )
+    val targetFunction = when(AronaNotifyConfig.defaultJPActivitySource) {
+      ActivityJPSource.B_WIKI -> ActivityUtil::fetchJPActivityFromCN
+      ActivityJPSource.WIKI_RU -> ActivityUtil::fetchJPActivityFromJP
+      ActivityJPSource.GAME_KEE -> ActivityUtil::fetchJPActivityFromGameKee
+      ActivityJPSource.SCHALE_DB -> ActivityUtil::fetchJPActivityFromSchaleDB
+    }
+    return doFetch(list, targetFunction)
+  }
+
+  private fun doFetch(list: MutableList<KFunction0<Pair<List<Activity>, List<Activity>>>>, select: KFunction<Pair<List<Activity>, List<Activity>>>): Pair<List<Activity>, List<Activity>> {
+    list.remove(select)
     var result = kotlin.runCatching {
-      targetFunction.isAccessible = true
-      targetFunction.call()
+      select.isAccessible = true
+      select.call()
+    }
+    if (result.isFailure) {
+      result.exceptionOrNull()
     }
     var data = result.getOrDefault(listOf<Activity>() to listOf())
     if (result.isSuccess && (data.first.isNotEmpty() || data.second.isNotEmpty())) return data
     for (function in list) {
-      result = runCatching(function)
+      result = runCatching {
+        function.call()
+      }
       data = result.getOrDefault(listOf<Activity>() to listOf())
       if (data.first.isNotEmpty() || data.second.isNotEmpty()) break
     }
     return data
   }
 
-//  fun fetchENActivity(): Pair<List<Activity>, List<Activity>> {
-//    val fetchActivities = fetchActivities()
-//    val active = mutableListOf<Activity>()
-//    val pending = mutableListOf<Activity>()
-//    fetchActivities.forEach { js ->
-//      val content = js["orig_text"].toString().replace("\\r", "").replace("\\n", "")
-//      // N3H3
-//      if (content.contains(Regex("[Nn]ormal")) && content.contains(Regex("[Hh]ard"))) {
-//        val matchEntire = N3H3Plus.find(content)
-//        if (matchEntire != null && matchEntire.groups[0] != null) {
-//          val plus = matchEntire.groups[0]!!.value
-//          var power = 2
-//          if (plus.contains("3")) {
-//            power = 3
-//          }
-//          val nTime = NormalTime.find(content)?.groupValues ?: return@forEach
-//          val hTime = HardTime.find(content)?.groupValues ?: return@forEach
-//          if ((nTime.size == 6) && (hTime.size == 6)) {
-//            val n1 = nTime[1]
-//            val n2 = nTime[2]
-//            val n3 = nTime[4]
-//            val n4 = nTime[5]
-//            val h1 = hTime[1]
-//            val h2 = hTime[2]
-//            val h3 = hTime[4]
-//            val h4 = hTime[5]
-//            val now = Calendar.getInstance().time
-//            val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
-//            val startN = parseDateString3(year, n1, n2)
-//            val endN = parseDateString259(year, n3, n4)
-//            val startH = parseDateString3(year, h1, h2)
-//            val endH = parseDateString259(year, h3, h4)
-//            val parseStartN = simpleDateFormatParse(startN)
-//            val parseEndN = simpleDateFormatParse(endN)
-//            val parseStartH = simpleDateFormatParse(startH)
-//            val parseEndH = simpleDateFormatParse(endH)
-//            val titleN = "Normal${power}倍掉落"
-//            val titleH = "Hard${power}倍掉落"
-//            doInsert(now, parseStartN, parseEndN, active, pending, titleN, type0 = ActivityType.N2_3)
-//            doInsert(now, parseStartH, parseEndH, active, pending, titleH, type0 = ActivityType.H2_3)
-//          }
-//        }
-//        return@forEach
-//      }
-//      // PickUp
-//      if (content.contains("PICK") && content.contains("UP") && (content.contains("募集") or content.contains("招募"))) {
-//        val source = content.substringAfter("PICK UP学生").replace("★", "").replace("＆", "").replace(" ", "")
-//        val timeSource = content.replace(" ", "")
-//        val findAll = PickUpRegex.findAll(source).toList()
-//        var student = "pick up"
-//        if (findAll.isNotEmpty()) {
-//          findAll.forEach {
-//            val groups = it.groupValues
-//            val size = groups.size
-//            val studentName = groups[size - 2]
-//            val studentStar = groups[size - 3].ifEmpty { 3 }
-//            student = if (size > (floor((size / 2).toDouble()) * 2)) {
-//              "$student $studentStar★$studentName"
-//            } else {
-//              val extraName = groups[size - 1].replace(PickUpReplace, "")
-//              "$student $studentStar★$studentName($extraName)"
-//            }
-//          }
-//        } else return@forEach
-//        val findTime = PickUpTime.find(timeSource) ?: return@forEach
-//        val groupValue = findTime.groupValues
-//        if (groupValue.size >= 5) {
-//          val m1 = groupValue[1]
-//          val m2 = groupValue[3]
-//          val d1 = groupValue[2]
-//          val d2 = groupValue[4]
-//          val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
-//          val start = parseDateString(year, m1, d1, ServerMaintenanceStartTimeEN)
-//          val end = parseDateString(year, m2, d2, ServerMaintenanceEndTimeEN)
-//          val parseStart = simpleDateFormatParse(start)
-//          val parseEnd = simpleDateFormatParse(end)
-//          val now = Calendar.getInstance().time
-//          doInsert(now, parseStart, parseEnd, active, pending, student, type0 = ActivityType.PICK_UP)
-//        }
-//        return@forEach
-//      }
-//      // 维护公告
-//      if (content.contains("维护公告")) {
-//        val find = MaintenanceRegex.find(content)
-//        val groupValue = find?.groupValues ?: return@forEach
-//        if (groupValue.size >= 4) {
-//          val m = groupValue[1]
-//          val d = groupValue[2]
-//          val hour = groupValue[3]
-//          val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
-//          val start = parseDateString(year, m, d, ServerMaintenanceStartTimeEN)
-//          val parseStart = simpleDateFormatParse(start)
-//          val parseEnd = Calendar.getInstance()
-//          parseEnd.time = parseStart
-//          parseEnd.set(Calendar.HOUR, ServerMaintenanceEndTimeEN.substringBefore(":").toInt())
-//          val now = Calendar.getInstance()
-//          val title = "游戏维护"
-//          if (now.before(parseStart)) {
-//            doInsert(now.time, parseStart, parseEnd.time, active, pending, title, type0 = ActivityType.MAINTENANCE)
-//          }
-//        }
-//        return@forEach
-//      }
-//      // 总力战
-//      if (content.contains("总力战预告")) {
-//        val source = content.substringAfter("总力战预告").trim()
-//        val find = TotalAssault.find(source)
-//        val groupValue = find?.groupValues ?: return@forEach
-//        if (groupValue.size >= 5) {
-//          val name = groupValue[1]
-//          val terrain = groupValue[2]
-//          val m = groupValue[3]
-//          val d = groupValue[4]
-//          val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
-//          val start = parseDateString(year, m, d, ServerMaintenanceEndTimeEN)
-//          val parseStart = simpleDateFormatParse(start)
-//          val now = Calendar.getInstance().time
-//          val title = "总力战 $name($terrain)"
-//          val parseEnd = Calendar.getInstance()
-//          parseEnd.set(Calendar.MONTH, m.toInt() - 1)
-//          parseEnd.set(Calendar.DAY_OF_MONTH, d.toInt())
-//          parseEnd.set(Calendar.DAY_OF_MONTH, parseEnd.get(Calendar.DAY_OF_MONTH) + 6)
-//          parseEnd.set(Calendar.HOUR_OF_DAY, 23)
-//          doInsert(now, parseStart, parseEnd.time, active, pending, title, type0 = ActivityType.DECISIVE_BATTLE)
-//        }
-//        return@forEach
-//      }
-//    }
-//    return sortAndPackage(active, pending)
-//  }
+  private fun fetchENActivityFromBiliBili(): Pair<List<Activity>, List<Activity>> {
+    val fetchActivities = fetchActivities()
+    val active = mutableListOf<Activity>()
+    val pending = mutableListOf<Activity>()
+    fetchActivities.forEach { js ->
+      val content = js["orig_text"].toString().replace("\\r", "").replace("\\n", "")
+      // N3H3
+      if (content.contains(Regex("[Nn]ormal")) && content.contains(Regex("[Hh]ard"))) {
+        val matchEntire = N3H3Plus.find(content)
+        if (matchEntire != null && matchEntire.groups[0] != null) {
+          val plus = matchEntire.groups[0]!!.value
+          var power = 2
+          if (plus.contains("3")) {
+            power = 3
+          }
+          val nTime = NormalTime.find(content)?.groupValues ?: return@forEach
+          val hTime = HardTime.find(content)?.groupValues ?: return@forEach
+          if ((nTime.size == 6) && (hTime.size == 6)) {
+            val n1 = nTime[1]
+            val n2 = nTime[2]
+            val n3 = nTime[4]
+            val n4 = nTime[5]
+            val h1 = hTime[1]
+            val h2 = hTime[2]
+            val h3 = hTime[4]
+            val h4 = hTime[5]
+            val now = Calendar.getInstance().time
+            val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
+            val startN = parseDateString3(year, n1, n2)
+            val endN = parseDateString259(year, n3, n4)
+            val startH = parseDateString3(year, h1, h2)
+            val endH = parseDateString259(year, h3, h4)
+            val parseStartN = simpleDateFormatParse(startN)
+            val parseEndN = simpleDateFormatParse(endN)
+            val parseStartH = simpleDateFormatParse(startH)
+            val parseEndH = simpleDateFormatParse(endH)
+            val titleN = "Normal${power}倍掉落"
+            val titleH = "Hard${power}倍掉落"
+            doInsert(now, parseStartN, parseEndN, active, pending, titleN, type0 = ActivityType.N2_3)
+            doInsert(now, parseStartH, parseEndH, active, pending, titleH, type0 = ActivityType.H2_3)
+          }
+        }
+        return@forEach
+      }
+      // PickUp
+      if (content.contains("PICK") && content.contains("UP") && (content.contains("募集") or content.contains("招募"))) {
+        val source = content.substringAfter("PICK UP学生").replace("★", "").replace("＆", "").replace(" ", "")
+        val timeSource = content.replace(" ", "")
+        val findAll = PickUpRegex.findAll(source).toList()
+        var student = "pick up"
+        if (findAll.isNotEmpty()) {
+          findAll.forEach {
+            val groups = it.groupValues
+            val size = groups.size
+            val studentName = groups[size - 2]
+            val studentStar = groups[size - 3].ifEmpty { 3 }
+            student = if (size > (floor((size / 2).toDouble()) * 2)) {
+              "$student $studentStar★$studentName"
+            } else {
+              val extraName = groups[size - 1].replace(PickUpReplace, "")
+              "$student $studentStar★$studentName($extraName)"
+            }
+          }
+        } else return@forEach
+        val findTime = PickUpTime.find(timeSource) ?: return@forEach
+        val groupValue = findTime.groupValues
+        if (groupValue.size >= 5) {
+          val m1 = groupValue[1]
+          val m2 = groupValue[3]
+          val d1 = groupValue[2]
+          val d2 = groupValue[4]
+          val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
+          val start = parseDateString(year, m1, d1, ServerMaintenanceStartTimeEN)
+          val end = parseDateString(year, m2, d2, ServerMaintenanceEndTimeEN)
+          val parseStart = simpleDateFormatParse(start)
+          val parseEnd = simpleDateFormatParse(end)
+          val now = Calendar.getInstance().time
+          doInsert(now, parseStart, parseEnd, active, pending, student, type0 = ActivityType.PICK_UP)
+        }
+        return@forEach
+      }
+      // 维护公告
+      if (content.contains("维护公告")) {
+        val find = MaintenanceRegex.find(content)
+        val groupValue = find?.groupValues ?: return@forEach
+        if (groupValue.size >= 4) {
+          val m = groupValue[1]
+          val d = groupValue[2]
+          val hour = groupValue[3]
+          val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
+          val start = parseDateString(year, m, d, ServerMaintenanceStartTimeEN)
+          val parseStart = simpleDateFormatParse(start)
+          val parseEnd = Calendar.getInstance()
+          parseEnd.time = parseStart
+          parseEnd.set(Calendar.HOUR, ServerMaintenanceEndTimeEN.substringBefore(":").toInt())
+          val now = Calendar.getInstance()
+          val title = "游戏维护"
+          if (now.before(parseStart)) {
+            doInsert(now.time, parseStart, parseEnd.time, active, pending, title, type0 = ActivityType.MAINTENANCE)
+          }
+        }
+        return@forEach
+      }
+      // 总力战
+      if (content.contains("总力战预告")) {
+        val source = content.substringAfter("总力战预告").trim()
+        val find = TotalAssault.find(source)
+        val groupValue = find?.groupValues ?: return@forEach
+        if (groupValue.size >= 5) {
+          val name = groupValue[1]
+          val terrain = groupValue[2]
+          val m = groupValue[3]
+          val d = groupValue[4]
+          val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
+          val start = parseDateString(year, m, d, ServerMaintenanceEndTimeEN)
+          val parseStart = simpleDateFormatParse(start)
+          val now = Calendar.getInstance().time
+          val title = "总力战 $name($terrain)"
+          val parseEnd = Calendar.getInstance()
+          parseEnd.set(Calendar.MONTH, m.toInt() - 1)
+          parseEnd.set(Calendar.DAY_OF_MONTH, d.toInt())
+          parseEnd.set(Calendar.DAY_OF_MONTH, parseEnd.get(Calendar.DAY_OF_MONTH) + 6)
+          parseEnd.set(Calendar.HOUR_OF_DAY, 23)
+          doInsert(now, parseStart, parseEnd.time, active, pending, title, type0 = ActivityType.DECISIVE_BATTLE)
+        }
+        return@forEach
+      }
+    }
+    return sortAndPackage(active, pending)
+  }
 
   private fun parseDateString259(year: String, date1: String, date2: String) = parseDateString(year, date1, date2, "02:59")
 
@@ -255,51 +287,52 @@ object ActivityUtil {
     return res
   }
 
-//  fun fetchJPActivityFromJP(): Pair<List<Activity>, List<Activity>> {
-//    val active = mutableListOf<Activity>()
-//    val pending = mutableListOf<Activity>()
-//    val document = Jsoup.connect("https://bluearchive.wikiru.jp/?%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88%E4%B8%80%E8%A6%A7")
-//      .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
-//      .ignoreContentType(true)
-//      .get()
-//    val body = document.getElementById("body") ?: return Pair(active, pending)
-//    val activities = body.getElementsByClass("list-indent1")
-//    activities.forEach {
-//      val outer = it.getElementsByTag("li")
-//      if (outer.isEmpty()) return@forEach
-//      val target = outer[0]
-//      val containString = target.text().replace("メンテナンス前まで", "11:00")
-//      val timeSource = containString.substringAfterLast("(")
-//      var contentSource = containString
-//        .substringBeforeLast("(")
-//        .replace("・", "·")
-//        .replace("ガイドミッション", "指导任务")
-//        .trim()
-//      val findTime = ActivityJPRegex.find(timeSource)
-//      if (findTime == null || findTime.groups.size < 3) return@forEach
-//      val groups = findTime.groups
-//      val start = groups[1]!!.value
-//      val parseStart: Date = if (groups.filterNotNull().size == 3) {
-//        SimpleDateFormat("yyyy/M/d").parse(start)
-//      } else {
-//        SimpleDateFormat("yyyy/M/d HH:mm").parse("${start}${groups[2]!!.value}")
-//      }
-//      val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
-//      val end = "${year}/${groups[groups.size - 1]!!.value}"
-//      val parseEnd = SimpleDateFormat("yyyy/M/d HH:mm").parse(end)
-//      val now = Calendar.getInstance().time
-//      // 判断是不是特别依赖(经验本钱本)
-//      val special = target.getElementsByTag("img")
-//      if (special.isNotEmpty()) {
-//        val find = Regex("(\\d)").find(special[0].attr("title"))
-//        if (find == null || find.groups.size != 2) return@forEach
-//        val pow = find.groups[1]!!.value.toInt()
-//        contentSource = "特殊作战掉落${pow}倍"
-//      }
-//      doInsert(now, parseStart, parseEnd, active, pending, contentSource)
-//    }
-//    return sortAndPackage(active, pending)
-//  }
+  @Deprecated("new api use")
+  fun fetchJPActivityFromJP0(): Pair<List<Activity>, List<Activity>> {
+    val active = mutableListOf<Activity>()
+    val pending = mutableListOf<Activity>()
+    val document = Jsoup.connect("https://bluearchive.wikiru.jp/?%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88%E4%B8%80%E8%A6%A7")
+      .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
+      .ignoreContentType(true)
+      .get()
+    val body = document.getElementById("body") ?: return Pair(active, pending)
+    val activities = body.getElementsByClass("list-indent1")
+    activities.forEach {
+      val outer = it.getElementsByTag("li")
+      if (outer.isEmpty()) return@forEach
+      val target = outer[0]
+      val containString = target.text().replace("メンテナンス前まで", "11:00")
+      val timeSource = containString.substringAfterLast("(")
+      var contentSource = containString
+        .substringBeforeLast("(")
+        .replace("・", "·")
+        .replace("ガイドミッション", "指导任务")
+        .trim()
+      val findTime = ActivityJPRegex.find(timeSource)
+      if (findTime == null || findTime.groups.size < 3) return@forEach
+      val groups = findTime.groups
+      val start = groups[1]!!.value
+      val parseStart: Date = if (groups.filterNotNull().size == 3) {
+        SimpleDateFormat("yyyy/M/d").parse(start)
+      } else {
+        SimpleDateFormat("yyyy/M/d HH:mm").parse("${start}${groups[2]!!.value}")
+      }
+      val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
+      val end = "${year}/${groups[groups.size - 1]!!.value}"
+      val parseEnd = SimpleDateFormat("yyyy/M/d HH:mm").parse(end)
+      val now = Calendar.getInstance().time
+      // 判断是不是特别依赖(经验本钱本)
+      val special = target.getElementsByTag("img")
+      if (special.isNotEmpty()) {
+        val find = Regex("(\\d)").find(special[0].attr("title"))
+        if (find == null || find.groups.size != 2) return@forEach
+        val pow = find.groups[1]!!.value.toInt()
+        contentSource = "特殊作战掉落${pow}倍"
+      }
+      doInsert(now, parseStart, parseEnd, active, pending, contentSource)
+    }
+    return sortAndPackage(active, pending)
+  }
 
   fun fetchJPActivityFromJP(): Pair<List<Activity>, List<Activity>>{
     var res = Jsoup.connect("https://bluearchive.wikiru.jp?cmd=${WikiruCmd}&page=${WikiruPage}")
@@ -322,37 +355,6 @@ object ActivityUtil {
   private fun fetchJPActivityFromGameKee(): Pair<List<Activity>, List<Activity>> = GameKeeUtil.getEventData()
 
   private fun fetchJPActivityFromSchaleDB(): Pair<List<Activity>, List<Activity>> = SchaleDBUtil.getJPEventData()
-
-  fun fetchJPActivity(): Pair<List<Activity>, List<Activity>> {
-    val list = mutableListOf(
-      ActivityUtil::fetchJPActivityFromCN,
-      ActivityUtil::fetchJPActivityFromJP,
-      ActivityUtil::fetchJPActivityFromGameKee,
-      ActivityUtil::fetchJPActivityFromSchaleDB
-    )
-    val targetFunction = when(AronaNotifyConfig.defaultJPActivitySource) {
-      ActivityJPSource.B_WIKI -> ActivityUtil::fetchJPActivityFromCN
-      ActivityJPSource.WIKI_RU -> ActivityUtil::fetchJPActivityFromJP
-      ActivityJPSource.GAME_KEE -> ActivityUtil::fetchJPActivityFromGameKee
-      ActivityJPSource.SCHALE_DB -> ActivityUtil::fetchJPActivityFromSchaleDB
-    }
-    list.remove(targetFunction)
-    var result = kotlin.runCatching {
-      targetFunction.isAccessible = true
-      targetFunction.call()
-    }
-    if (result.isFailure) {
-      result.exceptionOrNull()
-    }
-    var data = result.getOrDefault(listOf<Activity>() to listOf())
-    if (result.isSuccess && (data.first.isNotEmpty() || data.second.isNotEmpty())) return data
-    for (function in list) {
-      result = runCatching(function)
-      data = result.getOrDefault(listOf<Activity>() to listOf())
-      if (data.first.isNotEmpty() || data.second.isNotEmpty()) break
-    }
-    return data
-  }
 
   private fun fetchJPMaintenanceActivityFromJP(active: MutableList<Activity>, pending: MutableList<Activity>) {
     val res = Jsoup.connect("https://bluearchive.wikiru.jp/?%E3%83%96%E3%83%AB%E3%83%BC%E3%82%A2%E3%83%BC%E3%82%AB%E3%82%A4%E3%83%96%EF%BC%88%E3%83%96%E3%83%AB%E3%82%A2%E3%82%AB%EF%BC%89%E6%94%BB%E7%95%A5+Wiki")
@@ -494,6 +496,105 @@ object ActivityUtil {
   private fun extraActivityJPTypeFromSchaleDB(activity: Activity) : Activity = activity
 
   /**
+   * 插入日服活动并对活动进行分类
+   * @param now 当前时间
+   * @param parseStart 活动开始时间
+   * @param parseEnd 活动结束时间
+   * @param active 正在进行的活动列表
+   * @param pending 即将开始的活动列表
+   * @param contentSource 活动内容
+   * @param type0 已知的活动类型(如果已经得知可以直接填，未知请在本方法里注册方法解析出来)
+   */
+  fun insertJpActivity(
+    now: Date,
+    parseStart: Date,
+    parseEnd: Date,
+    active: MutableList<Activity>,
+    pending: MutableList<Activity>,
+    contentSource: String,
+    from: ActivityJPSource = ActivityJPSource.GAME_KEE,
+    type0: ActivityType = ActivityType.NULL
+  ) {
+    var activity = Activity(
+      contentSource,
+      TimeUtil.calcTime(now, parseStart, true),
+      serverLocale = ServerLocale.GLOBAL,
+    )
+    if (type0 == ActivityType.NULL) {
+      activity = when (from) {
+        ActivityJPSource.B_WIKI -> extraActivityJPTypeFromCN(activity)
+        ActivityJPSource.WIKI_RU -> extraActivityJPTypeFromJPAndTranslate(activity)
+        ActivityJPSource.GAME_KEE -> extraActivityJPTypeFromGameKee(activity)
+        ActivityJPSource.SCHALE_DB -> extraActivityJPTypeFromSchaleDB(activity)
+      }
+    } else {
+      activity.type = type0
+    }
+    doInsert0(now, parseStart, parseEnd, active, pending, activity)
+  }
+
+  /**
+   * 插入国际服活动并对活动进行分类
+   * @param now 当前时间
+   * @param parseStart 活动开始时间
+   * @param parseEnd 活动结束时间
+   * @param active 正在进行的活动列表
+   * @param pending 即将开始的活动列表
+   * @param contentSource 活动内容
+   * @param type0 已知的活动类型(如果已经得知可以直接填，未知请在本方法里注册方法解析出来)
+   */
+  fun insertEnActivity(
+    now: Date,
+    parseStart: Date,
+    parseEnd: Date,
+    active: MutableList<Activity>,
+    pending: MutableList<Activity>,
+    contentSource: String,
+    from: ActivityENSource = ActivityENSource.SCHALE_DB,
+    type0: ActivityType = ActivityType.NULL
+  ) {
+    var activity = Activity(
+      contentSource,
+      TimeUtil.calcTime(now, parseStart, true),
+      serverLocale = ServerLocale.GLOBAL,
+    )
+    if (type0 == ActivityType.NULL) {
+      activity = when (from) {
+        ActivityENSource.SCHALE_DB -> extraActivityJPTypeFromSchaleDB(activity)
+        ActivityENSource.BILIBILI -> activity
+      }
+    } else {
+      activity.type = type0
+    }
+    doInsert0(now, parseStart, parseEnd, active, pending, activity)
+  }
+
+
+  /**
+   * 插入活动并对活动进行分类
+   * @param now 当前时间
+   * @param parseStart 活动开始时间
+   * @param parseEnd 活动结束时间
+   * @param active 正在进行的活动列表
+   * @param pending 即将开始的活动列表
+   */
+  fun doInsert0(
+    now: Date,
+    parseStart: Date,
+    parseEnd: Date,
+    active: MutableList<Activity>,
+    pending: MutableList<Activity>,
+    activity: Activity
+  ) {
+    if (now.before(parseStart)) {
+      pending.add(activity)
+    } else if (now.before(parseEnd)) {
+      activity.time = TimeUtil.calcTime(now, parseEnd, false)
+      active.add(activity)
+    }
+  }
+
+  /**
    * 插入活动并对活动进行分类
    * @param now 当前时间
    * @param parseStart 活动开始时间
@@ -588,6 +689,6 @@ object ActivityUtil {
   }
 
   enum class ActivityENSource {
-    SCHALE_DB
+    SCHALE_DB, BILIBILI
   }
 }

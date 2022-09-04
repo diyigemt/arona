@@ -31,7 +31,7 @@ object GameNameSearchCommand : SimpleCommand(
       GameName.find { GameNameTable.name like "%$myName%" }.toList()
     }!!
     if (res.isEmpty()) {
-      subject.sendMessage("没有叫 '$myName' 的群友")
+      subject.sendMessage("没有游戏名叫 '$myName' 的群友")
     }
     val builder = MessageChainBuilder()
     builder.add("查询结果:\n")
@@ -39,10 +39,9 @@ object GameNameSearchCommand : SimpleCommand(
       res.forEach {
         val member = (subject as Group)[it.id.value]
         if (member == null) {
-          builder.add("${it.name}(${it.id.value})\n")
+          builder.add("${it.name} (${it.id.value})\n")
         } else {
-          builder.add(At(member))
-          builder.add(PlainText("(${it.name})"))
+          builder.add(PlainText("@${member.nameCardOrNick} (${it.name})"))
           builder.add(PlainText("\n"))
         }
       }

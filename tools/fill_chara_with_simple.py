@@ -1,9 +1,7 @@
 import sqlite3
 import os
-from os import system
-from unicodedata import name
-file_path = r"F:\code\node\arona-backend\data\data.db"
-name_and_code = r"G:\verysync\arona\student_insert"
+file_path = r"C:\Users\qwe13\Desktop\data.db"
+name_and_code = r".\image\student_rank"
 def replace0(source):
     first = source.find("(")
     last = source.find(")")
@@ -15,23 +13,24 @@ if __name__ == '__main__':
     cursor = connection.cursor()
     index = 0
     print("数据库连接成功")
-    with open(name_and_code, encoding="utf8") as f:
-        for line in f.readlines():
-            divs = line.split(" ")
-            names = divs[0].split("_")
-            first_name = names[0]
-            last_name = names[1]
-            last_name = replace0(last_name)
-            code = divs[1]
-            cursor.execute("INSERT INTO `student_rank`(`name`, `code`) VALUES ('%s', '%s')" % (last_name, code))
-            connection.commit()
-            if len(names) > 2:
-                alias = names[2: len(names)]
-                cursor.execute("SELECT * FROM `student_rank` WHERE `code` = '%s'" % code)
-                id = cursor.fetchone()[0]
-                for a in alias:
-                    a = replace0(a)
-                    cursor.execute("INSERT INTO `student_rank`(`name`, `code`) VALUES ('%s', '%s')" % (a, id))
-                    connection.commit() 
-            index += 1
+    for file in os.listdir(name_and_code):
+        if file.find("黑兔") != -1:
+            a = 1
+            pass
+        divs = file.replace(".png", "")
+        names = divs.split("_")
+        first_name = names[0]
+        last_name = names[1]
+        last_name = replace0(last_name)
+        cursor.execute("INSERT INTO `student_rank_0`(`name`, `code`) VALUES ('%s', '%s')" % (last_name, file))
+        connection.commit()
+        if len(names) > 2:
+            alias = names[2: len(names)]
+            cursor.execute("SELECT * FROM `student_rank_0` WHERE `code` = '%s'" % file)
+            id = cursor.fetchone()[0]
+            for a in alias:
+                a = replace0(a)
+                cursor.execute("INSERT INTO `student_rank_0`(`name`, `code`) VALUES ('%s', '%s')" % (a, id))
+                connection.commit() 
+        index += 1
     print("成功! %d" % index)

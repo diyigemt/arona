@@ -48,6 +48,7 @@ object Arona : KotlinPlugin(
   lateinit var arona: Bot
   private val INIT: List<InitializedFunction> =
     listOf(
+      GeneralUtils,
       AronaServiceManager,
       CommandInterceptorManager
     )
@@ -200,7 +201,7 @@ object Arona : KotlinPlugin(
     this.sendMessage(msg)
   }
 
-  fun dataFolderPath(): String = Arona.dataFolderPath.absolutePathString()
+  fun dataFolderPath(subPath: String = ""): String = Arona.dataFolderPath.absolutePathString() + subPath
 
   suspend fun Group.sendTeacherNameMessage(user: UserOrBot, message: String) {
     val name = GeneralUtils.queryTeacherNameFromDB(this, user)

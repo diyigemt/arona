@@ -521,7 +521,7 @@ object ActivityUtil {
     var activity = Activity(
       contentSource,
       TimeUtil.calcTime(now, parseStart, true),
-      serverLocale = ServerLocale.GLOBAL,
+      serverLocale = ServerLocale.JP,
     )
     if (type0 == ActivityType.NULL) {
       activity = when (from) {

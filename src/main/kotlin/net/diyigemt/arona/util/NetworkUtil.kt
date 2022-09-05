@@ -8,12 +8,19 @@ import net.diyigemt.arona.entity.ServerResponse
 import net.mamoe.mirai.console.plugin.version
 import org.jsoup.Connection
 import org.jsoup.Jsoup
-import kotlin.reflect.full.memberProperties
-import kotlin.reflect.jvm.isAccessible
 
 object NetworkUtil {
   const val BACKEND_ADDRESS = "https://arona.diyigemt.net"
   private const val BACKEND_API_ADDRESS = "$BACKEND_ADDRESS/api/v1"
+  private const val AUTH_HEADER = "Authorization"
+  private const val VERSION_HEADER = "version"
+  fun register() {
+    val resp = sendDataToServerSource("/user/register")
+    val header = resp.header(AUTH_HEADER)
+    if (header.isNullOrBlank()) return
+    AronaConfig.uuid = header
+  }
+
   inline fun <reified T> fetchDataFromServer(api: String, data: MutableMap<String, String> = mutableMapOf()): ServerResponse<T> {
     val response = fetchDataFromServerSource(api, data)
     return Json.decodeFromString(response.body())
@@ -25,19 +32,14 @@ object NetworkUtil {
       .execute()
   }
 
-  inline fun <reified T> sendDataToServer(api: String, data: Any): ServerResponse<T> {
+  private inline fun <reified T> sendDataToServer(api: String, data: MutableMap<String, String> = mutableMapOf()): ServerResponse<T> {
     val response = sendDataToServerSource(api, data)
     return Json.decodeFromString(response.body())
   }
 
-  fun sendDataToServerSource(api: String, data: Any): Connection.Response {
-    val map = mutableMapOf<String, String>()
-    data::class.memberProperties.forEach {
-      it.isAccessible = true
-      map[it.name] = it.call(null).toString()
-    }
+  private fun sendDataToServerSource(api: String, data: MutableMap<String, String> = mutableMapOf()): Connection.Response {
     return baseRequest(api)
-      .data(map)
+      .data(data)
       .method(Connection.Method.POST)
       .execute()
   }
@@ -45,7 +47,6 @@ object NetworkUtil {
   fun baseRequest(api: String, source: String = BACKEND_API_ADDRESS): Connection = Jsoup.connect("$source${api}")
     .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
     .ignoreContentType(true)
-    .header("Authorization", AronaConfig.uuid)
-    .header("version", Arona.version.toString())
-
+    .header(AUTH_HEADER, AronaConfig.uuid)
+    .header(VERSION_HEADER, Arona.version.toString())
 }

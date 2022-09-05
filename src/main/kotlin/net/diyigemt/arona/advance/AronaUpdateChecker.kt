@@ -37,6 +37,10 @@ object AronaUpdateChecker: AronaQuartzService {
 
   class UpdateCheckJob: Job {
     override fun execute(context: JobExecutionContext?) {
+      // 向服务器注册自己
+//      if (AronaConfig.uuid.isBlank()) {
+//        NetworkUtil.register()
+//      }
       val response = NetworkUtil.fetchDataFromServer<VersionInfo>("/version")
       val version = response.data.version
       val nowVersion = SemVersion(version.replace("v", ""))

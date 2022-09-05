@@ -5,12 +5,10 @@ data class Activity(
   var time: String,
   var type: ActivityType = ActivityType.NULL,
   var serverLocale: ServerLocale = ServerLocale.JP,
-  val katakana: String = "",
-  val description : String = ""
 )
 
-enum class ServerLocale(val serverName: String) {
-  GLOBAL("国际服"), JP("日服")
+enum class ServerLocale(val serverName: String, val dbName: String) {
+  JP("日服", "JPN"), GLOBAL("国际服", "GLB")
 }
 
 enum class ActivityType(val level: Int) {

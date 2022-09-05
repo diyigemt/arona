@@ -50,6 +50,7 @@ object ActivityUtil {
     4 to (Color.WHITE to Color.RED),
     5 to (Color.WHITE to Color.GREEN)
   )
+  // 从b_wiki获取数据
   fun fetchJPActivityFromCN(): Pair<List<Activity>, List<Activity>> {
     val document = Jsoup.connect("https://wiki.biligame.com/bluearchive/%E9%A6%96%E9%A1%B5").get()
     val activities = document.getElementsByClass("activity")
@@ -63,7 +64,7 @@ object ActivityUtil {
       val now = Calendar.getInstance().time
       if (now.after(parseEnd)) return@forEach
       val content = it.getElementsByClass("activity__name").text()
-      doInsert(now, parseStart, parseEnd, active, pending, content, contentSourceJP = ActivityJPSource.B_WIKI)
+      insertJpActivity(now, parseStart, parseEnd, active, pending, content, from = ActivityJPSource.B_WIKI)
     }
     return sortAndPackage(active, pending)
   }
@@ -157,8 +158,8 @@ object ActivityUtil {
             val parseEndH = simpleDateFormatParse(endH)
             val titleN = "Normal${power}倍掉落"
             val titleH = "Hard${power}倍掉落"
-            doInsert(now, parseStartN, parseEndN, active, pending, titleN, type0 = ActivityType.N2_3)
-            doInsert(now, parseStartH, parseEndH, active, pending, titleH, type0 = ActivityType.H2_3)
+            insertEnActivity(now, parseStartN, parseEndN, active, pending, titleN, from = ActivityENSource.BILIBILI, type0 = ActivityType.N2_3)
+            insertEnActivity(now, parseStartH, parseEndH, active, pending, titleH, from = ActivityENSource.BILIBILI, type0 = ActivityType.N2_3)
           }
         }
         return@forEach
@@ -196,7 +197,7 @@ object ActivityUtil {
           val parseStart = simpleDateFormatParse(start)
           val parseEnd = simpleDateFormatParse(end)
           val now = Calendar.getInstance().time
-          doInsert(now, parseStart, parseEnd, active, pending, student, type0 = ActivityType.PICK_UP)
+          insertEnActivity(now, parseStart, parseEnd, active, pending, student, from = ActivityENSource.BILIBILI, type0 = ActivityType.PICK_UP)
         }
         return@forEach
       }
@@ -217,7 +218,7 @@ object ActivityUtil {
           val now = Calendar.getInstance()
           val title = "游戏维护"
           if (now.before(parseStart)) {
-            doInsert(now.time, parseStart, parseEnd.time, active, pending, title, type0 = ActivityType.MAINTENANCE)
+            insertEnActivity(now.time, parseStart, parseEnd.time, active, pending, title, from = ActivityENSource.BILIBILI, type0 = ActivityType.MAINTENANCE)
           }
         }
         return@forEach
@@ -242,7 +243,7 @@ object ActivityUtil {
           parseEnd.set(Calendar.DAY_OF_MONTH, d.toInt())
           parseEnd.set(Calendar.DAY_OF_MONTH, parseEnd.get(Calendar.DAY_OF_MONTH) + 6)
           parseEnd.set(Calendar.HOUR_OF_DAY, 23)
-          doInsert(now, parseStart, parseEnd.time, active, pending, title, type0 = ActivityType.DECISIVE_BATTLE)
+          insertEnActivity(now, parseStart, parseEnd.time, active, pending, title, from = ActivityENSource.BILIBILI, type0 = ActivityType.DECISIVE_BATTLE)
         }
         return@forEach
       }
@@ -287,6 +288,7 @@ object ActivityUtil {
     return res
   }
 
+  // 从wikiru网页爬取
   @Deprecated("new api use")
   fun fetchJPActivityFromJP0(): Pair<List<Activity>, List<Activity>> {
     val active = mutableListOf<Activity>()
@@ -329,7 +331,7 @@ object ActivityUtil {
         val pow = find.groups[1]!!.value.toInt()
         contentSource = "特殊作战掉落${pow}倍"
       }
-      doInsert(now, parseStart, parseEnd, active, pending, contentSource)
+      insertJpActivity(now, parseStart, parseEnd, active, pending, contentSource, from = ActivityJPSource.WIKI_RU)
     }
     return sortAndPackage(active, pending)
   }
@@ -356,6 +358,7 @@ object ActivityUtil {
 
   private fun fetchJPActivityFromSchaleDB(): Pair<List<Activity>, List<Activity>> = SchaleDBUtil.getJPEventData()
 
+  // 从wikiru网页爬取维护信息
   private fun fetchJPMaintenanceActivityFromJP(active: MutableList<Activity>, pending: MutableList<Activity>) {
     val res = Jsoup.connect("https://bluearchive.wikiru.jp/?%E3%83%96%E3%83%AB%E3%83%BC%E3%82%A2%E3%83%BC%E3%82%AB%E3%82%A4%E3%83%96%EF%BC%88%E3%83%96%E3%83%AB%E3%82%A2%E3%82%AB%EF%BC%89%E6%94%BB%E7%95%A5+Wiki")
       .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
@@ -380,7 +383,7 @@ object ActivityUtil {
     val end = now.clone() as Calendar
     end.time = start
     end.set(Calendar.HOUR_OF_DAY, ServerMaintenanceEndTimeJP.substringBefore(":").toInt())
-    doInsert(now.time, start, end.time, active, pending, "游戏维护")
+    insertJpActivity(now.time, start, end.time, active, pending, "游戏维护", from = ActivityJPSource.WIKI_RU, type0 = ActivityType.MAINTENANCE)
   }
 
   fun constructMessage(activities: Pair<List<Activity>, List<Activity>>): String {
@@ -513,7 +516,7 @@ object ActivityUtil {
     pending: MutableList<Activity>,
     contentSource: String,
     from: ActivityJPSource = ActivityJPSource.GAME_KEE,
-    type0: ActivityType = ActivityType.NULL
+    type0: ActivityType = ActivityType.NULL,
   ) {
     var activity = Activity(
       contentSource,
@@ -586,55 +589,6 @@ object ActivityUtil {
     pending: MutableList<Activity>,
     activity: Activity
   ) {
-    if (now.before(parseStart)) {
-      pending.add(activity)
-    } else if (now.before(parseEnd)) {
-      activity.time = TimeUtil.calcTime(now, parseEnd, false)
-      active.add(activity)
-    }
-  }
-
-  /**
-   * 插入活动并对活动进行分类
-   * @param now 当前时间
-   * @param parseStart 活动开始时间
-   * @param parseEnd 活动结束时间
-   * @param active 正在进行的活动列表
-   * @param pending 即将开始的活动列表
-   * @param contentSource 活动内容
-   * @param katakana 额外帮助判断活动类型的内容
-   * @param contentSourceJP 若是日服的活动, 那么数据来源是日服wiki还是b站wiki还是game_kee或者Schale_DB
-   * @param type0 已知的活动类型(如果已经得知可以直接填，未知请在本方法里注册方法解析出来)
-   */
-  fun doInsert(
-    now: Date,
-    parseStart: Date,
-    parseEnd: Date,
-    active: MutableList<Activity>,
-    pending: MutableList<Activity>,
-    contentSource: String,
-    description: String = "",
-    katakana: String = "",
-    contentSourceJP: ActivityJPSource = ActivityJPSource.GAME_KEE,
-    type0: ActivityType? = null
-  ) {
-    var activity = Activity(
-      contentSource,
-      TimeUtil.calcTime(now, parseStart, true),
-      serverLocale = locale(type0),
-      katakana = katakana,
-      description = description
-    )
-    if (type0 != null) {
-      activity.type = type0
-    } else {
-      activity = when (contentSourceJP) {
-        ActivityJPSource.B_WIKI -> extraActivityJPTypeFromCN(activity)
-        ActivityJPSource.WIKI_RU -> extraActivityJPTypeFromJPAndTranslate(activity)
-        ActivityJPSource.GAME_KEE -> extraActivityJPTypeFromGameKee(activity)
-        ActivityJPSource.SCHALE_DB -> extraActivityJPTypeFromSchaleDB(activity)
-      }
-    }
     if (now.before(parseStart)) {
       pending.add(activity)
     } else if (now.before(parseEnd)) {

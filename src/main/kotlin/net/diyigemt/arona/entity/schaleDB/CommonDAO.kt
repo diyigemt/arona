@@ -3,6 +3,8 @@ package net.diyigemt.arona.entity.schaleDB
 import net.diyigemt.arona.db.DB
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.data.schaledb.CurrentData
+import net.diyigemt.arona.entity.Activity
+import net.diyigemt.arona.entity.ServerLocale
 import net.diyigemt.arona.util.scbaleDB.SchaleDBDataSyncService
 import net.diyigemt.arona.util.scbaleDB.SchaleDBUtil
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
@@ -82,22 +84,22 @@ data class CommonDAO(
     var res: T
 
     //JPN
-    res = generateServerData(SchaleDBUtil.ServerType.JPN, dao)
+    res = generateServerData(ServerLocale.JP, dao)
 
     //GLB
-    res = generateServerData(SchaleDBUtil.ServerType.GLB, res)
+    res = generateServerData(ServerLocale.GLOBAL, res)
 
     return res
   }
 
-  private fun <T : BaseDAO> generateServerData(type : SchaleDBUtil.ServerType, dao : T) : T{
+  private fun <T : BaseDAO> generateServerData(type : ServerLocale, dao : T) : T{
     val serverType = type.ordinal
     dao as CommonDAO
     //character
     var query = kotlin.runCatching {
       DataBaseProvider.query(DB.DATA.ordinal) {
         CurrentData.select(
-          CurrentData.type eq "STUDENT" and (CurrentData.server eq type.name)
+          CurrentData.type eq "STUDENT" and (CurrentData.server eq type.dbName)
         ).groupBy(CurrentData.start, CurrentData.end).toList()
       }
     }.getOrNull()?: mutableListOf()
@@ -115,7 +117,7 @@ data class CommonDAO(
     query = kotlin.runCatching {
       DataBaseProvider.query(DB.DATA.ordinal) {
         CurrentData.select(
-          CurrentData.type eq "STUDENT" and (CurrentData.server eq type.name)
+          CurrentData.type eq "STUDENT" and (CurrentData.server eq type.dbName)
         ).toList()
       }
     }.getOrNull()?: mutableListOf()
@@ -135,7 +137,7 @@ data class CommonDAO(
     query = kotlin.runCatching {
       DataBaseProvider.query(DB.DATA.ordinal) {
         CurrentData.select(
-          CurrentData.type eq "EVENT" and (CurrentData.server eq type.name)
+          CurrentData.type eq "EVENT" and (CurrentData.server eq type.dbName)
         ).toList()
       }
     }.getOrNull()?: mutableListOf()
@@ -151,7 +153,7 @@ data class CommonDAO(
     query = kotlin.runCatching {
       DataBaseProvider.query(DB.DATA.ordinal) {
         CurrentData.select(
-          CurrentData.type eq "RAID" and (CurrentData.server eq type.name)
+          CurrentData.type eq "RAID" and (CurrentData.server eq type.dbName)
         ).toList()
       }
     }.getOrNull()?: mutableListOf()

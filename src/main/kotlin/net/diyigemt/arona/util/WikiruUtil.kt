@@ -1,6 +1,7 @@
 package net.diyigemt.arona.util
 
 import net.diyigemt.arona.entity.Activity
+import net.diyigemt.arona.entity.ActivityType
 import net.diyigemt.arona.util.ScriptInterpreter.color
 import net.diyigemt.arona.util.ScriptInterpreter.default
 import net.diyigemt.arona.util.ScriptInterpreter.ref
@@ -60,8 +61,15 @@ object WikiruUtil {
         timeEnd = SimpleDateFormat("M/d HH:mm").parse(time.substring(time.indexOf("～") + 1))
         timeEnd.year = timeStart.year
       }
-
-      ActivityUtil.doInsert(Calendar.getInstance().time, timeStart, timeEnd, active, pending, name, katakana = katakana0, contentSourceJP = ActivityUtil.ActivityJPSource.WIKI_RU)
+      ActivityUtil.insertJpActivity(
+        Calendar.getInstance().time,
+        timeStart,
+        timeEnd,
+        active,
+        pending,
+        name,
+        from = ActivityUtil.ActivityJPSource.WIKI_RU,
+      )
     }
 
     active.sortByDescending { it.type.level }

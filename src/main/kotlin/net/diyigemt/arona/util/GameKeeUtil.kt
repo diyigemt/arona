@@ -2,6 +2,7 @@ package net.diyigemt.arona.util
 
 import com.google.gson.Gson
 import net.diyigemt.arona.entity.Activity
+import net.diyigemt.arona.entity.ActivityType
 import net.diyigemt.arona.entity.GameKeeDAO
 import org.jsoup.Jsoup
 import java.util.*
@@ -29,15 +30,14 @@ object GameKeeUtil {
     val pending : MutableList<Activity> = mutableListOf()
 
     for(i in json.data){
-      ActivityUtil.doInsert(
+      ActivityUtil.insertJpActivity(
         Calendar.getInstance().time,
         Date(i.begin_at * 1000),
         Date(i.end_at * 1000),
         active,
         pending,
         i.title,
-        description = i.description,
-        contentSourceJP = ActivityUtil.ActivityJPSource.GAME_KEE
+        from = ActivityUtil.ActivityJPSource.GAME_KEE,
       )
     }
 

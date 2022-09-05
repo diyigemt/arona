@@ -39,7 +39,7 @@ object DataBaseProvider: BaseFunctionProvider() {
     }
   }
 
-  fun connectDataBase(dataBaseName : String){
+  private fun connectDataBase(dataBaseName : String){
     var tmp = Connection(null, ConnectionStatus.DISCONNECTED)
     runCatching {
       tmp = Connection(

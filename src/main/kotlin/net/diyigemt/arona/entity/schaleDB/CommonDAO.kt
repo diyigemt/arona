@@ -3,15 +3,11 @@ package net.diyigemt.arona.entity.schaleDB
 import net.diyigemt.arona.db.DB
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.data.schaledb.CurrentData
-import net.diyigemt.arona.entity.Activity
+import net.diyigemt.arona.db.data.schaledb.Raid
 import net.diyigemt.arona.entity.ServerLocale
 import net.diyigemt.arona.util.scbaleDB.SchaleDBDataSyncService
-import net.diyigemt.arona.util.scbaleDB.SchaleDBUtil
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.deleteAll
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
 
 /**
  *@Author hjn
@@ -66,6 +62,11 @@ data class CommonDAO(
             it[server] = item.abbreviation ?: getServer(isJPN)
             it[start] = raid.start
             it[end] = raid.end
+          }
+
+          Raid.update ({ Raid.Id eq raid.raid }){
+            if (isJPN) it[CurrentJPN] = raid.terrain?: ""
+            else it[CurrentGLB] = raid.terrain?: ""
           }
         }
       }
@@ -152,9 +153,9 @@ data class CommonDAO(
     //raid
     query = kotlin.runCatching {
       DataBaseProvider.query(DB.DATA.ordinal) {
-        CurrentData.select(
+        CurrentData.join(Raid, JoinType.INNER, additionalConstraint = {CurrentData.value eq Raid.Id}).select {
           CurrentData.type eq "RAID" and (CurrentData.server eq type.dbName)
-        ).toList()
+        }.toList()
       }
     }.getOrNull()?: mutableListOf()
 
@@ -162,7 +163,11 @@ data class CommonDAO(
       val start = item.getOrNull(CurrentData.start)!!
       val end = item.getOrNull(CurrentData.end)!!
       val value = item.getOrNull(CurrentData.value)!!
-      dao.regions[serverType].current_raid = dao.regions[serverType].current_raid.plus(CurrentRaid(value,"", start, end))
+      val terrain = when(type){
+        ServerLocale.GLOBAL -> item.getOrNull(Raid.CurrentGLB)!!
+        ServerLocale.JP -> item.getOrNull(Raid.CurrentJPN)!!
+      }
+      dao.regions[serverType].current_raid = dao.regions[serverType].current_raid.plus(CurrentRaid(value, terrain, start, end))
     }
 
     return dao

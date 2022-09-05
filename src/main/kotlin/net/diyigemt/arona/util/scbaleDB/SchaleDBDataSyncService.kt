@@ -46,10 +46,15 @@ object SchaleDBDataSyncService : AronaQuartzService{
     override fun execute(context: JobExecutionContext?) = getData()
 
     fun getData(){
-      SchaleDBUtil.commonItem = getCommonData()
-      SchaleDBUtil.studentItem = getStudentData()
-      SchaleDBUtil.localizationItem = getLocalizationData()
-      SchaleDBUtil.raidItem = getRaidData()
+      kotlin.runCatching {
+        SchaleDBUtil.studentItem = getStudentData()
+        SchaleDBUtil.localizationItem = getLocalizationData()
+        SchaleDBUtil.raidItem = getRaidData()
+        SchaleDBUtil.commonItem = getCommonData()
+      }.onFailure {
+        Arona.warning(it.toString())
+        Arona.warning("数据同步失败，无法保证数据准确性")
+      }
     }
   }
 
@@ -116,8 +121,8 @@ object SchaleDBDataSyncService : AronaQuartzService{
       DataBaseProvider.query(DB.DATA.ordinal) { MD5.select(MD5.name eq dataType).first() }
     }.getOrNull()
     val dao = Gson().fromJson(res.getOrDefault(""), T::class.java)
+    resString += "Source: $dataType"
     if (query?.getOrNull(MD5.name) != null){
-      resString += "Source: ${query.getOrNull(MD5.name).toString()}"
       when(query.getOrNull(MD5.remote)){
         RemoteType.GITHUB.name -> apply {
           resString += " from GitHub"

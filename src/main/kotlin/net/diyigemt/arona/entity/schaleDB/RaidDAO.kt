@@ -42,6 +42,8 @@ data class RaidDAO(
           it[Id] = item.Id
           it[IsReleased] = item.IsReleased.first()
           it[NameCn] = item.NameCn
+          it[CurrentJPN] = ""
+          it[CurrentGLB] = ""
         }
       }
     }

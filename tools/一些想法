@@ -1,0 +1,10 @@
+撤回消息 /r (recall)
+撤回此消息的前一条消息 /rc1 | /rc (recall current offset 1)
+撤回此消息的前第二条消息 /rc2 (recall current offset 2)
+撤回此消息的前两条消息 /rc1t2 (recall current from 1 to 2)
+撤回机器人的前一条消息 /rb1 | /rb1 | /r (recall bot offset 1)
+撤回机器人的前第二条消息 /rb2 (recall bot offset 2)
+撤回机器人的前两条消息 /rc1t2 (recall current from 1 to 2)
+
+0 10 20
+limit - history

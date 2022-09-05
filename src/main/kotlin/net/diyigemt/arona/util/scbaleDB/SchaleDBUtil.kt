@@ -75,13 +75,19 @@ object SchaleDBUtil {
       val raid = CalendarFactory.getRaidById(item.raid)
       //未开放的活动不予显示
       if(raid == null || !raid.IsReleased[0]) continue
+      val terrain = raid.Terrain.firstOrNull().let {
+        return@let if (it.isNullOrBlank()) ""
+        else it.replace("Outdoor", "屋外")
+          .replace("Street", "市街")
+          .replace("Indoor", "室内")
+      }
       function.call(
         now,
         Date(item.start * 1000),
         Date(item.end * 1000),
         active,
         pending,
-        raid.NameCn,
+        "${raid.NameCn}($terrain)",
         ActivityUtil.ActivityJPSource.SCHALE_DB,
         ActivityType.DECISIVE_BATTLE
       )

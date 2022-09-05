@@ -13,6 +13,8 @@ import net.diyigemt.arona.db.name.TeacherName
 import net.diyigemt.arona.db.name.TeacherNameTable
 import net.diyigemt.arona.entity.ServerResponse
 import net.diyigemt.arona.interfaces.InitializedFunction
+import net.diyigemt.arona.util.NetworkUtil.BACKEND_ADDRESS
+import net.diyigemt.arona.util.NetworkUtil.baseRequest
 import net.mamoe.mirai.console.plugin.version
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.message.data.MessageChainBuilder
@@ -28,9 +30,8 @@ import kotlin.reflect.jvm.isAccessible
 
 object GeneralUtils: InitializedFunction() {
 
-  private const val BACKEND_ADDRESS = "https://arona.diyigemt.net/api/v1"
   private const val IMAGE_FOLDER = "/image"
-  private const val BACKEND_IMAGE_RESOURCE = "https://arona.diyigemt.net$IMAGE_FOLDER"
+  private const val BACKEND_IMAGE_RESOURCE = "${BACKEND_ADDRESS}$IMAGE_FOLDER"
 
   fun checkService(group: Contact?): Boolean = when(group) {
     is Group -> AronaConfig.groups.contains(group.id)
@@ -80,39 +81,6 @@ object GeneralUtils: InitializedFunction() {
     }
   }
 
-  inline fun <reified T> fetchDataFromServer(api: String, data: MutableMap<String, String> = mutableMapOf()): ServerResponse<T> {
-    val response = fetchDataFromServerSource(api, data)
-    return Json.decodeFromString(response.body())
-  }
-
-  fun fetchDataFromServerSource(api: String, data: MutableMap<String, String> = mutableMapOf()): Response {
-    return baseRequest(api)
-      .data(data)
-      .execute()
-  }
-
-  inline fun <reified T> sendDataToServer(api: String, data: Any): ServerResponse<T> {
-    val response = sendDataToServerSource(api, data)
-    return Json.decodeFromString(response.body())
-  }
-
-  fun sendDataToServerSource(api: String, data: Any): Response {
-    val map = mutableMapOf<String, String>()
-    data::class.memberProperties.forEach {
-      it.isAccessible = true
-      map[it.name] = it.call(null).toString()
-    }
-    return baseRequest(api)
-      .data(map)
-      .method(Connection.Method.POST)
-      .execute()
-  }
-
-  private fun baseRequest(api: String, source: String = BACKEND_ADDRESS): Connection = Jsoup.connect("$source${api}")
-    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
-    .ignoreContentType(true)
-    .header("Authorization", AronaConfig.uuid)
-    .header("version", Arona.version.toString())
 
   private fun imageRequest(subFolder: String, fileName: String, localFile: File): File {
     val connection = baseRequest("$subFolder/$fileName", BACKEND_IMAGE_RESOURCE)

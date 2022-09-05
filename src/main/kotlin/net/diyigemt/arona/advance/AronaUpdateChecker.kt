@@ -10,6 +10,7 @@ import net.diyigemt.arona.quartz.QuartzProvider
 import net.diyigemt.arona.service.AronaQuartzService
 import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.GeneralUtils.clearExtraQute
+import net.diyigemt.arona.util.NetworkUtil
 import net.mamoe.mirai.console.plugin.version
 import net.mamoe.mirai.console.util.SemVersion
 import org.jsoup.Jsoup
@@ -36,7 +37,7 @@ object AronaUpdateChecker: AronaQuartzService {
 
   class UpdateCheckJob: Job {
     override fun execute(context: JobExecutionContext?) {
-      val response = GeneralUtils.fetchDataFromServer<VersionInfo>("/version")
+      val response = NetworkUtil.fetchDataFromServer<VersionInfo>("/version")
       val version = response.data.version
       val nowVersion = SemVersion(version.replace("v", ""))
       if (Arona.version == nowVersion) return

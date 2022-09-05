@@ -5,6 +5,7 @@ import kotlinx.coroutines.withContext
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.util.GeneralUtils
+import net.diyigemt.arona.util.NetworkUtil
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.UserCommandSender
@@ -53,7 +54,7 @@ object TrainerCommand : SimpleCommand(
 
   private suspend fun sendStudent(contact: Contact, name: String) {
     // 获取学生名字对应的图片名字
-    val response = GeneralUtils.fetchDataFromServer<String>("/student-rank", mutableMapOf(
+    val response = NetworkUtil.fetchDataFromServer<String>("/student-rank", mutableMapOf(
       "name" to name,
       "version" to "v2"
     ))

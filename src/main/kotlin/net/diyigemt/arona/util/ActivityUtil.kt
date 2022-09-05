@@ -468,7 +468,6 @@ object ActivityUtil {
   }
 
   private fun extraActivityJPTypeFromCN(activity: Activity): Activity {
-    val source = activity.content
     return activity
   }
 

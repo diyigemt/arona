@@ -30,7 +30,7 @@ object GachaHistoryCommand : SimpleCommand(
     var ss = "历史排行:\n"
     history
       .map {
-        val teacherName = queryTeacherNameFromDB(subject, user)
+        val teacherName = queryTeacherNameFromDB(subject, subject[it.id.value]!!)
         val rate = if (it.count3 == 0) 0 else it.points / it.count3
         "${teacherName}(${it.id.value}): ${it.points}抽/${it.count3}个3星 = $rate"
       }

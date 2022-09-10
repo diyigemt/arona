@@ -29,11 +29,11 @@ object GachaLimitTable: IdTable<Long>(name = "GachaLimit") {
     DataBaseProvider.query {
       if (group0 == null) {
         GachaLimitTable.update() {
-          it[count] = AronaGachaConfig.limit
+          it[count] = 0
         }
       } else {
         GachaLimitTable.update({ group eq group0 }) {
-          it[count] = AronaGachaConfig.limit
+          it[count] = 0
         }
       }
     }

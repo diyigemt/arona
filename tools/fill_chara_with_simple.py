@@ -14,9 +14,6 @@ if __name__ == '__main__':
     index = 0
     print("数据库连接成功")
     for file in os.listdir(name_and_code):
-        if file.find("黑兔") != -1:
-            a = 1
-            pass
         divs = file.replace(".png", "")
         names = divs.split("_")
         first_name = names[0]

@@ -57,6 +57,7 @@ Please note that for various reasons, developers may **stop updating** or **dele
 3. 将抽卡限制记录信息改用数据库存储
 4. 抽卡配置指令支持配置1 2 3 星和pick up出货率，并可以修改每日限制次数和撤回时间间隔
 5. 添加游戏名记录功能，方便对社团进行管理，具体使用请看[这里](#game-name)
+6. 修复抽卡限制没有刷新的问题
 
 2022-08-29 v1.0.7-M1
 

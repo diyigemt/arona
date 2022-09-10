@@ -13,7 +13,7 @@ data class GameKeeDAO(
 
 data class Data(
   val id : Int,
-  val title : String,
+  var title : String,
   val link_url : String,
   val picture : String,
   val description : String,

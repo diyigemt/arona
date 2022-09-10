@@ -71,6 +71,8 @@ object ActivityUtil {
 
   private fun fetchENActivityFromSchaleDB() : Pair<List<Activity>, List<Activity>> = SchaleDBUtil.getGlobalEventData()
 
+  private fun fetchENActivityFromGameKee() : Pair<List<Activity>, List<Activity>> = GameKeeUtil.getEventData(ServerLocale.GLOBAL)
+
   fun fetchENActivity(): Pair<List<Activity>, List<Activity>>{
     val list = mutableListOf(
       ActivityUtil::fetchENActivityFromSchaleDB,
@@ -79,6 +81,7 @@ object ActivityUtil {
     val targetFunction = when(AronaNotifyConfig.defaultENActivitySource) {
       ActivityENSource.SCHALE_DB -> ActivityUtil::fetchENActivityFromSchaleDB
       ActivityENSource.BILIBILI -> ActivityUtil::fetchENActivityFromBiliBili
+      ActivityENSource.GAME_KEE -> ActivityUtil::fetchENActivityFromGameKee
     }
     return doFetch(list, targetFunction)
   }
@@ -354,7 +357,7 @@ object ActivityUtil {
     return parse
   }
 
-  private fun fetchJPActivityFromGameKee(): Pair<List<Activity>, List<Activity>> = GameKeeUtil.getEventData()
+  private fun fetchJPActivityFromGameKee(): Pair<List<Activity>, List<Activity>> = GameKeeUtil.getEventData(ServerLocale.JP)
 
   private fun fetchJPActivityFromSchaleDB(): Pair<List<Activity>, List<Activity>> = SchaleDBUtil.getJPEventData()
 
@@ -471,21 +474,23 @@ object ActivityUtil {
     return activity
   }
 
-  private fun extraActivityJPTypeFromGameKee(activity: Activity): Activity {
+  private fun extraActivityTypeFromGameKee(activity: Activity, server: ServerLocale): Activity {
     var source = activity.content
-      .replace("【日服】", "")
+      .replace("【" + server.serverName + "】", "")
       .replace("（", "(")
       .replace("）", ")")
     activity.type = ActivityType.ACTIVITY
     when {
       source.contains("卡池") -> {
         activity.type = ActivityType.PICK_UP
-        source = source.replace("【日服卡池】", "Pick Up")
+        source = source.replace("【" + server.serverName + "卡池" + "】", "Pick Up: ")
       }
       source.contains("指名手配") -> activity.type = ActivityType.WANTED_DROP
+      source.contains("悬赏通缉") -> activity.type = ActivityType.WANTED_DROP
       source.contains("学院交流") -> activity.type = ActivityType.COLLEGE_EXCHANGE_DROP
       source.contains("特别依赖") -> activity.type = ActivityType.SPECIAL_DROP
       source.contains("日程") -> activity.type = ActivityType.SCHEDULE
+      source.contains("课程表") -> activity.type = ActivityType.SCHEDULE
       source.contains("总力战") -> activity.type = ActivityType.DECISIVE_BATTLE
       source.contains("任务（Nor") -> activity.type = ActivityType.N2_3
       source.contains("任务（Har") -> activity.type = ActivityType.H2_3
@@ -526,7 +531,7 @@ object ActivityUtil {
       activity = when (from) {
         ActivityJPSource.B_WIKI -> extraActivityJPTypeFromCN(activity)
         ActivityJPSource.WIKI_RU -> extraActivityJPTypeFromJPAndTranslate(activity)
-        ActivityJPSource.GAME_KEE -> extraActivityJPTypeFromGameKee(activity)
+        ActivityJPSource.GAME_KEE -> extraActivityTypeFromGameKee(activity, ServerLocale.JP)
         ActivityJPSource.SCHALE_DB -> extraActivityJPTypeFromSchaleDB(activity)
       }
     } else {
@@ -562,8 +567,9 @@ object ActivityUtil {
     )
     if (type0 == ActivityType.NULL) {
       activity = when (from) {
-        ActivityENSource.SCHALE_DB -> extraActivityJPTypeFromSchaleDB(activity)
+        ActivityENSource.SCHALE_DB -> activity
         ActivityENSource.BILIBILI -> activity
+        ActivityENSource.GAME_KEE -> extraActivityTypeFromGameKee(activity, ServerLocale.GLOBAL)
       }
     } else {
       activity.type = type0
@@ -580,7 +586,7 @@ object ActivityUtil {
    * @param active 正在进行的活动列表
    * @param pending 即将开始的活动列表
    */
-  fun doInsert0(
+  private fun doInsert0(
     now: Date,
     parseStart: Date,
     parseEnd: Date,
@@ -642,6 +648,6 @@ object ActivityUtil {
   }
 
   enum class ActivityENSource {
-    SCHALE_DB, BILIBILI
+    SCHALE_DB, BILIBILI, GAME_KEE
   }
 }

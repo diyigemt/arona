@@ -114,8 +114,8 @@ object GeneralUtils: InitializedFunction() {
       }
       localFile
     } else {
-      // 有本地图片 比对hash值检查是否需要更新
-      return if (localDB.hash != imageResult.hash) {
+      // 有本地图片 如果本地hash值与服务器不一致或者本地文件不存在则获取图片
+      return if (localDB.hash != imageResult.hash || !localFile.exists()) {
         // 删除本地图片并重新获取
         if (localDB.path != imageResult.path) {
           localImageFile(localDB.path).delete()

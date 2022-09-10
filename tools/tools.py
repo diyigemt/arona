@@ -44,7 +44,8 @@ def update_alias(id: str, alias: list[str], cursor: sqlite3.Cursor, connection: 
         cursor.execute("SELECT * FROM `image` WHERE `name` = '%s'" % a)
         history = cursor.fetchone()
         if history != None:
-            cursor.execute("UPDATE `image` SET `path` = '%s', `hash` = '%s'" % (id, id))
+            id0 = str(history[0])
+            cursor.execute("UPDATE `image` SET `path` = '%s', `hash` = '%s' WHERE `id` = '%s'" % (id, id, id0))
         else:
             cursor.execute("INSERT INTO `image`(`name`, `path`, `hash`) VALUES ('%s', '%s', '%s')" % (a, id, id))
         connection.commit() 
@@ -63,7 +64,8 @@ def insert_into_db(name: str, hash: str, folder: str, cursor: sqlite3.Cursor, co
     history = cursor.fetchone()
     # 有记录 更新名字和hash
     if history != None:
-        cursor.execute("UPDATE `image` SET `path` = '%s', `hash` = '%s'" % (path, hash))
+        id = str(history[0])
+        cursor.execute("UPDATE `image` SET `path` = '%s', `hash` = '%s' WHERE `id` = '%s'" % (path, hash, id))
     else:
     # 否则新建记录   
         cursor.execute("INSERT INTO `image`(`name`, `path`, `hash`) VALUES ('%s', '%s', '%s')" % (last_name, path, hash))

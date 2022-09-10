@@ -76,7 +76,8 @@ object ActivityUtil {
   fun fetchENActivity(): Pair<List<Activity>, List<Activity>>{
     val list = mutableListOf(
       ActivityUtil::fetchENActivityFromSchaleDB,
-      ActivityUtil::fetchENActivityFromBiliBili
+      ActivityUtil::fetchENActivityFromBiliBili,
+      ActivityUtil::fetchENActivityFromGameKee
     )
     val targetFunction = when(AronaNotifyConfig.defaultENActivitySource) {
       ActivityENSource.SCHALE_DB -> ActivityUtil::fetchENActivityFromSchaleDB

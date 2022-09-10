@@ -20,7 +20,6 @@ object TrainerCommand : SimpleCommand(
   Arona,"trainer", "攻略",
   description = "主线地图和学生攻略"
 ), AronaService {
-  private val MapRegex: Regex = Regex("^([1-9]\\d?-[1-5])|(H[1-9]\\d?-[1-3])$")
   const val StudentRankFolder: String = "/student_rank"
   const val ChapterMapFolder: String = "/chapter_map"
   @Handler
@@ -33,39 +32,8 @@ object TrainerCommand : SimpleCommand(
       subject.sendMessage("南通爬")
       return
     }
-    val match = MapRegex.matchEntire(str)
-    // 地图攻略
-    if  (match != null) {
-      sendMap(subject, match)
-    } else {
-      // 学生攻略
-      sendStudent(subject, str)
-    }
-  }
-
-  private suspend fun sendMap(contact: Contact, match: MatchResult) {
-    val group = match.groupValues
-    val id = group[0]
-    val file = GeneralUtils.getImageOrDownload(ChapterMapFolder, "${id}.png")
-    sendImage(contact, file)
-//    val response = GeneralUtils.fetchDataFromServer<String>("/main-map?id=${id}")
-//    contact.sendMessage(response.data.deserializeMiraiCode())
-  }
-
-  private suspend fun sendStudent(contact: Contact, name: String) {
-    // 获取学生名字对应的图片名字
-    val response = NetworkUtil.fetchDataFromServer<String>("/student-rank", mutableMapOf(
-      "name" to name,
-      "version" to "v2"
-    ))
-    val data = response.data
-    // 信息有误
-    if (data.length < 5) {
-      return
-    }
-    val file = GeneralUtils.getImageOrDownload(StudentRankFolder, data)
-    sendImage(contact, file)
-//    contact.sendMessage(response.data.deserializeMiraiCode())
+    val file = GeneralUtils.loadImageOrUpdate(str) ?: return
+    sendImage(subject, file)
   }
 
   private suspend fun sendImage(contact: Contact, image: File) {

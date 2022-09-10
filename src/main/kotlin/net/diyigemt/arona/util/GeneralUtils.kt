@@ -8,7 +8,10 @@ import net.diyigemt.arona.advance.AronaUpdateChecker
 import net.diyigemt.arona.command.CallMeCommand
 import net.diyigemt.arona.command.TrainerCommand
 import net.diyigemt.arona.config.AronaConfig
+import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.DataBaseProvider.query
+import net.diyigemt.arona.db.image.ImageTable
+import net.diyigemt.arona.db.image.ImageTableModel
 import net.diyigemt.arona.db.name.TeacherName
 import net.diyigemt.arona.db.name.TeacherNameTable
 import net.diyigemt.arona.entity.ServerResponse
@@ -81,9 +84,57 @@ object GeneralUtils: InitializedFunction() {
     }
   }
 
-
-  private fun imageRequest(subFolder: String, fileName: String, localFile: File): File {
-    val connection = baseRequest("$subFolder/$fileName", BACKEND_IMAGE_RESOURCE)
+  fun loadImageOrUpdate(name: String): File? {
+    // TODO 查本地数据库比对hash
+    val localDB = query {
+      ImageTableModel.find { ImageTable.name eq name }.firstOrNull()
+    }
+    val result = kotlin.runCatching {
+      NetworkUtil.requestImage(name)
+    }.onFailure {
+      // 服务器寄了 尝试从本地拿
+      if (localDB != null) {
+        val localFile = localImageFile(localDB.path)
+        return if (localFile.exists()) localFile else null
+      }
+      return null
+    }.getOrNull() ?: return null
+    val imageResult = result.data
+    val localFile = localImageFile(imageResult.path)
+    // 没有本地图片, 向后端下载并存入数据库中
+    return if (localDB == null) {
+      imageRequest(imageResult.path, localFile)
+      // 将本地图片信息写入数据库
+      query {
+        ImageTableModel.new {
+          this.name = name
+          this.path = imageResult.path
+          this.hash = imageResult.hash
+        }
+      }
+      localFile
+    } else {
+      // 有本地图片 比对hash值检查是否需要更新
+      return if (localDB.hash != imageResult.hash) {
+        // 删除本地图片并重新获取
+        if (localDB.path != imageResult.path) {
+          localImageFile(localDB.path).delete()
+        }
+        // 否则直接写入旧文件
+        imageRequest(imageResult.path, localFile)
+        // 更新hash
+        query {
+          localDB.hash = imageResult.hash
+          localDB.path = imageResult.path
+        }
+        localFile
+      } else {
+        localFile
+      }
+    }
+  }
+  private fun imageRequest(path: String, localFile: File): File {
+    val connection = baseRequest(path, BACKEND_IMAGE_RESOURCE)
     val res = connection.execute().bodyStream().readAllBytes()
     localFile.writeBytes(res)
     return localFile
@@ -91,13 +142,7 @@ object GeneralUtils: InitializedFunction() {
 
   private fun imageFileFolder(subFolder: String = "") = Arona.dataFolderPath(IMAGE_FOLDER) + subFolder
 
-  private fun localImageFile(fileName: String) = File(imageFileFolder(fileName.let { return@let if (fileName.startsWith("/")) fileName else "/$it" }))
-
-  fun getImageOrDownload(subFolder: String, fileName: String): File {
-    val file = localImageFile("$subFolder/$fileName")
-    if (file.exists()) return file
-    return imageRequest(subFolder, fileName, file)
-  }
+  private fun localImageFile(path: String) = File(imageFileFolder(path.let { return@let if (path.startsWith("/")) path else "/$it" }))
 
   override fun init() {
     // 初始化本地图片文件夹

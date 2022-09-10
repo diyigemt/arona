@@ -20,7 +20,8 @@ if __name__ == '__main__':
         history = cursor.fetchone()
         # 有记录 更新path和hash
         if history != None:
-            cursor.execute("UPDATE `image` SET `path` = '%s', `hash` = '%s'" % (file_path, hash))
+            id = str(history[0])
+            cursor.execute("UPDATE `image` SET `path` = '%s', `hash` = '%s' WHERE `id` = '%s'" % (file_path, hash, id))
         else:
         # 否则新建记录   
             cursor.execute("INSERT INTO `image`(`name`, `path`, `hash`) VALUES ('%s', '%s', '%s')" % (file_name, file_path, hash))

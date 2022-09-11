@@ -20,7 +20,7 @@ import org.quartz.JobKey
 
 object AronaUpdateChecker: AronaQuartzService {
   private const val AronaUpdateCheckJobKey = "AronaUpdateCheck"
-  override lateinit var jobKey: JobKey
+  override var jobKey: JobKey? = null
   override val id: Int = 14
   override val name: String = "自动更新检查"
   override var enable: Boolean = true
@@ -62,7 +62,7 @@ object AronaUpdateChecker: AronaQuartzService {
       AronaUpdateCheckJobKey
     ).first
     QuartzProvider.createSimpleDelayJob(20) {
-      QuartzProvider.triggerTask(jobKey)
+      QuartzProvider.triggerTask(jobKey!!)
     }
   }
 }

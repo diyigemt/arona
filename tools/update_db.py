@@ -3,6 +3,7 @@ import os
 import hashlib
 da_path = r"C:\Users\qwe13\Desktop\data.db"
 
+## 批量更新数据库
 if __name__ == '__main__':
     connection = sqlite3.connect(da_path)
     cursor = connection.cursor()

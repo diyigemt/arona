@@ -1,5 +1,9 @@
 import sqlite3
 import os
+
+## 将巴哈角色攻略图片插入数据库
+## 已弃用
+
 file_path = r"C:\Users\qwe13\Desktop\data.db"
 name_and_code = r".\image\student_rank"
 def replace0(source):

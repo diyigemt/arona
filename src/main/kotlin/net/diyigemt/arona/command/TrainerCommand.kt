@@ -22,6 +22,7 @@ object TrainerCommand : SimpleCommand(
 ), AronaService {
   const val StudentRankFolder: String = "/student_rank"
   const val ChapterMapFolder: String = "/chapter_map"
+  const val OtherFolder: String = "/some"
   @Handler
   suspend fun UserCommandSender.trainer(str: String) {
     if (str == "阿罗娜" || str == "彩奈") {

@@ -4,9 +4,11 @@ import net.diyigemt.arona.quartz.QuartzProvider
 import org.quartz.JobKey
 
 interface AronaQuartzService: AronaService {
-  var jobKey: JobKey
+  var jobKey: JobKey?
 
   override fun disableService() {
-    QuartzProvider.deleteTask(jobKey)
+    if (jobKey != null) {
+      QuartzProvider.deleteTask(jobKey!!)
+    }
   }
 }

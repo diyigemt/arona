@@ -4,5 +4,6 @@ package net.diyigemt.arona.entity
 data class ImageResult(
   val name: String = "",
   val path: String = "",
-  val hash: String = ""
+  val hash: String = "",
+  val type: Int = 1,
 )

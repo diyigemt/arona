@@ -4,8 +4,11 @@ import requests
 import zhconv
 import sqlite3
 from tools import replace_name, draw_image, insert_into_db
+
+## 从b站专栏获取夜喵的角色图文攻略
+
 file_path = r"C:\Users\qwe13\Desktop\data.db"
-img_folder = "image/student_rank/"
+img_folder = "/student_rank/"
 debug_index = -1
 cvs = ['cv15830417', 'cv15832875', 'cv15833934', 'cv15839738']
 # cvs = ['cv15839738']

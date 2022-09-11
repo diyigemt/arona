@@ -10,6 +10,7 @@ object ImageTable: LongIdTable(name = "Image") {
   val name: Column<String> = char("name", 255)
   val path: Column<String> = char("path", 255)
   val hash: Column<String> = char("hash", 255)
+  val type: Column<Int> = integer("type")
 }
 
 class ImageTableModel(id: EntityID<Long>): LongEntity(id) {
@@ -17,4 +18,5 @@ class ImageTableModel(id: EntityID<Long>): LongEntity(id) {
   var name by ImageTable.name
   var path by ImageTable.path
   var hash by ImageTable.hash
+  var type by ImageTable.type
 }

@@ -47,8 +47,8 @@ object ActivityUtil {
     1 to (Color.WHITE to Color(255, 140, 0)),
     2 to (Color.WHITE to Color(138, 43, 226)),
     3 to (Color.WHITE to Color(16, 126, 247)),
-    4 to (Color.WHITE to Color.RED),
-    5 to (Color.WHITE to Color.GREEN)
+    4 to (Color.WHITE to Color(245, 108, 108)),
+    5 to (Color.WHITE to Color(103, 194, 58))
   )
   // 从b_wiki获取数据
   fun fetchJPActivityFromCN(): Pair<List<Activity>, List<Activity>> {
@@ -84,7 +84,10 @@ object ActivityUtil {
       ActivityENSource.BILIBILI -> ActivityUtil::fetchENActivityFromBiliBili
       ActivityENSource.GAME_KEE -> ActivityUtil::fetchENActivityFromGameKee
     }
-    return doFetch(list, targetFunction)
+    return doFetch(list, targetFunction).let {
+      // 加入生日信息
+      it.first to it.second.toMutableList().also { a -> a.addAll(SchaleDBUtil.getENBirthdayData()) }
+    }
   }
 
   fun fetchJPActivity(): Pair<List<Activity>, List<Activity>> {
@@ -100,7 +103,10 @@ object ActivityUtil {
       ActivityJPSource.GAME_KEE -> ActivityUtil::fetchJPActivityFromGameKee
       ActivityJPSource.SCHALE_DB -> ActivityUtil::fetchJPActivityFromSchaleDB
     }
-    return doFetch(list, targetFunction)
+    return doFetch(list, targetFunction).let {
+      // 加入生日信息
+      it.first to it.second.toMutableList().also { a -> a.addAll(SchaleDBUtil.getJPBirthdayData()) }
+    }
   }
 
   private fun doFetch(list: MutableList<KFunction0<Pair<List<Activity>, List<Activity>>>>, select: KFunction<Pair<List<Activity>, List<Activity>>>): Pair<List<Activity>, List<Activity>> {
@@ -639,16 +645,26 @@ object ActivityUtil {
     ImageUtil.drawText(image, "即将开始", calcY())
     lineIndex++
     drawActivity(pending)
+    val comeFrom = when(server) {
+      ServerLocale.JP -> AronaNotifyConfig.defaultJPActivitySource.source
+      ServerLocale.GLOBAL -> AronaNotifyConfig.defaultENActivitySource.source
+    }
+    ImageUtil.drawText(image, "数据来源: $comeFrom", calcY())
     val imageFile = File(Arona.dataFolder.absolutePath + "/activity.png")
     ImageIO.write(image.first.scale(DEFAULT_IMAGE_SCALE), "png", imageFile)
     return imageFile
   }
 
-  enum class ActivityJPSource {
-    B_WIKI, WIKI_RU, GAME_KEE, SCHALE_DB
+  enum class ActivityJPSource(val source: String) {
+    B_WIKI("https://wiki.biligame.com/bluearchive/"),
+    WIKI_RU("https://bluearchive.wikiru.jp/"),
+    GAME_KEE("https://ba.gamekee.com/"),
+    SCHALE_DB("https://lonqie.github.io/SchaleDB/")
   }
 
-  enum class ActivityENSource {
-    SCHALE_DB, BILIBILI, GAME_KEE
+  enum class ActivityENSource(val source: String) {
+    SCHALE_DB("https://lonqie.github.io/SchaleDB/"),
+    BILIBILI("https://space.bilibili.com/1585224247"),
+    GAME_KEE("https://ba.gamekee.com/")
   }
 }

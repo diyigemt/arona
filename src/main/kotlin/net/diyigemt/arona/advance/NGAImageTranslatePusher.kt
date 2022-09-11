@@ -27,7 +27,7 @@ object NGAImageTranslatePusher : AronaQuartzService {
   )
   private const val ImageRegex = "\\[img][.]/([\\w/-]+[.](jpg|png|JPG|PNG))\\[/img]"
   private const val maxCache: Int = 3
-  override lateinit var jobKey: JobKey
+  override var jobKey: JobKey? = null
   override val id: Int = 13
   override val name: String = "nga图楼推送"
   override var enable: Boolean = true
@@ -194,7 +194,7 @@ object NGAImageTranslatePusher : AronaQuartzService {
       ImageTranslateCheckJobKey
     ).first
     QuartzProvider.createSimpleDelayJob(20) {
-      QuartzProvider.triggerTaskWithData(jobKey, mapOf(ImageTranslateCheckInitKey to true))
+      QuartzProvider.triggerTaskWithData(jobKey!!, mapOf(ImageTranslateCheckInitKey to true))
     }
   }
 }

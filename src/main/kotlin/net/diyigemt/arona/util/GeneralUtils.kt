@@ -27,7 +27,9 @@ import org.jetbrains.exposed.sql.and
 import org.jsoup.Connection
 import org.jsoup.Connection.Response
 import org.jsoup.Jsoup
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.nio.charset.Charset
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.isAccessible
 
@@ -110,6 +112,7 @@ object GeneralUtils: InitializedFunction() {
           this.name = name
           this.path = imageResult.path
           this.hash = imageResult.hash
+          this.type = imageResult.type
         }
       }
       localFile
@@ -126,6 +129,7 @@ object GeneralUtils: InitializedFunction() {
         query {
           localDB.hash = imageResult.hash
           localDB.path = imageResult.path
+          localDB.type = imageResult.type
         }
         localFile
       } else {
@@ -135,8 +139,17 @@ object GeneralUtils: InitializedFunction() {
   }
   private fun imageRequest(path: String, localFile: File): File {
     val connection = baseRequest(path, BACKEND_IMAGE_RESOURCE)
-    val res = connection.execute().bodyStream().readAllBytes()
-    localFile.writeBytes(res)
+    val stream = connection.execute().bodyStream()
+    val buffer = ByteArray(1024)
+    val byteOutputStream = ByteArrayOutputStream()
+    var len = stream.read(buffer)
+    while (len != -1) {
+      byteOutputStream.write(buffer, 0, len)
+      len = stream.read(buffer)
+    }
+    localFile.writeBytes(byteOutputStream.toByteArray())
+    stream.close()
+    byteOutputStream.close()
     return localFile
   }
 
@@ -148,5 +161,6 @@ object GeneralUtils: InitializedFunction() {
     // 初始化本地图片文件夹
     File(imageFileFolder(TrainerCommand.ChapterMapFolder)).also { it.mkdirs() }
     File(imageFileFolder(TrainerCommand.StudentRankFolder)).also { it.mkdirs() }
+    File(imageFileFolder(TrainerCommand.OtherFolder)).also { it.mkdirs() }
   }
 }

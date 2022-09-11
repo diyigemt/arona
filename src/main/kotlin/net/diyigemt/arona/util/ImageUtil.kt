@@ -13,8 +13,8 @@ object ImageUtil {
 
   private const val DEFAULT_PADDING: Int = 10
   fun createCalendarImage(eventLength: Int, contentMaxLength: Int, titleLength: Int = 20, fontSize: Float = DEFAULT_CALENDAR_FONT_SIZE.toFloat()): Pair<BufferedImage, Graphics2D> {
-    val width = fontSize * (max(contentMaxLength, titleLength) + 20) * 0.7
-    val height = (eventLength + 3) * (fontSize + DEFAULT_CALENDAR_LINE_MARGIN) + 2 * DEFAULT_CALENDAR_LINE_MARGIN
+    val width = fontSize * (max(contentMaxLength, titleLength) + 20) * 0.8
+    val height = (eventLength + 4) * (fontSize + DEFAULT_CALENDAR_LINE_MARGIN) + 2 * DEFAULT_CALENDAR_LINE_MARGIN
     val img = BufferedImage(width.toInt(), height.toInt(), BufferedImage.TYPE_4BYTE_ABGR)
     val g = img.createGraphics()
     g.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS,

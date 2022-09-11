@@ -26,6 +26,10 @@ object SchaleDBUtil {
 
   fun getJPEventData(): Pair<MutableList<Activity>, MutableList<Activity>> = getData(ServerLocale.JP)
 
+  fun getENBirthdayData(): List<Activity> = getBirthdayData(ServerLocale.GLOBAL)
+
+  fun getJPBirthdayData(): List<Activity> = getBirthdayData(ServerLocale.JP)
+
   private fun getData(type : ServerLocale) : Pair<MutableList<Activity>, MutableList<Activity>>{
     val active: MutableList<Activity> = mutableListOf()
     val pending: MutableList<Activity> = mutableListOf()
@@ -33,6 +37,10 @@ object SchaleDBUtil {
     val function = when(type) {
       ServerLocale.JP -> ActivityUtil::insertJpActivity
       ServerLocale.GLOBAL -> ActivityUtil::insertEnActivity
+    }
+    val source = when(type) {
+      ServerLocale.JP -> ActivityUtil.ActivityJPSource.SCHALE_DB
+      ServerLocale.GLOBAL -> ActivityUtil.ActivityENSource.SCHALE_DB
     }
     //Characters
     for (item in commonItem.regions[type.ordinal].current_gacha) {
@@ -47,7 +55,7 @@ object SchaleDBUtil {
         active,
         pending,
         CalendarFactory.getCharacterLocalizationName(item.characters),
-        ActivityUtil.ActivityJPSource.SCHALE_DB,
+        source,
         ActivityType.PICK_UP
       )
     }
@@ -65,7 +73,7 @@ object SchaleDBUtil {
         active,
         pending,
         CalendarFactory.getEventLocalizationName(item.event),
-        ActivityUtil.ActivityJPSource.SCHALE_DB,
+        source,
         ActivityType.ACTIVITY
       )
     }
@@ -88,7 +96,7 @@ object SchaleDBUtil {
         active,
         pending,
         "${raid.NameCn}($terrain)",
-        ActivityUtil.ActivityJPSource.SCHALE_DB,
+        source,
         ActivityType.DECISIVE_BATTLE
       )
     }
@@ -103,11 +111,38 @@ object SchaleDBUtil {
         active,
         pending,
         item.name + "的生日",
-        ActivityUtil.ActivityJPSource.SCHALE_DB,
+        source,
         ActivityType.BIRTHDAY
       )
     }
 
     return active to pending
+  }
+
+  private fun getBirthdayData(locale : ServerLocale): List<Activity> {
+    val list = mutableListOf<Activity>()
+    val function = when(locale) {
+      ServerLocale.JP -> ActivityUtil::insertJpActivity
+      ServerLocale.GLOBAL -> ActivityUtil::insertEnActivity
+    }
+    val source = when(locale) {
+      ServerLocale.JP -> ActivityUtil.ActivityJPSource.SCHALE_DB
+      ServerLocale.GLOBAL -> ActivityUtil.ActivityENSource.SCHALE_DB
+    }
+    if (birthdayList.isEmpty()) SchaleDBDataSyncService.BirthdayJob().getBirthdayList()
+    val now = Calendar.getInstance().time
+    for (item in birthdayList){
+      function.call(
+        now,
+        Date.from(item.date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()),
+        Date.from(item.date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()),
+        mutableListOf<Activity>(),
+        list,
+        item.name + "的生日",
+        source,
+        ActivityType.BIRTHDAY
+      )
+    }
+    return list
   }
 }

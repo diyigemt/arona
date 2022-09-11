@@ -26,7 +26,7 @@ import java.time.format.DateTimeFormatter
  *@Create 2022/8/20
  */
 object SchaleDBDataSyncService : AronaQuartzService{
-  override lateinit var jobKey: JobKey
+  override var jobKey: JobKey? = null
   lateinit var birthdayJobKey: JobKey
   override val id: Int = 19
   override val name: String = "数据同步服务"
@@ -188,7 +188,7 @@ object SchaleDBDataSyncService : AronaQuartzService{
       SchaleDBDataSyncServiceJobKey,
       SchaleDBDataSyncServiceJobKey
     ).first
-    QuartzProvider.triggerTask(jobKey)
+    QuartzProvider.triggerTask(jobKey!!)
 
     //生日计算，程序启动5秒后进行，每天0点刷新
     birthdayJobKey = QuartzProvider.createCronTask(

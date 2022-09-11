@@ -27,7 +27,7 @@ object ActivityNotify: AronaQuartzService {
   private const val MaintenanceKey = "maintenance"
   private const val DropActivityTime = 22
   private const val DropEndTime = 24 + 3 - DropActivityTime
-  override lateinit var jobKey: JobKey
+  override var jobKey: JobKey? = null
 
   class ActivityNotifyJob: Job {
     override fun execute(context: JobExecutionContext?) {
@@ -212,7 +212,7 @@ object ActivityNotify: AronaQuartzService {
       ActivityNotifyJobKey
     ).first
     QuartzProvider.createSimpleDelayJob(20) {
-      QuartzProvider.triggerTaskWithData(jobKey, mapOf(ActivityNotifyDataInitKey to true))
+      QuartzProvider.triggerTaskWithData(jobKey!!, mapOf(ActivityNotifyDataInitKey to true))
     }
   }
 

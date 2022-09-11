@@ -55,4 +55,5 @@ object NetworkUtil {
     .ignoreContentType(true)
     .header(AUTH_HEADER, AronaConfig.uuid)
     .header(VERSION_HEADER, Arona.version.toString())
+    .maxBodySize(1024 * 1024 * 10)
 }

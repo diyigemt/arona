@@ -6,6 +6,9 @@ from PIL import ImageDraw, ImageFont, Image
 import cv2
 import urllib
 from tools import replace_name
+
+## 从巴哈获取夜喵的角色图文攻略
+
 debug_index = -1
 url = "https://forum.gamer.com.tw/C.php?bsn=38898&snA=698&tnum=34"
 headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36"}

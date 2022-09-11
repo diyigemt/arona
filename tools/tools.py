@@ -3,6 +3,9 @@ from PIL import ImageDraw, ImageFont, Image
 import cv2
 import hashlib
 import sqlite3
+import os
+import re
+from zhon.hanzi import punctuation
 headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"}
 tmp_file_path = "tmp.png"
 tmp_file_path2 = "tmp2.png"
@@ -10,7 +13,8 @@ img_folder = "image/student_rank/"
 source_str = "图片来源: 巴哈姆特@夜喵貓貓咪喵(asaz5566a)"
 font_size = 28
 fnt = ImageFont.truetype('C:\Windows\Fonts\msyh.ttc', font_size)
-def draw_image(url: str, name: str):
+## 获取图片并在图片上添加图片来源
+def draw_image(url: str, name: str, override_path: str = ""):
     request = urllib.request.Request(url=url,headers=headers)
     response = urllib.request.urlopen(request)
     img = response.read()
@@ -24,7 +28,12 @@ def draw_image(url: str, name: str):
     bg.save(tmp_file_path2)
     bg = cv2.imread(tmp_file_path2)
     bg[0:rows, 0:cols] = img
+    name = re.sub('[\/:*?"<>|]','',name) # 移除非法字符
+    name = re.sub(r"[%s]+" %punctuation, "",name)
     final_path = img_folder + name
+    if override_path != "":
+        final_path = override_path + name
+
     cv2.imencode(".png", bg)[1].tofile(final_path)
     # 计算md5
     hash = ""
@@ -47,7 +56,7 @@ def update_alias(id: str, alias: list[str], cursor: sqlite3.Cursor, connection: 
             id0 = str(history[0])
             cursor.execute("UPDATE `image` SET `path` = '%s', `hash` = '%s' WHERE `id` = '%s'" % (id, id, id0))
         else:
-            cursor.execute("INSERT INTO `image`(`name`, `path`, `hash`) VALUES ('%s', '%s', '%s')" % (a, id, id))
+            cursor.execute("INSERT INTO `image`(`name`, `path`, `hash`, `type`) VALUES ('%s', '%s', '%s', 1)" % (a, id, id))
         connection.commit() 
 
 def insert_into_db(name: str, hash: str, folder: str, cursor: sqlite3.Cursor, connection: sqlite3.Connection):
@@ -68,13 +77,46 @@ def insert_into_db(name: str, hash: str, folder: str, cursor: sqlite3.Cursor, co
         cursor.execute("UPDATE `image` SET `path` = '%s', `hash` = '%s' WHERE `id` = '%s'" % (path, hash, id))
     else:
     # 否则新建记录   
-        cursor.execute("INSERT INTO `image`(`name`, `path`, `hash`) VALUES ('%s', '%s', '%s')" % (last_name, path, hash))
+        cursor.execute("INSERT INTO `image`(`name`, `path`, `hash`, `type`) VALUES ('%s', '%s', '%s', 1)" % (last_name, path, hash))
     connection.commit()
     if len(names) > 2:
         alias = names[2: len(names)]
         cursor.execute("SELECT * FROM `image` WHERE `hash` = '%s'" % hash)
         id = cursor.fetchone()[0]
         update_alias(id, alias, cursor, connection)
+
+base_img_folder = "image"
+def update_image(folder: str, cursor: sqlite3.Cursor, connection: sqlite3.Connection, type: int = 2):
+    index = 0
+    for file in os.listdir(base_img_folder + folder):
+        file_name = file.replace(".png", "")
+        file_path = base_img_folder + folder + file
+        file_path_absolute = folder + file
+        
+        
+        file_size = os.path.getsize(file_path) / 1024 / 1024 # M
+        # 将大于3M的图片进行压缩
+        if file_size > 3:
+            im = Image.open(file_path)
+            (x, y) = im.size
+            resize = im.resize((int(x * 0.7), int(y * 0.7)), Image.ANTIALIAS)
+            resize.save(file_path)
+        # 计算md5
+        hash = ""
+        with open(file_path, "rb") as f:
+            hash = hashlib.md5(f.read()).digest().hex()
+        cursor.execute("SELECT * FROM `image` WHERE `hash` = '%s' OR `name` = '%s'" % (hash, file_name))
+        history = cursor.fetchone()
+        # 有记录 更新path和hash
+        if history != None:
+            id = str(history[0])
+            cursor.execute("UPDATE `image` SET `path` = '%s', `hash` = '%s' WHERE `id` = '%s'" % (file_path_absolute, hash, id))
+        else:
+        # 否则新建记录   
+            cursor.execute("INSERT INTO `image`(`name`, `path`, `hash`, `type`) VALUES ('%s', '%s', '%s', %d)" % (file_name, file_path_absolute, hash, type))
+        connection.commit()
+        index += 1
+    return index
 
 replace_name = {
     "沙耶": "/老鼠/鼠鼠",

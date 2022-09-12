@@ -1,6 +1,6 @@
 ## 更新日志
 
-2022-09-012 v1.0.7
+2022-09-12 v1.0.8
 
 1. 删除配置文件arona-gacha-limit.yml，原有的配置项移动到arona-gacha.yml配置文件中
 2. 移除配置项arona-gacha->revoke，将功能移动到arona-gacha->revokeTime中

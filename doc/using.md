@@ -120,8 +120,6 @@ messageList:
     <summary>杂图列表:</summary>
     <img src="static/image-help.png" />
 </details>
-
-
 #### 1.9 游戏名记录<a id="game-name"> </a>
 
 `/游戏名 string` 将自己的游戏名添加到记录中。
@@ -338,6 +336,13 @@ NGA图楼推送配置，具体配置方法可以看[下面](#nga-config)
 | 6    | 小夏池         |
 | 7    | 水大叔池       |
 | 8    | 水千世老板娘池 |
+| 9    | 爱丽丝骑白子池 |
+| 10    | 86新春池 |
+| 11    | 纱织池 |
+| 12    | 春黑池 |
+| 13    | 小黑猫大兔子 |
+| 14    | 大狐狸 |
+| 15    | 泳装2期 |
 
 5.GachaLimit表
 
@@ -412,16 +417,12 @@ NGA图楼推送配置，具体配置方法可以看[下面](#nga-config)
     <summary>步骤2:</summary>
     <img src="static/help1.JPG" />
 </details>
-
-
 3. 双击`Tables`栏中的`GachaCharacters`数据表，编辑新老婆信息
 
 <details>
     <summary>步骤3:</summary>
     <img src="static/help2.JPG" />
 </details>
-
-
 其中`name`为老婆名字;`star`为老婆初始星级；`limit`表示老婆是限定还是常驻，其中1表示限定、0表示常驻；`id`为自动生成，无需填写。
 
 填写完毕后单击`Save and New`保存，即可关闭页面。
@@ -432,8 +433,6 @@ NGA图楼推送配置，具体配置方法可以看[下面](#nga-config)
     <summary>步骤4:</summary>
     <img src="static/help3.JPG" />
 </details>
-
-
 同上，只需要填入`name`作为新池子的名字即可。
 
 5. 双击`Tables`栏中的`GachaPoolCharacters`数据表，编辑新池子与新老婆的对应关系信息
@@ -442,24 +441,18 @@ NGA图楼推送配置，具体配置方法可以看[下面](#nga-config)
     <summary>步骤5-1:</summary>
     <img src="static/help4.JPG" />
 </details>
-
-
 其中`pool_id`为之前新建池子的主键，可以在这里看到
 
 <details>
     <summary>步骤5-2:</summary>
     <img src="static/help5.JPG" />
 </details>
-
-
 同理，`character_id`为之前新建的老婆信息的主键
 
 <details>
     <summary>步骤5-3:</summary>
     <img src="static/help6.JPG" />
 </details>
-
-
 **特别的**，一个池子可以有多个pickup，因此可以根据需要在`GachaPoolCharacters`对同一个池子添加多条数据。
 
 至此，数据库编辑完毕。

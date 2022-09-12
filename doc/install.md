@@ -32,6 +32,7 @@ Arona是依赖于Mirai-Console的一个插件，并不能独立工作，要使�
 6. 再次运行mirai-console即可享受arona的服务。
 
 **注意**，arona的运行依赖`chat-command`插件，该插件的安装方法与[步骤1](#step1)一致，你可以在[这里](https://github.com/project-mirai/chat-command)找到它的下载链接
+
 **本插件依赖的mirai-console最低版本为2.11.1**
 
 ## 初始化注意事项
@@ -85,4 +86,4 @@ arona一共提供了如下的指令：
 
 ## Arona配置
 
-在这: [arona配置](./using.md)
+在这: [arona配置](./using.md#config)

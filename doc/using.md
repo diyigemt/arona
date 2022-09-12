@@ -98,6 +98,7 @@ messageList:
     <summary>H19-3图文攻略:</summary>
     <img src="static/main-map.png" />
 </details>
+
 <details>
     <summary>学生攻略:</summary>
     <img src="static/student-rank.png" />
@@ -114,6 +115,11 @@ messageList:
     <summary>HOD图文攻略:</summary>
     <img src="static/hod.png" />
 </details>
+
+<details>
+    <summary>日服学生人权:</summary>
+    <img src="static/student-adv.png" />
+</details>
 由于杂图太多而且不好记名字，因此提供指令`/攻略 杂图`显示所有可用的名字列表
 
 <details>
@@ -129,7 +135,7 @@ messageList:
 以上命令也可以通过群私聊机器人调用，此时`谁是`指令将只提供游戏内名称并附上对应qq号。
 
 <details>
-    <summary>杂图列表:</summary>
+    <summary>例如:</summary>
     <img src="static/game-name.png" />
 </details>
 

@@ -23,6 +23,7 @@ import net.diyigemt.arona.interfaces.InitializedFunction
 import net.diyigemt.arona.quartz.QuartzProvider
 import net.diyigemt.arona.service.AronaServiceManager
 import net.diyigemt.arona.util.GeneralUtils
+import net.diyigemt.arona.util.NetworkUtil
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.descriptor.ExperimentalCommandDescriptors
 import net.mamoe.mirai.console.extension.PluginComponentStorage
@@ -83,6 +84,7 @@ object Arona : KotlinPlugin(
   }
 
   private fun init() {
+    NetworkUtil.registerInstance()
     AronaConfig.reload()
     AronaGachaConfig.init()
     AronaNudgeConfig.reload()

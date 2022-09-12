@@ -47,7 +47,7 @@ def replace0(source):
         source = source[first+1: last] + source[0:first]
     return source
 
-def update_alias(id: str, alias: list[str], cursor: sqlite3.Cursor, connection: sqlite3.Connection):
+def update_alias(id: str, alias: list[str], cursor: sqlite3.Cursor, connection: sqlite3.Connection, type: int = 1):
     for a in alias:
         a = replace0(a)
         cursor.execute("SELECT * FROM `image` WHERE `name` = '%s'" % a)
@@ -56,8 +56,16 @@ def update_alias(id: str, alias: list[str], cursor: sqlite3.Cursor, connection: 
             id0 = str(history[0])
             cursor.execute("UPDATE `image` SET `path` = '%s', `hash` = '%s' WHERE `id` = '%s'" % (id, id, id0))
         else:
-            cursor.execute("INSERT INTO `image`(`name`, `path`, `hash`, `type`) VALUES ('%s', '%s', '%s', 1)" % (a, id, id))
-        connection.commit() 
+            cursor.execute("INSERT INTO `image`(`name`, `path`, `hash`, `type`) VALUES ('%s', '%s', '%s', %d)" % (a, id, id, type))
+        connection.commit()
+    # 删除弃用的名字
+    cursor.execute("SELECT * FROM `image` WHERE `path` = '%s'" % id)
+    for item in cursor.fetchall():
+        item_name = str(item[1])
+        # 别名已弃用
+        if item_name not in alias:
+            target_id = str(item[0])
+            cursor.execute("DELETE FROM `image` WHERE `id` = '%s'" % target_id)
 
 def insert_into_db(name: str, hash: str, folder: str, cursor: sqlite3.Cursor, connection: sqlite3.Connection):
     path = folder + name
@@ -93,28 +101,50 @@ def update_image(folder: str, cursor: sqlite3.Cursor, connection: sqlite3.Connec
         file_path = base_img_folder + folder + file
         file_path_absolute = folder + file
         
+        file_names = file_name.split("_")
         
-        file_size = os.path.getsize(file_path) / 1024 / 1024 # M
-        # 将大于3M的图片进行压缩
-        if file_size > 3:
-            im = Image.open(file_path)
-            (x, y) = im.size
-            resize = im.resize((int(x * 0.7), int(y * 0.7)), Image.ANTIALIAS)
-            resize.save(file_path)
+        # file_size = os.path.getsize(file_path) / 1024 / 1024 # M
+        # # 将大于3M的图片进行压缩
+        # if file_size > 3:
+        #     im = Image.open(file_path)
+        #     (x, y) = im.size
+        #     resize = im.resize((int(x * 0.7), int(y * 0.7)), Image.ANTIALIAS)
+        #     resize.save(file_path)
         # 计算md5
         hash = ""
         with open(file_path, "rb") as f:
             hash = hashlib.md5(f.read()).digest().hex()
-        cursor.execute("SELECT * FROM `image` WHERE `hash` = '%s' OR `name` = '%s'" % (hash, file_name))
+        # 更新主记录
+        main_name = file_names[0]
+        cursor.execute("SELECT * FROM `image` WHERE `hash` = '%s' OR `name` = '%s'" % (hash, main_name))
         history = cursor.fetchone()
         # 有记录 更新path和hash
         if history != None:
             id = str(history[0])
-            cursor.execute("UPDATE `image` SET `path` = '%s', `hash` = '%s' WHERE `id` = '%s'" % (file_path_absolute, hash, id))
+            cursor.execute("UPDATE `image` SET `name` = '%s', `path` = '%s', `hash` = '%s' WHERE `id` = '%s'" % (main_name, file_path_absolute, hash, id))
+            connection.commit()
         else:
-        # 否则新建记录   
+            # 否则新建记录   
             cursor.execute("INSERT INTO `image`(`name`, `path`, `hash`, `type`) VALUES ('%s', '%s', '%s', %d)" % (file_name, file_path_absolute, hash, type))
-        connection.commit()
+            connection.commit()
+            cursor.execute("SELECT * FROM `image` WHERE `hash` = '%s'" % hash)
+            history = cursor.fetchone()
+        # 如果有别名
+        if len(file_names) > 1:
+            file_names.remove(main_name)
+            main_id = str(history[0])
+            update_alias(main_id, file_names, cursor, connection, type=type)
+            # for alias in file_names:
+            #     cursor.execute("SELECT * FROM `image` WHERE `name` = '%s'" % alias)
+            #     history = cursor.fetchone()
+            #     # 有记录 更新path和hash
+            #     if history != None:
+            #         id = str(history[0])
+            #         cursor.execute("UPDATE `image` SET `name` = '%s', `path` = '%s', `hash` = '%s' WHERE `id` = '%s'" % (alias, main_id, main_id, id))
+            #     else:
+            #     # 否则新建记录   
+            #         cursor.execute("INSERT INTO `image`(`name`, `path`, `hash`, `type`) VALUES ('%s', '%s', '%s', %d)" % (alias, main_id, main_id, type))
+            #     connection.commit()
         index += 1
     return index
 

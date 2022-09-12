@@ -18,10 +18,18 @@ object NetworkUtil {
   private const val BACKEND_IMAGE_API = "/image"
   private const val AUTH_HEADER = "Authorization"
   private const val VERSION_HEADER = "version"
-  fun register() {
+
+  // 向后端服务器注册自己
+  fun registerInstance() {
+    if (AronaConfig.uuid.isNotEmpty()) {
+      return
+    }
     val resp = sendDataToServerSource("/user/register")
     val header = resp.header(AUTH_HEADER)
-    if (header.isNullOrBlank()) return
+    if (header.isNullOrBlank()) {
+      Arona.warning("register failure")
+      return
+    }
     AronaConfig.uuid = header
   }
 

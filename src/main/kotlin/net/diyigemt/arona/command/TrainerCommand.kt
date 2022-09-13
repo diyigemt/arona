@@ -46,7 +46,7 @@ object TrainerCommand : SimpleCommand(
         sendImage(subject, file)
       }
       TrainerOverride.OverrideType.RAW -> {
-        val file = GeneralUtils.loadImageOrUpdate(str).let {
+        val file = GeneralUtils.loadImageOrUpdate(override.value).let {
           if (it == null) {
             sendMessage("没有对应信息, 请联系作者添加别名或者在配置文件中指定")
             return

@@ -84,7 +84,6 @@ object Arona : KotlinPlugin(
   }
 
   private fun init() {
-    NetworkUtil.registerInstance()
     AronaConfig.reload()
     AronaGachaConfig.init()
     AronaNudgeConfig.reload()
@@ -97,6 +96,7 @@ object Arona : KotlinPlugin(
     AronaTrainerConfig.reload()
     DataBaseProvider.start()
     QuartzProvider.start()
+    NetworkUtil.registerInstance()
     launch {
       withContext(Dispatchers.IO) {
         INIT.forEach {

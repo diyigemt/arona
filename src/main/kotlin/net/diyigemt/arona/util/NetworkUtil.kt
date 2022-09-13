@@ -24,13 +24,17 @@ object NetworkUtil {
     if (AronaConfig.uuid.isNotEmpty()) {
       return
     }
-    val resp = sendDataToServerSource("/user/register")
-    val header = resp.header(AUTH_HEADER)
-    if (header.isNullOrBlank()) {
+    kotlin.runCatching {
+      val resp = sendDataToServerSource("/user/register")
+      val header = resp.header(AUTH_HEADER)
+      if (header.isNullOrBlank()) {
+        Arona.warning("register failure")
+        return
+      }
+      AronaConfig.uuid = header
+    }.onFailure {
       Arona.warning("register failure")
-      return
     }
-    AronaConfig.uuid = header
   }
 
   fun requestImage(name: String): ServerResponse<ImageResult> = fetchDataFromServer(BACKEND_IMAGE_API, mapOf("name" to name))

@@ -64,6 +64,7 @@ arona是基于mirai-console的插件。
     <summary>活动推送:</summary>
     <img src="static/activity.png" />
 </details>
+
 <details>
     <summary>活动结束前防侠:</summary>
     <img src="static/2.jpg" />
@@ -114,6 +115,7 @@ arona是基于mirai-console的插件。
     <summary>学生攻略:</summary>
     <img src="static/student-rank.png" />
 </details>
+
 <details>
     <summary>杂图:</summary>
     <img src="static/hod.png" />
@@ -122,18 +124,10 @@ arona是基于mirai-console的插件。
 
 ## 更新日志
 
-2022-09-12 v1.0.8
+2022-09-13 v1.0.9
 
-1. 删除配置文件arona-gacha-limit.yml，原有的配置项移动到arona-gacha.yml配置文件中
-2. 移除配置项arona-gacha->revoke，将功能移动到arona-gacha->revokeTime中
-3. 将抽卡限制记录信息改用数据库存储
-4. 抽卡配置指令支持配置1 2 3 星和pick up出货率，并可以修改每日限制次数和撤回时间间隔
-5. 添加游戏名记录功能，方便对社团进行管理，具体使用请看[这里](./doc/using.md#game-name)
-6. 修复抽卡限制没有刷新的问题
-7. 国际服信息来源新增GameKee，并推荐使用该信息源
-8. `/攻略` 指令新增部分夜喵杂图，涵盖了基本所有的一图流攻略，具体使用请看[这里](./doc/using.md#main-map)
-9. 修复抽卡历史排行名称错误的问题
-10. 攻略指令图片将会在本地data文件夹下进行缓存，加快发送速度并一定程度上防止后端崩了发不出图片的问题
+1. 新增配置文件arona-trainer.yml，为`/攻略`指令提供别名复写功能，具体使用请看[这里](./doc/using.md#other-name)
+2. 修复v1.0.8版本中初始化失败导致服务失效的严重Bug
 
 历史日志：[这里](./doc/update.md)
 
@@ -160,6 +154,10 @@ arona是基于mirai-console的插件。
 ## 安装
 
 安装方法：[这里](./doc/install.md)
+
+## 配置和指令
+
+配置和指令：[这里](./doc/using.md)
 
 ## 鸣谢
 

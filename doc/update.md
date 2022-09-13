@@ -1,5 +1,10 @@
 ## 更新日志
 
+2022-09-13 v1.0.9
+
+1. 新增配置文件arona-trainer.yml，为`/攻略`指令提供别名复写功能，具体使用请看[这里](./using.md#other-name)
+2. 修复v1.0.8版本中初始化失败导致服务失效的严重Bug
+
 2022-09-12 v1.0.8
 
 1. 删除配置文件arona-gacha-limit.yml，原有的配置项移动到arona-gacha.yml配置文件中

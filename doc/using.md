@@ -109,7 +109,7 @@ messageList:
 
 查看佑香的攻略，指令为`/攻略 佑香`或者`/攻略 没包人`?。
 
-1.0.7版本后，而外增加了其他杂项一图流的攻略，例如
+1.0.8版本后，额外增加了其他杂项一图流的攻略，例如
 
 <details>
     <summary>HOD图文攻略:</summary>
@@ -126,6 +126,18 @@ messageList:
     <summary>杂图列表:</summary>
     <img src="static/image-help.png" />
 </details>
+1.0.9版本后，额外增加了别名覆写功能，在原有基础上用户可自定义简短的别名方便记忆<a id="other-name"> </a>
+
+<details>
+    <summary>si'l:</summary>
+    <img src="static/image-help.png" />
+</details>
+
+<details>
+    <summary>杂图列表:</summary>
+    <img src="static/image-help.png" />
+</details>
+
 #### 1.9 游戏名记录<a id="game-name"> </a>
 
 `/游戏名 string` 将自己的游戏名添加到记录中。

@@ -129,14 +129,17 @@ messageList:
 1.0.9版本后，额外增加了别名覆写功能，在原有基础上用户可自定义简短的别名方便记忆<a id="other-name"> </a>
 
 <details>
-    <summary>si'l:</summary>
-    <img src="static/image-help.png" />
+    <summary>示例配置:</summary>
+    <img src="static/override-name3.png" />
 </details>
 
 <details>
-    <summary>杂图列表:</summary>
-    <img src="static/image-help.png" />
+    <summary>效果:</summary>
+    <img src="static/override-name1.png" />
+    <img src="static/override-name2.png" />
 </details>
+
+具体配置可看下面的[配置文件详解](#other-name-config)
 
 #### 1.9 游戏名记录<a id="game-name"> </a>
 
@@ -151,7 +154,7 @@ messageList:
     <img src="static/game-name.png" />
 </details>
 
-由于是模糊查询的原因，查询结果可能会涉及多个群友，没事把人家@出来也不好，因此1.0.7后查询结果将不会再@。
+由于是模糊查询的原因，查询结果可能会涉及多个群友，没事把人家@出来也不好，因此1.0.8后查询结果将不会再@。
 
 ## 配置文件详解<a id="config"> </a>
 
@@ -280,7 +283,67 @@ arona总的配置。
 | ------ | ------ | ------------------------------------------------------------ |
 | dayOne | Boolen | 是否每天只能抽一张，为true时一天中同一个人在同一个群中的抽卡结果相同 |
 
-### 9.nga.yml
+### 9.arona-trainer.yml <a id="other-name-config"> </a>
+
+别名配置。
+
+| 键       | 属性                                     | 作用                      |
+| -------- | ---------------------------------------- | ------------------------- |
+| override | List<TrainerOverride(type, name, value)> | 覆写指令`/攻略`提供的参数 |
+
+`type` 字段是一个枚举值，可选的有`IMAGE, RAW, CODE`
+
+`name` 为要覆盖的原始值，当`/攻略` 指令后接的参数与该值一致时执行`type`对应的动作
+
+`value` 为覆盖后的值，根据`type`的不同也有不同的填写要求
+
+`IMAGE`：代表当规则生效时，发送一张`path`指向的图片，其中`path`值的相对目录为`./data/net.diyigemt.arona/image`
+
+配置示例:
+
+```yaml
+override:
+  - type: IMAGE
+  	name: '乐'
+  	value: '/test/乐.gif'
+```
+
+代表当指令为`/攻略 乐`时，发送`./data/net.diyigemt.arona/image`文件夹下`test`子文件夹中的`乐.gif`图片
+
+`RAW`：代表当规则生效时，将`name`替换成`value`继续执行原有逻辑
+
+配置示例:
+
+```yaml
+override:
+  - type: RAW
+  	name: 'HOD'
+  	value: '黑白'
+```
+
+代表当指令为`/攻略 HOD`时，发送`黑白`的攻略图片，效果如下
+
+<details>
+    <summary>效果:</summary>
+    <img src="static/override-name2.png" />
+</details>
+
+`CODE`：代表当规则生效时，将`value`的值看作`mirai-code`反序列化为消息片段并发送
+
+`mirai-code`简单来说就是机器人启动后每收到一条消息在`mirai-console`中的打印值，具体解释可以看[这里](https://docs.mirai.mamoe.net/Messages.html#mirai-%E7%A0%81)
+
+配置示例:
+
+```yaml
+override:
+  - type: CODE
+  	name: '黑服'
+  	value: '南通爬'
+```
+
+代表当指令为`/攻略 黑服`时，发送`南通爬`。后期将会支持@对应发送人的功能
+
+### 10.nga.yml
 
 NGA图楼推送配置，具体配置方法可以看[下面](#nga-config)
 

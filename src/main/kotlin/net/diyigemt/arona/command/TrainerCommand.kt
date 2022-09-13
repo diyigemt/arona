@@ -31,10 +31,6 @@ object TrainerCommand : SimpleCommand(
       subject.sendMessage("阿罗娜已经被老师攻略啦>_<")
       return
     }
-    if (str == "黑服") {
-      subject.sendMessage("南通爬")
-      return
-    }
     val override = AronaTrainerConfig.override.firstOrNull { it.name == str } ?: TrainerOverride(TrainerOverride.OverrideType.RAW, str, str)
     when (override.type) {
       TrainerOverride.OverrideType.IMAGE -> {

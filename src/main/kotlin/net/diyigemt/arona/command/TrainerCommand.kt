@@ -3,6 +3,8 @@ package net.diyigemt.arona.command
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.diyigemt.arona.Arona
+import net.diyigemt.arona.config.AronaTrainerConfig
+import net.diyigemt.arona.entity.TrainerOverride
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.NetworkUtil
@@ -33,12 +35,34 @@ object TrainerCommand : SimpleCommand(
       subject.sendMessage("南通爬")
       return
     }
-    val file = GeneralUtils.loadImageOrUpdate(str) ?: return
-    sendImage(subject, file)
+    val override = AronaTrainerConfig.override.firstOrNull { it.name == str } ?: TrainerOverride(TrainerOverride.OverrideType.RAW, str, str)
+    when (override.type) {
+      TrainerOverride.OverrideType.IMAGE -> {
+        val file = GeneralUtils.localImageFile(override.value)
+        if (!file.exists()) {
+          Arona.warning("处理攻略指令别名: ${override.name} 时失败,没有找到对应的文件: ${override.value}")
+          return
+        }
+        sendImage(subject, file)
+      }
+      TrainerOverride.OverrideType.RAW -> {
+        val file = GeneralUtils.loadImageOrUpdate(override.value).let {
+          if (it == null) {
+            sendMessage("没有对应信息, 请联系作者添加别名或者在配置文件中指定")
+            return
+          }
+          it
+        }
+        sendImage(subject, file)
+      }
+      TrainerOverride.OverrideType.CODE -> {
+        sendMessage(override.value.deserializeMiraiCode(subject))
+      }
+    }
   }
 
   private suspend fun sendImage(contact: Contact, image: File) {
-    val resource = image.toExternalResource("png")
+    val resource = image.toExternalResource()
     contact.sendMessage(contact.uploadImage(resource))
     withContext(Dispatchers.IO) {
       resource.close()

@@ -84,7 +84,6 @@ object Arona : KotlinPlugin(
   }
 
   private fun init() {
-    NetworkUtil.registerInstance()
     AronaConfig.reload()
     AronaGachaConfig.init()
     AronaNudgeConfig.reload()
@@ -94,8 +93,10 @@ object Arona : KotlinPlugin(
     NGAPushConfig.reload()
     AronaTarotConfig.reload()
     AronaEmergencyConfig.reload()
+    AronaTrainerConfig.reload()
     DataBaseProvider.start()
     QuartzProvider.start()
+    NetworkUtil.registerInstance()
     launch {
       withContext(Dispatchers.IO) {
         INIT.forEach {
@@ -116,6 +117,7 @@ object Arona : KotlinPlugin(
     AronaServiceConfig.save()
     AronaTarotConfig.save()
     AronaEmergencyConfig.save()
+    AronaTrainerConfig.save()
     AronaServiceManager.saveServiceStatus()
   }
 

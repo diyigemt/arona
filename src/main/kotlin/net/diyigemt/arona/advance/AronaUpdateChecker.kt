@@ -47,7 +47,7 @@ object AronaUpdateChecker: AronaQuartzService {
       if (Arona.version == nowVersion) return
       val newFuture = response.data.newFuture
         .mapIndexed { index, element ->
-          "${index + 1}. $element}"
+          "${index + 1}. $element"
         }.joinToString("\n")
       val concat = "检测到版本更新,当前版本:${Arona.version}, 新版本:${nowVersion}\n更新日志:\n${newFuture}"
       Arona.sendMessageToAdmin(concat)

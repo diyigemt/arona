@@ -8,8 +8,13 @@ import net.diyigemt.arona.entity.ImageResult
 import net.diyigemt.arona.entity.ServerResponse
 import net.mamoe.mirai.console.plugin.version
 import org.jsoup.Connection
+import org.jsoup.Connection.Response
 import org.jsoup.Jsoup
 import java.io.File
+import kotlin.reflect.KFunction
+import kotlin.reflect.KParameter
+import kotlin.reflect.full.*
+import kotlin.reflect.jvm.isAccessible
 
 object NetworkUtil {
   const val BACKEND_ADDRESS = "https://arona.diyigemt.net"
@@ -21,20 +26,47 @@ object NetworkUtil {
 
   // 向后端服务器注册自己
   fun registerInstance() {
-    if (AronaConfig.uuid.isNotEmpty()) {
-      return
+    if (AronaConfig.uuid.isBlank()) {
+      safeNetworkWithoutId(NetworkUtil::registerInstance0)
+        .onSuccess {
+          val header = it.header(AUTH_HEADER)
+          if (header.isNullOrBlank()) {
+            Arona.warning("register failure")
+            return
+          }
+          AronaConfig.uuid = header
+        }.onFailure {
+          Arona.warning("register failure")
+        }
     }
-    kotlin.runCatching {
-      val resp = sendDataToServerSource("/user/register")
-      val header = resp.header(AUTH_HEADER)
-      if (header.isNullOrBlank()) {
-        Arona.warning("register failure")
-        return
-      }
-      AronaConfig.uuid = header
-    }.onFailure {
-      Arona.warning("register failure")
+  }
+
+  private fun registerInstance0(): Response {
+    return sendDataToServerSource("/user/register")
+  }
+
+  private fun logoutInstance0(): Response {
+    return sendDataToServerSource("/user/offline")
+  }
+
+  fun logoutInstance() {
+    safeNetwork(NetworkUtil::logoutInstance0)
+  }
+
+  @Suppress("UNCHECKED_CAST")
+  fun safeNetworkWithoutId(func: KFunction<Response>): Result<Response> {
+    func.isAccessible = true
+    return kotlin.runCatching {
+      func.call()
+    }.onFailure { it.printStackTrace() }
+  }
+
+  @Suppress("UNCHECKED_CAST")
+  fun safeNetwork(func: KFunction<Response>): Result<Response> {
+    if (AronaConfig.uuid.isEmpty()) {
+      return kotlin.runCatching { throw Exception() }
     }
+    return safeNetworkWithoutId(func)
   }
 
   fun requestImage(name: String): ServerResponse<ImageResult> = fetchDataFromServer(BACKEND_IMAGE_API, mapOf("name" to name))
@@ -62,7 +94,8 @@ object NetworkUtil {
       .execute()
   }
 
-  fun baseRequest(api: String, source: String = BACKEND_API_ADDRESS): Connection = Jsoup.connect("$source${api}")
+  fun baseRequest(api: String, source: String = BACKEND_API_ADDRESS): Connection =
+    Jsoup.connect("$source${api}")
     .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
     .ignoreContentType(true)
     .header(AUTH_HEADER, AronaConfig.uuid)

@@ -2,6 +2,7 @@ package net.diyigemt.arona.extension
 
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.interfaces.InitializedFunction
+import net.diyigemt.arona.util.NetworkUtil
 import net.mamoe.mirai.console.command.CommandManager
 import net.mamoe.mirai.console.command.UserCommandSender
 import net.mamoe.mirai.console.command.descriptor.ExperimentalCommandDescriptors
@@ -24,6 +25,7 @@ object ExitCommandInterceptor: CommandInterceptor {
     if (valueArguments.isEmpty() && EXIT_COMMAND.contains(calleeName)) {
       Arona.sendExitMessage()
     }
+    NetworkUtil.logoutInstance()
     return true
   }
 }

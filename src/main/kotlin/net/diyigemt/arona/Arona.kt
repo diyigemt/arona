@@ -94,6 +94,7 @@ object Arona : KotlinPlugin(
     NGAPushConfig.reload()
     AronaTarotConfig.reload()
     AronaEmergencyConfig.reload()
+    AronaTrainerConfig.reload()
     DataBaseProvider.start()
     QuartzProvider.start()
     launch {
@@ -116,6 +117,7 @@ object Arona : KotlinPlugin(
     AronaServiceConfig.save()
     AronaTarotConfig.save()
     AronaEmergencyConfig.save()
+    AronaTrainerConfig.save()
     AronaServiceManager.saveServiceStatus()
   }
 

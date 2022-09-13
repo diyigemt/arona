@@ -155,7 +155,7 @@ object GeneralUtils: InitializedFunction() {
 
   private fun imageFileFolder(subFolder: String = "") = Arona.dataFolderPath(IMAGE_FOLDER) + subFolder
 
-  private fun localImageFile(path: String) = File(imageFileFolder(path.let { return@let if (path.startsWith("/")) path else "/$it" }))
+  fun localImageFile(path: String) = File(imageFileFolder(path.let { return@let if (path.startsWith("/")) path else "/$it" }))
 
   override fun init() {
     // 初始化本地图片文件夹

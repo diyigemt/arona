@@ -1,0 +1,7 @@
+override:
+- name: HOD, HOD2
+  type: RAW
+  value: 黑白
+- name: 乐, 乐2
+  type: IMAGE
+  value: /test/乐.gif

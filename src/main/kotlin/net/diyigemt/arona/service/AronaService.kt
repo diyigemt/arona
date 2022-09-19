@@ -1,5 +1,7 @@
 package net.diyigemt.arona.service
 
+import net.diyigemt.arona.util.sys.SysStatic
+
 interface AronaService {
   val id: Int
   val name: String

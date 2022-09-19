@@ -6,6 +6,7 @@ import net.diyigemt.arona.Arona
 import net.diyigemt.arona.config.AronaConfig
 import net.diyigemt.arona.entity.ImageResult
 import net.diyigemt.arona.entity.ServerResponse
+import net.diyigemt.arona.util.sys.SysStatic
 import net.mamoe.mirai.console.plugin.version
 import org.jsoup.Connection
 import org.jsoup.Connection.Response
@@ -18,7 +19,8 @@ import kotlin.reflect.jvm.isAccessible
 
 object NetworkUtil {
   const val BACKEND_ADDRESS = "https://arona.diyigemt.net"
-//  const val BACKEND_ADDRESS = "http://localhost:12201"
+
+  //  const val BACKEND_ADDRESS = "http://localhost:12201"
   private const val BACKEND_API_ADDRESS = "$BACKEND_ADDRESS/api/v1"
   private const val BACKEND_IMAGE_API = "/image"
   private const val AUTH_HEADER = "Authorization"
@@ -26,18 +28,30 @@ object NetworkUtil {
 
   // 向后端服务器注册自己
   fun registerInstance() {
-    if (AronaConfig.uuid.isBlank()) {
-      safeNetworkWithoutId(NetworkUtil::registerInstance0)
-        .onSuccess {
-          val header = it.header(AUTH_HEADER)
-          if (header.isNullOrBlank()) {
+    val uuid = AronaConfig.uuid
+    val sysSave = SysDataUtil.get(SysStatic.UUID)
+    if (uuid.isBlank()) {
+      if (sysSave == null) {
+        safeNetworkWithoutId(NetworkUtil::registerInstance0)
+          .onSuccess {
+            val header = it.header(AUTH_HEADER)
+            if (header.isNullOrBlank()) {
+              Arona.warning("register failure")
+              return
+            }
+            SysDataUtil.saveRegisterData(header)
+            AronaConfig.uuid = header
+          }.onFailure {
             Arona.warning("register failure")
-            return
           }
-          AronaConfig.uuid = header
-        }.onFailure {
-          Arona.warning("register failure")
-        }
+      } else {
+        AronaConfig.uuid = sysSave
+      }
+    } else {
+      // 合并旧版本
+      if (uuid.length == 36) {
+        SysDataUtil.saveRegisterDataOrDefault(uuid)
+      }
     }
   }
 
@@ -53,41 +67,46 @@ object NetworkUtil {
     safeNetwork(NetworkUtil::logoutInstance0)
   }
 
-  @Suppress("UNCHECKED_CAST")
-  fun safeNetworkWithoutId(func: KFunction<Response>): Result<Response> {
+  private fun safeNetworkWithoutId(func: KFunction<Response>): Result<Response> {
     func.isAccessible = true
     return kotlin.runCatching {
       func.call()
     }.onFailure { it.printStackTrace() }
   }
 
-  @Suppress("UNCHECKED_CAST")
-  fun safeNetwork(func: KFunction<Response>): Result<Response> {
+  private fun safeNetwork(func: KFunction<Response>): Result<Response> {
     if (AronaConfig.uuid.isEmpty()) {
       return kotlin.runCatching { throw Exception() }
     }
     return safeNetworkWithoutId(func)
   }
 
-  fun requestImage(name: String): ServerResponse<ImageResult> = fetchDataFromServer(BACKEND_IMAGE_API, mapOf("name" to name))
+  fun requestImage(name: String): ServerResponse<ImageResult> =
+    fetchDataFromServer(BACKEND_IMAGE_API, mapOf("name" to name))
 
-  inline fun <reified T> fetchDataFromServer(api: String, data: Map<String, String> = mutableMapOf()): ServerResponse<T> {
+  inline fun <reified T> fetchDataFromServer(
+    api: String,
+    data: Map<String, String> = mutableMapOf()
+  ): ServerResponse<T> {
     val response = fetchDataFromServerSource(api, data)
     return Json.decodeFromString(response.body())
   }
 
-  fun fetchDataFromServerSource(api: String, data: Map<String, String> = mutableMapOf()): Connection.Response {
+  fun fetchDataFromServerSource(api: String, data: Map<String, String> = mutableMapOf()): Response {
     return baseRequest(api)
       .data(data)
       .execute()
   }
 
-  private inline fun <reified T> sendDataToServer(api: String, data: Map<String, String> = mutableMapOf()): ServerResponse<T> {
+  private inline fun <reified T> sendDataToServer(
+    api: String,
+    data: Map<String, String> = mutableMapOf()
+  ): ServerResponse<T> {
     val response = sendDataToServerSource(api, data)
     return Json.decodeFromString(response.body())
   }
 
-  private fun sendDataToServerSource(api: String, data: Map<String, String> = mutableMapOf()): Connection.Response {
+  private fun sendDataToServerSource(api: String, data: Map<String, String> = mutableMapOf()): Response {
     return baseRequest(api)
       .data(data)
       .method(Connection.Method.POST)
@@ -96,9 +115,9 @@ object NetworkUtil {
 
   fun baseRequest(api: String, source: String = BACKEND_API_ADDRESS): Connection =
     Jsoup.connect("$source${api}")
-    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
-    .ignoreContentType(true)
-    .header(AUTH_HEADER, AronaConfig.uuid)
-    .header(VERSION_HEADER, Arona.version.toString())
-    .maxBodySize(1024 * 1024 * 10)
+      .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
+      .ignoreContentType(true)
+      .header(AUTH_HEADER, AronaConfig.uuid)
+      .header(VERSION_HEADER, Arona.version.toString())
+      .maxBodySize(1024 * 1024 * 10)
 }

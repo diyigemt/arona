@@ -1,22 +1,16 @@
 package net.diyigemt.arona.command
 
 import net.diyigemt.arona.Arona
-import net.diyigemt.arona.command.EmergencyStopCommand.emergencyStop
 import net.diyigemt.arona.config.AronaEmergencyConfig
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.service.AronaServiceManager
-import net.mamoe.mirai.console.command.BuiltInCommands.AutoLoginCommand.clear
-import net.mamoe.mirai.console.command.CommandManager
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.UserCommandSender
 import net.mamoe.mirai.console.command.descriptor.ExperimentalCommandDescriptors
-import net.mamoe.mirai.console.plugin.PluginManager.INSTANCE.disable
 import net.mamoe.mirai.console.util.ConsoleExperimentalApi
-import net.mamoe.mirai.message.data.PlainText
-import java.util.Calendar
-import java.util.Date
+import java.util.*
 
 object EmergencyStopCommand : SimpleCommand(
   Arona,"emergency_stop", "紧急停止",

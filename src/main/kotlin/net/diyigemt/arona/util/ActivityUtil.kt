@@ -499,8 +499,8 @@ object ActivityUtil {
       source.contains("日程") -> activity.type = ActivityType.SCHEDULE
       source.contains("课程表") -> activity.type = ActivityType.SCHEDULE
       source.contains("总力战") -> activity.type = ActivityType.DECISIVE_BATTLE
-      source.contains("任务（Nor") -> activity.type = ActivityType.N2_3
-      source.contains("任务（Har") -> activity.type = ActivityType.H2_3
+      source.contains("Normal") -> activity.type = ActivityType.N2_3
+      source.contains("Hard") -> activity.type = ActivityType.H2_3
       source.contains("合同火力演习") -> activity.type = ActivityType.JOINT_EXERCISES
     }
     activity.content = source

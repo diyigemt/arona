@@ -44,7 +44,9 @@ object TrainerCommand : SimpleCommand(
       TrainerOverride.OverrideType.RAW -> {
         val file = GeneralUtils.loadImageOrUpdate(override.value).let {
           if (it == null) {
-            sendMessage("没有对应信息, 请联系作者添加别名或者在配置文件中指定")
+            if (AronaTrainerConfig.tipWhenNull) {
+              sendMessage("没有对应信息, 请联系作者添加别名或者在配置文件中指定")
+            }
             return
           }
           it

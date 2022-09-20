@@ -81,7 +81,7 @@ object NetworkUtil {
     return safeNetworkWithoutId(func)
   }
 
-  fun requestImage(name: String): ServerResponse<ImageResult> =
+  fun requestImage(name: String): ServerResponse<List<ImageResult>> =
     fetchDataFromServer(BACKEND_IMAGE_API, mapOf("name" to name))
 
   inline fun <reified T> fetchDataFromServer(

@@ -1,9 +1,7 @@
 package org.example.mirai.plugin
 
 import com.taptap.pinyin.PinyinPlus
-import io.kotest.assertions.print.print
 import me.xdrop.fuzzywuzzy.FuzzySearch
-import net.diyigemt.arona.Arona
 import net.diyigemt.arona.advance.AronaUpdateChecker
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.entity.ActivityType
@@ -18,6 +16,7 @@ import org.jsoup.Jsoup
 import org.junit.jupiter.api.Test
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.Collection
 import kotlin.math.pow
 
 class TestSimple {
@@ -149,9 +148,10 @@ class TestSimple {
   @Test
   fun testFuzzySearch() {
     val dict = listOf(
-      "鼠鼠", "沙耶", "私服鼠鼠", "私服沙耶", "老鼠"
+      "鼠鼠, test2", "沙耶", "私服鼠鼠", "私服沙耶", "老鼠"
     )
-    println(FuzzySearch.extractSorted("鼠", dict, 60))
+    println(FuzzySearch.extractSorted("鼠", dict))
     println(PinyinPlus.to("鼠鼠"))
   }
+
 }

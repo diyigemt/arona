@@ -1,4 +1,5 @@
 import urllib
+import urllib.request
 from PIL import ImageDraw, ImageFont, Image
 import cv2
 import hashlib
@@ -147,6 +148,9 @@ def update_image(folder: str, cursor: sqlite3.Cursor, connection: sqlite3.Connec
             #     connection.commit()
         index += 1
     return index
+
+# if __name__ == "__main__":
+    # draw_image("https://i0.hdslb.com/bfs/new_dyn/f37c4f6e1b70ab674e6a96895d6d4f46425535005.png", "火力演习.png", "./image/some/")
 
 replace_name = {
     "沙耶": "/老鼠/鼠鼠",

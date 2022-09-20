@@ -99,6 +99,10 @@ object AronaServiceManager: InitializedFunction() {
     else -> null
   }
 
+  fun recordServiceCall() {
+
+  }
+
 
   fun getAllService(): List<AronaService> = MAP.filter { entry -> checkNameIsInt(entry.key) }.values.toList()
 

@@ -1,5 +1,8 @@
 package org.example.mirai.plugin
 
+import com.taptap.pinyin.PinyinPlus
+import io.kotest.assertions.print.print
+import me.xdrop.fuzzywuzzy.FuzzySearch
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.advance.AronaUpdateChecker
 import net.diyigemt.arona.entity.Activity
@@ -141,5 +144,14 @@ class TestSimple {
       }.joinToString("\n")
     val concat = "检测到版本更新,当前版本:${cur}, 新版本:${nowVersion}\n更新日志:\n${newFuture}"
     println(concat)
+  }
+
+  @Test
+  fun testFuzzySearch() {
+    val dict = listOf(
+      "鼠鼠", "沙耶", "私服鼠鼠", "私服沙耶", "老鼠"
+    )
+    println(FuzzySearch.extractSorted("鼠", dict, 60))
+    println(PinyinPlus.to("鼠鼠"))
   }
 }

@@ -17,6 +17,7 @@ val okhttpVersion = "4.10.0"
 
 repositories {
   maven("https://maven.aliyun.com/repository/public") // 阿里云国内代理仓库
+  maven("https://jitpack.io")
   mavenCentral()
 }
 
@@ -40,6 +41,7 @@ dependencies {
   implementation("me.xdrop:fuzzywuzzy:1.4.0")
   // https://mvnrepository.com/artifact/com.github.taptap/pinyin-plus
   implementation("com.github.taptap:pinyin-plus:1.0")
+  implementation("com.github.Towdium:PinIn:1.5.1")
 
 }
 

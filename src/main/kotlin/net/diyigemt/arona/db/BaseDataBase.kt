@@ -6,6 +6,7 @@ import net.diyigemt.arona.db.gacha.*
 import net.diyigemt.arona.db.image.ImageTable
 import net.diyigemt.arona.db.name.GameNameTable
 import net.diyigemt.arona.db.name.TeacherNameTable
+import net.diyigemt.arona.db.system.SystemTable
 import net.diyigemt.arona.db.tarot.TarotRecordTable
 import net.diyigemt.arona.db.tarot.TarotTable
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -25,6 +26,7 @@ object BaseDataBase {
         TeacherNameTable,
         GameNameTable,
         ImageTable,
+        SystemTable
       )
     }
     GachaCache.init()

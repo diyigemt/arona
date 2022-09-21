@@ -1,6 +1,8 @@
 package org.example.mirai.plugin
 
 import com.taptap.pinyin.PinyinPlus
+import me.towdium.pinin.PinIn
+import me.towdium.pinin.utils.PinyinFormat
 import me.xdrop.fuzzywuzzy.FuzzySearch
 import net.diyigemt.arona.advance.AronaUpdateChecker
 import net.diyigemt.arona.entity.Activity
@@ -152,6 +154,14 @@ class TestSimple {
     )
     println(FuzzySearch.extractSorted("鼠", dict))
     println(PinyinPlus.to("鼠鼠"))
+  }
+
+  @Test
+  fun testFuzzySearch2() {
+    val p = PinIn().config().format(PinyinFormat.RAW).fSh2S(true).commit()
+    println(p.getChar('阿').pinyins()[0])
+    println(p.getPinyin("阿伊").phonemes())
+    println(p.contains("保洁阿姨", p.getPinyin("阿伊").toString()))
   }
 
 }

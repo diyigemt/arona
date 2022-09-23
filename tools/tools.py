@@ -6,6 +6,9 @@ import hashlib
 import sqlite3
 import os
 import re
+import getpass
+import requests
+password_file = "C:\\Users\\%s\\.ssh\\arona-backend-password" % getpass.getuser()
 from zhon.hanzi import punctuation
 headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"}
 tmp_file_path = "tmp.png"
@@ -151,6 +154,66 @@ def update_image(folder: str, cursor: sqlite3.Cursor, connection: sqlite3.Connec
 
 # if __name__ == "__main__":
     # draw_image("https://i0.hdslb.com/bfs/new_dyn/f37c4f6e1b70ab674e6a96895d6d4f46425535005.png", "火力演习.png", "./image/some/")
+
+def get_password() -> str:
+    pw = ""
+    with open(password_file, "r") as f:
+        pw = str(f.read())
+    return pw
+
+def update_image_from_api(folder: str, type: int = 2):
+    index = 0
+    dict = []
+    for file in os.listdir(base_img_folder + folder):
+        file_name = file.replace(".png", "")
+        file_path = base_img_folder + folder + file
+        file_path_absolute = folder + file
+        
+        file_names = file_name.split("_")
+        
+        # file_size = os.path.getsize(file_path) / 1024 / 1024 # M
+        # # 将大于3M的图片进行压缩
+        # if file_size > 3:
+        #     im = Image.open(file_path)
+        #     (x, y) = im.size
+        #     resize = im.resize((int(x * 0.7), int(y * 0.7)), Image.ANTIALIAS)
+        #     resize.save(file_path)
+        # 计算md5
+        hash = ""
+        with open(file_path, "rb") as f:
+            hash = hashlib.md5(f.read()).digest().hex()
+        # 插入主记录
+        dict.append({
+            "name": file_names[0],
+            "path": file_path_absolute,
+            "hash": hash,
+            "type": type
+        })
+        # 如果有别名
+        if len(file_names) > 1:
+            dict.append({
+            "name": file_names[0],
+            "path": file_path_absolute,
+            "hash": hash,
+            "type": type
+            })
+            file_names.remove(file_names[0])
+            for a in file_names:
+                a = replace0(a)
+                dict.append({
+                    "name": a,
+                    "path": file_path_absolute,
+                    "hash": hash,
+                    "type": type
+                })
+        index += 1
+    #信息收集完成, 提交到后端进行处理
+    header = {
+        "token": get_password(),
+        "Content-Type": "application/json"
+    }
+    resp = requests.post("http://localhost:12201/api/v1/admin/image", json=dict, headers=header)
+    print(resp.text)
 
 replace_name = {
     "沙耶": "/老鼠/鼠鼠",

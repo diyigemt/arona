@@ -1,17 +1,12 @@
 package net.diyigemt.arona.util
 
 import com.taptap.pinyin.PinyinPlus
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import me.xdrop.fuzzywuzzy.FuzzySearch
-import me.xdrop.fuzzywuzzy.model.ExtractedResult
+import me.towdium.pinin.PinIn
+import me.towdium.pinin.utils.PinyinFormat
 import net.diyigemt.arona.Arona
-import net.diyigemt.arona.advance.AronaUpdateChecker
 import net.diyigemt.arona.command.CallMeCommand
 import net.diyigemt.arona.command.TrainerCommand
 import net.diyigemt.arona.config.AronaConfig
-import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.DataBaseProvider.query
 import net.diyigemt.arona.db.image.ImageTable
 import net.diyigemt.arona.db.image.ImageTableModel
@@ -19,30 +14,23 @@ import net.diyigemt.arona.db.name.TeacherName
 import net.diyigemt.arona.db.name.TeacherNameTable
 import net.diyigemt.arona.entity.FuzzyImageResult
 import net.diyigemt.arona.entity.ImageRequestResult
-import net.diyigemt.arona.entity.ServerResponse
 import net.diyigemt.arona.interfaces.InitializedFunction
 import net.diyigemt.arona.util.NetworkUtil.BACKEND_ADDRESS
 import net.diyigemt.arona.util.NetworkUtil.baseRequest
-import net.mamoe.mirai.console.plugin.version
-import net.mamoe.mirai.contact.*
-import net.mamoe.mirai.message.data.MessageChainBuilder
-import net.mamoe.mirai.message.data.content
+import net.mamoe.mirai.contact.Contact
+import net.mamoe.mirai.contact.Group
+import net.mamoe.mirai.contact.UserOrBot
+import net.mamoe.mirai.contact.nameCardOrNick
 import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
 import org.jetbrains.exposed.sql.and
-import org.jsoup.Connection
-import org.jsoup.Connection.Response
-import org.jsoup.Jsoup
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.nio.charset.Charset
-import kotlin.reflect.full.memberProperties
-import kotlin.reflect.jvm.isAccessible
 
 object GeneralUtils: InitializedFunction() {
 
   private const val IMAGE_FOLDER = "/image"
   private const val BACKEND_IMAGE_RESOURCE = "${BACKEND_ADDRESS}$IMAGE_FOLDER"
-
+  private lateinit var PinyinObject: PinIn
   fun checkService(group: Contact?): Boolean = when(group) {
     is Group -> AronaConfig.groups.contains(group.id)
     else -> false
@@ -160,9 +148,23 @@ object GeneralUtils: InitializedFunction() {
     }
   }
 
-  fun toPinyin(str: String): String = PinyinPlus.to(str)
+  fun toPinyin(str: String): String = str
+    .toCharArray()
+    .joinToString("") {
+      PinyinObject.getChar(it).pinyins().let { list -> return@let if (list.isEmpty()) it.toString() else PinyinObject.format(list[0]) }
+    }
 
-  fun fuzzySearch(str: String, dict: List<String>, threshold: Int = 60): MutableList<ExtractedResult> = FuzzySearch.extractSorted(str, dict, threshold)
+  fun fuzzySearch(str: String, dict: List<String>): Int {
+    val pinyin = toPinyin(str)
+    dict.forEachIndexed { index, s ->
+      if (PinyinObject.contains(s, pinyin)) {
+        return index
+      }
+    }
+    return -1
+  }
+
+  fun fuzzySearch(str: String, target: String): Boolean = PinyinObject.contains(target, toPinyin(str))
 
   private fun imageRequest(path: String, localFile: File): File {
     val connection = baseRequest(path, BACKEND_IMAGE_RESOURCE)
@@ -189,5 +191,6 @@ object GeneralUtils: InitializedFunction() {
     File(imageFileFolder(TrainerCommand.ChapterMapFolder)).also { it.mkdirs() }
     File(imageFileFolder(TrainerCommand.StudentRankFolder)).also { it.mkdirs() }
     File(imageFileFolder(TrainerCommand.OtherFolder)).also { it.mkdirs() }
+    PinyinObject = PinIn().config().format(PinyinFormat.RAW).fSh2S(true).commit()
   }
 }

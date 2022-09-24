@@ -159,9 +159,19 @@ class TestSimple {
   @Test
   fun testFuzzySearch2() {
     val p = PinIn().config().format(PinyinFormat.RAW).fSh2S(true).commit()
-    println(p.getChar('阿').pinyins()[0])
-    println(p.getPinyin("阿伊").phonemes())
-    println(p.contains("保洁阿姨", p.getPinyin("阿伊").toString()))
+    val dict = listOf(
+      "宝洁",
+      "报界"
+    )
+    println(PinyinPlus.to("保洁"))
+    println(getPinyin("保洁"))
+    println(p.format(p.getChar('阿').pinyins()[0]))
+    println(p.contains("宝洁", PinyinPlus.to("保洁")))
+  }
+
+  fun getPinyin(str: String): String {
+    val p = PinIn().config().format(PinyinFormat.RAW).fSh2S(true).commit()
+    return str.toCharArray().joinToString("") { p.format(p.getChar(it).pinyins()[0]) }
   }
 
 }

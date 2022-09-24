@@ -1,12 +1,19 @@
 package org.example.mirai.plugin
 
+import com.charleskorn.kaml.Yaml
 import com.taptap.pinyin.PinyinPlus
+import dev.vishna.watchservice.KWatchChannel
+import dev.vishna.watchservice.KWatchEvent
+import dev.vishna.watchservice.asWatchChannel
+import io.kotest.common.runBlocking
+import kotlinx.coroutines.channels.consumeEach
 import me.towdium.pinin.PinIn
 import me.towdium.pinin.utils.PinyinFormat
 import me.xdrop.fuzzywuzzy.FuzzySearch
 import net.diyigemt.arona.advance.AronaUpdateChecker
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.entity.ActivityType
+import net.diyigemt.arona.entity.TrainerOverride
 import net.diyigemt.arona.util.ActivityUtil
 import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.NetworkUtil
@@ -16,9 +23,9 @@ import net.diyigemt.arona.util.scbaleDB.SchaleDBUtil
 import net.mamoe.mirai.console.util.SemVersion
 import org.jsoup.Jsoup
 import org.junit.jupiter.api.Test
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.Collection
 import kotlin.math.pow
 
 class TestSimple {
@@ -169,9 +176,28 @@ class TestSimple {
     println(p.contains("宝洁", PinyinPlus.to("保洁")))
   }
 
-  fun getPinyin(str: String): String {
+  private fun getPinyin(str: String): String {
     val p = PinIn().config().format(PinyinFormat.RAW).fSh2S(true).commit()
     return str.toCharArray().joinToString("") { p.format(p.getChar(it).pinyins()[0]) }
+  }
+
+  @Test
+  fun testFileWatcher() {
+    val dir = File("D:\\123.txt")
+    if (!dir.exists()) {
+      dir.writeText("")
+    }
+    val channel = dir.asWatchChannel(KWatchChannel.Mode.SingleFile)
+    runBlocking {
+      channel.consumeEach {
+        when (it.kind) {
+          KWatchEvent.Kind.Modified -> {
+            Yaml.default.decodeFromString(TrainerOverride.serializer(), it.file.readText(Charsets.UTF_8))
+          }
+          else -> {}
+        }
+      }
+    }
   }
 
 }

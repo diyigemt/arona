@@ -33,7 +33,7 @@ object AronaConfig: AutoSavePluginConfig("arona") {
   @ValueDescription("自动检查更新的时间")
   val updateCheckTime: Int by value(8)
 
-  @ValueDescription("名称是否自动带上后缀,默认是\"老师\"")
+  @ValueDescription("名称是否自动带上后缀, 默认是\"老师\"")
   val endWithSensei: String by value("老师")
 
   @ValueDescription("是否允许arona收集匿名统计信息")
@@ -41,5 +41,8 @@ object AronaConfig: AutoSavePluginConfig("arona") {
 
   @ValueDescription("识别id(无需修改)")
   var uuid: String by value("")
+
+  @ValueDescription("查询公告间隔 设置为0表示不开启, 单位是小时")
+  val announcementCheckInterval: Int by value(1)
 
 }

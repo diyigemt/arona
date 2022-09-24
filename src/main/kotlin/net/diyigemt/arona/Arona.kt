@@ -97,11 +97,9 @@ object Arona : KotlinPlugin(
     DataBaseProvider.start()
     QuartzProvider.start()
     NetworkUtil.registerInstance()
-    launch {
-      withContext(Dispatchers.IO) {
-        INIT.forEach {
-          it.init()
-        }
+    runSuspend {
+      INIT.forEach {
+        it.init()
       }
     }
 //    startUpload() // 上传图片获取mirai-code
@@ -121,10 +119,8 @@ object Arona : KotlinPlugin(
     AronaServiceManager.saveServiceStatus()
   }
 
-  fun runSuspend(block: suspend () -> Unit) = runBlocking {
-    withContext(coroutineContext) {
-      block()
-    }
+  fun runSuspend(block: suspend () -> Unit) = launch(coroutineContext) {
+    block()
   }
   fun sendExitMessage() {
     if (AronaConfig.sendOfflineMessage) {
@@ -133,46 +129,38 @@ object Arona : KotlinPlugin(
   }
 
   fun sendMessage(message: String) {
-    runBlocking {
-      withContext(coroutineContext) {
-        AronaConfig.groups.forEach {
-          val group =  arona.groups[it] ?: return@forEach
-          group.sendMessage(message)
-        }
+    runSuspend {
+      AronaConfig.groups.forEach {
+        val group =  arona.groups[it] ?: return@forEach
+        group.sendMessage(message)
       }
     }
   }
 
   fun sendMessageWithFile(block: suspend (group: Contact) -> MessageChain) {
-    runBlocking {
-      withContext(coroutineContext) {
-        AronaConfig.groups.forEach {
-          val group =  arona.groups[it] ?: return@forEach
-          val message = block(group)
-          group.sendMessage(message)
-        }
+    runSuspend {
+      AronaConfig.groups.forEach {
+        val group =  arona.groups[it] ?: return@forEach
+        val message = block(group)
+        group.sendMessage(message)
       }
     }
   }
 
   fun sendMessage(message: MessageChain) {
-    runBlocking {
-      withContext(coroutineContext) {
-        AronaConfig.groups.forEach {
-          val group =  arona.groups[it] ?: return@forEach
-          group.sendMessage(message)
-        }
+    runSuspend {
+      AronaConfig.groups.forEach {
+        val group =  arona.groups[it] ?: return@forEach
+        group.sendMessage(message)
       }
     }
   }
 
   fun sendMessage(messageBuilder: (group: Group) -> MessageChain) {
-    runBlocking {
-      withContext(coroutineContext) {
-        AronaConfig.groups.forEach {
-          val group =  arona.groups[it] ?: return@forEach
-          group.sendMessage(messageBuilder(group))
-        }
+    runSuspend {
+      AronaConfig.groups.forEach {
+        val group =  arona.groups[it] ?: return@forEach
+        group.sendMessage(messageBuilder(group))
       }
     }
   }
@@ -185,17 +173,15 @@ object Arona : KotlinPlugin(
       }
       return null
     }
-    runBlocking {
-      withContext(coroutineContext) {
-        if (AronaConfig.groups.isEmpty() || AronaConfig.managerGroup.isEmpty()) return@withContext
-        val list = mutableListOf<NormalMember>()
-        AronaConfig.managerGroup.forEach {
-          val admin = getAdmin(it) ?: return@forEach
-          list.add(admin)
-        }
-        list.forEach {
-          it.sendMessage(message)
-        }
+    runSuspend {
+      if (AronaConfig.groups.isEmpty() || AronaConfig.managerGroup.isEmpty()) return@runSuspend
+      val list = mutableListOf<NormalMember>()
+      AronaConfig.managerGroup.forEach {
+        val admin = getAdmin(it) ?: return@forEach
+        list.add(admin)
+      }
+      list.forEach {
+        it.sendMessage(message)
       }
     }
   }

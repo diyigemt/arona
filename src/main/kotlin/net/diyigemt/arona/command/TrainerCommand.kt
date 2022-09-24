@@ -2,6 +2,7 @@ package net.diyigemt.arona.command
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.Serializable
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.config.AronaTrainerConfig
 import net.diyigemt.arona.db.DataBaseProvider
@@ -100,6 +101,11 @@ object TrainerCommand : SimpleCommand(
     }
   }
 
+  @Serializable
+  data class TrainerFileConfig(
+    val override: List<TrainerOverride>
+  )
+
   override val id: Int = 20
   override val name: String = "地图与学生攻略"
   override var enable: Boolean = true
@@ -110,6 +116,8 @@ object TrainerCommand : SimpleCommand(
     AronaTrainerConfig.override.forEach {
       FuzzySearch.add(it.name.split(",").map { s -> s.trim() })
     }
+    // 监视data文件夹下的arona-trainer.yml文件动态添加配置
+
   }
 
 }

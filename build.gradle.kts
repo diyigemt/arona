@@ -1,5 +1,5 @@
 plugins {
-  val kotlinVersion = "1.6.10"
+  val kotlinVersion = "1.7.10"
   val miraiVersion = "2.12.2"
   kotlin("jvm") version kotlinVersion
   kotlin("plugin.serialization") version kotlinVersion
@@ -42,7 +42,8 @@ dependencies {
   // https://mvnrepository.com/artifact/com.github.taptap/pinyin-plus
   implementation("com.github.taptap:pinyin-plus:1.0")
   implementation("com.github.Towdium:PinIn:1.5.1")
-
+  implementation("com.github.vishna:watchservice-ktx:master-SNAPSHOT")
+  implementation("com.charleskorn.kaml:kaml:0.48.0")
 }
 
 tasks.test {

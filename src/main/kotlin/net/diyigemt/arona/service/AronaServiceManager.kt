@@ -2,10 +2,7 @@ package net.diyigemt.arona.service
 
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.Arona.reload
-import net.diyigemt.arona.advance.ActivityNotify
-import net.diyigemt.arona.advance.AronaUpdateChecker
-import net.diyigemt.arona.advance.GroupMessageRecorder
-import net.diyigemt.arona.advance.NGAImageTranslatePusher
+import net.diyigemt.arona.advance.*
 import net.diyigemt.arona.command.*
 import net.diyigemt.arona.config.AronaServiceConfig
 import net.diyigemt.arona.handler.GroupRepeaterHandler
@@ -164,6 +161,7 @@ object AronaServiceManager: InitializedFunction() {
     TrainerCommand.init()
     GameNameCommand.init()
     GameNameSearchCommand.init()
+    AronaAnnouncementChecker.init()
     AronaServiceConfig.reload()
     AronaServiceConfig.config.forEach {
       if (it.value) {

@@ -24,8 +24,8 @@ object ExitCommandInterceptor: CommandInterceptor {
     val valueArguments = call.valueArguments
     if (valueArguments.isEmpty() && EXIT_COMMAND.contains(calleeName)) {
       Arona.sendExitMessage()
+      NetworkUtil.logoutInstance()
     }
-    NetworkUtil.logoutInstance()
     return true
   }
 }

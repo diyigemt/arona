@@ -1,6 +1,8 @@
 package net.diyigemt.arona.util
 
 import com.taptap.pinyin.PinyinPlus
+import dev.vishna.watchservice.KWatchChannel
+import dev.vishna.watchservice.asWatchChannel
 import me.towdium.pinin.PinIn
 import me.towdium.pinin.utils.PinyinFormat
 import net.diyigemt.arona.Arona
@@ -25,13 +27,14 @@ import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
 import org.jetbrains.exposed.sql.and
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.security.MessageDigest
 
-object GeneralUtils: InitializedFunction() {
+object GeneralUtils : InitializedFunction() {
 
   private const val IMAGE_FOLDER = "/image"
   private const val BACKEND_IMAGE_RESOURCE = "${BACKEND_ADDRESS}$IMAGE_FOLDER"
   private lateinit var PinyinObject: PinIn
-  fun checkService(group: Contact?): Boolean = when(group) {
+  fun checkService(group: Contact?): Boolean = when (group) {
     is Group -> AronaConfig.groups.contains(group.id)
     else -> false
   }
@@ -148,11 +151,21 @@ object GeneralUtils: InitializedFunction() {
     }
   }
 
-  fun toPinyin(str: String): String = str
+  fun toPinyin(str: String): String = toPinyin1(str)
+
+  fun toPinyin0(str: String): String = str
     .toCharArray()
     .joinToString("") {
-      PinyinObject.getChar(it).pinyins().let { list -> return@let if (list.isEmpty()) it.toString() else PinyinObject.format(list[0]) }
+      PinyinObject.getChar(it).pinyins().let { list ->
+        return@let if (list.isEmpty()) {
+          it.toString()
+        } else {
+          PinyinObject.format(list[0])
+        }
+      }
     }
+
+  fun toPinyin1(str: String): String = PinyinPlus.to(str).replace(" ", "")
 
   fun fuzzySearch(str: String, dict: List<String>): Int {
     val pinyin = toPinyin(str)
@@ -165,6 +178,17 @@ object GeneralUtils: InitializedFunction() {
   }
 
   fun fuzzySearch(str: String, target: String): Boolean = PinyinObject.contains(target, toPinyin(str))
+
+  fun fileWatchChannel(path: String): KWatchChannel {
+    val file = File(path)
+    if (!file.exists()) {
+      file.writeText("")
+    }
+    return file.asWatchChannel(KWatchChannel.Mode.SingleFile)
+  }
+
+  fun md5(str: String): ByteArray = MessageDigest.getInstance("MD5").digest(str.toByteArray(Charsets.UTF_8))
+  fun ByteArray.toHex() = joinToString(separator = "") { byte -> "%02x".format(byte) }
 
   private fun imageRequest(path: String, localFile: File): File {
     val connection = baseRequest(path, BACKEND_IMAGE_RESOURCE)
@@ -184,7 +208,8 @@ object GeneralUtils: InitializedFunction() {
 
   private fun imageFileFolder(subFolder: String = "") = Arona.dataFolderPath(IMAGE_FOLDER) + subFolder
 
-  fun localImageFile(path: String) = File(imageFileFolder(path.let { return@let if (path.startsWith("/")) path else "/$it" }))
+  fun localImageFile(path: String) =
+    File(imageFileFolder(path.let { return@let if (path.startsWith("/")) path else "/$it" }))
 
   override fun init() {
     // 初始化本地图片文件夹

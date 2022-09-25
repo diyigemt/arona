@@ -1,6 +1,11 @@
 package net.diyigemt.arona.command
 
+import com.charleskorn.kaml.Yaml
+import dev.vishna.watchservice.KWatchChannel
+import dev.vishna.watchservice.KWatchEvent
+import dev.vishna.watchservice.asWatchChannel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import net.diyigemt.arona.Arona
@@ -10,6 +15,7 @@ import net.diyigemt.arona.db.image.ImageTableModel
 import net.diyigemt.arona.entity.TrainerOverride
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.util.GeneralUtils
+import net.diyigemt.arona.util.GeneralUtils.toHex
 import net.diyigemt.arona.util.NetworkUtil
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.SimpleCommand
@@ -29,14 +35,19 @@ object TrainerCommand : SimpleCommand(
   const val StudentRankFolder: String = "/student_rank"
   const val ChapterMapFolder: String = "/chapter_map"
   const val OtherFolder: String = "/some"
+  private const val AutoReadConfigFileName = "trainer_config.yml"
+  private lateinit var ConfigFileWatcherChannel: KWatchChannel
+  private lateinit var ConfigFile: File
+  private var ConfigFileMd5: String = ""
   private val FuzzySearch = mutableListOf<List<String>>()
+  private val overrideList = mutableListOf<TrainerOverride>()
   @Handler
   suspend fun UserCommandSender.trainer(str: String) {
     if (str == "阿罗娜" || str == "彩奈") {
       subject.sendMessage("阿罗娜已经被老师攻略啦>_<")
       return
     }
-    val override = AronaTrainerConfig.override
+    val override = overrideList
       .filter { it.name.contains(str) }
       .firstOrNull { it.name.split(",")
         .any { s -> s.trim() == str }
@@ -101,10 +112,48 @@ object TrainerCommand : SimpleCommand(
     }
   }
 
+  // 模糊查询缓存
+  private fun rebuildFuzzySearchCache() {
+    kotlin.runCatching {
+      val read = ConfigFile.readText(Charsets.UTF_8).also {
+        if (it.isBlank()) {
+          return
+        }
+      }
+      GeneralUtils.md5(read).toHex().also {
+        if (it == ConfigFileMd5) {
+          return
+        } else {
+          ConfigFileMd5 = it
+        }
+      }
+      Yaml.default.decodeFromString(TrainerFileConfig.serializer(), read)
+    }.onFailure { err ->
+      Arona.warning("序列化别名配置时失败")
+      Arona.warning(err.message)
+      err.printStackTrace()
+    }.onSuccess {
+      FuzzySearch.clear()
+      overrideList.clear()
+      overrideList.addAll(it.override)
+    }
+    overrideList.addAll(AronaTrainerConfig.override.filter {
+      !overrideList.any { already -> already.name == it.name }
+    })
+
+    overrideList.forEach {
+      FuzzySearch.add(it.name.split(",").map { s -> s.trim() })
+    }
+  }
+
   @Serializable
   data class TrainerFileConfig(
     val override: List<TrainerOverride>
   )
+
+  enum class FuzzySearchSource {
+    ALL, LOCAL_CONFIG, REMOTE
+  }
 
   override val id: Int = 20
   override val name: String = "地图与学生攻略"
@@ -112,12 +161,25 @@ object TrainerCommand : SimpleCommand(
   override fun init() {
     registerService()
     register()
-    // 模糊查询缓存
-    AronaTrainerConfig.override.forEach {
-      FuzzySearch.add(it.name.split(",").map { s -> s.trim() })
-    }
     // 监视data文件夹下的arona-trainer.yml文件动态添加配置
+    ConfigFile = File(Arona.dataFolderPath("/${AutoReadConfigFileName}"))
+    if (!ConfigFile.exists()) {
+      ConfigFile.writeText("")
+    }
+    Arona.runSuspend {
+      ConfigFileWatcherChannel = ConfigFile.asWatchChannel(KWatchChannel.Mode.SingleFile)
+      ConfigFileWatcherChannel.consumeEach {
+        when (it.kind) {
+          KWatchEvent.Kind.Modified, KWatchEvent.Kind.Initialized -> rebuildFuzzySearchCache()
+          else -> {}
+        }
+      }
+    }
+  }
 
+  override fun disableService() {
+    ConfigFileWatcherChannel.close()
+    super.disableService()
   }
 
 }

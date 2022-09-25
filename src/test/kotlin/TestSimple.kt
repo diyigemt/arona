@@ -11,6 +11,7 @@ import me.towdium.pinin.PinIn
 import me.towdium.pinin.utils.PinyinFormat
 import me.xdrop.fuzzywuzzy.FuzzySearch
 import net.diyigemt.arona.advance.AronaUpdateChecker
+import net.diyigemt.arona.command.TrainerCommand
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.entity.ActivityType
 import net.diyigemt.arona.entity.TrainerOverride
@@ -64,14 +65,14 @@ class TestSimple {
 
   @Test
   fun testEnumClass() {
-    println(A.B in (A.C .. A.E))
+    println(A.B in (A.C..A.E))
   }
 
   enum class A {
     A, B, C, D, E
   }
 
-  fun testA(){
+  fun testA() {
     val cmd = "diff"
     val page = "イベント一覧"
     val res = Jsoup.connect("https://bluearchive.wikiru.jp?cmd=${cmd}&page=${page}")
@@ -81,7 +82,7 @@ class TestSimple {
       .body()
       .getElementById("body")
       ?.getElementsByTag("pre")!!
-      res.select(".diff_removed").remove()
+    res.select(".diff_removed").remove()
 
     val str = WikiruUtil.getValidData(res.text())
     print(WikiruUtil.analyze(str))
@@ -102,7 +103,7 @@ class TestSimple {
   }
 
   @Test
-  fun testSchaleDB(){
+  fun testSchaleDB() {
     System.setProperty("proxyHost", "127.0.0.1")
     System.setProperty("proxyPort", "7890")
     SchaleDBDataSyncService.SchaleDBDataSyncJob().getData()
@@ -113,9 +114,9 @@ class TestSimple {
   @Test
   fun testRandom() {
     val times = 10
-    val sigma = (1 .. 5).map {
+    val sigma = (1..5).map {
       val record = FloatArray(22) { 0f }
-      (1 .. times).forEach { _ ->
+      (1..times).forEach { _ ->
         record[GeneralUtils.randomInt(22)]++
       }
       val avg = record.sum() / 22
@@ -131,9 +132,9 @@ class TestSimple {
   fun testRandom2() {
     var a = 0
     var b = 0
-    (1 .. 10).forEach { _ ->
+    (1..10).forEach { _ ->
       if (GeneralUtils.randomBoolean()) a++ else b++
-      Thread.sleep((1 .. 10).random().toLong())
+      Thread.sleep((1..10).random().toLong())
     }
     println(a)
     println(b)
@@ -170,10 +171,24 @@ class TestSimple {
       "宝洁",
       "报界"
     )
-    println(PinyinPlus.to("保洁"))
+    println(PinyinPlus.to("侧式"))
     println(getPinyin("保洁"))
     println(p.format(p.getChar('阿').pinyins()[0]))
     println(p.contains("宝洁", PinyinPlus.to("保洁")))
+    println(p.contains("测试1", GeneralUtils.toPinyin("侧式")))
+    val b = p.getPinyin("侧式")
+    val a = "侧式".toCharArray()
+      .joinToString("") {
+        p.getChar(it).pinyins().let { list ->
+          println("a")
+          return@let if (list.isEmpty()) {
+            it.toString()
+          } else {
+            p.format(list[0])
+          }
+        }
+      }
+    println(a)
   }
 
   private fun getPinyin(str: String): String {
@@ -192,8 +207,15 @@ class TestSimple {
       channel.consumeEach {
         when (it.kind) {
           KWatchEvent.Kind.Modified -> {
-            Yaml.default.decodeFromString(TrainerOverride.serializer(), it.file.readText(Charsets.UTF_8))
+            val obj = Yaml.default.decodeFromString(
+              TrainerCommand.TrainerFileConfig.serializer(),
+              it.file.readText(Charsets.UTF_8)
+            )
+            obj.override.forEach { to ->
+              println(to.name)
+            }
           }
+
           else -> {}
         }
       }

@@ -27,30 +27,22 @@ object NetworkUtil {
 
   // 向后端服务器注册自己
   fun registerInstance() {
-    val uuid = AronaConfig.uuid
     val sysSave = SysDataUtil.get(SysStatic.UUID)
-    if (uuid.isBlank()) {
-      if (sysSave == null) {
-        safeNetworkWithoutId(NetworkUtil::registerInstance0)
-          .onSuccess {
-            val header = it.header(AUTH_HEADER)
-            if (header.isNullOrBlank()) {
-              Arona.warning("register failure")
-              return
-            }
-            SysDataUtil.saveRegisterData(header)
-            AronaConfig.uuid = header
-          }.onFailure {
+    if (sysSave == null) {
+      safeNetworkWithoutId(NetworkUtil::registerInstance0)
+        .onSuccess {
+          val header = it.header(AUTH_HEADER)
+          if (header.isNullOrBlank()) {
             Arona.warning("register failure")
+            return
           }
-      } else {
-        AronaConfig.uuid = sysSave
-      }
+          SysDataUtil.saveRegisterData(header)
+          AronaConfig.uuid = header
+        }.onFailure {
+          Arona.warning("register failure")
+        }
     } else {
-      // 合并旧版本
-      if (uuid.length == 36) {
-        SysDataUtil.saveRegisterDataOrDefault(uuid)
-      }
+      AronaConfig.uuid = sysSave
     }
   }
 

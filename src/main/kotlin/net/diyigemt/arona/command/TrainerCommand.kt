@@ -64,12 +64,19 @@ object TrainerCommand : SimpleCommand(
       }
       TrainerOverride.OverrideType.RAW -> {
         val result = GeneralUtils.loadImageOrUpdate(value)
-        var list = result.list.map { it.name }
+        var list = result.list.map { it.name }.toMutableList()
         // 没有本地文件
         if (result.file == null) {
           // 远端也没有搜索建议 或者远端没有回应 对本地进行查找
-          if (list.isEmpty()) {
-            list = fuzzySearch(str)
+          when (AronaTrainerConfig.fuzzySearchSource) {
+            FuzzySearchSource.ALL -> {
+              list.addAll(fuzzySearch(str))
+            }
+            FuzzySearchSource.LOCAL_CONFIG -> {
+              list.clear()
+              list.addAll(fuzzySearch(str))
+            }
+            FuzzySearchSource.REMOTE -> {}
           }
           // 如果仍然没有搜索建议 说明真的找不到
           if (list.isEmpty()) {
@@ -78,9 +85,10 @@ object TrainerCommand : SimpleCommand(
             }
           } else {
             // 无精确匹配结果, 但是有搜索建议, 发送建议
-            sendMessage("没有与${str}对应的信息, 是否想要输入:\n${list.mapIndexed {
-                index, it -> "${index + 1}. $it"
-            }.joinToString("\n")}")
+            sendMessage("没有与${str}对应的信息, 是否想要输入:\n${list
+              .filterIndexed{ index, _ -> index < 4 }
+              .mapIndexed { index, it -> "${index + 1}. $it" }
+              .joinToString("\n")}")
           }
         } else {
           sendImage(subject, result.file)
@@ -140,10 +148,10 @@ object TrainerCommand : SimpleCommand(
     overrideList.addAll(AronaTrainerConfig.override.filter {
       !overrideList.any { already -> already.name == it.name }
     })
-
     overrideList.forEach {
       FuzzySearch.add(it.name.split(",").map { s -> s.trim() })
     }
+    Arona.info("别名配置更新成功")
   }
 
   @Serializable

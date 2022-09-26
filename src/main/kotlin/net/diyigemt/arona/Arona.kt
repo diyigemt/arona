@@ -96,11 +96,11 @@ object Arona : KotlinPlugin(
     AronaTrainerConfig.reload()
     DataBaseProvider.start()
     QuartzProvider.start()
-    NetworkUtil.registerInstance()
     runSuspend {
       INIT.forEach {
         it.init()
       }
+      NetworkUtil.registerInstance()
     }
 //    startUpload() // 上传图片获取mirai-code
   }

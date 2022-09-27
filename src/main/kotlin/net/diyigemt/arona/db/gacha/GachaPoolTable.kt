@@ -12,5 +12,5 @@ object GachaPoolTable: IntIdTable(name = "GachaPools") {
 
 class GachaPool(id: EntityID<Int>) : IntEntity(id) {
   companion object: IntEntityClass<GachaPool>(GachaPoolTable)
-  val name by GachaPoolTable.name
+  var name by GachaPoolTable.name
 }

@@ -16,7 +16,7 @@ object GachaCharacterTable: IntIdTable(name = "GachaCharacters") {
 class GachaCharacter(id: EntityID<Int>) : IntEntity(id) {
   companion object: IntEntityClass<GachaCharacter>(GachaCharacterTable)
 
-  val name by GachaCharacterTable.name
-  val star by GachaCharacterTable.star
-  val limit by GachaCharacterTable.limit
+  var name by GachaCharacterTable.name
+  var star by GachaCharacterTable.star
+  var limit by GachaCharacterTable.limit
 }

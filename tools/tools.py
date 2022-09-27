@@ -208,11 +208,17 @@ def update_image_from_api(folder: str, type: int = 2):
                 })
         index += 1
     #信息收集完成, 提交到后端进行处理
+    post_data("imageUpdate", dict)
+
+def post_data(action: str, data: any):
     header = {
         "token": get_password(),
         "Content-Type": "application/json"
     }
-    resp = requests.post("http://localhost:12201/api/v1/admin/image", json=dict, headers=header)
+    resp = requests.post("http://localhost:12201/api/v1/admin/action", json={
+        "action": action,
+        "data": data
+    }, headers=header)
     print(resp.text)
 
 replace_name = {

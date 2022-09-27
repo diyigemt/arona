@@ -8,6 +8,7 @@ import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.announcement.RemoteActionModel
 import net.diyigemt.arona.interfaces.InitializedFunction
 import net.diyigemt.arona.remote.action.AnnouncementRemoteService
+import net.diyigemt.arona.remote.action.GachaPoolUpdateRemoteService
 import kotlin.reflect.full.createType
 
 object RemoteServiceManager: InitializedFunction() {
@@ -47,6 +48,7 @@ object RemoteServiceManager: InitializedFunction() {
 
   override fun init() {
     AnnouncementRemoteService().init()
+    GachaPoolUpdateRemoteService().init()
   }
 
 }

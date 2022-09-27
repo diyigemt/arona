@@ -1,9 +1,12 @@
 package net.diyigemt.arona.remote
 
+import kotlin.reflect.KType
 
-interface RemoteService {
 
-  fun handleService(data: String)
+interface RemoteService<T> {
+
+  val kType: KType
+  fun handleService(data: T)
 
 }
 

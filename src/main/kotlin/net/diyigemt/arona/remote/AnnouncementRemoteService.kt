@@ -2,6 +2,8 @@ package net.diyigemt.arona.remote
 
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import kotlin.reflect.KType
+import kotlin.reflect.full.createType
 
 @kotlinx.serialization.Serializable
 data class AnnouncementItem(
@@ -10,9 +12,9 @@ data class AnnouncementItem(
   val time: String
 )
 
-class AnnouncementRemoteService: RemoteService {
+class AnnouncementRemoteService : RemoteService<AnnouncementItem> {
 
-  override fun handleService(data: String) {
-    Json.decodeFromString<AnnouncementItem>(data)
+  override val kType: KType = AnnouncementItem::class.createType()
+  override fun handleService(data: AnnouncementItem) {
   }
 }

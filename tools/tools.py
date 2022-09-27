@@ -152,8 +152,8 @@ def update_image(folder: str, cursor: sqlite3.Cursor, connection: sqlite3.Connec
         index += 1
     return index
 
-# if __name__ == "__main__":
-    # draw_image("https://i0.hdslb.com/bfs/new_dyn/f37c4f6e1b70ab674e6a96895d6d4f46425535005.png", "火力演习.png", "./image/some/")
+if __name__ == "__main__":
+    draw_image("https://i0.hdslb.com/bfs/new_dyn/dd446c6164a1f30419e92697491e4c5c425535005.png", "黑白.png", "./image/some/")
 
 def get_password() -> str:
     pw = ""

@@ -9,11 +9,11 @@ import org.jetbrains.exposed.sql.Column
 /**
  * 保存已发送的公告id
  */
-object AnnouncementTable: LongIdTable(name = "Announcement") {
+object RemoteActionTable: LongIdTable(name = "RemoteAction") {
   val aid: Column<Long> = long("aid")
 }
 
-class AnnouncementModel(id: EntityID<Long>): LongEntity(id) {
-  companion object: LongEntityClass<AnnouncementModel>(AnnouncementTable)
-  var aid by AnnouncementTable.aid
+class RemoteActionModel(id: EntityID<Long>): LongEntity(id) {
+  companion object: LongEntityClass<RemoteActionModel>(RemoteActionTable)
+  var aid by RemoteActionTable.aid
 }

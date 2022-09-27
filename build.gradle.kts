@@ -16,9 +16,9 @@ val quartzVersion = "2.3.2"
 val okhttpVersion = "4.10.0"
 
 repositories {
-  maven("https://maven.aliyun.com/repository/public") // 阿里云国内代理仓库
-  maven("https://jitpack.io")
   mavenCentral()
+  maven("https://jitpack.io")
+  maven("https://maven.aliyun.com/repository/public") // 阿里云国内代理仓库
 }
 
 dependencies {

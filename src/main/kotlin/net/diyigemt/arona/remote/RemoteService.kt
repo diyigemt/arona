@@ -2,11 +2,15 @@ package net.diyigemt.arona.remote
 
 import kotlin.reflect.KType
 
-
+@Suppress("UNCHECKED_CAST")
 interface RemoteService<T> {
 
   val kType: KType
-  fun handleService(data: T)
+  val type: RemoteServiceAction
+  fun handleService(data: T, time: String)
+  fun init() {
+    RemoteServiceManager.registerService(this.type, this as RemoteService<Any>)
+  }
 
 }
 

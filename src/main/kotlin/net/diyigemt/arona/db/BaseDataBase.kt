@@ -2,7 +2,7 @@ package net.diyigemt.arona.db
 
 import net.diyigemt.arona.command.cache.GachaCache
 import net.diyigemt.arona.db.DataBaseProvider.query
-import net.diyigemt.arona.db.announcement.AnnouncementTable
+import net.diyigemt.arona.db.announcement.RemoteActionTable
 import net.diyigemt.arona.db.gacha.*
 import net.diyigemt.arona.db.image.ImageTable
 import net.diyigemt.arona.db.name.GameNameTable
@@ -28,7 +28,7 @@ object BaseDataBase {
         GameNameTable,
         ImageTable,
         SystemTable,
-        AnnouncementTable
+        RemoteActionTable
       )
     }
     GachaCache.init()

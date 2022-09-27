@@ -161,7 +161,7 @@ object AronaServiceManager: InitializedFunction() {
     TrainerCommand.init()
     GameNameCommand.init()
     GameNameSearchCommand.init()
-    AronaAnnouncementChecker.init()
+    AronaRemoteActionChecker.init()
     AronaServiceConfig.reload()
     AronaServiceConfig.config.forEach {
       if (it.value) {

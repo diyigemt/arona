@@ -8,10 +8,7 @@
  */
 package net.diyigemt.arona
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import net.diyigemt.arona.config.*
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.extension.CommandInterceptorManager
@@ -21,6 +18,7 @@ import net.diyigemt.arona.handler.HentaiEventHandler
 import net.diyigemt.arona.handler.NudgeEventHandler
 import net.diyigemt.arona.interfaces.InitializedFunction
 import net.diyigemt.arona.quartz.QuartzProvider
+import net.diyigemt.arona.remote.RemoteServiceManager
 import net.diyigemt.arona.service.AronaServiceManager
 import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.NetworkUtil
@@ -51,7 +49,8 @@ object Arona : KotlinPlugin(
     listOf(
       GeneralUtils,
       AronaServiceManager,
-      CommandInterceptorManager
+      CommandInterceptorManager,
+      RemoteServiceManager
     )
 
   @OptIn(ExperimentalCommandDescriptors::class, ConsoleExperimentalApi::class)

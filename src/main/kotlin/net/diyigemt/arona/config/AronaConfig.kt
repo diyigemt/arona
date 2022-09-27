@@ -42,7 +42,7 @@ object AronaConfig: AutoSavePluginConfig("arona") {
   @ValueDescription("识别id(无需修改)")
   var uuid: String by value("")
 
-  @ValueDescription("查询公告间隔 设置为0表示不开启, 单位是小时")
-  val announcementCheckInterval: Int by value(1)
+  @ValueDescription("远端操作查询间隔 设置为0表示不开启, 单位是小时")
+  val remoteCheckInterval: Int by value(1)
 
 }

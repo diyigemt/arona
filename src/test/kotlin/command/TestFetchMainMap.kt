@@ -36,7 +36,7 @@ class TestFetchMainMap {
   fun fetchAllMap() {
 //    System.setProperty("proxyHost", "127.0.0.1")
 //    System.setProperty("proxyPort", "7890")
-    (9 .. 19).forEach {
+    (20 .. 20).forEach {
       generateSubChapterList(it).forEach { chapter ->
         val final = generateMap(it, chapter) ?: return
         ImageIO.write(final, "png", File("./debug-sandbox/map-cache/${chapter}.png"))
@@ -77,7 +77,11 @@ class TestFetchMainMap {
       ) {
         val ddd = body.getElementsByTag("a").filter { a ->
           val name = a.attr("title")
-          return@filter name.isNotBlank() && name.contains(chapterName) && a.getElementsByTag("img").isNotEmpty()
+          val src = a.getElementsByTag("img").let let2@ {
+            img -> if (img.isEmpty()) return@filter false
+            return@let2 img[0]
+          }.attr("data-src")
+          return@filter name.isNotBlank() && name.contains(chapterName) && a.getElementsByTag("img").isNotEmpty() && src.contains("attach2")
         }
         ddd[0].getElementsByTag("img")[0]
       } else {

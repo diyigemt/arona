@@ -34,6 +34,9 @@ object GeneralUtils : InitializedFunction() {
   private const val IMAGE_FOLDER = "/image"
   private const val BACKEND_IMAGE_RESOURCE = "${BACKEND_ADDRESS}$IMAGE_FOLDER"
   private lateinit var PinyinObject: PinIn
+  private val Punctuation0: Regex = Regex("[\\u3002\\uff1f\\uff01\\uff0c\\u3001\\uff1b\\uff1a\\u201c\\u201d\\u2018\\u2019\\uff08\\uff09\\u300a\\u300b\\u3008\\u3009\\u3010\\u3011\\u300e\\u300f\\u300c\\u300d\\ufe43\\ufe44\\u3014\\u3015\\u2026\\u2014\\uff5e\\ufe4f\\uffe5]")
+  private val Punctuation1: Regex = Regex("[.,/#!\$%^&*;:{}=\\-_+`~()\\[\\]]")
+  private val Punctuation2: Regex = Regex("\\s{2,}")
   fun checkService(group: Contact?): Boolean = when (group) {
     is Group -> AronaConfig.groups.contains(group.id)
     else -> false
@@ -151,7 +154,7 @@ object GeneralUtils : InitializedFunction() {
     }
   }
 
-  fun toPinyin(str: String): String = toPinyin1(str)
+  fun toPinyin(str: String): String = toPinyin1(replacePunctuation(str))
 
   fun toPinyin0(str: String): String = str
     .toCharArray()
@@ -178,6 +181,10 @@ object GeneralUtils : InitializedFunction() {
   }
 
   fun fuzzySearch(str: String, target: String): Boolean = PinyinObject.contains(target, toPinyin(str))
+
+  fun replacePunctuation(str: String): String = str.replace(Punctuation0, "")
+    .replace(Punctuation1, "")
+    .replace(Punctuation2, "")
 
   fun fileWatchChannel(path: String): KWatchChannel {
     val file = File(path)

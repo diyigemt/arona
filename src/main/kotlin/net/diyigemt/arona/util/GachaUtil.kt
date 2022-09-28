@@ -9,7 +9,7 @@ import net.diyigemt.arona.db.gacha.*
 import org.jetbrains.exposed.sql.and
 
 object GachaUtil {
-  private const val star = "★"
+  const val star = "★"
 
   fun pickup(): GachaCharacter {
     val maxDot = pow10(AronaGachaConfig.maxDot)

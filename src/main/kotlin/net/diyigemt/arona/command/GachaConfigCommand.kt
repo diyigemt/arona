@@ -45,7 +45,7 @@ object GachaConfigCommand : CompositeCommand(
   @Description("设置1星出货率")
   suspend fun UserCommandSender.s1(rate: Float) {
     AronaGachaConfig.star1Rate = rate
-    AronaGachaConfig.save()
+    subject.sendMessage("1星出货率设置为${rate}%")
     AronaGachaConfig.init()
   }
 
@@ -53,12 +53,14 @@ object GachaConfigCommand : CompositeCommand(
   @Description("设置2星出货率")
   suspend fun UserCommandSender.s2(rate: Float) {
     AronaGachaConfig.star2Rate = rate
+    subject.sendMessage("2星出货率设置为${rate}%")
     AronaGachaConfig.init()
   }
   @SubCommand("3s")
   @Description("设置3星出货率")
   suspend fun UserCommandSender.s3(rate: Float) {
     AronaGachaConfig.star3Rate = rate
+    subject.sendMessage("3星出货率设置为${rate}%")
     AronaGachaConfig.init()
   }
 
@@ -66,6 +68,7 @@ object GachaConfigCommand : CompositeCommand(
   @Description("设置2星PickUp出货率")
   suspend fun UserCommandSender.ps2(rate: Float) {
     AronaGachaConfig.star2PickupRate = rate
+    subject.sendMessage("2星PickUp出货率设置为${rate}%")
     AronaGachaConfig.init()
   }
 
@@ -73,6 +76,7 @@ object GachaConfigCommand : CompositeCommand(
   @Description("设置3星PickUp出货率")
   suspend fun UserCommandSender.ps3(rate: Float) {
     AronaGachaConfig.star3PickupRate = rate
+    subject.sendMessage("3星PickUp出货率设置为${rate}%")
     AronaGachaConfig.init()
   }
 

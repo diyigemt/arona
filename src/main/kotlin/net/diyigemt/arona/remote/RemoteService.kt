@@ -18,6 +18,7 @@ enum class RemoteServiceAction(
   private val action: String
 ) {
   ANNOUNCEMENT("announcement"),
+  POOL_UPDATE("poolUpdate"),
   NULL("null");
   companion object {
     fun getRemoteServiceActionByName(name: String): RemoteServiceAction =

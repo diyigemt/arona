@@ -65,8 +65,8 @@ data class CommonDAO(
           }
 
           Raid.update ({ Raid.Id eq raid.raid }){
-            if (isJPN) it[CurrentJPN] = raid.terrain?: ""
-            else it[CurrentGLB] = raid.terrain?: ""
+            if (isJPN) it[CurrentJPN] = raid.terrain
+            else it[CurrentGLB] = raid.terrain
           }
         }
       }

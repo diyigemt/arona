@@ -4,6 +4,7 @@ import java.io.File
 
 @kotlinx.serialization.Serializable
 data class ImageResult(
+  val id: Int = 0,
   val name: String = "",
   val path: String = "",
   val hash: String = "",

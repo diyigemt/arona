@@ -1,8 +1,6 @@
 package net.diyigemt.arona.util
 
 import com.taptap.pinyin.PinyinPlus
-import dev.vishna.watchservice.KWatchChannel
-import dev.vishna.watchservice.asWatchChannel
 import me.towdium.pinin.PinIn
 import me.towdium.pinin.utils.PinyinFormat
 import net.diyigemt.arona.Arona
@@ -19,6 +17,8 @@ import net.diyigemt.arona.entity.ImageRequestResult
 import net.diyigemt.arona.interfaces.InitializedFunction
 import net.diyigemt.arona.util.NetworkUtil.BACKEND_ADDRESS
 import net.diyigemt.arona.util.NetworkUtil.baseRequest
+import net.diyigemt.arona.util.other.KWatchChannel
+import net.diyigemt.arona.util.other.asWatchChannel
 import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.UserOrBot

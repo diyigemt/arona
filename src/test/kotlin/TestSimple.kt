@@ -2,9 +2,6 @@ package org.example.mirai.plugin
 
 import com.charleskorn.kaml.Yaml
 import com.taptap.pinyin.PinyinPlus
-import dev.vishna.watchservice.KWatchChannel
-import dev.vishna.watchservice.KWatchEvent
-import dev.vishna.watchservice.asWatchChannel
 import io.kotest.common.runBlocking
 import kotlinx.coroutines.channels.consumeEach
 import me.towdium.pinin.PinIn
@@ -19,6 +16,9 @@ import net.diyigemt.arona.util.ActivityUtil
 import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.NetworkUtil
 import net.diyigemt.arona.util.WikiruUtil
+import net.diyigemt.arona.util.other.KWatchChannel
+import net.diyigemt.arona.util.other.KWatchEvent
+import net.diyigemt.arona.util.other.asWatchChannel
 import net.diyigemt.arona.util.scbaleDB.SchaleDBDataSyncService
 import net.diyigemt.arona.util.scbaleDB.SchaleDBUtil
 import net.mamoe.mirai.console.util.SemVersion

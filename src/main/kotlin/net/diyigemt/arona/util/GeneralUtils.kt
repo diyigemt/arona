@@ -121,7 +121,13 @@ object GeneralUtils : InitializedFunction() {
     val localFile = localImageFile(imageResult.path)
     // 没有本地图片, 向后端下载并存入数据库中
     return if (localDB == null) {
-      imageRequest(imageResult.path, localFile)
+      kotlin.runCatching {
+        imageRequest(imageResult.path, localFile)
+      }.onFailure {
+        Arona.sendMessageToAdmin("在下载图片${imageResult.name}时失败,请查看控制台报错信息")
+        it.printStackTrace()
+        throw it
+      }
       // 将本地图片信息写入数据库
       query {
         ImageTableModel.new {

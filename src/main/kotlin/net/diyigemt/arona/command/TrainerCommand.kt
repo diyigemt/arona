@@ -64,7 +64,7 @@ object TrainerCommand : SimpleCommand(
       }
       TrainerOverride.OverrideType.RAW -> {
         val result = GeneralUtils.loadImageOrUpdate(value)
-        var list = result.list.map { it.name }.toMutableList()
+        val list = result.list.map { it.name }.toMutableList()
         // 没有本地文件
         if (result.file == null) {
           // 远端也没有搜索建议 或者远端没有回应 对本地进行查找

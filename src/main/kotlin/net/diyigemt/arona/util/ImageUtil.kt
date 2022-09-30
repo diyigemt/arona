@@ -1,4 +1,5 @@
 package net.diyigemt.arona.util
+import net.diyigemt.arona.Arona
 import net.diyigemt.arona.entity.*
 import net.diyigemt.arona.util.ActivityUtil.DEFAULT_CALENDAR_FONT_SIZE
 import net.diyigemt.arona.util.ActivityUtil.DEFAULT_CALENDAR_LINE_MARGIN
@@ -12,6 +13,18 @@ import kotlin.math.max
 object ImageUtil {
 
   private const val DEFAULT_PADDING: Int = 10
+  private var font: Font? = null
+
+  init {
+    kotlin.runCatching {
+      val f = Font.createFont(Font.TRUETYPE_FONT, Arona.resolveDataFile("SourceHanSansCN-Normal.otf"))
+      GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(f)
+      font = f
+    }.onFailure {
+      Arona.warning("字体注册失败, 使用默认字体, 可能会导致中文乱码")
+    }
+  }
+
   fun createCalendarImage(eventLength: Int, contentMaxLength: Int, titleLength: Int = 20, fontSize: Float = DEFAULT_CALENDAR_FONT_SIZE.toFloat()): Pair<BufferedImage, Graphics2D> {
     val width = fontSize * (max(contentMaxLength, titleLength) + 20) * 0.8
     val height = (eventLength + 4) * (fontSize + DEFAULT_CALENDAR_LINE_MARGIN) + 2 * DEFAULT_CALENDAR_LINE_MARGIN
@@ -22,6 +35,7 @@ object ImageUtil {
     g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
       RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
     g.font = g.font.deriveFont(Font.PLAIN).deriveFont(fontSize)
+    font = font?.deriveFont(Font.PLAIN)?.deriveFont(fontSize)
     return img to g
   }
 
@@ -161,7 +175,7 @@ object ImageUtil {
   ) {
     val g = group.second
     val img = group.first
-    val cacheFont = g.font
+    g.font = font ?: g.font
     g.color = color
     g.font = g.font.deriveFont(fontWeight)
     if (fontSize != null) {
@@ -173,7 +187,6 @@ object ImageUtil {
       TextAlign.RIGHT -> g.drawString(str, img.width - width - DEFAULT_PADDING, y)
       TextAlign.CENTER -> g.drawString(str, (img.width - x - width) / 2 + x, y)
     }
-    g.font = cacheFont
   }
 
   fun drawText(
@@ -182,7 +195,7 @@ object ImageUtil {
     y: Int,
     align: TextAlign = TextAlign.LEFT,
     color: Color = Color.BLACK,
-    fontWeight: Int = Font.PLAIN
+    fontWeight: Int = Font.PLAIN,
   ) {
     drawTextAlign(group, str, 0, y, align, color, fontWeight)
   }

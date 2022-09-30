@@ -2,7 +2,7 @@ import sqlite3
 from tools import update_image, update_image_from_api
 
 
-da_path = r"C:\Users\qwe13\Desktop\data.db"
+da_path = r"C:\Users\hgny\Desktop\data.db"
 img_folder = "image"
 base_folder = "/some/"
 

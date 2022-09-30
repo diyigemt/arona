@@ -26,7 +26,7 @@ object RemoteServiceManager: InitializedFunction() {
           }
           JsonObject.decodeFromString(serializer(rs.kType), it.content)
         }.onSuccess { json ->
-          rs.handleService(json!!, it.time)
+          rs.handleService(json!!, it.time, it.id)
           DataBaseProvider.query { _ ->
             RemoteActionModel.new {
               this.aid = it.id

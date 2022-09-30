@@ -11,7 +11,7 @@ class AnnouncementRemoteService : RemoteService<String> {
   override val kType: KType = String::class.createType()
   override val type: RemoteServiceAction = RemoteServiceAction.ANNOUNCEMENT
 
-  override fun handleService(data: String, time: String) {
+  override fun handleService(data: String, time: String, aid: Long) {
     Arona.sendMessageToAdmin("新公告(${time}):\n${data}")
   }
 }

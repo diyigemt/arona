@@ -20,64 +20,19 @@ class GachaPoolUpdateRemoteService : RemoteService<GachaPoolUpdateData> {
   override val kType: KType = GachaPoolUpdateData::class.createType()
   override val type: RemoteServiceAction = RemoteServiceAction.POOL_UPDATE
 
-  override fun handleService(data: GachaPoolUpdateData, time: String) {
-    var pool = DataBaseProvider.query {
+  override fun handleService(data: GachaPoolUpdateData, time: String, aid: Long) {
+    // 检测是否有池子名称冲突
+    val pool = DataBaseProvider.query {
       GachaPool.find { GachaPoolTable.name eq data.name }.firstOrNull()
     }
-    // 没有同名池子 新建池子
-    if (pool == null) {
-      DataBaseProvider.query {
-        pool = GachaPool.new {
-          this.name = data.name
-        }
-      }
-    } else {
-      // 有同名池子, 自己新建一个
-      DataBaseProvider.query {
-        pool = GachaPool.new {
-          this.name = "${data.name}(新)"
-        }
-      }
-    }
-    val insertCharacter = kotlin.runCatching {
-      insertCharacter(pool!!, data.character)
-    }.onFailure {
-      // 不知道为什么创建失败, 删除创建的池子
-      DataBaseProvider.query {
-        GachaPoolTable.deleteWhere {
-          GachaPoolTable.id eq pool!!.id
-        }
-      }
-      throw it
-    }.getOrNull() ?: return
     val message = """
-      新池子: ${pool!!.name} 已添加, id: ${pool!!.id}
-      ${insertCharacter.joinToString(", ") { "${it.name}(${it.star}${GachaUtil.star})" }}
-      使用指令 /gacha setpool ${pool!!.id} 来切换到这个池子
+      检测到新池子: ${data.name} ${if (pool != null) "(与现有池子名称冲突)" else ""}
+      ${data.character.joinToString(", ") { "${it.name}(${it.star}${GachaUtil.star})" }}
+      使用指令
+      /gacha update $aid ${if (pool != null) "新池子名称" else ""}
+      来更新这个池子
     """.trimIndent()
     Arona.sendMessageToAdmin(message)
-  }
-
-  private fun insertCharacter(pool: GachaPool, list: List<GachaCharacter>): List<GC> {
-    return DataBaseProvider.query { _ ->
-      list.map {
-        var gc = GC.find {
-          GachaCharacterTable.name eq it.name
-        }.firstOrNull()
-        if (gc == null) {
-          gc = GC.new {
-            this.name = it.name
-            this.star = it.star
-            this.limit = it.limit == 1
-          }
-        }
-        GachaPoolCharacter.new {
-          this.poolId = pool.id
-          this.characterId = gc.id
-        }
-        return@map gc
-      }
-    }!!
   }
 }
 

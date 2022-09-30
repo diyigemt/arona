@@ -7,7 +7,7 @@ interface RemoteService<T> {
 
   val kType: KType
   val type: RemoteServiceAction
-  fun handleService(data: T, time: String)
+  fun handleService(data: T, time: String, aid: Long)
   fun init() {
     RemoteServiceManager.registerService(this.type, this as RemoteService<Any>)
   }

@@ -73,7 +73,7 @@ object GeneralUtils : InitializedFunction() {
 
   private suspend fun doUpload(path: String) {
     val imageFileList = File(Arona.dataFolderPath() + path).listFiles() ?: return
-    val g = Arona.arona.groups[1002484182]!!
+    val g = Arona.arona.groups[10024841]!!
     imageFileList.forEach {
       val name = it.name
       val res = it.toExternalResource("png")

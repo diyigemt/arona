@@ -81,10 +81,10 @@ object TrainerCommand : SimpleCommand(
             }
           } else {
             // 无精确匹配结果, 但是有搜索建议, 发送建议
-            sendMessage("没有与${str}对应的信息, 是否想要输入:\n${list
-              .filterIndexed{ index, _ -> index < 4 }
-              .mapIndexed { index, it -> "${index + 1}. $it" }
-              .joinToString("\n")}")
+            sendMessage("没有与${str}对应的信息, 是否想要输入:\n${
+              list.filterIndexed { index, _ -> index < 4 }
+                .joinToString("\n") { "/攻略 $it" }
+            }")
           }
         } else {
           sendImage(subject, result.file)

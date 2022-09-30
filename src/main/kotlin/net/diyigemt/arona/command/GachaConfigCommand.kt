@@ -1,19 +1,30 @@
 package net.diyigemt.arona.command
 
+import kotlinx.serialization.InternalSerializationApi
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.serializer
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.Arona.save
+import net.diyigemt.arona.advance.RemoteActionItem
 import net.diyigemt.arona.command.cache.GachaCache
 import net.diyigemt.arona.config.AronaGachaConfig
+import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.DataBaseProvider.query
-import net.diyigemt.arona.db.gacha.GachaHistoryTable
-import net.diyigemt.arona.db.gacha.GachaLimitTable
+import net.diyigemt.arona.db.gacha.*
+import net.diyigemt.arona.remote.action.GachaCharacter
+import net.diyigemt.arona.remote.action.GachaPoolUpdateData
 import net.diyigemt.arona.service.AronaManageService
+import net.diyigemt.arona.util.GachaUtil
+import net.diyigemt.arona.util.NetworkUtil
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.console.command.UserCommandSender
+import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.Group
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
+import net.diyigemt.arona.db.gacha.GachaCharacter as GC
 
 object GachaConfigCommand : CompositeCommand(
   Arona,"gacha", "抽卡",
@@ -78,6 +89,103 @@ object GachaConfigCommand : CompositeCommand(
     AronaGachaConfig.star3PickupRate = rate
     subject.sendMessage("3星PickUp出货率设置为${rate}%")
     AronaGachaConfig.init()
+  }
+
+  @SubCommand("update")
+  @Description("从远端更新池子")
+  suspend fun UserCommandSender.updatePool(id: Int) {
+    doUpdate(id, subject)
+  }
+
+  @SubCommand("update2")
+  @Description("从远端更新池子")
+  suspend fun UserCommandSender.updatePool2(id: Int, name: String) {
+    doUpdate(id, subject, name)
+  }
+
+  @OptIn(InternalSerializationApi::class)
+  private suspend fun doUpdate(id: Int, subject: Contact, poolName: String? = null) {
+    val data = kotlin.runCatching {
+      val resp = NetworkUtil.fetchDataFromServer<RemoteActionItem>("/action/one", mapOf(
+        "id" to id.toString()
+      ))
+      Json.decodeFromString(GachaPoolUpdateData::class.serializer(), resp.data.content)
+    }.onFailure {
+      Arona.runSuspend {
+        subject.sendMessage("从远端获取池子信息失败")
+      }
+      it.printStackTrace()
+      return
+    }.getOrNull() ?: return
+    var pool = query {
+      GachaPool.find { GachaPoolTable.name eq data.name }.firstOrNull()
+    }
+    // 没有同名池子 新建池子
+    if (pool == null) {
+      DataBaseProvider.query {
+        pool = GachaPool.new {
+          this.name = data.name
+        }
+      }
+    } else {
+      // 有同名池子, 根据用户输入判断是否继续
+      if (poolName == null) {
+        subject.sendMessage("""
+          同名池子: ${data.name} 已经存在, 请使用
+          /gacha update $id 新池子名字
+          来更新
+        """.trimIndent())
+        return
+      }
+      query {
+        pool = GachaPool.new {
+          this.name = poolName
+        }
+      }
+    }
+    val insertCharacter = kotlin.runCatching {
+      insertCharacter(pool!!, data.character)
+    }.onFailure {
+      // 不知道为什么创建失败, 删除创建的池子
+      query {
+        GachaPoolTable.deleteWhere {
+          GachaPoolTable.id eq pool!!.id
+        }
+      }
+      subject.sendMessage("新池子创建失败, 请查看控制台日志")
+      throw it
+    }.getOrNull() ?: return
+    val message = """
+      新池子: ${pool!!.name} 已添加, id: ${pool!!.id}
+      ${insertCharacter.joinToString(", ") { "${it.name}(${it.star}${GachaUtil.star})" }}
+      使用指令
+      /gacha setpool ${pool!!.id}
+      来切换到这个池子
+    """.trimIndent()
+    subject.sendMessage(message)
+  }
+
+  private fun insertCharacter(pool: GachaPool, list: List<GachaCharacter>): List<GC> {
+    return query { _ ->
+      list.map {
+        var gc = GC.find {
+          GachaCharacterTable.name eq it.name
+        }.firstOrNull()
+        // 存在添加不存在删除
+        if (gc == null) {
+          gc = GC.new {
+            this.name = it.name
+            this.star = it.star
+            this.limit = it.limit == 1
+          }
+        }
+        GachaPoolCharacter.new {
+          this.poolId = pool.id
+          this.characterId = gc.id
+        }
+        return@map gc
+      }
+    }!!
   }
 
   override val id: Int = 1

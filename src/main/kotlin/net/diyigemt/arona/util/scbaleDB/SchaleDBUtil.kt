@@ -16,10 +16,10 @@ import kotlin.reflect.KParameter
  *@Create 2022/8/18
  */
 object SchaleDBUtil {
-  lateinit var commonItem : CommonDAO
-  lateinit var studentItem : StudentDAO
-  lateinit var localizationItem : LocalizationDAO
-  lateinit var raidItem : RaidDAO
+  var commonItem : CommonDAO = CommonDAO()
+  var studentItem : StudentDAO = StudentDAO()
+  var localizationItem : LocalizationDAO = LocalizationDAO()
+  var raidItem : RaidDAO = RaidDAO()
   var birthdayList : MutableList<Birthday> = mutableListOf()
 
   fun getGlobalEventData(): Pair<MutableList<Activity>, MutableList<Activity>> = getData(ServerLocale.GLOBAL)

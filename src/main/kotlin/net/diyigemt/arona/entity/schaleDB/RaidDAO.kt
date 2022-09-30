@@ -11,7 +11,7 @@ import org.jetbrains.exposed.sql.selectAll
  *@Create 2022/8/20
  */
 data class RaidDAO(
-  var Raid: List<Raid>,
+  var Raid: List<Raid> = mutableListOf(),
 //    val SeasonRewardGlobal: List<SeasonRewardGlobal>,
 //    val SeasonRewardJp: List<SeasonRewardJp>,
 //    val TimeAttack: List<TimeAttack>,

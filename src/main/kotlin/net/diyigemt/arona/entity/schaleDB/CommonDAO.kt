@@ -17,7 +17,7 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
 data class CommonDAO(
 //  val GachaGroup : List<GachaGroup>,
-  var regions : List<Regions>,
+  var regions : List<Regions> = mutableListOf(Regions(null), Regions(null)),
 //  val changelog : List<ChangeLog>
 ) : BaseDAO{
   override fun sendToDataBase(){
@@ -65,7 +65,7 @@ data class CommonDAO(
           }
 
           Raid.update ({ Raid.Id eq raid.raid }){
-            if (isJPN) it[CurrentJPN] = raid.terrain
+            if (isJPN) it[CurrentJPN] = raid.terrain ?: ""
             else it[CurrentGLB] = raid.terrain
           }
         }
@@ -185,28 +185,28 @@ data class GachaGroup(
 
 data class Regions(
   val abbreviation : String?,
-  val NameEn : String,
-  val NameJp : String,
-  val NameKr : String,
-  val NameTw : String,
-  val NameCn : String,
-  val studentlevel_max : Int,
-  val weaponlevel_max : Int,
-  val bondlevel_max : Int,
-  val gear1_max : Int,
-  val gear2_max : Int,
-  val gear3_max : Int,
-  val campaign_max : Int,
-  val events : List<Int>,
-  val event_max : Int,
-  val event_701_max : Int,
-  val event_701_challenge_max : Int,
-  val commission_max : Int,
-  val bounty_max : Int,
-  val schooldungeon_max : Int,
-  var current_gacha : List<CurrentGacha>,
-  var current_events : List<CurrentEvents>,
-  var current_raid : List<CurrentRaid>
+  val NameEn : String = "",
+  val NameJp : String = "",
+  val NameKr : String = "",
+  val NameTw : String = "",
+  val NameCn : String = "",
+  val studentlevel_max : Int = 0,
+  val weaponlevel_max : Int = 0,
+  val bondlevel_max : Int = 0,
+  val gear1_max : Int = 0,
+  val gear2_max : Int = 0,
+  val gear3_max : Int = 0,
+  val campaign_max : Int = 0,
+  val events : List<Int> = mutableListOf(),
+  val event_max : Int = 0,
+  val event_701_max : Int = 0,
+  val event_701_challenge_max : Int = 0,
+  val commission_max : Int = 0,
+  val bounty_max : Int = 0,
+  val schooldungeon_max : Int = 0,
+  var current_gacha : List<CurrentGacha> = mutableListOf(),
+  var current_events : List<CurrentEvents> = mutableListOf(),
+  var current_raid : List<CurrentRaid> = mutableListOf()
 )
 
 data class CurrentGacha(

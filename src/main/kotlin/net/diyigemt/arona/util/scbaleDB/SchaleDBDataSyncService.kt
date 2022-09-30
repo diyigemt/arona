@@ -110,7 +110,7 @@ object SchaleDBDataSyncService : AronaQuartzService{
         //GitHub超时，换国内镜像源。注：可能信息会因镜像源未及时同步而丢掉
         connection.url(CN + url).execute().body()
       }.onFailure {
-        Arona.warning("获取数据源失败，请检查网络连接")
+        Arona.warning("获取数据源: $dataType 失败，请检查网络连接")
       }
     }
 
@@ -121,6 +121,11 @@ object SchaleDBDataSyncService : AronaQuartzService{
       DataBaseProvider.query(DB.DATA.ordinal) { MD5.select(MD5.name eq dataType).first() }
     }.getOrNull()
     val dao = Gson().fromJson(res.getOrDefault(""), T::class.java)
+    //GET失败时dao为null，返回模板对象的默认值
+    if (dao == null){
+      val new = T::class.java.getDeclaredConstructor().newInstance()
+      return new.toModel(new)
+    }
     resString += "Source: $dataType"
     if (query?.getOrNull(MD5.name) != null){
       when(query.getOrNull(MD5.remote)){

@@ -38,7 +38,7 @@ class StudentDAO : ArrayList<StudentDAOItem>(), BaseDAO{
 
   override fun <T : BaseDAO> toModel(dao: T): T {
     dao as StudentDAO
-    dao.clear()
+    if (dao.isNotEmpty()) dao.clear()
 
     val query = kotlin.runCatching {
       DataBaseProvider.query(DB.DATA.ordinal) {

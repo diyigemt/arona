@@ -25,7 +25,7 @@ data class LocalizationDAO(
 //    val ConquestMap: ConquestMap,
 //    val EnemyRank: EnemyRank,
 //    val EnemyTags: EnemyTags,
-  var EventName: Map<String, String>,
+  var EventName: Map<String, String> = mutableMapOf(),
 //    val IsLimited: Map<String, String>,
 //    val ItemCategory: ItemCategory,
 //    val NodeQuality: Map<String, String>,

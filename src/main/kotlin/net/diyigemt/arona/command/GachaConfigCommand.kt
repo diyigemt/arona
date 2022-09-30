@@ -11,6 +11,7 @@ import net.diyigemt.arona.config.AronaGachaConfig
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.DataBaseProvider.query
 import net.diyigemt.arona.db.gacha.*
+import net.diyigemt.arona.remote.RemoteServiceAction
 import net.diyigemt.arona.remote.action.GachaCharacter
 import net.diyigemt.arona.remote.action.GachaPoolUpdateData
 import net.diyigemt.arona.service.AronaManageService
@@ -109,11 +110,12 @@ object GachaConfigCommand : CompositeCommand(
       val resp = NetworkUtil.fetchDataFromServer<RemoteActionItem>("/action/one", mapOf(
         "id" to id.toString()
       ))
+      if (resp.data.action != RemoteServiceAction.POOL_UPDATE.name) {
+        subject.sendMessage("id错误")
+      }
       Json.decodeFromString(GachaPoolUpdateData::class.serializer(), resp.data.content)
     }.onFailure {
-      Arona.runSuspend {
-        subject.sendMessage("从远端获取池子信息失败")
-      }
+      subject.sendMessage("从远端获取池子信息失败")
       it.printStackTrace()
       return
     }.getOrNull() ?: return

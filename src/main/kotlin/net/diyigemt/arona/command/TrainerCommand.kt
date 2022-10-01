@@ -140,6 +140,7 @@ object TrainerCommand : SimpleCommand(
       Arona.warning("序列化别名配置时失败")
       Arona.warning(err.message)
       err.printStackTrace()
+      return
     }.onSuccess {
       FuzzySearch.clear()
       overrideList.clear()
@@ -172,7 +173,7 @@ object TrainerCommand : SimpleCommand(
     // 监视data文件夹下的arona-trainer.yml文件动态添加配置
     ConfigFile = File(Arona.dataFolderPath("/${AutoReadConfigFileName}"))
     if (!ConfigFile.exists()) {
-      ConfigFile.writeText("")
+      ConfigFile.writeText("override: []")
     }
     Arona.runSuspend {
       ConfigFileWatcherChannel = ConfigFile.asWatchChannel(KWatchChannel.Mode.SingleFile)

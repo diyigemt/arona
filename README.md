@@ -137,7 +137,7 @@ arona是基于mirai-console的插件。
 9. 攻略图片下载失败时将会提供反馈信息
 10. 修复某些情况下无法获取学生生日信息导致`/活动`指令失效的问题
 11. 修复在服务器环境下部署时系统中没有中文字体导致`/活动`指令结果中文乱码的问题
-12. 新增特殊配置文件`./data/net.diyigemt.arona/arona-trainer.yml`允许用户在`mirai-console`运行时修改`/攻略`指令的别名覆写配置
+12. 新增特殊配置文件`./data/net.diyigemt.arona/trainer_config.yml`允许用户在`mirai-console`运行时修改`/攻略`指令的别名覆写配置，具体看[这里](./doc/using.md#other-name-runtime)
 
 2022-09-13 v1.0.9
 

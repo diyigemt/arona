@@ -1,6 +1,7 @@
 package net.diyigemt.arona.util
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.entity.*
+import net.diyigemt.arona.interfaces.InitializedFunction
 import net.diyigemt.arona.util.ActivityUtil.DEFAULT_CALENDAR_FONT_SIZE
 import net.diyigemt.arona.util.ActivityUtil.DEFAULT_CALENDAR_LINE_MARGIN
 import okhttp3.OkHttpClient
@@ -10,20 +11,11 @@ import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import kotlin.math.max
 
-object ImageUtil {
+object ImageUtil : InitializedFunction() {
 
   private const val DEFAULT_PADDING: Int = 10
+  private const val FONT_NAME = "SourceHanSansCN-Normal.otf"
   private var font: Font? = null
-
-  init {
-    kotlin.runCatching {
-      val f = Font.createFont(Font.TRUETYPE_FONT, Arona.resolveDataFile("SourceHanSansCN-Normal.otf"))
-      GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(f)
-      font = f
-    }.onFailure {
-      Arona.warning("字体注册失败, 使用默认字体, 可能会导致中文乱码")
-    }
-  }
 
   fun createCalendarImage(eventLength: Int, contentMaxLength: Int, titleLength: Int = 20, fontSize: Float = DEFAULT_CALENDAR_FONT_SIZE.toFloat()): Pair<BufferedImage, Graphics2D> {
     val width = fontSize * (max(contentMaxLength, titleLength) + 20) * 0.8
@@ -217,6 +209,24 @@ object ImageUtil {
 
   enum class LineType {
     HORIZON, VERTICAL
+  }
+
+  override fun init() {
+    // 下载字体
+    Arona.runSuspend {
+      kotlin.runCatching {
+        val fontFile = Arona.resolveDataFile(FONT_NAME)
+        if (!fontFile.exists()) {
+          NetworkUtil.downloadFileFile("/$FONT_NAME", fontFile)
+        }
+        val f = Font.createFont(Font.TRUETYPE_FONT, fontFile)
+        GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(f)
+        font = f
+        Arona.info("中文字体下载成功")
+      }.onFailure {
+        Arona.warning("字体注册失败, 使用默认字体, 可能会导致中文乱码")
+      }
+    }
   }
 }
 

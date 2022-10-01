@@ -138,8 +138,11 @@ messageList:
     <img src="static/override-name1.png" />
     <img src="static/override-name2.png" />
 </details>
-
 具体配置可看下面的[配置文件详解](#other-name-config)
+
+1.0.10版本后，额外增加特殊配置文件，位于`./data/net.diyigemt.arona/trainer_config.yml`，允许用户在不停止`mirai-console`的情况下修改`/攻略`指令的别名覆写配置。<a id="other-name-runtime"> </a>
+
+具体配置可看下面的[配置文件详解](#other-name-config-2)
 
 #### 1.9 游戏名记录<a id="game-name"> </a>
 
@@ -157,6 +160,8 @@ messageList:
 由于是模糊查询的原因，查询结果可能会涉及多个群友，没事把人家@出来也不好，因此1.0.8后查询结果将不会再@。
 
 ## 配置文件详解<a id="config"> </a>
+
+以下所有配置文件采用**yaml**文件格式保存。在编辑其内容时请按照`yaml`文件格式进行，如果不确定自己编辑的格式是否正确，可以先学习简单的语法。这个网站也可以帮助你判断编辑后的文件格式是否正确：[bejson](https://www.bejson.com/validators/yaml_editor/)
 
 ### 1.arona.yml
 
@@ -287,9 +292,31 @@ arona总的配置。
 
 别名配置。
 
-| 键       | 属性                                     | 作用                      |
-| -------- | ---------------------------------------- | ------------------------- |
-| override | List<TrainerOverride(type, name, value)> | 覆写指令`/攻略`提供的参数 |
+| 键                | 属性                                     | 作用                                 |
+| ----------------- | ---------------------------------------- | ------------------------------------ |
+| tipWhenNull       | Boole                                    | 对应图片不存在时是否提示模糊搜索结果 |
+| fuzzySearchSource | Enum                                     | 配置模糊查询的检索范围               |
+| override          | List<TrainerOverride(type, name, value)> | 覆写指令`/攻略`提供的参数            |
+
+##### 1. tipWhenNull
+
+对应图片不存在时是否提示模糊搜索结果，为true时，若名字不正确且没有模糊搜索结果，则回复"请联系管理员添加"
+
+##### 2. fuzzySearchSource
+
+配置在没有对应的攻略内容时，提供的模糊查询内容范围。
+
+枚举值，可选内容为：
+
+`ALL`：模糊查询范围包括用户自行配置的覆写内容与作者定义的内容
+
+`LOCAL_CONFIG`：仅对用户自行配置的覆写内容进行模糊查询
+
+`REMOTE`：仅对作者定义的内容进行模糊查询
+
+##### 3. override
+
+配置本地的攻略字段内容
 
 `type` 字段是一个枚举值，可选的有`IMAGE, RAW, CODE`
 
@@ -308,7 +335,7 @@ override:
   	value: '/test/乐.gif'
 ```
 
-代表当指令为`/攻略 乐`时，发送`./data/net.diyigemt.arona/image`文件夹下`test`子文件夹中的`乐.gif`图片
+代表当指令为`/攻略 乐`时，发送`./data/net.diyigemt.arona/image`文件夹下`test`子文件夹中的`乐.gif`图片。
 
 `RAW`：代表当规则生效时，将`name`替换成`value`继续执行原有逻辑
 
@@ -342,6 +369,33 @@ override:
 ```
 
 代表当指令为`/攻略 黑服`时，发送`南通爬`。后期将会支持@对应发送人的功能
+
+##### trainer_config.yml配置详解<a id="other-name-config-2"> </a>
+
+配置内容同上`arona-trainer.yml`，区别在于仅包含`override`这个字段，下面是一个配置示例
+
+```yaml
+override:
+  - type: RAW
+  	name: '拉拉响, 啦啦响'
+  	value: '拉响'
+```
+
+在发送`/攻略 拉拉响 `或`/攻略 啦啦响 `时，发送`响(啦啦队)`的攻略信息。
+
+arona会在启动后持续监听该文件的改动，一经保存会立即生效，并且控制台会输出：
+
+```shell
+yyyy-MM-dd HH:mm:ss I/ba-activity-pusher: 别名配置更新成功
+```
+
+表明配置生效。当文件格式错误时，会显示：
+
+````shell
+yyyy-MM-dd HH:mm:ss I/ba-activity-pusher: 序列化别名配置时失败
+````
+
+此时新的设置不会生效，而是保持上一次的配置内容。
 
 ### 10.nga.yml
 

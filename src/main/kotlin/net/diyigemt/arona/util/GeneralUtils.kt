@@ -16,7 +16,10 @@ import net.diyigemt.arona.entity.FuzzyImageResult
 import net.diyigemt.arona.entity.ImageRequestResult
 import net.diyigemt.arona.interfaces.InitializedFunction
 import net.diyigemt.arona.util.NetworkUtil.BACKEND_ADDRESS
+import net.diyigemt.arona.util.NetworkUtil.BACKEND_IMAGE_FOLDER
 import net.diyigemt.arona.util.NetworkUtil.baseRequest
+import net.diyigemt.arona.util.NetworkUtil.downloadFile
+import net.diyigemt.arona.util.NetworkUtil.downloadImageFile
 import net.diyigemt.arona.util.other.KWatchChannel
 import net.diyigemt.arona.util.other.asWatchChannel
 import net.mamoe.mirai.contact.Contact
@@ -31,8 +34,7 @@ import java.security.MessageDigest
 
 object GeneralUtils : InitializedFunction() {
 
-  private const val IMAGE_FOLDER = "/image"
-  private const val BACKEND_IMAGE_RESOURCE = "${BACKEND_ADDRESS}$IMAGE_FOLDER"
+  private const val BACKEND_IMAGE_RESOURCE = "${BACKEND_ADDRESS}$BACKEND_IMAGE_FOLDER"
   private lateinit var PinyinObject: PinIn
   private val Punctuation0: Regex = Regex("[\\u3002\\uff1f\\uff01\\uff0c\\u3001\\uff1b\\uff1a\\u201c\\u201d\\u2018\\u2019\\uff08\\uff09\\u300a\\u300b\\u3008\\u3009\\u3010\\u3011\\u300e\\u300f\\u300c\\u300d\\ufe43\\ufe44\\u3014\\u3015\\u2026\\u2014\\uff5e\\ufe4f\\uffe5]")
   private val Punctuation1: Regex = Regex("[.,/#!\$%^&*;:{}=\\-_+`~()\\[\\]]")
@@ -188,7 +190,7 @@ object GeneralUtils : InitializedFunction() {
 
   fun fuzzySearch(str: String, target: String): Boolean = PinyinObject.contains(target, toPinyin(str))
 
-  fun replacePunctuation(str: String): String = str.replace(Punctuation0, "")
+  private fun replacePunctuation(str: String): String = str.replace(Punctuation0, "")
     .replace(Punctuation1, "")
     .replace(Punctuation2, "")
 
@@ -203,23 +205,9 @@ object GeneralUtils : InitializedFunction() {
   fun md5(str: String): ByteArray = MessageDigest.getInstance("MD5").digest(str.toByteArray(Charsets.UTF_8))
   fun ByteArray.toHex() = joinToString(separator = "") { byte -> "%02x".format(byte) }
 
-  private fun imageRequest(path: String, localFile: File): File {
-    val connection = baseRequest(path, BACKEND_IMAGE_RESOURCE)
-    val stream = connection.execute().bodyStream()
-    val buffer = ByteArray(1024)
-    val byteOutputStream = ByteArrayOutputStream()
-    var len = stream.read(buffer)
-    while (len != -1) {
-      byteOutputStream.write(buffer, 0, len)
-      len = stream.read(buffer)
-    }
-    localFile.writeBytes(byteOutputStream.toByteArray())
-    stream.close()
-    byteOutputStream.close()
-    return localFile
-  }
+  private fun imageRequest(path: String, localFile: File): File = downloadImageFile(path, localFile)
 
-  private fun imageFileFolder(subFolder: String = "") = Arona.dataFolderPath(IMAGE_FOLDER) + subFolder
+  private fun imageFileFolder(subFolder: String = "") = Arona.dataFolderPath(BACKEND_IMAGE_FOLDER) + subFolder
 
   fun localImageFile(path: String) =
     File(imageFileFolder(path.let { return@let if (path.startsWith("/")) path else "/$it" }))

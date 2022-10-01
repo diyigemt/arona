@@ -22,3 +22,5 @@
 /tools/__pycache__/
 tools/pixiv.db
 tools/pixiv.py
+tools/pixiv.db-journal
+tools/skip

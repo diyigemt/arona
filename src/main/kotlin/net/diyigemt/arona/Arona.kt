@@ -21,6 +21,7 @@ import net.diyigemt.arona.quartz.QuartzProvider
 import net.diyigemt.arona.remote.RemoteServiceManager
 import net.diyigemt.arona.service.AronaServiceManager
 import net.diyigemt.arona.util.GeneralUtils
+import net.diyigemt.arona.util.ImageUtil
 import net.diyigemt.arona.util.NetworkUtil
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.descriptor.ExperimentalCommandDescriptors
@@ -50,7 +51,8 @@ object Arona : KotlinPlugin(
       GeneralUtils,
       AronaServiceManager,
       CommandInterceptorManager,
-      RemoteServiceManager
+      RemoteServiceManager,
+      ImageUtil
     )
 
   @OptIn(ExperimentalCommandDescriptors::class, ConsoleExperimentalApi::class)

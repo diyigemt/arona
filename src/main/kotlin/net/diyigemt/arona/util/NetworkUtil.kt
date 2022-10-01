@@ -11,24 +11,28 @@ import net.mamoe.mirai.console.plugin.version
 import org.jsoup.Connection
 import org.jsoup.Connection.Response
 import org.jsoup.Jsoup
+import java.io.ByteArrayOutputStream
 import java.io.File
 import kotlin.reflect.KFunction
-import kotlin.reflect.KParameter
-import kotlin.reflect.full.*
 import kotlin.reflect.jvm.isAccessible
 
 object NetworkUtil {
   const val BACKEND_ADDRESS = "https://arona.diyigemt.com"
 //  const val BACKEND_ADDRESS = "http://localhost:12201"
   private const val BACKEND_API_ADDRESS = "$BACKEND_ADDRESS/api/v1"
-  private const val BACKEND_IMAGE_API = "/image"
+  const val BACKEND_IMAGE_FOLDER = "/image"
+  private const val BACKEND_FILE_FOLDER = "/file"
+  private const val BACKEND_FILE_RESOURCE = "${BACKEND_ADDRESS}$BACKEND_FILE_FOLDER"
   private const val AUTH_HEADER = "Authorization"
   private const val VERSION_HEADER = "version"
+
 
   // 向后端服务器注册自己
   fun registerInstance() {
     val sysSave = SysDataUtil.get(SysStatic.UUID)
     if (sysSave == null) {
+      // 清除旧的配置文件
+      AronaConfig.uuid = ""
       safeNetworkWithoutId(NetworkUtil::registerInstance0)
         .onSuccess {
           val header = it.header(AUTH_HEADER)
@@ -38,6 +42,7 @@ object NetworkUtil {
           }
           SysDataUtil.saveRegisterData(header)
           AronaConfig.uuid = header
+          Arona.info("register success")
         }.onFailure {
           Arona.warning("register failure")
         }
@@ -73,7 +78,7 @@ object NetworkUtil {
   }
 
   fun requestImage(name: String): ServerResponse<List<ImageResult>> =
-    fetchDataFromServer(BACKEND_IMAGE_API, mapOf("name" to name))
+    fetchDataFromServer(BACKEND_IMAGE_FOLDER, mapOf("name" to name))
 
   inline fun <reified T> fetchDataFromServer(
     api: String,
@@ -111,4 +116,24 @@ object NetworkUtil {
       .header(AUTH_HEADER, AronaConfig.uuid)
       .header(VERSION_HEADER, Arona.version.toString())
       .maxBodySize(1024 * 1024 * 10)
+
+  fun downloadImageFile(path: String, localFile: File): File = downloadFile("${BACKEND_IMAGE_FOLDER}$path", localFile)
+
+
+  fun downloadFileFile(path: String, localFile: File): File = downloadFile("${BACKEND_FILE_FOLDER}$path", localFile)
+  fun downloadFile(path: String, localFile: File): File {
+    val connection = baseRequest(path, BACKEND_ADDRESS)
+    val stream = connection.execute().bodyStream()
+    val buffer = ByteArray(1024)
+    val byteOutputStream = ByteArrayOutputStream()
+    var len = stream.read(buffer)
+    while (len != -1) {
+      byteOutputStream.write(buffer, 0, len)
+      len = stream.read(buffer)
+    }
+    localFile.writeBytes(byteOutputStream.toByteArray())
+    stream.close()
+    byteOutputStream.close()
+    return localFile
+  }
 }

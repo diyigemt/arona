@@ -18,8 +18,8 @@ import kotlin.reflect.full.*
 import kotlin.reflect.jvm.isAccessible
 
 object NetworkUtil {
-//  const val BACKEND_ADDRESS = "https://arona.diyigemt.com"
-  const val BACKEND_ADDRESS = "http://localhost:12201"
+  const val BACKEND_ADDRESS = "https://arona.diyigemt.com"
+//  const val BACKEND_ADDRESS = "http://localhost:12201"
   private const val BACKEND_API_ADDRESS = "$BACKEND_ADDRESS/api/v1"
   private const val BACKEND_IMAGE_API = "/image"
   private const val AUTH_HEADER = "Authorization"

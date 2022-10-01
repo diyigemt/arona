@@ -20,3 +20,5 @@
 /tools/img/
 /tools/image/
 /tools/__pycache__/
+tools/pixiv.db
+tools/pixiv.py

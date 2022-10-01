@@ -63,7 +63,11 @@ object TrainerCommand : SimpleCommand(
         val list = result.list.map { it.name }.toMutableList()
         // 没有本地文件
         if (result.file == null) {
-          // 远端也没有搜索建议 或者远端没有回应 对本地进行查找
+          // 模糊搜索建议关闭
+          if (!AronaTrainerConfig.tipWhenNull) {
+            return
+          }
+          // 根据配置对数据源进行模糊搜索
           when (AronaTrainerConfig.fuzzySearchSource) {
             FuzzySearchSource.ALL -> {
               list.addAll(fuzzySearch(str))

@@ -8,7 +8,7 @@ import net.mamoe.mirai.console.data.value
 
 object AronaTrainerConfig: AutoSavePluginConfig("arona-trainer") {
 
-  @ValueDescription("当对应图片不存在时是否提示\"请联系管理员添加\"")
+  @ValueDescription("当对应图片不存在时是否提示模糊搜索结果, 若连模糊搜索结果都没有显示\"请联系管理员添加\"")
   val tipWhenNull: Boolean by value(true)
 
   @ValueDescription("模糊查询的数据来源 \"ALL\":作者设置的与自行添加的 \"LOCAL_CONFIG\":仅使用自行添加的 \"REMOTE\":仅使用作者添加的")

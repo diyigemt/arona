@@ -15,7 +15,7 @@ interface RemoteService<T> {
 }
 
 enum class RemoteServiceAction(
-  private val action: String
+  val action: String
 ) {
   ANNOUNCEMENT("announcement"),
   POOL_UPDATE("poolUpdate"),

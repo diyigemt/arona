@@ -4,7 +4,6 @@ import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
 import net.diyigemt.arona.Arona
-import net.diyigemt.arona.Arona.save
 import net.diyigemt.arona.advance.RemoteActionItem
 import net.diyigemt.arona.command.cache.GachaCache
 import net.diyigemt.arona.config.AronaGachaConfig
@@ -22,7 +21,6 @@ import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.console.command.UserCommandSender
 import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.Group
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
 import net.diyigemt.arona.db.gacha.GachaCharacter as GC
@@ -110,8 +108,9 @@ object GachaConfigCommand : CompositeCommand(
       val resp = NetworkUtil.fetchDataFromServer<RemoteActionItem>("/action/one", mapOf(
         "id" to id.toString()
       ))
-      if (resp.data.action != RemoteServiceAction.POOL_UPDATE.name) {
+      if (resp.data.action != RemoteServiceAction.POOL_UPDATE.action) {
         subject.sendMessage("id错误")
+        return
       }
       Json.decodeFromString(GachaPoolUpdateData::class.serializer(), resp.data.content)
     }.onFailure {

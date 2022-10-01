@@ -52,7 +52,7 @@ Please note that for various reasons, developers may **stop updating** or **dele
 
 arona是基于mirai-console的插件。
 
-**本插件依赖的mirai-console版本为2.11.1**
+**本插件依赖的mirai-console版本为2.12.2**
 
 作为BA(Blue Archive)的一款群助手，她可以实现以下功能：
 

@@ -42,7 +42,7 @@ dependencies {
   // https://mvnrepository.com/artifact/com.github.taptap/pinyin-plus
   implementation("com.github.taptap:pinyin-plus:1.0")
   implementation("com.github.Towdium:PinIn:1.5.1")
-  implementation("com.charleskorn.kaml:kaml:0.48.0")
+  implementation("net.mamoe.yamlkt:yamlkt-jvm:0.10.2")
 }
 
 tasks.test {

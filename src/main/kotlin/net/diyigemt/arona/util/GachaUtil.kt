@@ -9,7 +9,7 @@ import net.diyigemt.arona.db.gacha.*
 import org.jetbrains.exposed.sql.and
 
 object GachaUtil {
-  const val star = "★"
+  private const val star = "★"
 
   fun pickup(): GachaCharacter {
     val maxDot = pow10(AronaGachaConfig.maxDot)
@@ -136,6 +136,10 @@ object GachaUtil {
   fun resultData2String(result: GachaCharacter) = "${result.name}(${result.star}${star})${if (hitPickup(result)) "(pick up)" else ""}"
 
   fun hitPickup(result: GachaCharacter) = GachaCache.star2PickupList.contains(result) || GachaCache.star3PickupList.contains(result)
+
+  fun mapStudentInfo(student: GachaCharacter) = mapStudentInfo(student.name, student.star)
+
+  fun mapStudentInfo(name: String, star: Int) = "${name}(${star}${this.star})"
 
   private fun rollList(list: List<GachaCharacter>) = list[(list.indices).random()]
 

@@ -1,6 +1,5 @@
 package net.diyigemt.arona.command
 
-import com.charleskorn.kaml.Yaml
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.withContext
@@ -135,7 +134,7 @@ object TrainerCommand : SimpleCommand(
           ConfigFileMd5 = it
         }
       }
-      Yaml.default.decodeFromString(TrainerFileConfig.serializer(), read)
+      net.mamoe.yamlkt.Yaml.decodeFromString(TrainerFileConfig.serializer(), read)
     }.onFailure { err ->
       Arona.warning("序列化别名配置时失败")
       Arona.warning(err.message)

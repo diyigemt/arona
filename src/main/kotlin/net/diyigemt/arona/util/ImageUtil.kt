@@ -16,7 +16,7 @@ object ImageUtil : InitializedFunction() {
 
   private const val DEFAULT_PADDING: Int = 10
   private const val FONT_NAME = "SourceHanSansCN-Normal.otf"
-  private const val FontFolder: String = "font"
+  private const val FontFolder: String = "/font"
   private var font: Font? = null
 
   fun createCalendarImage(eventLength: Int, contentMaxLength: Int, titleLength: Int = 20, fontSize: Float = DEFAULT_CALENDAR_FONT_SIZE.toFloat()): Pair<BufferedImage, Graphics2D> {
@@ -218,7 +218,7 @@ object ImageUtil : InitializedFunction() {
     Arona.runSuspend {
       kotlin.runCatching {
         File(Arona.dataFolderPath(FontFolder)).also { it.mkdirs() }
-        val path = "/${FontFolder}/$FONT_NAME"
+        val path = "$FontFolder/$FONT_NAME"
         val fontFile = Arona.dataFolderFile(path)
         if (!fontFile.exists()) {
           NetworkUtil.downloadFileFile(path, fontFile)
@@ -226,7 +226,7 @@ object ImageUtil : InitializedFunction() {
         val f = Font.createFont(Font.TRUETYPE_FONT, fontFile)
         GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(f)
         font = f
-        Arona.info("中文字体下载成功")
+        Arona.info("中文字体初始化成功")
       }.onFailure {
         Arona.warning("字体注册失败, 使用默认字体, 可能会导致中文乱码")
       }

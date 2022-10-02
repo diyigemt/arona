@@ -25,7 +25,7 @@ Arona是依赖于Mirai-Console的一个插件，并不能独立工作，要使�
    yyyy-MM-dd HH:mm:ss I/arona: arona loaded
    yyyy-MM-dd HH:mm:ss I/arona: arona gacha module init success.
    yyyy-MM-dd HH:mm:ss I/ba-activity-pusher: 别名配置更新成功
-   yyyy-MM-dd HH:mm:ss I/ba-activity-pusher: 中文字体下载成功
+   yyyy-MM-dd HH:mm:ss I/ba-activity-pusher: 中文字体初始化成功
    yyyy-MM-dd HH:mm:ss I/ba-activity-pusher: Source: STUDENT from GitHub already up to date.
    yyyy-MM-dd HH:mm:ss I/ba-activity-pusher: Source: LOCALIZATION from GitHub already up to date.
    yyyy-MM-dd HH:mm:ss I/ba-activity-pusher: Source: RAID from GitHub already up to date.

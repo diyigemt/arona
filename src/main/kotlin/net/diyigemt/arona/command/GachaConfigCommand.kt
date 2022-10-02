@@ -21,8 +21,10 @@ import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.console.command.UserCommandSender
 import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.Group
+import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
+import org.jetbrains.exposed.sql.select
 import net.diyigemt.arona.db.gacha.GachaCharacter as GC
 
 object GachaConfigCommand : CompositeCommand(
@@ -97,9 +99,52 @@ object GachaConfigCommand : CompositeCommand(
   }
 
   @SubCommand("update2")
-  @Description("从远端更新池子")
+  @Description("从远端更新池子并重命名")
   suspend fun UserCommandSender.updatePool2(id: Int, name: String) {
     doUpdate(id, subject, name)
+  }
+
+  @SubCommand("list")
+  @Description("查看最近两个卡池的pickup内容")
+  suspend fun UserCommandSender.list() {
+    val poolList = query {
+      GachaPool
+        .all()
+        .orderBy(GachaPoolTable.id to SortOrder.DESC)
+        .limit(2)
+        .toList()
+    }!!
+    if (poolList.isEmpty()) {
+      subject.sendMessage("没有任何池子信息")
+      return
+    }
+    val msg = poolList.map {
+      val students = query { _ ->
+        GachaPoolCharacterTable
+          .innerJoin(GachaCharacterTable)
+          .slice(GachaCharacterTable.name, GachaCharacterTable.star)
+          .select {
+            GachaPoolCharacterTable.poolId eq it.id
+          }.toList()
+      }!!
+      return@map if (students.isEmpty()) {
+        "${it.name}(id: ${it.id}): 没有关联的学生"
+      } else {
+        "${it.name}(id: ${it.id}): ${students.joinToString(", ") { s -> GachaUtil.mapStudentInfo(s[GachaCharacterTable.name], s[GachaCharacterTable.star]) }}"
+      }
+    }.reversed().joinToString("\n")
+    subject.sendMessage(msg)
+  }
+
+//  @SubCommand("adds")
+//  @Description("给卡池添加新学生")
+  suspend fun UserCommandSender.adds(name: String, star: Int, limit: Int) {
+  // 模糊搜索判断是否重名
+    val data = query {
+      GC.find {
+        GachaCharacterTable.name eq name
+      }
+    }
   }
 
   @OptIn(InternalSerializationApi::class)
@@ -123,7 +168,7 @@ object GachaConfigCommand : CompositeCommand(
     }
     // 没有同名池子 新建池子
     if (pool == null) {
-      DataBaseProvider.query {
+      query {
         pool = GachaPool.new {
           this.name = data.name
         }
@@ -133,7 +178,7 @@ object GachaConfigCommand : CompositeCommand(
       if (poolName == null) {
         subject.sendMessage("""
           同名池子: ${data.name} 已经存在, 请使用
-          /gacha update $id 新池子名字
+          /gacha update2 $id 新池子名字
           来更新
         """.trimIndent())
         return
@@ -158,7 +203,7 @@ object GachaConfigCommand : CompositeCommand(
     }.getOrNull() ?: return
     val message = """
       新池子: ${pool!!.name} 已添加, id: ${pool!!.id}
-      ${insertCharacter.joinToString(", ") { "${it.name}(${it.star}${GachaUtil.star})" }}
+      ${insertCharacter.joinToString(", ") { GachaUtil.mapStudentInfo(it) }}
       使用指令
       /gacha setpool ${pool!!.id}
       来切换到这个池子

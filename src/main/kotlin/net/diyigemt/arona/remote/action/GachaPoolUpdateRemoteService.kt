@@ -25,11 +25,12 @@ class GachaPoolUpdateRemoteService : RemoteService<GachaPoolUpdateData> {
     val pool = DataBaseProvider.query {
       GachaPool.find { GachaPoolTable.name eq data.name }.firstOrNull()
     }
+    val crash = pool != null
     val message = """
-      检测到新池子: ${data.name} ${if (pool != null) "(与现有池子名称冲突)" else ""}
-      ${data.character.joinToString(", ") { "${it.name}(${it.star}${GachaUtil.star})" }}
+      检测到新池子: ${data.name} ${if (crash) "(与现有池子名称冲突)" else ""}
+      ${data.character.joinToString(", ") { GachaUtil.mapStudentInfo(it.name, it.star) }}
       使用指令
-      /gacha update $aid ${if (pool != null) "新池子名称" else ""}
+      /gacha ${if (crash) "update" else "update2"} $aid ${if (crash) "新池子名称" else ""}
       来更新这个池子
     """.trimIndent()
     Arona.sendMessageToAdmin(message)

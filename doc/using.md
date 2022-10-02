@@ -445,9 +445,13 @@ override:
 
 代表当指令为`/攻略 黑服`或者`/攻略 凯撒`时，发送`南通爬`。
 
-##### trainer_config.yml配置详解<a id="other-name-config-2"> </a>
+##### 4. trainer_config.yml配置详解<a id="other-name-config-2"> </a>
 
-配置内容同上`arona-trainer.yml`，区别在于仅包含`override`这个字段，下面是一个配置示例
+**首先**要明确的一点是，该配置文件位于`./data/net.diyigemt.arona/config/trainer_config.yml`
+
+与config目录下的`./config/net.diyigemt.arona/trainer_config.yml`并**不是同一个**
+
+配置内容同上`arona-trainer.yml`，区别在于**仅**包含`override`这个字段，下面是一个配置示例
 
 ```yaml
 override:

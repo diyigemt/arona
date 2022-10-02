@@ -191,12 +191,6 @@ def update_image_from_api(folder: str, type: int = 2):
         })
         # 如果有别名
         if len(file_names) > 1:
-            dict.append({
-            "name": file_names[0],
-            "path": file_path_absolute,
-            "hash": hash,
-            "type": type
-            })
             file_names.remove(file_names[0])
             for a in file_names:
                 a = replace0(a)
@@ -215,7 +209,7 @@ def post_data(action: str, data: any):
         "token": get_password(),
         "Content-Type": "application/json"
     }
-    resp = requests.post("http://localhost:12201/api/v1/admin/action", json={
+    resp = requests.post("https://arona.diyigemt.com/api/v1/admin/action", json={
         "action": action,
         "data": data
     }, headers=header)

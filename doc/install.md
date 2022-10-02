@@ -38,7 +38,7 @@ Arona是依赖于Mirai-Console的一个插件，并不能独立工作，要使�
 
 5. 在`./config/net.diyigemt.arona/`文件夹下根据自己的喜好编辑arona的配置文件，具体内容将会在下一节解释；
 
-6. 在[releases](https://github.com/diyigemt/arona/releases)下载`PinIn.zip`文件并解压到`mirai-console`安装目录下的`plugin-libraries`文件夹中，此时目录结构应该为
+6. 在[releases](https://github.com/diyigemt/arona/releases)下载`PinIn.zip`文件并解压到`mirai-console`安装目录下的`plugin-libraries`文件夹中，此时目录结构应该为<a id="install-6"> </a>
 
 ```bash
 plugin-libraries

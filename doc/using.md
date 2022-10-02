@@ -32,8 +32,6 @@
 
 `/抽卡 3s <number>` 设置3星出货率
 
-`/抽卡 rate <number> <number> <number>` 一并设置1、2、3星出货率
-
 `/抽卡 p2s <number>` 设置2星pick up出货率
 
 `/抽卡 p3s <number>` 设置3星pick up出货率
@@ -41,6 +39,12 @@
 `/抽卡 time <number>` 设置撤回时间
 
 `/抽卡 limit <number>` 设置每日限制次数
+
+`/抽卡 update <number>` 从远端更新池子，具体使用看[这里](#remote-pool-update)
+
+`/抽卡 update2 <number> <name>` 从远端更新池子并重命名，具体使用看[这里](#remote-pool-update)
+
+`/抽卡 list` 查看最近两个池子的配置
 
 **注意** 1、2、3星的出货率支持浮点数且它们的和需要等于100，2、3星pick up出货率不能高于各自的总出货率，否则抽卡功能可能不能正常运行
 
@@ -184,7 +188,7 @@ messageList:
 
 每日版本更新发现新版本时将更新消息通过私聊发送到具有管理员权限的qq中
 
-### 3. 远端服务
+### 3. 远端服务<a id="remote"> </a>
 
 **注意**，所有的远端服务均为作者手动维护，如果遇到信息更新延迟的情况说明作者懒狗了，请谅解。
 
@@ -196,7 +200,7 @@ messageList:
 
 以上两个过程，实现了攻略图片自动更新的功能。
 
-#### 3.2 公告
+#### 3.2 公告<a id="remote-announce"> </a>
 
 arona将会根据`arona.yml`配置文件中的`remoteCheckInterval`配置项定期向远端查询新的公告信息，下面是一个示例：
 
@@ -207,7 +211,7 @@ arona将会根据`arona.yml`配置文件中的`remoteCheckInterval`配置项定�
 
 基本上是用来通知攻略图片的更新信息的。
 
-#### 3.3 卡池自动更新
+#### 3.3 卡池自动更新<a id="remote-pool-update"> </a>
 
 arona将会根据`arona.yml`配置文件中的`remoteCheckInterval`配置项定期向远端查询新的卡池，下面是一个示例：
 
@@ -240,6 +244,7 @@ arona总的配置。
 | endWithSensei           | String       | 名称是否自动带上后缀，默认为"老师"，可以留空                 |
 | sendStatus              | Boolean      | 是否允许arona收集匿名统计信息(未实装)                        |
 | uuid                    | String       | 识别id(无需修改)                                             |
+| remoteCheckInterval     | Int          | 远端操作查询间隔 设置为0表示不开启, 单位是小时               |
 
 ### 2.arona-service.yml<a id="service-names"> </a>
 
@@ -429,7 +434,7 @@ override:
 
 代表当指令为`/攻略 黑服`时，发送`南通爬`。后期将会支持@对应发送人的功能。
 
-**特别的**，`name`的内容可以为多个值并以**英文**逗号： ","  进行分割，并且会忽略**一切**空格，例如
+**特别的**，`name`的内容可以为多个值并以**英文**逗号： ","  进行分割，并且会忽略**一切**空格，例如<a id="other-name-config-multi"> </a>
 
 ```yaml
 override:

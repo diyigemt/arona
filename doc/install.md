@@ -53,9 +53,7 @@ plugin-libraries
                                 PinIn-1.5.1.pom
 ```
 
-该文件是为了提供模糊搜索功能的，原仓库地址为[Towdium/PinIn](https://github.com/Towdium/PinIn)
-
-如果你知道这个文件夹以及这步操作是在干什么，你也可以去源仓库下载安装。
+该文件为`/攻略`指令提供模糊搜索功能，原仓库地址为[Towdium/PinIn](https://github.com/Towdium/PinIn)，如果你知道这个文件夹以及这步操作是在干什么，你也可以去源仓库下载安装。
 
 7. 再次运行mirai-console即可享受arona的服务。
 
@@ -84,6 +82,8 @@ arona一共提供了如下的指令：
 | net.diyigemt.arona:command.trainer          | 所有   | 群员             | 查看主线地图和学生攻略   |
 | net.diyigemt.arona:command.game_name        | 所有   | 群员             | 让arona记住你的游戏名    |
 | net.diyigemt.arona:command.game_name_search | 所有   | 群员             | 模糊查询游戏名对应的群友 |
+
+**注意**，以上语境中的"管理员"指arona主配置文件中`managerGroup`指定的管理员，并不是qq群的管理员
 
 一些解释：
 

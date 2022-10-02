@@ -92,6 +92,33 @@ object GachaConfigCommand : CompositeCommand(
     AronaGachaConfig.init()
   }
 
+  @SubCommand("time")
+  @Description("设置设置撤回时间")
+  suspend fun UserCommandSender.time(time: Int) {
+    if (time > 0) {
+      AronaGachaConfig.revokeTime = time
+      subject.sendMessage("撤回时间设置为${time}")
+    } else {
+      AronaGachaConfig.revokeTime = 0
+      subject.sendMessage("关闭抽卡结果撤回")
+    }
+    AronaGachaConfig.init()
+  }
+
+  @SubCommand("limit")
+  @Description("设置设置撤回时间")
+  suspend fun UserCommandSender.gachalimit(time: Int) {
+    if (time > 0) {
+      AronaGachaConfig.limit = time
+      subject.sendMessage("每日限制次数设置为${time}")
+    } else {
+      AronaGachaConfig.limit = 0
+      subject.sendMessage("每日限制次数设置为不限制每日抽卡次数")
+    }
+    AronaGachaConfig.init()
+  }
+
+
   @SubCommand("update")
   @Description("从远端更新池子")
   suspend fun UserCommandSender.updatePool(id: Int) {

@@ -1,6 +1,5 @@
 package org.example.mirai.plugin
 
-import com.charleskorn.kaml.Yaml
 import com.taptap.pinyin.PinyinPlus
 import io.kotest.common.runBlocking
 import kotlinx.coroutines.channels.consumeEach
@@ -22,6 +21,7 @@ import net.diyigemt.arona.util.other.asWatchChannel
 import net.diyigemt.arona.util.scbaleDB.SchaleDBDataSyncService
 import net.diyigemt.arona.util.scbaleDB.SchaleDBUtil
 import net.mamoe.mirai.console.util.SemVersion
+import net.mamoe.yamlkt.Yaml
 import org.jsoup.Jsoup
 import org.junit.jupiter.api.Test
 import java.io.File
@@ -207,7 +207,7 @@ class TestSimple {
       channel.consumeEach {
         when (it.kind) {
           KWatchEvent.Kind.Modified -> {
-            val obj = Yaml.default.decodeFromString(
+            val obj = Yaml.decodeFromString(
               TrainerCommand.TrainerFileConfig.serializer(),
               it.file.readText(Charsets.UTF_8)
             )

@@ -171,7 +171,7 @@ object TrainerCommand : SimpleCommand(
     registerService()
     register()
     // 监视data文件夹下的arona-trainer.yml文件动态添加配置
-    ConfigFile = File(Arona.dataFolderPath("/${AutoReadConfigFileName}"))
+    ConfigFile = File(Arona.dataFolderPath("/${GeneralUtils.ConfigFolder}/${AutoReadConfigFileName}"))
     if (!ConfigFile.exists()) {
       ConfigFile.writeText("override: []")
     }

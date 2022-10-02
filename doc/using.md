@@ -140,7 +140,7 @@ messageList:
 </details>
 具体配置可看下面的[配置文件详解](#other-name-config)
 
-1.0.10版本后，额外增加特殊配置文件，位于`./data/net.diyigemt.arona/trainer_config.yml`，允许用户在不停止`mirai-console`的情况下修改`/攻略`指令的别名覆写配置。<a id="other-name-runtime"> </a>
+1.0.10版本后，额外增加特殊配置文件，位于`./data/net.diyigemt.arona/config/trainer_config.yml`，允许用户在不停止`mirai-console`的情况下修改`/攻略`指令的别名覆写配置。<a id="other-name-runtime"> </a>
 
 具体配置可看下面的[配置文件详解](#other-name-config-2)
 

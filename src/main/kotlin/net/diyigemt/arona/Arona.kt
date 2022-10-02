@@ -40,6 +40,7 @@ import net.mamoe.mirai.event.events.NudgeEvent
 import net.mamoe.mirai.message.code.MiraiCode.deserializeMiraiCode
 import net.mamoe.mirai.message.data.MessageChain
 import net.mamoe.mirai.utils.info
+import java.io.File
 import kotlin.io.path.absolutePathString
 
 object Arona : KotlinPlugin(
@@ -193,6 +194,8 @@ object Arona : KotlinPlugin(
   }
 
   fun dataFolderPath(subPath: String = ""): String = Arona.dataFolderPath.absolutePathString() + subPath
+
+  fun dataFolderFile(subPath: String = ""): File = File(Arona.dataFolderPath.absolutePathString() + subPath)
 
   suspend fun Group.sendTeacherNameMessage(user: UserOrBot, message: String) {
     val name = GeneralUtils.queryTeacherNameFromDB(this, user)

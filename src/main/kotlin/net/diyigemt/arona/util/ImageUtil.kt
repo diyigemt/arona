@@ -8,6 +8,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.awt.*
 import java.awt.image.BufferedImage
+import java.io.File
 import javax.imageio.ImageIO
 import kotlin.math.max
 
@@ -15,6 +16,7 @@ object ImageUtil : InitializedFunction() {
 
   private const val DEFAULT_PADDING: Int = 10
   private const val FONT_NAME = "SourceHanSansCN-Normal.otf"
+  private const val FontFolder: String = "font"
   private var font: Font? = null
 
   fun createCalendarImage(eventLength: Int, contentMaxLength: Int, titleLength: Int = 20, fontSize: Float = DEFAULT_CALENDAR_FONT_SIZE.toFloat()): Pair<BufferedImage, Graphics2D> {
@@ -215,9 +217,11 @@ object ImageUtil : InitializedFunction() {
     // 下载字体
     Arona.runSuspend {
       kotlin.runCatching {
-        val fontFile = Arona.resolveDataFile(FONT_NAME)
+        File(Arona.dataFolderPath(FontFolder)).also { it.mkdirs() }
+        val path = "/${FontFolder}/$FONT_NAME"
+        val fontFile = Arona.dataFolderFile(path)
         if (!fontFile.exists()) {
-          NetworkUtil.downloadFileFile("/$FONT_NAME", fontFile)
+          NetworkUtil.downloadFileFile(path, fontFile)
         }
         val f = Font.createFont(Font.TRUETYPE_FONT, fontFile)
         GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(f)

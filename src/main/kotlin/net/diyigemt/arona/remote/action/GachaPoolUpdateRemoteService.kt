@@ -30,7 +30,7 @@ class GachaPoolUpdateRemoteService : RemoteService<GachaPoolUpdateData> {
       检测到新池子: ${data.name} ${if (crash) "(与现有池子名称冲突)" else ""}
       ${data.character.joinToString(", ") { GachaUtil.mapStudentInfo(it.name, it.star) }}
       使用指令
-      /gacha ${if (crash) "update" else "update2"} $aid ${if (crash) "新池子名称" else ""}
+      /gacha ${if (crash) "update2" else "update"} $aid ${if (crash) "新池子名称" else ""}
       来更新这个池子
     """.trimIndent()
     Arona.sendMessageToAdmin(message)

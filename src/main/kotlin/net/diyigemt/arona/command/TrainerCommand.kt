@@ -148,10 +148,14 @@ object TrainerCommand : SimpleCommand(
     overrideList.addAll(AronaTrainerConfig.override.filter {
       !overrideList.any { already -> already.name == it.name }
     })
+    reloadConfig()
+    Arona.info("别名配置更新成功")
+  }
+
+  private fun reloadConfig() {
     overrideList.forEach {
       FuzzySearch.add(it.name.split(",").map { s -> s.trim() })
     }
-    Arona.info("别名配置更新成功")
   }
 
   @Serializable
@@ -169,6 +173,8 @@ object TrainerCommand : SimpleCommand(
   override fun init() {
     registerService()
     register()
+    overrideList.addAll(AronaTrainerConfig.override)
+    reloadConfig()
     // 监视data文件夹下的arona-trainer.yml文件动态添加配置
     ConfigFile = File(Arona.dataFolderPath("/${GeneralUtils.ConfigFolder}/${AutoReadConfigFileName}"))
     if (!ConfigFile.exists()) {

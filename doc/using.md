@@ -226,6 +226,8 @@ arona将会根据`arona.yml`配置文件中的`remoteCheckInterval`配置项定�
 
 以下所有配置文件采用**yaml**文件格式保存。在编辑其内容时请按照`yaml`文件格式进行，如果不确定自己编辑的格式是否正确，可以先学习简单的语法。这个网站也可以帮助你判断编辑后的文件格式是否正确：[bejson](https://www.bejson.com/validators/yaml_editor/)
 
+yaml文件对格式**十分敏感**，在保存之前**建议**使用在线网站**验证**文件内容格式的正确性
+
 ### 1.arona.yml
 
 arona总的配置。
@@ -395,8 +397,8 @@ arona总的配置。
 ```yaml
 override:
   - type: IMAGE
-  	name: '乐'
-  	value: '/test/乐.gif'
+    name: '乐'
+    value: '/test/乐.gif'
 ```
 
 代表当指令为`/攻略 乐`时，发送`./data/net.diyigemt.arona/image`文件夹下`test`子文件夹中的`乐.gif`图片。
@@ -408,8 +410,8 @@ override:
 ```yaml
 override:
   - type: RAW
-  	name: 'HOD'
-  	value: '黑白'
+    name: 'HOD'
+    value: '黑白'
 ```
 
 代表当指令为`/攻略 HOD`时，发送`黑白`的攻略图片，效果如下
@@ -428,8 +430,8 @@ override:
 ```yaml
 override:
   - type: CODE
-  	name: '黑服'
-  	value: '南通爬'
+    name: '黑服'
+    value: '南通爬'
 ```
 
 代表当指令为`/攻略 黑服`时，发送`南通爬`。后期将会支持@对应发送人的功能。
@@ -439,8 +441,8 @@ override:
 ```yaml
 override:
   - type: CODE
-  	name: '黑服,凯撒'
-  	value: '南通爬'
+    name: '黑服,凯撒'
+    value: '南通爬'
 ```
 
 代表当指令为`/攻略 黑服`或者`/攻略 凯撒`时，发送`南通爬`。
@@ -457,13 +459,13 @@ override:
 
 配置内容同上`arona-trainer.yml`，区别在于**仅**包含`override`这个字段，下面是一个配置示例
 
-
+yaml文件对格式**十分敏感**，在保存之前**建议**使用在线网站**验证**文件内容格式的正确性
 
 ```yaml
 override:
   - type: RAW
-  	name: '拉拉响, 啦啦响'
-  	value: '拉响'
+    name: '拉拉响, 啦啦响'
+    value: '拉响'
 ```
 
 在发送`/攻略 拉拉响 `或`/攻略 啦啦响 `时，发送`响(啦啦队)`的攻略信息。

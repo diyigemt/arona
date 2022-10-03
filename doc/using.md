@@ -451,9 +451,13 @@ override:
 
 与config目录下的`./config/net.diyigemt.arona/trainer_config.yml`并**不是同一个**
 
+配置文件采用**yaml**文件格式保存。在编辑其内容时请按照`yaml`文件格式进行，如果不确定自己编辑的格式是否正确，可以先学习简单的语法。这个网站也可以帮助你判断编辑后的文件格式是否正确：[bejson](https://www.bejson.com/validators/yaml_editor/)
+
+配置内容与`config`目录下的内容覆盖关系为该配置文件**>**`config`下的文件
+
 配置内容同上`arona-trainer.yml`，区别在于**仅**包含`override`这个字段，下面是一个配置示例
 
-配置文件采用**yaml**文件格式保存。在编辑其内容时请按照`yaml`文件格式进行，如果不确定自己编辑的格式是否正确，可以先学习简单的语法。这个网站也可以帮助你判断编辑后的文件格式是否正确：[bejson](https://www.bejson.com/validators/yaml_editor/)
+
 
 ```yaml
 override:

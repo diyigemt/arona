@@ -2,7 +2,7 @@ from functools import reduce
 import os
 import numpy as np
 from PIL import ImageDraw, ImageFont, Image
-img_folder = "image"
+img_folder = "image/history"
 base_folder = "/some/"
 col = 3
 font_size = 28

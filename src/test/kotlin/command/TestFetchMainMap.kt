@@ -39,7 +39,7 @@ class TestFetchMainMap {
     (20 .. 20).forEach {
       generateSubChapterList(it).forEach { chapter ->
         val final = generateMap(it, chapter) ?: return
-        ImageIO.write(final, "png", File("./debug-sandbox/map-cache/${chapter}.png"))
+        ImageIO.write(final, "png", File("./tools/image/chapter_map/${chapter}.png"))
       }
     }
   }
@@ -158,6 +158,7 @@ class TestFetchMainMap {
           .replace("は左スタートへ", "回到左出发点")
           .replace("は右スタートへ", "回到右出发点")
           .replace("下スタートへ", "回到下出发点")
+          .replace("スタートへ戻る", "返回出发点")
           .replace("自タイルクリックしてワープ", "点击自己脚底进行传送")
           .replace("ワープ後に", "传送后向")
           .replace("ワープして", "传送至")

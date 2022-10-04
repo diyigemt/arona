@@ -1,17 +1,9 @@
 from tools import draw_image
 
 images = [{
-    "name": "颜艺.png",
-    "path": "./image/student_rank/",
-    "url": "https://i0.hdslb.com/bfs/new_dyn/801fefd35ed73a7651a4be06ddaa22c7425535005.png",
-}, {
-    "name": "车白.png",
-    "path": "./image/student_rank/",
-    "url": "https://i0.hdslb.com/bfs/new_dyn/b2e9d36e975fb8018a86a635041e2ef5425535005.png",
-}, {
-    "name": "朱音.png",
-    "path": "./image/student_rank/",
-    "url": "https://i0.hdslb.com/bfs/new_dyn/cfdf6af370fb089f9ff8852a712e665f425535005.png@1295w.webp",
+    "name": "日服兔子.png",
+    "path": "./image/some/",
+    "url": "https://i0.hdslb.com/bfs/new_dyn/279529219ad713b93e471bbd4968d705425535005.png",
 }]
 
 if __name__ == "__main__":
@@ -21,6 +13,6 @@ if __name__ == "__main__":
         print("%d/%d" % (count, total))
         name = item["name"]
         path = item["path"]
-        url = item["url"]
+        url = item["url"].split("@")[0]
         draw_image(url, name, path)
-        total += 1
+        count += 1

@@ -1,5 +1,5 @@
 import sqlite3
-from tools import update_image, update_image_from_api
+from tools import post_image_to_remote, update_image, update_image_from_api
 
 
 da_path = r"C:\Users\qwe13\Desktop\data.db"
@@ -16,3 +16,4 @@ if __name__ == '__main__':
     # index = update_image(base_folder, cursor, connection, type=3)
     # print("成功! %d" % index)
     update_image_from_api(base_folder, type=3)
+    post_image_to_remote(base_folder)

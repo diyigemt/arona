@@ -1,3 +1,4 @@
+import shutil
 import urllib
 import urllib.request
 from PIL import ImageDraw, ImageFont, Image
@@ -8,6 +9,7 @@ import os
 import re
 import getpass
 import requests
+import paramiko
 password_file = "C:\\Users\\%s\\.ssh\\arona-backend-password" % getpass.getuser()
 from zhon.hanzi import punctuation
 headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"}
@@ -203,6 +205,24 @@ def update_image_from_api(folder: str, type: int = 2):
         index += 1
     #信息收集完成, 提交到后端进行处理
     post_data("imageUpdate", dict)
+
+def post_image_to_remote(folder: str):
+    index = 0
+    pwd = ""
+    with open(r"C:\Users\qwe13\.ssh\pwd", "r") as f:
+        pwd = f.readline()
+    key = paramiko.RSAKey.from_private_key_file(r"C:\Users\qwe13\.ssh\id_rsa", password=pwd)
+    transport = paramiko.Transport(("42.192.117.253", 22))
+    transport.connect(username="root", pkey=key)
+    sftp = paramiko.SFTPClient.from_transport(transport)
+    for file in os.listdir(base_img_folder + folder):
+        file_path = base_img_folder + folder + file
+        file_history_path = base_img_folder + "/history" + folder + file
+        remove_path = "/srv/arona-backend/image%s" % (folder + file)
+        sftp.put(file_path, remove_path)
+        shutil.move(file_path, file_history_path)
+        index += 1
+    print("success: %d" % index)
 
 def post_data(action: str, data: any):
     header = {

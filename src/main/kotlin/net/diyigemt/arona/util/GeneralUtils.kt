@@ -150,7 +150,12 @@ object GeneralUtils : InitializedFunction() {
           localImageFile(localDB.path).delete()
         }
         // 否则直接写入旧文件
-        imageRequest(imageResult.path, localFile)
+        kotlin.runCatching {
+          imageRequest(imageResult.path, localFile)
+        }.onFailure {
+          Arona.sendMessageToAdmin("在下载图片${imageResult.name}时失败,请查看控制台报错信息")
+          return ImageRequestResult()
+        }
         // 更新hash
         query {
           localDB.hash = imageResult.hash

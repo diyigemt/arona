@@ -195,7 +195,18 @@ object GeneralUtils : InitializedFunction() {
     return -1
   }
 
-  fun fuzzySearch(str: String, target: String): Boolean = PinyinObject.contains(target, toPinyin(str))
+  fun fuzzySearchDouble(str: String, dict: List<String>): Int {
+    val pinyin = toPinyin(str)
+    dict.forEachIndexed { index, s ->
+      if (PinyinObject.contains(s, pinyin) || fuzzySearch(str, s)) {
+        return index
+      }
+    }
+    return -1
+  }
+
+
+  fun fuzzySearch(source: String, target: String): Boolean = PinyinObject.contains(source, toPinyin(target))
 
   private fun replacePunctuation(str: String): String = str.replace(Punctuation0, "")
     .replace(Punctuation1, "")

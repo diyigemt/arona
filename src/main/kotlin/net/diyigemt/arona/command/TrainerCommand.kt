@@ -84,8 +84,9 @@ object TrainerCommand : SimpleCommand(
             }
           } else {
             // 无精确匹配结果, 但是有搜索建议, 发送建议
+            // 远端信息和本地信息去重
             sendMessage("没有与${str}对应的信息, 是否想要输入:\n${
-              list.filterIndexed { index, _ -> index < 4 }
+              list.toSet().filterIndexed { index, _ -> index < 4 }
                 .joinToString("\n") { "/攻略 $it" }
             }")
           }
@@ -101,13 +102,17 @@ object TrainerCommand : SimpleCommand(
 
   private fun fuzzySearch(source: String): List<String> {
     val list = FuzzySearch.map {
-      val index = GeneralUtils.fuzzySearch(source, it)
+      val index = GeneralUtils.fuzzySearchDouble(source, it)
       return@map if (index == -1) "" else it[index]
     }.filter { it.isNotBlank() }.toMutableList()
     // 从数据库查找
-    list.addAll(DataBaseProvider.query {
-      ImageTableModel.all().map { it.name }.filter { GeneralUtils.fuzzySearch(source, it) }
+    list.addAll(DataBaseProvider.query { _ ->
+      ImageTableModel.all().map { it.name }.filter { GeneralUtils.fuzzySearch(it, source) || GeneralUtils.fuzzySearch(source, it) }
     }!!)
+    // 根据相似度进行排序
+    list.sortBy {
+      return@sortBy it.toCharArray().toSet().sumOf { ch -> (if (source.contains(ch)) 1 else 0).toInt() }
+    }
     return list
   }
 
@@ -178,7 +183,7 @@ object TrainerCommand : SimpleCommand(
     // 监视data文件夹下的arona-trainer.yml文件动态添加配置
     ConfigFile = File(Arona.dataFolderPath("/${GeneralUtils.ConfigFolder}/${AutoReadConfigFileName}"))
     if (!ConfigFile.exists()) {
-      ConfigFile.writeText("override: []")
+      ConfigFile.writeText("override: []", Charsets.UTF_8)
     }
     Arona.runSuspend {
       ConfigFileWatcherChannel = ConfigFile.asWatchChannel(KWatchChannel.Mode.SingleFile)

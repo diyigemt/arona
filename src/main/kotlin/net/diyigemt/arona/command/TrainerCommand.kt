@@ -84,7 +84,12 @@ object TrainerCommand : SimpleCommand(
             }
           } else {
             // 无精确匹配结果, 但是有搜索建议, 发送建议
-            // 远端信息和本地信息去重
+            // 根据相似度进行排序
+            val sourceSet = str.toSet()
+            list.sortByDescending {
+              it.toSet().sumOf { ch -> (if (sourceSet.contains(ch)) 1 else 0).toInt() }
+            }
+            // 去重
             sendMessage("没有与${str}对应的信息, 是否想要输入:\n${
               list.toSet().filterIndexed { index, _ -> index < 4 }
                 .joinToString("\n") { "/攻略 $it" }
@@ -109,10 +114,6 @@ object TrainerCommand : SimpleCommand(
     list.addAll(DataBaseProvider.query { _ ->
       ImageTableModel.all().map { it.name }.filter { GeneralUtils.fuzzySearch(it, source) || GeneralUtils.fuzzySearch(source, it) }
     }!!)
-    // 根据相似度进行排序
-    list.sortBy {
-      return@sortBy it.toCharArray().toSet().sumOf { ch -> (if (source.contains(ch)) 1 else 0).toInt() }
-    }
     return list
   }
 

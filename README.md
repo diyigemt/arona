@@ -20,7 +20,7 @@ arona 继承 [Mirai](https://github.com/mamoe/mirai) 使用 AGPLv3 协议开源�
 ### 衍生软件需声明引用
 
 - 若引用 arona 发布的软件包而不修改 arona ，则衍生项目需在描述的任意部位提及使用 arona 。
-- 若修改 arona 源代码再发布，或参考 arona 内部实现发布另一个项目，则衍生项目必须在文章首部或 'miraiboot' 相关内容首次出现的位置明确声明来源于本仓库 ([arona](https://github.com/diyigemt/arona))。
+- 若修改 arona 源代码再发布，或参考 arona 内部实现发布另一个项目，则衍生项目必须在文章首部或 'arona' 相关内容首次出现的位置明确声明来源于本仓库 ([arona](https://github.com/diyigemt/arona))。
 - 不得扭曲或隐藏免费且开源的事实。
 
 ## Statement

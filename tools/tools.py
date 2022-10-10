@@ -209,9 +209,10 @@ def update_image_from_api(folder: str, type: int = 2):
 def post_image_to_remote(folder: str):
     index = 0
     pwd = ""
-    with open(r"C:\Users\qwe13\.ssh\pwd", "r") as f:
-        pwd = f.readline()
-    key = paramiko.RSAKey.from_private_key_file(r"C:\Users\qwe13\.ssh\id_rsa", password=pwd)
+    if os.path.exists(r"C:\Users\%s\.ssh\pwd" % getpass.getuser()):
+        with open(r"C:\Users\%s\.ssh\pwd" % getpass.getuser(), "r") as f:
+            pwd = f.readline()
+    key = paramiko.RSAKey.from_private_key_file(r"C:\Users\%s\.ssh\id_rsa" % getpass.getuser(), password=pwd)
     transport = paramiko.Transport(("42.192.117.253", 22))
     transport.connect(username="root", pkey=key)
     sftp = paramiko.SFTPClient.from_transport(transport)

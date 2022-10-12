@@ -51,5 +51,5 @@ if __name__ == '__main__':
         for i in range(0, len(outer)):
             draw.text((0 + padding + max_row_width[i] * font_size, cur_row * font_size + row_gap * (cur_row )), outer[i], font=fnt, fill=(0,0,0))
         cur_row += 1
-    img.save(img_folder + base_folder + "杂图.png")
+    img.save('image' + base_folder + "杂图.png")
     print("成功! %d" % index) 

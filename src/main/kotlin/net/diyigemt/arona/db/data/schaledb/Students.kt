@@ -9,7 +9,7 @@ import org.jetbrains.exposed.sql.Table
  */
 object Students : Table("Students") {
   val studentID: Column<Int> = integer("studentID")
-  val name: Column<String> = varchar("name", 10)
+  val name: Column<String> = varchar("name", 15)
   val birthday: Column<String> = varchar("birthday", 5)
 
   override val primaryKey: PrimaryKey = PrimaryKey(studentID)

@@ -17,6 +17,7 @@ import net.diyigemt.arona.handler.GroupRepeaterHandler
 import net.diyigemt.arona.handler.HentaiEventHandler
 import net.diyigemt.arona.handler.NudgeEventHandler
 import net.diyigemt.arona.interfaces.InitializedFunction
+import net.diyigemt.arona.plugins.PluginManager
 import net.diyigemt.arona.quartz.QuartzProvider
 import net.diyigemt.arona.remote.RemoteServiceManager
 import net.diyigemt.arona.service.AronaServiceManager
@@ -54,6 +55,7 @@ object Arona : KotlinPlugin(
       AronaServiceManager,
       CommandInterceptorManager,
       RemoteServiceManager,
+      PluginManager,
       ImageUtil
     )
 

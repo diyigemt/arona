@@ -124,7 +124,7 @@ src/test/kotlin/RunTerminal.kt
 # Mirai console files with direct bootstrap
 /config
 /data
-/plugins
+#/plugins
 /bots
 
 # Local Test Launch Point working directory

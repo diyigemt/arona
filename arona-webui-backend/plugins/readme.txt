@@ -1,0 +1,1 @@
+本地依赖文件夹，需要在此放置net.diyigemt.arona-arona-x.x.x.mirai2.jar或其它插件，Gradle会加载它们。

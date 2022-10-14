@@ -1,7 +1,6 @@
 package net.diyigemt.arona.plugins.message
 
 import kotlinx.serialization.Serializable
-import net.diyigemt.arona.plugins.PluginMessage
 
 /**
  *@Author hjn
@@ -10,5 +9,6 @@ import net.diyigemt.arona.plugins.PluginMessage
 @Serializable
 data class SingleMessage(
   override val pluginID: String,
+  val action : String,
   val message : String
 ) : PluginMessage

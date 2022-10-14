@@ -4,7 +4,7 @@ import kotlinx.serialization.json.Json
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.interfaces.InitializedFunction
 import net.diyigemt.arona.plugins.event.webuievent.CommitEvent
-import net.diyigemt.arona.plugins.message.PluginService
+import net.diyigemt.arona.plugins.services.PluginService
 import net.diyigemt.arona.plugins.message.SingleMessage
 import net.diyigemt.arona.plugins.services.WebUIService
 import net.mamoe.mirai.event.GlobalEventChannel

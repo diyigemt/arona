@@ -1,4 +1,4 @@
-package net.diyigemt.arona.plugins
+package net.diyigemt.arona.plugins.message
 
 /**
  *@Author hjn

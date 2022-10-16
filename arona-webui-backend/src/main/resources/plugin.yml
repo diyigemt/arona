@@ -1,8 +1,0 @@
-id: net.diyigemt.arona-webui
-version: 0.0.1
-name: Arona WebUI
-author: diyigemt
-dependencies:
-  - "net.diyigemt.arona"
-info: Arona Web based user interface
-main: net.diyigemt.WebUI

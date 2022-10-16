@@ -55,7 +55,6 @@ object Arona : KotlinPlugin(
       AronaServiceManager,
       CommandInterceptorManager,
       RemoteServiceManager,
-      PluginManager,
       ImageUtil
     )
 

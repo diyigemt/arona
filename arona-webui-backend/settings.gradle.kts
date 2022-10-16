@@ -1,1 +1,0 @@
-rootProject.name = "net.diyigemt.arona-webui"

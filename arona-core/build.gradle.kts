@@ -5,6 +5,9 @@ plugins {
   kotlin("plugin.serialization") version kotlinVersion
 
   id("net.mamoe.mirai-console") version miraiVersion
+
+  application
+  id("io.ktor.plugin") version "2.1.2"
 }
 
 group = "net.diyigemt.arona"
@@ -14,13 +17,21 @@ val exposedVersion = "0.38.2"
 val sqliteVersion = "3.36.0.3"
 val quartzVersion = "2.3.2"
 val okhttpVersion = "4.10.0"
-val ktorVersion = "2.1.2"
-val logbackVersion = "1.2.11"
+val ktor_version = "2.1.2"
+val kotlin_version = "1.7.10"
+val logback_version = "1.2.11"
 
 repositories {
   mavenCentral()
   maven("https://jitpack.io")
   maven("https://maven.aliyun.com/repository/public") // 阿里云国内代理仓库
+}
+
+application{
+  mainClass.set("WenUI")
+
+  val isDevelopment: Boolean = project.ext.has("development")
+  applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
 }
 
 dependencies {
@@ -45,17 +56,18 @@ dependencies {
   implementation("com.github.taptap:pinyin-plus:1.0")
   implementation("com.github.Towdium:PinIn:1.5.1")
   implementation("net.mamoe.yamlkt:yamlkt-jvm:0.10.2")
-  //webui
-  implementation("io.ktor:ktor-server-core-jvm:$ktorVersion")
-  implementation("io.ktor:ktor-server-host-common-jvm:$ktorVersion")
+
+  implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
+  implementation("io.ktor:ktor-server-host-common-jvm:$ktor_version")
   implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.3")
-  implementation("io.ktor:ktor-server-html-builder-jvm:$ktorVersion")
+  implementation("io.ktor:ktor-server-html-builder-jvm:$ktor_version")
   implementation("org.jetbrains:kotlin-css-jvm:1.0.0-pre.129-kotlin-1.4.20")
-  implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktorVersion")
-  implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktorVersion")
-  implementation("io.ktor:ktor-server-netty-jvm:$ktorVersion")
-  implementation("ch.qos.logback:logback-classic:$logbackVersion")
-  testImplementation("io.ktor:ktor-server-tests-jvm:$ktorVersion")
+  implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktor_version")
+  implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor_version")
+  implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
+//  implementation("ch.qos.logback:logback-classic:$logback_version")
+  testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
+  testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 }
 
 tasks.test {

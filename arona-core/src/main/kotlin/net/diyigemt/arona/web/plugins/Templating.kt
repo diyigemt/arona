@@ -1,4 +1,4 @@
-package net.diyigemt.arona.plugins
+package net.diyigemt.arona.web.plugins
 
 import io.ktor.server.html.*
 import kotlinx.html.*

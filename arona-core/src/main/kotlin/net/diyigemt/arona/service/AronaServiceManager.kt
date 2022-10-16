@@ -12,7 +12,7 @@ import net.diyigemt.arona.handler.NudgeEventHandler
 import net.diyigemt.arona.interfaces.InitializedFunction
 import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.scbaleDB.SchaleDBDataSyncService
-import net.diyigemt.arona.webui.WebUIService
+import net.diyigemt.arona.web.WebUIService
 import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.User

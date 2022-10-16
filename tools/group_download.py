@@ -1,9 +1,15 @@
 from tools import draw_image
 
-images = [{
-    "name": "日服角色简评.png",
+images = [
+{
+    "name": "日服人权.png",
     "path": "./image/some/",
-    "url": "https://i0.hdslb.com/bfs/article/cbbbc5d481129f58c7cacf671bfc0772c2cb6bb8.png@942w_711h_progressive.webp",
+    "url": "https://i0.hdslb.com/bfs/article/fdd24d627d9e19c08744de5fb35a10a2b3a4f03b.png@942w_534h_progressive.webp",
+},
+{
+    "name": "国际服人权.png",
+    "path": "./image/some/",
+    "url": "https://i0.hdslb.com/bfs/article/18002a78313399cb799572ab0350714b1bf54c66.png@942w_470h_progressive.webp",
 }
 # ,{
 #     "name": "纱织.png",

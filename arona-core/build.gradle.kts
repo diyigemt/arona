@@ -14,6 +14,8 @@ val exposedVersion = "0.38.2"
 val sqliteVersion = "3.36.0.3"
 val quartzVersion = "2.3.2"
 val okhttpVersion = "4.10.0"
+val ktorVersion = "2.1.2"
+val logbackVersion = "1.2.11"
 
 repositories {
   mavenCentral()
@@ -43,6 +45,17 @@ dependencies {
   implementation("com.github.taptap:pinyin-plus:1.0")
   implementation("com.github.Towdium:PinIn:1.5.1")
   implementation("net.mamoe.yamlkt:yamlkt-jvm:0.10.2")
+  //webui
+  implementation("io.ktor:ktor-server-core-jvm:$ktorVersion")
+  implementation("io.ktor:ktor-server-host-common-jvm:$ktorVersion")
+  implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.3")
+  implementation("io.ktor:ktor-server-html-builder-jvm:$ktorVersion")
+  implementation("org.jetbrains:kotlin-css-jvm:1.0.0-pre.129-kotlin-1.4.20")
+  implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktorVersion")
+  implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktorVersion")
+  implementation("io.ktor:ktor-server-netty-jvm:$ktorVersion")
+  implementation("ch.qos.logback:logback-classic:$logbackVersion")
+  testImplementation("io.ktor:ktor-server-tests-jvm:$ktorVersion")
 }
 
 tasks.test {

@@ -5,12 +5,14 @@ import net.diyigemt.arona.Arona.reload
 import net.diyigemt.arona.advance.*
 import net.diyigemt.arona.command.*
 import net.diyigemt.arona.config.AronaServiceConfig
+import net.diyigemt.arona.config.AronaWebUIConfig
 import net.diyigemt.arona.handler.GroupRepeaterHandler
 import net.diyigemt.arona.handler.HentaiEventHandler
 import net.diyigemt.arona.handler.NudgeEventHandler
 import net.diyigemt.arona.interfaces.InitializedFunction
 import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.scbaleDB.SchaleDBDataSyncService
+import net.diyigemt.arona.webui.WebUIService
 import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.User
@@ -162,6 +164,8 @@ object AronaServiceManager: InitializedFunction() {
     GameNameCommand.init()
     GameNameSearchCommand.init()
     AronaRemoteActionChecker.init()
+    AronaWebUIConfig.reload()
+    WebUIService.init()
     AronaServiceConfig.reload()
     AronaServiceConfig.config.forEach {
       if (it.value) {

@@ -1,4 +1,4 @@
-import service from '@/api/http';
+import service from "@/api/http";
 
 const loginApi = {
   // 验证登录实例

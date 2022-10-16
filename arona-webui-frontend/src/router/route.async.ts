@@ -1,7 +1,6 @@
 // 需要鉴权的业务路由
 import { RouteRecordRaw } from "vue-router";
-import ConfigRouter from "@/router/config";
-import DatabaseRouter from "@/router/database";
+import { MenuConfig } from "@/constant";
 
 const asyncRoutes: Array<RouteRecordRaw> = [
   {
@@ -17,8 +16,7 @@ const asyncRoutes: Array<RouteRecordRaw> = [
     },
     component: () => import("@/views/home/HomeIndex.vue"),
   },
-  ...ConfigRouter,
-  ...DatabaseRouter,
+  ...MenuConfig,
 ];
 
 export default asyncRoutes;

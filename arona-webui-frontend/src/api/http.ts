@@ -48,20 +48,27 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+
+interface ServerResponse<T> {
+  code: number;
+  message: string;
+  data: T;
+}
+
 const service = {
-  get<T>(url: string, data?: object): Promise<T> {
+  get<T>(url: string, data?: object): Promise<ServerResponse<T>> {
     return axiosInstance.get(url, { params: data });
   },
 
-  post<T>(url: string, data?: object): Promise<T> {
+  post<T>(url: string, data?: object): Promise<ServerResponse<T>> {
     return axiosInstance.post(url, data);
   },
 
-  put<T>(url: string, data?: object): Promise<T> {
+  put<T>(url: string, data?: object): Promise<ServerResponse<T>> {
     return axiosInstance.put(url, data);
   },
 
-  delete<T>(url: string, data?: object): Promise<T> {
+  delete<T>(url: string, data?: object): Promise<ServerResponse<T>> {
     return axiosInstance.delete(url, data);
   },
 

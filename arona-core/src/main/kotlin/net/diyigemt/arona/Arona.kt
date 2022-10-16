@@ -122,6 +122,7 @@ object Arona : KotlinPlugin(
     AronaEmergencyConfig.save()
     AronaTrainerConfig.save()
     AronaServiceManager.saveServiceStatus()
+    AronaWebUIConfig.save()
   }
 
   fun runSuspend(block: suspend () -> Unit) = launch(coroutineContext) {

@@ -2,14 +2,15 @@
   <el-menu default-active="1" :default-openeds="mapExpand" class="main-menu">
     <el-sub-menu v-for="(menu, index) in MenuConfig" :key="index" :index="String(index)">
       <template #title>
-        <span>{{ menu.name }}</span>
+        <span>{{ t(menu.menuName) }}</span>
       </template>
       <el-menu-item
         v-for="(item, jIndex) in menu.children"
+        v-show="item.path"
         :key="'1-' + jIndex + 'sub'"
         :index="index + '-' + jIndex"
-        @click="jump(item.path)"
-        >{{ item.name }}</el-menu-item
+        @click="jump(item.menuPath)"
+        >{{ item.menuName }}</el-menu-item
       >
     </el-sub-menu>
   </el-menu>
@@ -18,6 +19,7 @@
 <script setup lang="ts">
 import { MenuConfig } from "@/constant";
 
+const { t } = useI18n();
 const router = useRouter();
 const mapExpand = MenuConfig.map((_, index) => String(index));
 function jump(path: string) {

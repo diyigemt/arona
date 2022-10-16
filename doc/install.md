@@ -17,11 +17,7 @@ Arona是依赖于Mirai-Console的一个插件，并不能独立工作，要使�
    sudo fc-cache --force
    ```
 
-2. 运行一次`mirai-console`，等待根目录下生成多个目录后退出；
-
-3. 在[releases](https://github.com/diyigemt/arona/releases)下载最新版本的jar包并放入mirai-console的`plugins`目录下；<a id="step1"> </a>
-
-5. 在[releases](https://github.com/diyigemt/arona/releases)下载`PinIn.zip`文件并解压到`mirai-console`安装目录下的`plugin-libraries`文件夹中，此时目录结构应该为<a id="install-4"> </a>
+2. 在[releases](https://github.com/diyigemt/arona/releases)下载`PinIn.zip`文件并解压到`mirai-console`安装目录下的`plugin-libraries`文件夹中(一般是没有的，可以自己新建一个)，此时目录结构应该为<a id="install-2"> </a>
 
    ```bash
    plugin-libraries
@@ -37,6 +33,10 @@ Arona是依赖于Mirai-Console的一个插件，并不能独立工作，要使�
    ```
 
 ​		该文件为`/攻略`指令提供模糊搜索功能，原仓库地址为[Towdium/PinIn](https://github.com/Towdium/PinIn)，如果你知道这个文件夹以及这步操作		是在干什么，你也可以去源仓库下载安装。
+
+3. 运行一次`mirai-console`，等待根目录下生成多个目录后退出；
+
+4. 在[releases](https://github.com/diyigemt/arona/releases)下载最新版本的jar包并放入mirai-console的`plugins`目录下；<a id="step1"> </a>
 
 5. 启动mirai-console，等到显示如下字样后退出：
 

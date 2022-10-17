@@ -9,7 +9,6 @@
 /config/
 /plugins/
 /debug-sandbox/*
-/src/test/kotlin/RunMirai.kt
 
 # Runtime files
 /bots/

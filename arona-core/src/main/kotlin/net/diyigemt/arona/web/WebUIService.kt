@@ -6,7 +6,6 @@ import net.diyigemt.arona.Arona
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.web.plugins.configureRouting
 import net.diyigemt.arona.web.plugins.configureSerialization
-import net.diyigemt.arona.web.plugins.configureTemplating
 
 object WebUIService: AronaService {
 
@@ -15,7 +14,6 @@ object WebUIService: AronaService {
   override fun enableService() {
     Arona.runSuspend {
       server = embeddedServer(Netty, port = 8080, host = "127.0.0.1") {
-        configureTemplating()
         configureSerialization()
         configureRouting()
       }.start(wait = false)

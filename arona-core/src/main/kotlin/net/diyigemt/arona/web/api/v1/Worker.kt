@@ -16,11 +16,11 @@ interface Worker {
   val json: Json
     get() = Json { encodeDefaults = true }
 
-  fun <T> responseMessage(json : T) = Json.encodeToString(
-      ServerResponse(200, HttpStatusCode.OK.description, json)
-  )
-
   fun fail() = ServerResponse(500, HttpStatusCode.InternalServerError.description, null as String?)
 
   fun noContent() = json.encodeToString(ServerResponse(204, HttpStatusCode.NoContent.description, null as String?))
 }
+
+inline fun <reified T> responseMessage(json: T) = Json.encodeToString(
+  ServerResponse(200, HttpStatusCode.OK.description, json)
+)

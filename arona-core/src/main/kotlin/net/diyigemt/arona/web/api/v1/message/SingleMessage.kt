@@ -1,4 +1,4 @@
-package net.diyigemt.arona.web.api.v1.account
+package net.diyigemt.arona.web.api.v1.message
 
 import kotlinx.serialization.Serializable
 
@@ -7,6 +7,6 @@ import kotlinx.serialization.Serializable
  *@Create 2022/10/16
  */
 @Serializable
-data class AccountMessage(
-  val qq : Long
+data class SingleMessage<T>(
+  val value : T
 )

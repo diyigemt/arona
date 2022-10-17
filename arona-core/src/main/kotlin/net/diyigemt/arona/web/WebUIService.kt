@@ -14,6 +14,7 @@ object WebUIService: AronaService {
   override fun enableService() {
     Arona.runSuspend {
       server = embeddedServer(Netty, port = 8080, host = "127.0.0.1") {
+//        configureTemplating()
         configureSerialization()
         configureRouting()
       }.start(wait = false)

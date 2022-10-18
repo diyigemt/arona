@@ -7,5 +7,7 @@
   "i18n-ally.localesPaths": [
     "locales"
   ],
-  "scss.lint.unknownAtRules": "ignore"
+  "scss.lint.unknownAtRules": "ignore",
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.sourceLanguage": "zh-CN"
 }

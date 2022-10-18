@@ -35,5 +35,6 @@ module.exports = {
     "no-plusplus": "off",
     "no-param-reassign": "off",
     "@typescript-eslint/ban-ts-comment": "off",
+    "no-use-before-define": "off",
   },
 };

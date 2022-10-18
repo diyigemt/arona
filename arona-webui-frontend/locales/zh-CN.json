@@ -4,5 +4,10 @@
   "change dark": "点击切换为暗黑主题",
   "change lang": "切换国际化语言",
   "method to using": "使用模板的方法",
-  "template process": "模板配置流程"
+  "template process": "模板配置流程",
+  "config": {
+    "arona": {
+      "desc": "这是arona的主配置文件"
+    }
+  }
 }

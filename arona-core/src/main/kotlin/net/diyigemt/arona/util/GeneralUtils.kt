@@ -5,6 +5,7 @@ import me.towdium.pinin.PinIn
 import me.towdium.pinin.utils.PinyinFormat
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.command.CallMeCommand
+import net.diyigemt.arona.command.TarotCommand
 import net.diyigemt.arona.command.TrainerCommand
 import net.diyigemt.arona.config.AronaConfig
 import net.diyigemt.arona.db.DataBaseProvider.query
@@ -223,7 +224,7 @@ object GeneralUtils : InitializedFunction() {
   fun md5(str: String): ByteArray = MessageDigest.getInstance("MD5").digest(str.toByteArray(Charsets.UTF_8))
   fun ByteArray.toHex() = joinToString(separator = "") { byte -> "%02x".format(byte) }
 
-  private fun imageRequest(path: String, localFile: File): File = downloadImageFile(path, localFile)
+  fun imageRequest(path: String, localFile: File): File = downloadImageFile(path, localFile)
 
   private fun imageFileFolder(subFolder: String = "") = Arona.dataFolderPath(BACKEND_IMAGE_FOLDER) + subFolder
 
@@ -235,6 +236,7 @@ object GeneralUtils : InitializedFunction() {
     File(imageFileFolder(TrainerCommand.ChapterMapFolder)).also { it.mkdirs() }
     File(imageFileFolder(TrainerCommand.StudentRankFolder)).also { it.mkdirs() }
     File(imageFileFolder(TrainerCommand.OtherFolder)).also { it.mkdirs() }
+    File(imageFileFolder(TarotCommand.TarotImageFolder)).also { it.mkdirs() }
     File(Arona.dataFolderPath(ConfigFolder)).also { it.mkdirs() }
     PinyinObject = PinIn().config().format(PinyinFormat.RAW).fSh2S(true).commit()
   }

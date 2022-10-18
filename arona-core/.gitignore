@@ -9,6 +9,7 @@
 /config/
 /plugins/
 /debug-sandbox/*
+deploy.cmd
 
 # Runtime files
 /bots/

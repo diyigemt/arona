@@ -19,6 +19,7 @@ import kotlin.reflect.full.findAnnotation
  */
 object GetAronaConfig : Worker{
   override suspend fun worker(context: PipelineContext<Unit, ApplicationCall>) {
+    context.call.response.header("Content-Type", "application/json")
     val res : MutableMap<String, ContentUnit<Any>> = mutableMapOf()
     kotlin.runCatching {
       AronaConfig.javaClass.kotlin.declaredMemberProperties.forEach {

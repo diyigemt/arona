@@ -50,11 +50,11 @@ object TarotCommand : SimpleCommand(
         return
       }
     }
-    val tarotIndex = GeneralUtils.randomInt(TarotCount) + 1
+    val tarotIndex = 1
     val tarot0 = query {
       Tarot.findById(tarotIndex)
     }!!
-    val positive = GeneralUtils.randomBoolean()
+    val positive = true
     send(user, subject, tarot0, positive)
     if (AronaTarotConfig.dayOne) {
       if (record.isNotEmpty()) {
@@ -104,6 +104,7 @@ object TarotCommand : SimpleCommand(
         resource.close()
       }
     }.onFailure {
+      Arona.warning("下载塔罗牌图片: ${tarot.id.value}-${fileSuffix}.png 失败")
       contact.sendMessage("看看${teacherName}抽到了什么:\n${tarot.name}(${resName})\n${res}")
     }
   }

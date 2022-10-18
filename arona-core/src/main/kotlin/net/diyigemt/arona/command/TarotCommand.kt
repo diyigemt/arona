@@ -50,11 +50,11 @@ object TarotCommand : SimpleCommand(
         return
       }
     }
-    val tarotIndex = 1
+    val tarotIndex = GeneralUtils.randomInt(TarotCount) + 1
     val tarot0 = query {
       Tarot.findById(tarotIndex)
     }!!
-    val positive = true
+    val positive = GeneralUtils.randomBoolean()
     send(user, subject, tarot0, positive)
     if (AronaTarotConfig.dayOne) {
       if (record.isNotEmpty()) {
@@ -85,27 +85,31 @@ object TarotCommand : SimpleCommand(
     val teacherName = queryTeacherNameFromDB(contact, user)
     val path = "${TarotImageFolder}/${tarot.id.value}-${fileSuffix}.png"
     val s = "看看${teacherName}抽到了什么:\n${tarot.name}(${resName})\n${res}"
-    // 加载塔罗牌图片
-    kotlin.runCatching {
-      val imageFile = GeneralUtils.localImageFile(path)
-      if (!imageFile.exists()) {
-        GeneralUtils.imageRequest(path, imageFile)
+    if (AronaTarotConfig.image) {
+      // 加载塔罗牌图片
+      kotlin.runCatching {
+        val imageFile = GeneralUtils.localImageFile(path)
+        if (!imageFile.exists()) {
+          GeneralUtils.imageRequest(path, imageFile)
+        }
+        imageFile
+      }.onSuccess {
+        val builder = MessageChainBuilder()
+        builder.add(s)
+        builder.add("\n")
+        val resource = it.toExternalResource()
+        val image = contact.uploadImage(resource)
+        builder.add(image)
+        contact.sendMessage(builder.build())
+        withContext(Dispatchers.IO) {
+          resource.close()
+        }
+      }.onFailure {
+        Arona.warning("下载塔罗牌图片: ${tarot.id.value}-${fileSuffix}.png 失败")
+        contact.sendMessage(s)
       }
-      imageFile
-    }.onSuccess {
-      val builder = MessageChainBuilder()
-      builder.add(s)
-      builder.add("\n")
-      val resource = it.toExternalResource()
-      val image = contact.uploadImage(resource)
-      builder.add(image)
-      contact.sendMessage(builder.build())
-      withContext(Dispatchers.IO) {
-        resource.close()
-      }
-    }.onFailure {
-      Arona.warning("下载塔罗牌图片: ${tarot.id.value}-${fileSuffix}.png 失败")
-      contact.sendMessage("看看${teacherName}抽到了什么:\n${tarot.name}(${resName})\n${res}")
+    } else {
+      contact.sendMessage(s)
     }
   }
 

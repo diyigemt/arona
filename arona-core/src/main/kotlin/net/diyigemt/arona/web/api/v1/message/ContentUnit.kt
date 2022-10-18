@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
  *@Create 2022/10/17
  */
 @Serializable
-data class MapMessage <T, K>(
-  val value : Map<T, K>
+data class ContentUnit<T>(
+  val value : T,
+  val description : String
 )

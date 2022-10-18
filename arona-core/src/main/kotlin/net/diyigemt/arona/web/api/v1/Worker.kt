@@ -16,7 +16,7 @@ interface Worker {
   val json: Json
     get() = Json { encodeDefaults = true }
 
-  fun fail() = ServerResponse(500, HttpStatusCode.InternalServerError.description, null as String?)
+  fun fail() = json.encodeToString(ServerResponse(500, HttpStatusCode.InternalServerError.description, null as String?))
 
   fun noContent() = json.encodeToString(ServerResponse(204, HttpStatusCode.NoContent.description, null as String?))
 }

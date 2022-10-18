@@ -46,7 +46,7 @@ object TarotCommand : SimpleCommand(
         val tarot = query {
           Tarot.findById(tarotRecord.tarot)
         }!!
-        send(user, subject, tarot, !tarotRecord.positive)
+        send(user, subject, tarot, tarotRecord.positive)
         return
       }
     }

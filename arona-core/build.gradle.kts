@@ -73,3 +73,14 @@ dependencies {
 tasks.test {
   useJUnitPlatform()
 }
+
+tasks.create("buildAndDeploy"){
+  group = "mirai"
+  dependsOn("buildPlugin")
+  doLast {
+    exec{
+      workingDir("$rootDir")
+      commandLine("cmd", "/c", "deploy.cmd", "${rootProject.name}-$version.mirai2.jar")
+    }
+  }
+}

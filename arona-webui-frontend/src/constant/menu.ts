@@ -76,7 +76,7 @@ export const MenuConfig: MenuItem[] = [
     meta: {
       title: "配置文件",
     },
-    menuName: "配置文件",
+    menuName: "side menu config",
     children: ConfigMenu,
   },
   {
@@ -84,7 +84,7 @@ export const MenuConfig: MenuItem[] = [
     meta: {
       title: "数据库",
     },
-    menuName: "数据库文件",
+    menuName: "side menu database",
     children: DatabaseMenu,
   },
 ];

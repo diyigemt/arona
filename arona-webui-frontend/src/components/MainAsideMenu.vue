@@ -32,3 +32,16 @@ function jump(path: string) {
   height: 100%;
 }
 </style>
+
+<i18n>
+{
+  "en": {
+    "side menu config": "config",
+    "side menu database": "database"
+  },
+  "zh-cn": {
+    "side menu config": "配置文件",
+    "side menu database": "数据库文件"
+  }
+}
+</i18n>

@@ -1,5 +1,7 @@
 package net.diyigemt.arona.command
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.config.AronaTarotConfig
 import net.diyigemt.arona.db.DataBaseProvider.query
@@ -15,6 +17,8 @@ import net.mamoe.mirai.console.command.UserCommandSender
 import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.User
+import net.mamoe.mirai.message.data.MessageChainBuilder
+import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.update
 import java.util.*
@@ -24,6 +28,7 @@ object TarotCommand : SimpleCommand(
   description = "抽一张塔罗牌"
 ), AronaService {
   private const val TarotCount = 22
+  const val TarotImageFolder: String = "/tarot" // 塔罗牌图片
   @Handler
   suspend fun UserCommandSender.tarot() {
     val group0 = if (subject is Group) subject.id else user.id
@@ -76,8 +81,31 @@ object TarotCommand : SimpleCommand(
   private suspend fun send(user: User, contact: Contact, tarot: Tarot, positive: Boolean) {
     val res = if (positive) tarot.positive else tarot.negative
     val resName = if (positive) "正位" else "逆位"
+    val fileSuffix = if (positive) "up" else "down"
     val teacherName = queryTeacherNameFromDB(contact, user)
-    contact.sendMessage("看看${teacherName}抽到了什么:\n${tarot.name}(${resName})\n${res}")
+    val path = "${TarotImageFolder}/${tarot.id.value}-${fileSuffix}.png"
+    val s = "看看${teacherName}抽到了什么:\n${tarot.name}(${resName})\n${res}"
+    // 加载塔罗牌图片
+    kotlin.runCatching {
+      val imageFile = GeneralUtils.localImageFile(path)
+      if (!imageFile.exists()) {
+        GeneralUtils.imageRequest(path, imageFile)
+      }
+      imageFile
+    }.onSuccess {
+      val builder = MessageChainBuilder()
+      builder.add(s)
+      builder.add("\n")
+      val resource = it.toExternalResource()
+      val image = contact.uploadImage(resource)
+      builder.add(image)
+      contact.sendMessage(builder.build())
+      withContext(Dispatchers.IO) {
+        resource.close()
+      }
+    }.onFailure {
+      contact.sendMessage("看看${teacherName}抽到了什么:\n${tarot.name}(${resName})\n${res}")
+    }
   }
 
   override val id: Int = 16

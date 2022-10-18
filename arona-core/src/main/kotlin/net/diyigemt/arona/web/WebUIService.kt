@@ -22,7 +22,9 @@ object WebUIService: AronaService {
   }
 
   override fun disableService() {
-    server.stop()
+    kotlin.runCatching {
+      server.stop()
+    }
   }
 
   override val id: Int = 24

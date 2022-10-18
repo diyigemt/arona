@@ -63,6 +63,7 @@ object SchaleDBDataSyncService : AronaQuartzService{
 
     fun getBirthdayList() {
       val formatter = DateTimeFormatter.ofPattern("yyyy/M/d")
+      SchaleDBUtil.birthdayList.clear()
       for (item in SchaleDBUtil.studentItem){
         val date = LocalDate.parse(LocalDate.now().year.toString() + "/" + item.BirthDay, formatter)
         if (date.isAfter(LocalDate.now()) && date.isBefore(LocalDate.now().plusWeeks(1))){

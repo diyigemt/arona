@@ -9,13 +9,13 @@
 /config/
 /plugins/
 /debug-sandbox/*
-/src/test/kotlin/RunMirai.kt
 deploy.cmd
 
 # Runtime files
 /bots/
 /data/
 /logs/
+/debug/
 /plugin-libraries/
 /plugin-shared-libraries/
 /tools/img/

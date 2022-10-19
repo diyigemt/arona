@@ -6,7 +6,7 @@
         <el-input v-model.number="data.form.qq" />
       </el-form-item>
       <el-form-item label="groups">
-        <el-select v-model="data.form.managerGroup">
+        <el-select v-model="data.form.groups">
           <el-option v-for="(e, index) in data.select.groups" :key="index" :label="e" :value="e"></el-option>
         </el-select>
       </el-form-item>
@@ -15,6 +15,10 @@
 </template>
 
 <script setup lang="ts">
+import { ElMessage } from "element-plus";
+import { fetchBotGroupList } from "@/api/modules/config";
+import { Group } from "@/interface";
+
 const { t } = useI18n();
 const data = reactive<Data>({
   form: {
@@ -36,6 +40,15 @@ const data = reactive<Data>({
     groups: [],
   },
 });
+onMounted(() => {
+  fetchBotGroupList().then((groups) => {
+    if (!groups || !groups.data || groups.data.length === 0) {
+      ElMessage.warning("获取群列表失败");
+    } else {
+      data.select.groups = groups.data;
+    }
+  });
+});
 interface Data {
   form: {
     qq: string;
@@ -53,7 +66,7 @@ interface Data {
     remoteCheckInterval: number;
   };
   select: {
-    groups: number[];
+    groups: Group[];
   };
 }
 </script>

@@ -1,7 +1,9 @@
+/* eslint-disable prettier/prettier */
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { ElMessage } from "element-plus";
 import showCodeMessage from "@/api/code";
 import { formatJsonToUrlParams, instanceObject } from "@/utils/format";
+import { Group } from "@/interface";
 
 const BASE_PREFIX = import.meta.env.VITE_API_BASEURL;
 
@@ -33,6 +35,10 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
     if (response.status === 200) {
+      const resp = response.data as ServerResponse<unknown>;
+      if (resp.code !== 200 && resp.message) {
+        ElMessage.warning(resp.message);
+      }
       return response.data;
     }
     ElMessage.info(JSON.stringify(response.status));
@@ -79,6 +85,10 @@ const service = {
   download: (url: string, data: instanceObject) => {
     window.location.href = `${BASE_PREFIX}/${url}?${formatJsonToUrlParams(data)}`;
   },
+
+  raw<T>(config: AxiosRequestConfig): Promise<ServerResponse<T>> {
+    return axiosInstance(config) as unknown as Promise<ServerResponse<T>>;
+  }
 };
 
 export default service;

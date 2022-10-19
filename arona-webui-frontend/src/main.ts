@@ -13,7 +13,6 @@ import "virtual:windi-devtools";
 import "@/assets/styles/index.scss";
 
 const i18n = createI18n({
-  legacy: false,
   locale: "zh-cn",
   fallbackLocale: "zh",
   messages,

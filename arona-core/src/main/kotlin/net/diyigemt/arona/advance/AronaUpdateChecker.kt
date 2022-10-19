@@ -44,7 +44,7 @@ object AronaUpdateChecker: AronaQuartzService {
       val response = NetworkUtil.fetchDataFromServer<VersionInfo>("/version")
       val version = response.data.version
       val nowVersion = SemVersion(version.replace("v", ""))
-      if (Arona.version == nowVersion) return
+      if (nowVersion == Arona.version || nowVersion.identifier != null) return // 忽略测试版
       val newFuture = response.data.newFuture
         .mapIndexed { index, element ->
           "${index + 1}. $element"

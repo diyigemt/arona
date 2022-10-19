@@ -10,6 +10,7 @@
 /plugins/
 /debug-sandbox/*
 /src/test/kotlin/RunMirai.kt
+deploy.cmd
 
 # Runtime files
 /bots/

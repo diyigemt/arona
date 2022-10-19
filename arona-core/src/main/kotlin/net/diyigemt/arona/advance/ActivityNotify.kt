@@ -99,8 +99,9 @@ object ActivityNotify: AronaQuartzService {
       // 非双倍掉落提醒
       val nowH = instance.get(Calendar.HOUR_OF_DAY)
       if (activity.isNotEmpty()) {
-        val h = extraHAndD(activity[0]).first
-        doInsert(activity, nowH + h - 1)
+        activity.groupBy { extraHAndD(it).first }.forEach { (h, u) ->
+          doInsert(u, nowH + h - 1, h.toString())
+        }
       }
       // 双倍掉落提醒
       if (dropActivities.isNotEmpty()) {

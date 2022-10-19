@@ -112,6 +112,7 @@ object GeneralUtils : InitializedFunction() {
         val localFile = localImageFile(localDB.path)
         return if (localFile.exists()) ImageRequestResult(file = localFile) else ImageRequestResult()
       }
+      it.printStackTrace()
       // 否则对数据库内容和自定义配置文件进行模糊搜索(指令上级)
       return ImageRequestResult()
     }.getOrNull() ?: return ImageRequestResult()

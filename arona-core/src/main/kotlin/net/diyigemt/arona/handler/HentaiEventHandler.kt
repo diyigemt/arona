@@ -4,6 +4,7 @@ import net.diyigemt.arona.Arona.sendTeacherNameMessage
 import net.diyigemt.arona.config.AronaHentaiConfig
 import net.diyigemt.arona.service.AronaGroupService
 import net.diyigemt.arona.util.MessageUtil
+import net.mamoe.mirai.contact.UserOrBot
 import net.mamoe.mirai.event.events.GroupMessageEvent
 
 object HentaiEventHandler: AronaEventHandler<GroupMessageEvent>, AronaGroupService {
@@ -20,7 +21,7 @@ object HentaiEventHandler: AronaEventHandler<GroupMessageEvent>, AronaGroupServi
     var index = (0 until total).random()
     for (msg in messageList) {
       if (index < msg.weight) {
-        subject.sendTeacherNameMessage(target, MessageUtil.at(target, msg.message))
+        subject.sendTeacherNameMessage(target as UserOrBot, MessageUtil.at(target, msg.message))
         return
       } else {
         index -= msg.weight

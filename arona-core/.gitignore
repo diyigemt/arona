@@ -15,6 +15,7 @@ deploy.cmd
 /bots/
 /data/
 /logs/
+/debug/
 /plugin-libraries/
 /plugin-shared-libraries/
 /tools/img/

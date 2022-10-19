@@ -495,13 +495,12 @@ object ActivityUtil {
       source.contains("指名手配") -> activity.type = ActivityType.WANTED_DROP
       source.contains("悬赏通缉") -> activity.type = ActivityType.WANTED_DROP
       source.contains("学院交流") -> activity.type = ActivityType.COLLEGE_EXCHANGE_DROP
-      source.contains("特别依赖") -> activity.type = ActivityType.SPECIAL_DROP
-      source.contains("日程") -> activity.type = ActivityType.SCHEDULE
-      source.contains("课程表") -> activity.type = ActivityType.SCHEDULE
+      source.contains("特别依赖") || source.contains("特殊任务") -> activity.type = ActivityType.SPECIAL_DROP
+      source.contains("日程") || source.contains("课程表") -> activity.type = ActivityType.SCHEDULE
       source.contains("总力战") -> activity.type = ActivityType.DECISIVE_BATTLE
       source.contains("Normal") -> activity.type = ActivityType.N2_3
       source.contains("Hard") -> activity.type = ActivityType.H2_3
-      source.contains("合同火力演习") -> activity.type = ActivityType.JOINT_EXERCISES
+      source.contains("合同火力演习") || source.contains("综合战术考试") -> activity.type = ActivityType.JOINT_EXERCISES
     }
     activity.content = source
     return activity

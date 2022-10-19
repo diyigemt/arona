@@ -38,6 +38,13 @@ class TestSimple {
   }
 
   @Test
+  fun testVersion() {
+    println(SemVersion("1.0.1-M1"))
+    println(SemVersion("1.0.1-M1").identifier)
+    println(SemVersion("1.0.1-M1") >= SemVersion("1.0.1"))
+  }
+
+  @Test
   fun testDateAdd() {
     val instance = Calendar.getInstance()
     instance.set(Calendar.DAY_OF_MONTH, 28)

@@ -44,13 +44,25 @@ object AronaUpdateChecker: AronaQuartzService {
       val response = NetworkUtil.fetchDataFromServer<VersionInfo>("/version")
       val version = response.data.version
       val nowVersion = SemVersion(version.replace("v", ""))
-      if (nowVersion == Arona.version || nowVersion.identifier != null) return // 忽略测试版
       val newFuture = response.data.newFuture
         .mapIndexed { index, element ->
           "${index + 1}. $element"
         }.joinToString("\n")
       val concat = "检测到版本更新,当前版本:${Arona.version}, 新版本:${nowVersion}\n更新日志:\n${newFuture}"
-      Arona.sendMessageToAdmin(concat)
+      // 如果本机使用测试版
+      if (Arona.version.identifier != null) {
+        // 新的版本发布就提醒更新
+        if (Arona.version.major == nowVersion.major
+          && Arona.version.minor == nowVersion.minor
+          && Arona.version.patch == nowVersion.patch
+          && Arona.version.identifier != nowVersion.identifier
+        ) {
+          Arona.sendMessageToAdmin(concat)
+        }
+      } else {
+        if (nowVersion.identifier != null) return // 忽略测试版
+        Arona.sendMessageToAdmin(concat)
+      }
     }
   }
 

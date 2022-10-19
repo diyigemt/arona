@@ -7,7 +7,7 @@
   "template process": "模板配置流程",
   "config": {
     "arona": {
-      "desc": "这是arona的主配置文件"
+      "desc": "arona主配置文件"
     }
   }
 }

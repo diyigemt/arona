@@ -1,9 +1,10 @@
-export interface Group {
-  id: number;
-  name: string;
-}
+export type Config2Map<Config> = {
+  [key in keyof Config]: {
+    value: Config[key];
+    description: string;
+  };
+};
 
-export interface User {
-  id: number;
-  name: string;
-}
+export type Config2Form<Config> = {
+  [key in keyof Config]: Config[key] | null;
+};

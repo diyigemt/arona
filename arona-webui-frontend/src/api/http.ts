@@ -36,8 +36,11 @@ axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
     if (response.status === 200) {
       const resp = response.data as ServerResponse<unknown>;
-      if (resp.code !== 200 && resp.message) {
-        ElMessage.warning(resp.message);
+      if (resp && resp.code !== 200 && resp.message) {
+        ElMessage({
+          type: "warning",
+          message: resp.message,
+        });
       }
       return response.data;
     }
@@ -88,7 +91,7 @@ const service = {
 
   raw<T>(config: AxiosRequestConfig): Promise<ServerResponse<T>> {
     return axiosInstance(config) as unknown as Promise<ServerResponse<T>>;
-  }
+  },
 };
 
 export default service;

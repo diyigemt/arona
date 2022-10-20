@@ -42,8 +42,8 @@ const ConfigMenu: SubMenuItem[] = [
 ];
 const DatabaseMenu: SubMenuItem[] = [
   {
-    path: "",
     name: "database",
+    path: "",
     menuName: "database-home",
     menuPath: "database-home",
     component: () => import("@/views/database/DatabaseIndex.vue"),

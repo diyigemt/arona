@@ -6,5 +6,31 @@
 #app {
   width: 100vw;
   height: 100vh;
-  overflow-x: hidden; // TODO delete
+}
+
+// 隐藏横向滚动条
+.scrollbar-hide-horizontal[class~=el-scrollbar] {
+  .is-horizontal {
+    display: none;
+  }
+}
+
+// 点模糊背景
+.dot-bg {
+  background-image: radial-gradient(transparent 1px, #fff 1px);
+  backdrop-filter: saturate(50%) blur(4px);
+  background-size: 4px 4px;
+}
+
+// 菜单美化
+
+.custom-menu {
+  .el-sub-menu {
+    .el-menu {
+      padding: 0 16px;
+      .el-menu-item[class~=is-active] {
+        background-color: var(--el-color-primary-light-8);
+      }
+    }
+  }
 }

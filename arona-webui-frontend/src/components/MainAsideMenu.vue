@@ -1,5 +1,5 @@
 <template>
-  <el-menu default-active="1" :default-openeds="mapExpand" class="main-menu">
+  <el-menu :default-openeds="mapExpand" class="main-menu custom-menu">
     <el-sub-menu v-for="(menu, index) in MenuConfig" :key="index" :index="String(index)">
       <template #title>
         <span>{{ t(menu.menuName) }}</span>
@@ -30,6 +30,14 @@ function jump(path: string) {
 <style lang="scss" scoped>
 .main-menu {
   height: 100%;
+  border-right: none;
+  ::v-deep .el-sub-menu {
+    .el-menu {
+      .el-menu-item {
+        border-radius: 4px;
+      }
+    }
+  }
 }
 </style>
 

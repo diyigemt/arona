@@ -7,24 +7,29 @@ const locale = zhCn;
 
 <template>
   <el-config-provider :locale="locale">
-    <el-container class="container">
-      <el-header>
-        <MainBanner />
-      </el-header>
-      <el-container>
-        <el-aside width="200px">
-          <MainAsideMenu />
-        </el-aside>
-        <el-main>
-          <router-view />
-        </el-main>
-      </el-container>
+    <MainBanner />
+    <el-container class="main-container">
+      <el-aside width="250px">
+        <MainAsideMenu />
+      </el-aside>
+      <el-main class="container">
+        <el-scrollbar class="scrollbar-hide-horizontal">
+          <div style="margin-top: 60px">
+            <router-view />
+          </div>
+        </el-scrollbar>
+      </el-main>
     </el-container>
   </el-config-provider>
 </template>
 
 <style lang="scss" scoped>
+.main-container {
+  height: calc(100vh - 60px);
+}
 .container {
-  height: 100%;
+  height: 100vh;
+  transform: translateY(-60px);
+  overflow: hidden;
 }
 </style>

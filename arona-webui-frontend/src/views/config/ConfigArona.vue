@@ -1,23 +1,30 @@
 <template>
-  <PageHeader :title="t('config.arona.desc')" />
+  <el-affix :offset="45">
+    <PageHeader :title="t('config.arona.desc')" />
+  </el-affix>
   <el-row :gutter="16">
     <el-col :span="20">
-      <el-form :model="form" label-width="80px" label-position="left">
+      <el-form :model="form" label-width="180px" label-position="left">
         <el-form-item label="qq">
-          <el-input v-model.number="form.qq" />
+          <div>
+            <el-input v-model.number="form.qq" />
+          </div>
           <div>指明运行arona的机器人qq号</div>
         </el-form-item>
         <el-form-item label="groups" prop="groups">
-          <el-transfer
-            v-model="form.groups"
-            :data="select.groups"
-            filterable
-            :titles="['群列表', '服务的群']"
-            :props="{ key: 'id', label: 'name' }"
-            :filter-method="groupFilter"
-          >
-            <template #default="{ option }"> {{ option.name }} ({{ option.id }}) </template>
-          </el-transfer>
+          <div>
+            <el-transfer
+              v-model="form.groups"
+              :data="select.groups"
+              filterable
+              :titles="['群列表', '服务的群']"
+              :props="{ key: 'id', label: 'name' }"
+              :filter-method="groupFilter"
+            >
+              <template #default="{ option }"> {{ option.name }} ({{ option.id }}) </template>
+            </el-transfer>
+          </div>
+          <div>指明arona响应的qq群信息</div>
         </el-form-item>
         <el-form-item label="managerGroup" prop="managerGroup">
           <el-transfer
@@ -33,11 +40,43 @@
         </el-form-item>
         <el-form-item label="permissionDeniedMessage" prop="permissionDeniedMessage">
           <el-input v-model="form.permissionDeniedMessage" />
-          <div>指明运行arona的机器人qq号</div>
+          <div>当不具备管理员权限的用户尝试执行管理员权限时的回应信息</div>
         </el-form-item>
         <el-form-item label="sendOnlineMessage" prop="sendOnlineMessage">
           <el-switch v-model="form.sendOnlineMessage" />
-          <div>指明运行arona的机器人qq号</div>
+          <div>发送上线消息</div>
+        </el-form-item>
+        <el-form-item label="onlineMessage" prop="onlineMessage">
+          <el-input v-model="form.onlineMessage" />
+          <div>上线消息内容</div>
+        </el-form-item>
+        <el-form-item label="sendOfflineMessage" prop="sendOfflineMessage">
+          <el-switch v-model="form.sendOfflineMessage" />
+          <div>发送下线消息</div>
+        </el-form-item>
+        <el-form-item label="offlineMessage" prop="offlineMessage">
+          <el-input v-model="form.offlineMessage" />
+          <div>下线消息内容</div>
+        </el-form-item>
+        <el-form-item label="updateCheckTime" prop="updateCheckTime">
+          <el-input-number v-model="form.updateCheckTime" :max="23" :min="0" />
+          <div>每日检查更新时间</div>
+        </el-form-item>
+        <el-form-item label="endWithSensei" prop="endWithSensei">
+          <el-input v-model="form.endWithSensei" />
+          <div>昵称后缀</div>
+        </el-form-item>
+        <el-form-item label="sendStatus" prop="sendStatus">
+          <el-switch v-model="form.sendStatus" />
+          <div>允许arona向后端发送匿名统计数据</div>
+        </el-form-item>
+        <el-form-item label="uuid" prop="uuid">
+          <el-input v-model="form.uuid" disabled />
+          <div>uuid</div>
+        </el-form-item>
+        <el-form-item label="remoteCheckInterval" prop="remoteCheckInterval">
+          <el-input-number v-model="form.remoteCheckInterval" :max="23" :min="1" />
+          <div>公告检查间隔</div>
         </el-form-item>
       </el-form>
     </el-col>
@@ -103,14 +142,4 @@ interface Select {
 }
 </script>
 
-<style lang="scss" scoped>
-.el-form {
-  .el-form-item__content {
-    display: flex;
-
-    > div {
-      flex: 1;
-    }
-  }
-}
-</style>
+<style lang="scss" scoped></style>

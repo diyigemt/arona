@@ -180,7 +180,7 @@ arona是基于mirai-console的插件。
 
 ## 鸣谢
 
-**排名不分先后**
+**除第一名外排名不分先后**
 
 [**Haythem723**](https://github.com/Haythem723)(wikiru、SchaleDB爬取模块)
 

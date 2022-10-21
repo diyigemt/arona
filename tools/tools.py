@@ -10,6 +10,8 @@ import re
 import getpass
 import requests
 import paramiko
+
+from reflash_cdn import purgeFiles
 password_file = "C:\\Users\\%s\\.ssh\\arona-backend-password" % getpass.getuser()
 from zhon.hanzi import punctuation
 headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"}
@@ -203,10 +205,15 @@ def update_image_from_api(folder: str, type: int = 2):
                     "type": type
                 })
         index += 1
+    if len(dict) == 0:
+        print("empty!")
+        return
     #信息收集完成, 提交到后端进行处理
     post_data("imageUpdate", dict)
 
 def post_image_to_remote(folder: str):
+    cdn_path = "https://arona.cdn.diyigemt.com/image"
+    purgePath = []
     index = 0
     pwd = ""
     if os.path.exists(r"C:\Users\%s\.ssh\pwd" % getpass.getuser()):
@@ -219,10 +226,16 @@ def post_image_to_remote(folder: str):
     for file in os.listdir(base_img_folder + folder):
         file_path = base_img_folder + folder + file
         file_history_path = base_img_folder + "/history" + folder + file
-        remove_path = "/srv/arona-backend/image%s" % (folder + file)
+        file_remote_path = folder + file
+        remove_path = "/srv/arona-backend/image%s" % (file_remote_path)
         sftp.put(file_path, remove_path)
+        purgePath.append(cdn_path + file_remote_path)
         shutil.move(file_path, file_history_path)
         index += 1
+    if index == 0:
+        print("empty!")
+        return
+    purgeFiles(purgePath)
     print("success: %d" % index)
 
 def post_data(action: str, data: any):

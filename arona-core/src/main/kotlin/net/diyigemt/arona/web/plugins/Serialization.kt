@@ -1,9 +1,12 @@
 package net.diyigemt.arona.web.plugins
 
+import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import net.diyigemt.arona.web.api.v1.commit.CommitManager
 import net.diyigemt.arona.web.api.v1.config.GetAronaConfig
 
 fun Application.configureSerialization() {
@@ -17,6 +20,10 @@ fun Application.configureSerialization() {
           route("/config"){
             get("/aronaConfig"){
               GetAronaConfig.worker(this)
+            }
+
+            post("/commit"){
+              CommitManager.worker(this)
             }
           }
         }

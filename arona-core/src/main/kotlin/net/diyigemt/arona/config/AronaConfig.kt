@@ -31,18 +31,18 @@ object AronaConfig: AutoSavePluginConfig("arona") {
   var offlineMessage: String by value("arona摸了")
 
   @ValueDescription("自动检查更新的时间")
-  val updateCheckTime: Int by value(8)
+  var updateCheckTime: Int by value(8)
 
   @ValueDescription("名称是否自动带上后缀, 默认是\"老师\"")
-  val endWithSensei: String by value("老师")
+  var endWithSensei: String by value("老师")
 
   @ValueDescription("是否允许arona收集匿名统计信息")
-  val sendStatus: Boolean by value(false)
+  var sendStatus: Boolean by value(false)
 
   @ValueDescription("识别id(无需修改)")
   var uuid: String by value("")
 
   @ValueDescription("远端操作查询间隔 设置为0表示不开启, 单位是小时")
-  val remoteCheckInterval: Int by value(1)
+  var remoteCheckInterval: Int by value(1)
 
 }

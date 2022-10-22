@@ -2,6 +2,7 @@ package net.diyigemt.arona.web.api.v1
 
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.response.*
 import io.ktor.util.pipeline.*
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -11,7 +12,9 @@ import kotlinx.serialization.json.Json
  *@Create 2022/10/16
  */
 interface Worker {
-  suspend fun worker(context : PipelineContext<Unit, ApplicationCall>)
+  suspend fun worker(context : PipelineContext<Unit, ApplicationCall>){
+    context.call.response.header("Content-Type", "application/json")
+  }
 
   val json: Json
     get() = Json { encodeDefaults = true }

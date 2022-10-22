@@ -1,6 +1,5 @@
 package net.diyigemt.arona.web.api.v1.commit
 
-import com.google.gson.Gson
 import com.squareup.moshi.Types
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -8,6 +7,7 @@ import io.ktor.server.response.*
 import io.ktor.util.pipeline.*
 import net.diyigemt.arona.util.MoshiUtil
 import net.diyigemt.arona.web.api.v1.Worker
+import net.diyigemt.arona.web.api.v1.responseMessage
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.starProjectedType
@@ -48,7 +48,7 @@ object CommitManager :Worker {
         }
       }
 
-      context.call.respond(Gson().toJson(resMap))
+      context.call.respond(responseMessage(resMap))
     }.onFailure {
       it.printStackTrace()
       context.call.respond(fail())

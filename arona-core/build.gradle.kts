@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "net.diyigemt.arona"
-version = "1.0.12-M1"
+version = "1.0.12"
 val miraiVersion = "2.11.1"
 val exposedVersion = "0.38.2"
 val sqliteVersion = "3.36.0.3"

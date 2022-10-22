@@ -18,7 +18,7 @@ import kotlin.reflect.jvm.isAccessible
 
 object NetworkUtil {
   const val BACKEND_ADDRESS = "https://arona.diyigemt.com"
-  const val CDN_ADDRESS = "https://arona.cdn.diyigemt.com"
+  private const val CDN_ADDRESS = "https://arona.cdn.diyigemt.com"
 //  const val BACKEND_ADDRESS = "http://localhost:12201"
   private const val BACKEND_API_ADDRESS = "$BACKEND_ADDRESS/api/v1"
   const val BACKEND_IMAGE_FOLDER = "/image"

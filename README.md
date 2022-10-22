@@ -124,29 +124,17 @@ arona是基于mirai-console的插件。
 
 ## 更新日志
 
-2022-10-02 v1.0.10
+2022-10-22 v1.0.12
 
-1. 攻略指令的别名覆写配置支持一对多
-2. 修复N2H2防侠时间错误的问题
-3. 修复配置文件中机器人运行的qq与实际不一样时仍会回应的问题
-4. 攻略指令提供模糊搜索建议功能
-5. 添加配置项arona-trainer.yml -> tipWhenNull 允许用户配置是否启用`/攻略`指令的模糊搜索提示，[这里](./doc/using.md#other-name-config)
-6. 添加配置项arona-trainer.yml -> fuzzySearchSource 允许用户配置`/攻略`指令的模糊搜索来源，[这里](./doc/using.md#other-name-config)
-7. 攻略指令的别名支持多对一配置，[这里](./doc/using.md#other-name-config-multi)
-8. 新增公告功能，可以接收作者的公告，[这里](./doc/using.md#remote-announce)
-9. 新增卡池自动更新功能，可以接收懒狗作者根据新池子内容自动更新本地抽卡数据库，[这里](./doc/using.md#remote-pool-update)
-10. 添加配置项arona.yml -> remoteCheckInterval 允许用户配置**远端**功能的开启与否，[这里](./doc/using.md#remote)
-11. 攻略图片下载失败时将会提供反馈信息
-12. 修复某些情况下无法获取学生生日信息导致`/活动`指令失效的问题
-13. 修复在服务器环境下部署时系统中没有中文字体导致`/活动`指令结果中文乱码的问题
-14. 新增特殊配置文件`./data/net.diyigemt.arona/config/trainer_config.yml`允许用户在`mirai-console`运行时修改`/攻略`指令的别名覆写配置，具体看[这里](./doc/using.md#other-name-config-2)
-15. 添加指令`/抽卡 list`可查看最近两个池子的配置
-16. 后端服务地址转移到国内的服务器上，优化`/攻略`指令第一次下载图片时的速度
+1. 修复学生生日信息会随着时间增加的问题
+2. 修复某些情况下数据库字段过短的问题
+3. `/塔罗牌`指令结果会同时附上P站[@Shi0n老师](https://www.pixiv.net/users/4150140)绘制的BA版塔罗牌图片
+4. 静态资源使用CDN加速，优化各种图片第一次加载的速度
 
-2022-09-13 v1.0.9
+2022-10-07 v1.0.11
 
-1. 新增配置文件arona-trainer.yml，为`/攻略`指令提供别名复写功能，具体使用请看[这里](./doc/using.md#other-name)
-2. 修复v1.0.8版本中初始化失败导致服务失效的严重Bug
+1. 攻略指令模糊搜索功能优化
+2. 修复某些情况下攻略指令覆写配置读取乱码的问题
 
 历史日志：[这里](./doc/update.md)
 

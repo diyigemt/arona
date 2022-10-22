@@ -60,7 +60,7 @@ object AronaUpdateChecker: AronaQuartzService {
           Arona.sendMessageToAdmin(concat)
         }
       } else {
-        if (nowVersion.identifier != null) return // 忽略测试版
+        if (nowVersion.identifier != null || Arona.version >= nowVersion) return // 忽略测试版和低版本
         Arona.sendMessageToAdmin(concat)
       }
     }

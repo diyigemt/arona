@@ -50,11 +50,12 @@ object TarotCommand : SimpleCommand(
         return
       }
     }
-    val tarotIndex = 1
+    val tarotIndex = GeneralUtils.randomInt(22) + 1
     val tarot0 = query {
       Tarot.findById(tarotIndex)
     }!!
-    val positive = true
+    Thread.sleep((1..10).random().toLong())
+    val positive = GeneralUtils.randomBoolean()
     send(user, subject, tarot0, positive)
     if (AronaTarotConfig.dayOne) {
       if (record.isNotEmpty()) {

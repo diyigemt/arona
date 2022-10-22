@@ -18,6 +18,7 @@ import kotlin.reflect.jvm.isAccessible
 
 object NetworkUtil {
   const val BACKEND_ADDRESS = "https://arona.diyigemt.com"
+  const val CDN_ADDRESS = "https://arona.cdn.diyigemt.com"
 //  const val BACKEND_ADDRESS = "http://localhost:12201"
   private const val BACKEND_API_ADDRESS = "$BACKEND_ADDRESS/api/v1"
   const val BACKEND_IMAGE_FOLDER = "/image"
@@ -109,21 +110,37 @@ object NetworkUtil {
       .execute()
   }
 
-  fun baseRequest(api: String, source: String = BACKEND_API_ADDRESS): Connection =
-    Jsoup.connect("$source${api}")
-      .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
-      .ignoreContentType(true)
-      .header(AUTH_HEADER, AronaConfig.uuid)
-      .header(VERSION_HEADER, Arona.version.toString())
-      .maxBodySize(1024 * 1024 * 10)
+  private fun baseRequest(api: String, source: String = BACKEND_API_ADDRESS): Connection =
+    request(Jsoup.connect("$source${api}"))
 
-  fun downloadImageFile(path: String, localFile: File): File = downloadFile("${BACKEND_IMAGE_FOLDER}$path", localFile)
+  private fun cdnRequest(api: String, source: String = CDN_ADDRESS): Connection =
+    request(Jsoup.connect("$source${api}"))
 
 
-  fun downloadFileFile(path: String, localFile: File): File = downloadFile("${BACKEND_FILE_FOLDER}$path", localFile)
-  fun downloadFile(path: String, localFile: File): File {
+  private fun request(conn: Connection): Connection = conn
+    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
+    .ignoreContentType(true)
+    .header(AUTH_HEADER, AronaConfig.uuid)
+    .header(VERSION_HEADER, Arona.version.toString())
+    .maxBodySize(1024 * 1024 * 15)
+
+  fun downloadImageFile(path: String, localFile: File): File = downloadCDNFile("${BACKEND_IMAGE_FOLDER}$path", localFile)
+
+
+  fun downloadFileFile(path: String, localFile: File): File = downloadCDNFile("${BACKEND_FILE_FOLDER}$path", localFile)
+
+  fun downloadCDNFile(path: String, localFile: File): File {
+    val connection = cdnRequest(path)
+    return writeFile(localFile, connection);
+  }
+
+  private fun downloadFile(path: String, localFile: File): File {
     val connection = baseRequest(path, BACKEND_ADDRESS)
-    val stream = connection.execute().bodyStream()
+    return writeFile(localFile, connection);
+  }
+
+  private fun writeFile(localFile: File, conn: Connection): File {
+    val stream = conn.execute().bodyStream()
     val buffer = ByteArray(1024)
     val byteOutputStream = ByteArrayOutputStream()
     var len = stream.read(buffer)

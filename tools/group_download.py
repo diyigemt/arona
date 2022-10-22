@@ -1,29 +1,19 @@
+import yaml
+from yaml.loader import SafeLoader
 from tools import draw_image
 
-images = [
-{
-    "name": "日服人权.png",
-    "path": "./image/some/",
-    "url": "https://i0.hdslb.com/bfs/article/fdd24d627d9e19c08744de5fb35a10a2b3a4f03b.png@942w_534h_progressive.webp",
-},
-{
-    "name": "国际服人权.png",
-    "path": "./image/some/",
-    "url": "https://i0.hdslb.com/bfs/article/18002a78313399cb799572ab0350714b1bf54c66.png@942w_470h_progressive.webp",
-}
-# ,{
-#     "name": "纱织.png",
-#     "path": "./image/student_rank/",
-#     "url": "https://i0.hdslb.com/bfs/new_dyn/473218dca85027dbbe763eb3b19d31d9425535005.png@1295w.webp",
-# }
-]
-
 if __name__ == "__main__":
+    source = {}
+    with open(r"./group_download.yml", "r", encoding="UTF-8") as f:
+        source = yaml.load(f, SafeLoader)
     count = 1
+    images = list(filter(lambda item: item['name'] != 'test', list(source['image'])))
     total = len(images)
     for item in images:
         print("%d/%d" % (count, total))
         name = item["name"]
+        if name.find(".png") == -1:
+            name = name + ".png"
         path = item["path"]
         url = item["url"].split("@")[0]
         draw_image(url, name, path)

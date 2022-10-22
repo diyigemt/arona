@@ -18,8 +18,6 @@ import net.diyigemt.arona.entity.ImageRequestResult
 import net.diyigemt.arona.interfaces.InitializedFunction
 import net.diyigemt.arona.util.NetworkUtil.BACKEND_ADDRESS
 import net.diyigemt.arona.util.NetworkUtil.BACKEND_IMAGE_FOLDER
-import net.diyigemt.arona.util.NetworkUtil.baseRequest
-import net.diyigemt.arona.util.NetworkUtil.downloadFile
 import net.diyigemt.arona.util.NetworkUtil.downloadImageFile
 import net.diyigemt.arona.util.other.KWatchChannel
 import net.diyigemt.arona.util.other.asWatchChannel
@@ -29,7 +27,6 @@ import net.mamoe.mirai.contact.UserOrBot
 import net.mamoe.mirai.contact.nameCardOrNick
 import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
 import org.jetbrains.exposed.sql.and
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.security.MessageDigest
 

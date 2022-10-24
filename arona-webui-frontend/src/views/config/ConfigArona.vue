@@ -1,7 +1,4 @@
 <template>
-  <el-affix :offset="45">
-    <PageHeader :title="t('config.arona.desc')" />
-  </el-affix>
   <el-row :gutter="16">
     <el-col :span="20">
       <el-form :model="form" label-width="180px" label-position="left">

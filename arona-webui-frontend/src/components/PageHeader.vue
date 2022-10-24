@@ -1,7 +1,7 @@
 <template>
   <div class="dot-bg">
-    <el-page-header :content="props.title" class="page-header" @back="goBack">
-      <template v-if="!props.title" #title>
+    <el-page-header :content="routerTitle" class="page-header" @back="goBack">
+      <template v-if="!routerTitle" #title>
         <slot name="title" />
       </template>
     </el-page-header>
@@ -10,11 +10,13 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<Props>();
+const route = useRoute();
 const router = useRouter();
+const props = defineProps<Props>();
 const goBack = () => {
   router.go(-1);
 };
+const routerTitle = computed(() => route.meta.title || props.title || "");
 interface Props {
   title?: string;
 }

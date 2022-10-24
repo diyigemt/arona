@@ -1,5 +1,6 @@
 package net.diyigemt.arona.config
 
+import net.diyigemt.arona.annotations.Const
 import net.mamoe.mirai.console.data.AutoSavePluginConfig
 import net.mamoe.mirai.console.data.ValueDescription
 import net.mamoe.mirai.console.data.value
@@ -39,6 +40,7 @@ object AronaConfig: AutoSavePluginConfig("arona") {
   @ValueDescription("是否允许arona收集匿名统计信息")
   var sendStatus: Boolean by value(false)
 
+  @Const
   @ValueDescription("识别id(无需修改)")
   var uuid: String by value("")
 

@@ -5,6 +5,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.util.pipeline.*
+import net.diyigemt.arona.annotations.Const
 import net.diyigemt.arona.util.MoshiUtil
 import net.diyigemt.arona.web.api.v1.Worker
 import net.diyigemt.arona.web.api.v1.responseMessage
@@ -39,11 +40,12 @@ object CommitManager :Worker {
             }
             else -> {it.value}
           }
+          if(property.annotations.contains(Const())) throw Exception("${property.name} can not be modified.")
           property.setter.call(configClass.objectInstance, value)
         }.onSuccess { _ ->
           resMap[it.key] = true
         }.onFailure { e ->
-          e.printStackTrace()
+          if (e !is Exception) e.printStackTrace()
           resMap[it.key] = false
         }
       }

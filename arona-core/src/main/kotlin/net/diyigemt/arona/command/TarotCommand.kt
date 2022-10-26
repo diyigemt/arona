@@ -63,6 +63,7 @@ object TarotCommand : SimpleCommand(
           TarotRecordTable.update({ (TarotRecordTable.id eq userId) and (TarotRecordTable.group eq group0) }) {
             it[day] = today
             it[tarot] = tarotIndex
+            it[TarotRecordTable.positive] = positive
           }
         }
         return

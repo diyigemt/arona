@@ -2,6 +2,7 @@ package net.diyigemt.arona.db
 
 import kotlinx.coroutines.Dispatchers
 import net.diyigemt.arona.Arona
+import net.diyigemt.arona.db.DataBaseProvider.exec
 import net.diyigemt.arona.db.data.schaledb.SchaleDataBase
 import net.diyigemt.arona.interfaces.BaseFunctionProvider
 import org.jetbrains.exposed.sql.Database
@@ -13,6 +14,8 @@ import org.jetbrains.exposed.sql.statements.expandArgs
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.transactions.transactionManager
+import java.sql.ResultSet
 
 object DataBaseProvider: BaseFunctionProvider() {
 
@@ -85,4 +88,17 @@ object DataBaseProvider: BaseFunctionProvider() {
     Arona.error { "Database is disconnected, Any operation that requires database support cannot be performed." }
     null
   } else newSuspendedTransaction(context = Dispatchers.IO, db = databaseConnectionList[db].db) { block(this) }
+
+  fun <T : Any> String.exec(db : Int = 0, transform : (ResultSet) -> T) : List<T> {
+    val result = arrayListOf<T>()
+    transaction(databaseConnectionList[db].db){
+      exec(this@exec){ rs ->
+        while (rs.next()) {
+          result += transform(rs)
+        }
+      }
+    }
+
+    return result
+  }
 }

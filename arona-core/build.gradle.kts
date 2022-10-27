@@ -37,7 +37,6 @@ application{
 dependencies {
 //    implementation("com.github.kittinunf.fuel:fuel:2.3.1")
   implementation("org.jsoup:jsoup:1.15.1")
-  implementation("io.ktor:ktor-server-cors-jvm:2.1.2")
   testImplementation("org.junit.jupiter:junit-jupiter:5.6.0")
   testImplementation("io.kotest:kotest-runner-junit5:5.3.0")
   testImplementation("io.kotest:kotest-assertions-core:5.3.0")
@@ -58,6 +57,7 @@ dependencies {
   implementation("com.github.taptap:pinyin-plus:1.0")
   implementation("com.github.Towdium:PinIn:1.5.1")
   implementation("net.mamoe.yamlkt:yamlkt-jvm:0.10.2")
+  implementation("org.reflections:reflections:0.10.2")
 
   implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
   implementation("io.ktor:ktor-server-host-common-jvm:$ktor_version")

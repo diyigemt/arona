@@ -238,7 +238,7 @@ def post_image_to_remote(folder: str):
     purgeFiles(purgePath)
     print("success: %d" % index)
 
-def post_data(action: str, data: any):
+def post_data(action: str, data: any, printResp: bool = True):
     header = {
         "token": get_password(),
         "Content-Type": "application/json"
@@ -247,7 +247,10 @@ def post_data(action: str, data: any):
         "action": action,
         "data": data
     }, headers=header)
-    print(resp.text)
+    if printResp:
+        print(resp.text)
+    return resp
+        
 
 replace_name = {
     "沙耶": "/老鼠/鼠鼠",

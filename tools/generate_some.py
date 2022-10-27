@@ -1,7 +1,10 @@
 from functools import reduce
+import json
 import os
 import numpy as np
 from PIL import ImageDraw, ImageFont, Image
+
+from tools import post_data
 img_folder = "image/history"
 base_folder = "/some/"
 col = 3
@@ -14,7 +17,7 @@ jp_str = "日服"
 en_str = "国际服"
 other_str = "其他"
 # 总力战
-DECISIVE_BATTLE = ["HOD", "大蛇", "黑白", "黑白", "寿司", "眼球", "主教"]
+DECISIVE_BATTLE = ["HOD", "大蛇", "黑白", "鸡斯拉", "寿司", "眼球", "主教", "GOZ"]
 # 生成杂图帮助
 
 def a(arr: list[str]):
@@ -41,9 +44,12 @@ if __name__ == '__main__':
     en_list = []
     other_list = []
     battle_list = []
-    for file in os.listdir(img_folder + base_folder):
-        file_names = file.replace(".png", "").replace(".jpg", "").split("_")
-        file_name = file_names[np.argmax(file_names)]
+    someList = post_data("imageDBQuery", {
+        "type": 3
+    }, printResp=False).text
+    someImageList = json.loads(someList)["data"]
+    for image in someImageList:
+        file_name = image["name"]
         if file_name.find(jp_str) != -1:
             jp_list.append(file_name)
         elif file_name.find(en_str) != -1:

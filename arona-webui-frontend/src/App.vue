@@ -2,9 +2,15 @@
 import zhCn from "element-plus/lib/locale/lang/zh-cn";
 import MainBanner from "@/components/MainBanner.vue";
 import useBaseStore from "@/store/base";
-
+import { warningMessage } from "./utils/message";
 const store = useBaseStore();
-store.syncContacts();
+const router = useRouter();
+if (!store.host) {
+  warningMessage("api地址未配置,将跳转到配置界面");
+  router.push("/setting/setting-api");
+} else {
+  store.syncContacts();
+}
 const locale = zhCn;
 </script>
 

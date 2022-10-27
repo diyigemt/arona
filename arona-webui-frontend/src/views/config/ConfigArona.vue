@@ -1,7 +1,7 @@
 <template>
   <el-form :model="form" label-width="180px" label-position="left">
     <el-form-item label="qq">
-      <el-row :gutter="16">
+      <el-row :gutter="16" class="w-full">
         <el-col :span="12">
           <el-input v-model.number="form.qq" />
         </el-col>
@@ -11,9 +11,9 @@
       </el-row>
     </el-form-item>
     <el-form-item label="groups" prop="groups">
-      <el-row :gutter="16">
+      <el-row :gutter="16" class="w-full">
         <el-col :span="12">
-          <el-select v-model="form.groups">
+          <el-select v-model="form.groups" class="w-full">
             <el-option v-for="(e, index) in select.groups" :key="index" :value="e.id" :label="e.name" />
           </el-select>
         </el-col>
@@ -23,9 +23,9 @@
       </el-row>
     </el-form-item>
     <el-form-item label="managerGroup" prop="managerGroup">
-      <el-row :gutter="16">
+      <el-row :gutter="16" class="w-full">
         <el-col :span="12">
-          <el-select v-model="form.managerGroup">
+          <el-select v-model="form.managerGroup" class="w-full">
             <el-option v-for="(e, index) in select.friends" :key="index" :value="e.id" :label="e.name" />
           </el-select>
         </el-col>
@@ -35,7 +35,7 @@
       </el-row>
     </el-form-item>
     <el-form-item label="permissionDeniedMessage" prop="permissionDeniedMessage">
-      <el-row :gutter="16">
+      <el-row :gutter="16" class="w-full">
         <el-col :span="12">
           <el-input v-model="form.permissionDeniedMessage" />
         </el-col>
@@ -45,7 +45,7 @@
       </el-row>
     </el-form-item>
     <el-form-item label="sendOnlineMessage" prop="sendOnlineMessage">
-      <el-row :gutter="16">
+      <el-row :gutter="16" class="w-full">
         <el-col :span="12">
           <el-switch v-model="form.sendOnlineMessage" />
         </el-col>
@@ -55,7 +55,7 @@
       </el-row>
     </el-form-item>
     <el-form-item label="onlineMessage" prop="onlineMessage">
-      <el-row :gutter="16">
+      <el-row :gutter="16" class="w-full">
         <el-col :span="12">
           <el-input v-model="form.onlineMessage" />
         </el-col>
@@ -65,7 +65,7 @@
       </el-row>
     </el-form-item>
     <el-form-item label="sendOfflineMessage" prop="sendOfflineMessage">
-      <el-row :gutter="16">
+      <el-row :gutter="16" class="w-full">
         <el-col :span="12">
           <el-switch v-model="form.sendOfflineMessage" />
         </el-col>
@@ -75,7 +75,7 @@
       </el-row>
     </el-form-item>
     <el-form-item label="offlineMessage" prop="offlineMessage">
-      <el-row :gutter="16">
+      <el-row :gutter="16" class="w-full">
         <el-col :span="12">
           <el-input v-model="form.offlineMessage" />
         </el-col>
@@ -85,7 +85,7 @@
       </el-row>
     </el-form-item>
     <el-form-item label="updateCheckTime" prop="updateCheckTime">
-      <el-row :gutter="16">
+      <el-row :gutter="16" class="w-full">
         <el-col :span="12">
           <el-input-number v-model="form.updateCheckTime" :max="23" :min="0" />
         </el-col>
@@ -94,9 +94,8 @@
         </el-col>
       </el-row>
     </el-form-item>
-    <el-form-item label="endWithSensei" prop="endWithSensei"
-      >\
-      <el-row :gutter="16">
+    <el-form-item label="endWithSensei" prop="endWithSensei">
+      <el-row :gutter="16" class="w-full">
         <el-col :span="12">
           <el-input v-model="form.endWithSensei" />
         </el-col>
@@ -106,7 +105,7 @@
       </el-row>
     </el-form-item>
     <el-form-item label="sendStatus" prop="sendStatus">
-      <el-row :gutter="16">
+      <el-row :gutter="16" class="w-full">
         <el-col :span="12">
           <el-switch v-model="form.sendStatus" />
         </el-col>
@@ -116,7 +115,7 @@
       </el-row>
     </el-form-item>
     <el-form-item label="uuid" prop="uuid">
-      <el-row :gutter="16">
+      <el-row :gutter="16" class="w-full">
         <el-col :span="12">
           <el-input v-model="form.uuid" disabled />
         </el-col>
@@ -126,7 +125,7 @@
       </el-row>
     </el-form-item>
     <el-form-item label="remoteCheckInterval" prop="remoteCheckInterval">
-      <el-row :gutter="16">
+      <el-row :gutter="16" class="w-full">
         <el-col :span="12">
           <el-input-number v-model="form.remoteCheckInterval" :max="23" :min="1" />
         </el-col>
@@ -139,12 +138,12 @@
 </template>
 
 <script setup lang="ts">
-import { ElMessage } from "element-plus";
-import { AronaConfigForm, AronaConfigMap } from "@/interface";
+import { AronaConfigForm } from "@/interface";
 import { Friend, Group } from "@/types/contact";
-import { fetchBotContacts } from "@/api/modules/contact";
+import useBaseStore from "@/store/base";
 
 const { t } = useI18n();
+const baseStore = useBaseStore();
 const form = ref<AronaConfigForm>({
   qq: null,
   groups: [123123],
@@ -176,13 +175,8 @@ const select = reactive<Select>({
   ],
 });
 onMounted(() => {
-  fetchBotContacts().then((contact) => {
-    if (!groups || !groups.data || groups.data.length === 0) {
-      ElMessage.warning("获取群列表失败");
-    } else {
-      select.groups = groups.data;
-    }
-  });
+  select.groups = baseStore.botGroups;
+  select.friends = baseStore.botFriends;
 });
 interface Select {
   groups: Omit<Group, "permission">[];

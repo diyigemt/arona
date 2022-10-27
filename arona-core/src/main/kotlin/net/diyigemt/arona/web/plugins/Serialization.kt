@@ -3,11 +3,13 @@ package net.diyigemt.arona.web.plugins
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import net.diyigemt.arona.web.api.v1.Contacts
 import net.diyigemt.arona.web.api.v1.data.Data
 import net.diyigemt.arona.web.api.v1.commit.CommitManager
 import net.diyigemt.arona.web.api.v1.config.GetAronaConfig
+import net.diyigemt.arona.web.api.v1.responseMessage
 
 fun Application.configureSerialization() {
     install(ContentNegotiation) {
@@ -35,6 +37,10 @@ fun Application.configureSerialization() {
             post("/{dataBase}/{table}"){
               Data.worker(this)
             }
+          }
+
+          get("/ping") {
+            this.call.respond(responseMessage("pong"))
           }
         }
       }

@@ -7,7 +7,9 @@ import type {
   BotInvitedJoinGroupRequestOperationType,
   MemberJoinRequestOperationType,
   NewFriendRequestOperationType,
+  //@ts-ignore
 } from "../mirai-api-http/resp";
+//@ts-ignore
 import type { Api } from "../index";
 import type * as Contact from "./contact";
 import type { MessageType } from "./message-type";

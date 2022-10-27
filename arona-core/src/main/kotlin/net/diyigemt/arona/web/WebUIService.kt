@@ -4,6 +4,7 @@ import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.service.AronaService
+import net.diyigemt.arona.web.database.DBOptionService
 import net.diyigemt.arona.web.plugins.configureRouting
 import net.diyigemt.arona.web.plugins.configureSerialization
 
@@ -33,5 +34,6 @@ object WebUIService: AronaService {
 
   override fun init() {
     registerService()
+    DBOptionService.init()
   }
 }

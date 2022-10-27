@@ -6,6 +6,7 @@ import io.ktor.server.response.*
 import io.ktor.util.pipeline.*
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import net.diyigemt.arona.web.api.v1.message.ServerResponse
 
 /**
  *@Author hjn

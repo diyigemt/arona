@@ -57,6 +57,7 @@ dependencies {
   implementation("com.github.taptap:pinyin-plus:1.0")
   implementation("com.github.Towdium:PinIn:1.5.1")
   implementation("net.mamoe.yamlkt:yamlkt-jvm:0.10.2")
+  implementation("org.reflections:reflections:0.10.2")
 
   implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
   implementation("io.ktor:ktor-server-host-common-jvm:$ktor_version")

@@ -26,6 +26,12 @@ const DatabaseMenu: SubMenuItem[] = [
     path: "/database/database-gacha-history",
   },
 ];
+const SettingMenu: SubMenuItem[] = [
+  {
+    name: "api",
+    path: "/setting/setting-api",
+  },
+];
 // eslint-disable-next-line import/prefer-default-export
 export const MenuConfig: MenuItem[] = [
   {
@@ -33,7 +39,11 @@ export const MenuConfig: MenuItem[] = [
     children: ConfigMenu,
   },
   {
-    name: "side menu config",
+    name: "side menu database",
     children: DatabaseMenu,
+  },
+  {
+    name: "side menu setting",
+    children: SettingMenu,
   },
 ];

@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import zhCn from "element-plus/lib/locale/lang/zh-cn";
 import MainBanner from "@/components/MainBanner.vue";
+import useBaseStore from "@/store/base";
 
+const store = useBaseStore();
+store.syncContacts();
 const locale = zhCn;
 </script>
 

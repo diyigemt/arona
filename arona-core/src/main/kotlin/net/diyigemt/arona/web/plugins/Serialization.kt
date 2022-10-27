@@ -13,7 +13,7 @@ fun Application.configureSerialization() {
       json()
     }
 
-    routing {
+    routing() {
       route("/api"){
         route("/v1"){
           route("/config"){
@@ -27,7 +27,7 @@ fun Application.configureSerialization() {
           }
 
           get("/contacts"){
-            Contacts.worker(this);
+            Contacts.worker(this)
           }
         }
       }

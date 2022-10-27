@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-const theme = defineStore({
+const useThemeStore = defineStore({
   // 这里的id必须为唯一ID
   id: "theme",
   state: () => {
@@ -23,4 +23,4 @@ const theme = defineStore({
   },
 });
 
-export default theme;
+export default useThemeStore;

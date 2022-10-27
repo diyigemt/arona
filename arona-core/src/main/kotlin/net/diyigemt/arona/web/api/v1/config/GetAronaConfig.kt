@@ -6,7 +6,7 @@ import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.util.pipeline.*
 import net.diyigemt.arona.config.AronaConfig
-import net.diyigemt.arona.web.api.v1.message.ServerResponse
+import net.diyigemt.arona.web.api.v1.ServerResponse
 import net.diyigemt.arona.web.api.v1.Worker
 import net.diyigemt.arona.web.api.v1.message.ContentUnit
 import net.mamoe.mirai.console.data.ValueDescription

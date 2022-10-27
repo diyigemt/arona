@@ -45,11 +45,13 @@ function jump(path: string) {
 {
   "en": {
     "side menu config": "config",
-    "side menu database": "database"
+    "side menu database": "database",
+    "side menu setting": "setting"
   },
   "zh-cn": {
     "side menu config": "配置文件",
-    "side menu database": "数据库文件"
+    "side menu database": "数据库文件",
+    "side menu setting": "设置"
   }
 }
 </i18n>

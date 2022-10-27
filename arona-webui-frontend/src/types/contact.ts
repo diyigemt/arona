@@ -40,7 +40,7 @@ export interface Friend extends BaseUser {
   /**
    * 用户昵称
    */
-  nickname: string;
+  name: string;
   /**
    * 用户备注
    */

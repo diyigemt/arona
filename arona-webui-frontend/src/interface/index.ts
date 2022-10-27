@@ -1,3 +1,4 @@
+export * from "./modules/config";
 export type Config2Map<Config> = {
   [key in keyof Config]: {
     value: Config[key];

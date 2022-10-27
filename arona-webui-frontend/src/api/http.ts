@@ -3,7 +3,6 @@ import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } f
 import { ElMessage } from "element-plus";
 import showCodeMessage from "@/api/code";
 import { formatJsonToUrlParams, instanceObject } from "@/utils/format";
-import { Group } from "@/interface";
 
 const BASE_PREFIX = import.meta.env.VITE_API_BASEURL;
 
@@ -16,7 +15,9 @@ const axiosInstance: AxiosInstance = axios.create({
   // 请求头
   headers: {
     "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
   },
+  withCredentials: true,
 });
 
 // 请求拦截器

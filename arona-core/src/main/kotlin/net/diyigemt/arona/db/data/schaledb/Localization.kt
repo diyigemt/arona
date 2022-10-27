@@ -10,5 +10,5 @@ import org.jetbrains.exposed.sql.Table
 object Localization : Table("Localization"){
   val tag : Column<String> = varchar("tag", 10)
   val eventID : Column<Int> = integer("eventID")
-  val value : Column<String> = varchar("value", 30)
+  val value : Column<String> = varchar("value", 100)
 }

@@ -133,16 +133,18 @@ object SchaleDBDataSyncService : AronaQuartzService{
         RemoteType.GITHUB.name -> apply {
           resString += " from GitHub"
           if (query.getOrNull(MD5.md5) != md5 && isGitHub){
-            dao.sendToDataBase()
-            updateMD5(dataType, RemoteType.GITHUB.name, md5)
+            kotlin.runCatching { dao.sendToDataBase() }.onSuccess {
+              updateMD5(dataType, RemoteType.GITHUB.name, md5)
+            }
             isUpdate = true
           } else resString += " already up to date."
         }
         else -> apply {
           resString += " from mirror"
           if (query.getOrNull(MD5.md5) != md5){
-            dao.sendToDataBase()
-            updateMD5(dataType, RemoteType.MIRROR.name, md5)
+            kotlin.runCatching { dao.sendToDataBase() }.onSuccess {
+              updateMD5(dataType, RemoteType.MIRROR.name, md5)
+            }
             isUpdate = true
           } else resString += " already up to date."
         }

@@ -1,6 +1,8 @@
 package net.diyigemt.arona.config
 
+import net.diyigemt.arona.Arona
 import net.diyigemt.arona.annotations.Const
+import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.data.AutoSavePluginConfig
 import net.mamoe.mirai.console.data.ValueDescription
 import net.mamoe.mirai.console.data.value
@@ -8,7 +10,15 @@ import net.mamoe.mirai.console.data.value
 object AronaConfig: AutoSavePluginConfig("arona") {
 
   @ValueDescription("运行arona的qq")
-  var qq: Long by value()
+  var qq: Long = 0
+    set(value) {
+      field = value
+      kotlin.runCatching {
+        val bot = Bot.getInstance(value)
+        Arona.arona = bot
+        Arona.info("bot 获取成功")
+      }
+    }
 
   @ValueDescription("arona服务的群")
   var groups: MutableList<Long> by value()

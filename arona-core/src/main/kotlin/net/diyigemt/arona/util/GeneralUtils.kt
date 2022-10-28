@@ -73,9 +73,10 @@ object GeneralUtils : InitializedFunction() {
     doUpload("/student_info")
   }
 
+  @Deprecated("do not use it!!")
   private suspend fun doUpload(path: String) {
     val imageFileList = File(Arona.dataFolderPath() + path).listFiles() ?: return
-    val g = Arona.arona.groups[10024841]!!
+    val g = Arona.arona!!.groups[10024841]!!
     imageFileList.forEach {
       val name = it.name
       val res = it.toExternalResource("png")

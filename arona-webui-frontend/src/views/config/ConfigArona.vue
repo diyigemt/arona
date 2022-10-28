@@ -13,8 +13,15 @@
     <el-form-item label="groups" prop="groups">
       <el-row :gutter="16" class="w-full">
         <el-col :span="12">
-          <el-select v-model="form.groups" class="w-full">
-            <el-option v-for="(e, index) in select.groups" :key="index" :value="e.id" :label="e.name" />
+          <el-select v-model="form.groups" multiple class="w-full">
+            <el-option
+              v-for="(e, index) in select.groups"
+              :key="index"
+              :value="e.id"
+              :label="e.name + '(' + e.id + ')'"
+            >
+              {{ e.name }}({{ e.id }})
+            </el-option>
           </el-select>
         </el-col>
         <el-col :span="12">
@@ -25,8 +32,15 @@
     <el-form-item label="managerGroup" prop="managerGroup">
       <el-row :gutter="16" class="w-full">
         <el-col :span="12">
-          <el-select v-model="form.managerGroup" class="w-full">
-            <el-option v-for="(e, index) in select.friends" :key="index" :value="e.id" :label="e.name" />
+          <el-select v-model="form.managerGroup" multiple class="w-full">
+            <el-option
+              v-for="(e, index) in select.friends"
+              :key="index"
+              :value="e.id"
+              :label="e.name + '(' + e.id + ')'"
+            >
+              {{ e.name }}({{ e.id }})
+            </el-option>
           </el-select>
         </el-col>
         <el-col :span="12">
@@ -134,16 +148,21 @@
         </el-col>
       </el-row>
     </el-form-item>
+    <el-form-item>
+      <el-button type="primary" @click="doSave">保存</el-button>
+      <el-button @click="doFetchMainConfig">重置</el-button>
+    </el-form-item>
   </el-form>
 </template>
 
 <script setup lang="ts">
+import { forOwn } from "lodash";
 import { AronaConfigForm } from "@/interface";
 import { Friend, Group } from "@/types/contact";
-import useBaseStore from "@/store/base";
+import { fetchBotContacts } from "@/api/modules/contact";
+import { fetchAronaMainConfig, saveAronaMainConfig } from "@/api/modules/config";
+import { successMessage } from "@/utils/message";
 
-const { t } = useI18n();
-const baseStore = useBaseStore();
 const form = ref<AronaConfigForm>({
   qq: null,
   groups: [123123],
@@ -160,23 +179,27 @@ const form = ref<AronaConfigForm>({
   remoteCheckInterval: 1,
 });
 const select = reactive<Select>({
-  groups: [
-    {
-      id: 123123,
-      name: "测试",
-    },
-  ],
-  friends: [
-    {
-      id: 123,
-      name: "nick name",
-      remark: "",
-    },
-  ],
+  groups: [],
+  friends: [],
 });
+function doSave() {
+  saveAronaMainConfig(form.value).then(() => {
+    successMessage("更新成功");
+  });
+}
+function doFetchMainConfig() {
+  fetchAronaMainConfig().then((res) => {
+    forOwn(res.data, (value, key) => {
+      Reflect.set(form.value, key, value.value);
+    });
+  });
+}
 onMounted(() => {
-  select.groups = baseStore.botGroups;
-  select.friends = baseStore.botFriends;
+  fetchBotContacts().then((res) => {
+    select.groups = res.data.groups;
+    select.friends = res.data.friends;
+  });
+  doFetchMainConfig();
 });
 interface Select {
   groups: Omit<Group, "permission">[];

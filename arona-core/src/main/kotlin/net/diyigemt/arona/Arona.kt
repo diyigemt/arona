@@ -33,12 +33,13 @@ import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.NormalMember
 import net.mamoe.mirai.contact.UserOrBot
-import net.mamoe.mirai.event.GlobalEventChannel
 import net.mamoe.mirai.event.events.BotOnlineEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
 import net.mamoe.mirai.event.events.NudgeEvent
+import net.mamoe.mirai.event.globalEventChannel
 import net.mamoe.mirai.message.code.MiraiCode.deserializeMiraiCode
 import net.mamoe.mirai.message.data.MessageChain
+import net.mamoe.mirai.message.data.MessageChainBuilder
 import net.mamoe.mirai.utils.info
 import java.io.File
 import kotlin.io.path.absolutePathString
@@ -46,7 +47,7 @@ import kotlin.io.path.absolutePathString
 object Arona : KotlinPlugin(
   JvmPluginDescription.loadFromResource()
 ) {
-  lateinit var arona: Bot
+  var arona: Bot? = null
   private val INIT: List<InitializedFunction> =
     listOf(
       GeneralUtils,
@@ -59,9 +60,10 @@ object Arona : KotlinPlugin(
   @OptIn(ExperimentalCommandDescriptors::class, ConsoleExperimentalApi::class)
   override fun onEnable() {
     init()
+    System.setProperty("java.awt.headless", "true")
     if (DataBaseProvider.isConnected()) {
-      System.setProperty("java.awt.headless", "true")
-      GlobalEventChannel.filter {
+      val pluginEventChannel = globalEventChannel()
+      pluginEventChannel.filter {
         it is BotOnlineEvent && it.bot.id == AronaConfig.qq
       }.subscribeOnce<BotOnlineEvent> {
         arona = it.bot
@@ -69,10 +71,10 @@ object Arona : KotlinPlugin(
           sendMessage(deserializeMiraiCode(AronaConfig.onlineMessage))
         }
       }
-      GlobalEventChannel.subscribeAlways<NudgeEvent>(priority = AronaNudgeConfig.priority) {
+      pluginEventChannel.subscribeAlways<NudgeEvent>(priority = AronaNudgeConfig.priority) {
         NudgeEventHandler.preHandle(this)
       }
-      GlobalEventChannel.subscribeAlways<GroupMessageEvent> {
+      pluginEventChannel.subscribeAlways<GroupMessageEvent> {
         GroupRepeaterHandler.preHandle(this)
         HentaiEventHandler.preHandle(this)
       }
@@ -125,45 +127,33 @@ object Arona : KotlinPlugin(
   fun runSuspend(block: suspend () -> Unit) = launch(coroutineContext) {
     block()
   }
+
   fun sendExitMessage() {
     if (AronaConfig.sendOfflineMessage) {
       sendMessage(deserializeMiraiCode(AronaConfig.offlineMessage))
     }
   }
 
-  fun sendMessage(message: String) {
+  fun sendMessageWithFile(block: suspend (group: Contact) -> MessageChain) {
     runSuspend {
       AronaConfig.groups.forEach {
-        val group =  arona.groups[it] ?: return@forEach
-        group.sendMessage(message)
+        val group = arona?.groups?.get(it) ?: return@forEach
+        group.sendMessage(block(group))
       }
     }
   }
 
-  fun sendMessageWithFile(block: suspend (group: Contact) -> MessageChain) {
-    runSuspend {
-      AronaConfig.groups.forEach {
-        val group =  arona.groups[it] ?: return@forEach
-        val message = block(group)
-        group.sendMessage(message)
-      }
-    }
+  fun sendMessage(message: String) {
+    val builder = MessageChainBuilder()
+    builder.add(message)
+    sendMessage(builder.build())
   }
 
   fun sendMessage(message: MessageChain) {
     runSuspend {
       AronaConfig.groups.forEach {
-        val group =  arona.groups[it] ?: return@forEach
+        val group = arona?.groups?.get(it) ?: return@forEach
         group.sendMessage(message)
-      }
-    }
-  }
-
-  fun sendMessage(messageBuilder: (group: Group) -> MessageChain) {
-    runSuspend {
-      AronaConfig.groups.forEach {
-        val group =  arona.groups[it] ?: return@forEach
-        group.sendMessage(messageBuilder(group))
       }
     }
   }
@@ -171,21 +161,20 @@ object Arona : KotlinPlugin(
   fun sendMessageToAdmin(message: String) {
     fun getAdmin(id: Long): NormalMember? {
       AronaConfig.groups.forEach {
-        val admin = arona.groups[it]?.get(id)
+        val admin = arona?.groups?.get(it)?.get(id)
         if (admin != null) return admin
       }
       return null
     }
     runSuspend {
       if (AronaConfig.groups.isEmpty() || AronaConfig.managerGroup.isEmpty()) return@runSuspend
-      val list = mutableListOf<NormalMember>()
-      AronaConfig.managerGroup.forEach {
-        val admin = getAdmin(it) ?: return@forEach
-        list.add(admin)
-      }
-      list.forEach {
-        it.sendMessage(message)
-      }
+      AronaConfig.managerGroup
+        .mapNotNull {
+          getAdmin(it)
+        }
+        .forEach {
+          it.sendMessage(message)
+        }
     }
   }
 

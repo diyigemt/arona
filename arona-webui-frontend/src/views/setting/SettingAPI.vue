@@ -22,33 +22,38 @@
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="testConnection">测试</el-button>
-      <el-button>保存</el-button>
+      <el-button @click="doSave">保存</el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script setup lang="ts">
+import { ElForm, ElFormItem, ElRow, ElCol, ElInput, ElButton } from "element-plus";
 import { heartbeat } from "@/api";
-import { currentAPI } from "@/api/http";
+import { updateAPIService } from "@/api/http";
 import { APISettingForm } from "@/interface/modules/setting";
-import useBaseStore from "@/store/base";
-import { successMessage } from "@/utils/message";
+import useSettingStore from "@/store/setting";
+import { successMessage, warningMessage } from "@/utils/message";
 
-const baseStore = useBaseStore();
+const settingStore = useSettingStore();
 const form = reactive<APISettingForm>({
-  host: baseStore.host || "http://127.0.0.1",
-  port: baseStore.port || 8080,
+  host: settingStore.api.host || "http://127.0.0.1",
+  port: settingStore.api.port || 8080,
 });
 function testConnection() {
-  heartbeat(currentAPI(form.host!, form.port!)).then((res) => {
-    if (res.data === "pong") {
-      successMessage("连接成功");
-      baseStore.saveAPISetting(form.host!, form.port!);
-      baseStore.syncContacts();
+  updateAPIService(form.host!, form.port!);
+  heartbeat().then((res) => {
+    if (res) {
+      settingStore.saveAPISetting(form.host!, form.port!);
+    } else {
+      warningMessage("连接失败");
     }
   });
 }
-function saveAPISetting() {}
+function doSave() {
+  settingStore.saveAPISetting(form.host!, form.port!);
+  successMessage("保存成功!");
+}
 </script>
 
 <style lang="scss" scoped></style>

@@ -29,12 +29,13 @@ module.exports = {
   plugins: ["vue", "@typescript-eslint", "import"],
   rules: {
     "no-console": "off",
-    "import/no-unresolved": "off",
-    "import/extensions": "off",
-    "import/no-extraneous-dependencies": "off",
     "no-plusplus": "off",
     "no-param-reassign": "off",
-    "@typescript-eslint/ban-ts-comment": "off",
+    "import/extensions": "off",
     "no-use-before-define": "off",
+    "import/no-unresolved": "off",
+    "import/no-extraneous-dependencies": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
   },
 };

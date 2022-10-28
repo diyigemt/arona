@@ -1,17 +1,24 @@
 <script setup lang="ts">
 import zhCn from "element-plus/lib/locale/lang/zh-cn";
 import MainBanner from "@/components/MainBanner.vue";
-import useBaseStore from "@/store/base";
+import useSettingStore from "./store/setting";
 import { warningMessage } from "./utils/message";
-const store = useBaseStore();
+import { heartbeat } from "./api";
+
+const locale = zhCn;
+const settingStore = useSettingStore();
 const router = useRouter();
-if (!store.host) {
-  warningMessage("api地址未配置,将跳转到配置界面");
+if (!settingStore.isRestoreBackend) {
+  warningMessage("未配置后端地址,将会跳转到配置界面");
   router.push("/setting/setting-api");
 } else {
-  store.syncContacts();
+  heartbeat().then((res) => {
+    if (!res) {
+      warningMessage("后端连接失败,将会跳转到配置界面");
+      router.push("/setting/setting-api");
+    }
+  });
 }
-const locale = zhCn;
 </script>
 
 <template>

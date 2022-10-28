@@ -1,9 +1,24 @@
+import { successMessage } from "@/utils/message";
 import service from "./http";
 
-export function heartbeat(url: string) {
-  return service.raw<string>({
-    baseURL: url,
-    url: "/ping",
-    method: "GET",
+// eslint-disable-next-line import/prefer-default-export
+export function heartbeat() {
+  return new Promise((resolve) => {
+    service
+      .raw<string>({
+        url: "/ping",
+        method: "GET",
+        showResponseError: false,
+      })
+      .then((res) => {
+        if (res.data === "pong") {
+          successMessage("连接成功");
+          resolve(true);
+        }
+        resolve(false);
+      })
+      .catch(() => {
+        resolve(false);
+      });
   });
 }

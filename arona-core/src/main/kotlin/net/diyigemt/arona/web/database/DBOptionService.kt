@@ -4,18 +4,28 @@ import io.ktor.http.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import net.diyigemt.arona.Arona
 import net.diyigemt.arona.annotations.DTOService
+import net.diyigemt.arona.db.BaseDTO
 import net.diyigemt.arona.db.DB
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.DataBaseProvider.exec
 import net.diyigemt.arona.db.data.schaledb.Raid
-import net.diyigemt.arona.entity.dto.BaseDTO
 import net.diyigemt.arona.web.api.v1.message.DBJob
 import net.diyigemt.arona.web.api.v1.message.ServerResponse
 import net.diyigemt.arona.web.database.security.OptionFilter
 import org.jetbrains.exposed.sql.selectAll
 import org.reflections.Reflections
+import org.reflections.scanners.Scanners
+import org.reflections.util.ClasspathHelper
+import org.reflections.util.ConfigurationBuilder
+import org.reflections.util.FilterBuilder
+import java.io.File
+import java.net.URL
 import kotlin.coroutines.CoroutineContext
+import kotlin.io.path.Path
+import kotlin.io.path.name
+import kotlin.io.path.nameWithoutExtension
 import kotlin.reflect.full.createInstance
 
 /**
@@ -23,7 +33,7 @@ import kotlin.reflect.full.createInstance
  *@Create 2022/10/22
  */
 object DBOptionService : CoroutineScope{
-  private val tableSet : MutableSet<Class<*>> = mutableSetOf()
+  private val tableSet : MutableSet<String> = mutableSetOf()
   suspend fun addTask(job : DBJob) : ServerResponse<out Any> = coroutineScope {
     async {
       val db = kotlin.runCatching { DB.valueOf(job.properties.db.uppercase()) }.getOrElse {
@@ -45,28 +55,42 @@ object DBOptionService : CoroutineScope{
       val tmp = OptionFilter.optionCheck(job)
       if (tmp.code != 200) return@async tmp
 
-      val query = run {
-        DataBaseProvider.query(db.ordinal) {
-          Raid.selectAll().toList()
-        } ?: mutableListOf()
-      }
-
       val resInstance = runCatching {
-        Class.forName("net.diyigemt.arona.entity.dto.${job.properties.db}.${job.properties.table}").kotlin
+        val className = tableSet.find {
+          it.contains(job.properties.table + "DTO")
+        }!!
+        Class.forName(className).kotlin
       }.getOrElse {
         return@async ServerResponse(HttpStatusCode.NotFound.value, "No correspond DTO found", null as String?)
       }.createInstance() as BaseDTO<*>
+
+      val query = runCatching {
+        when(job.properties.task.strategy){
+          "SELECT" -> {
+            DataBaseProvider.query(db.ordinal) {
+              Raid.selectAll().toList()
+            } ?: mutableListOf()
+          }
+          else -> return@async ServerResponse(HttpStatusCode.BadRequest.value, "Undefined process strategy", null as String?)
+        }
+      }.getOrThrow()
 
       return@async ServerResponse(HttpStatusCode.OK.value, HttpStatusCode.OK.description, resInstance.toModel(query))
     }.await()
   }
 
   fun init(){
-    val clazz = Reflections("net.diyigemt.arona.db").getTypesAnnotatedWith(DTOService::class.java)
-    tableSet.addAll(clazz)
-    clazz.forEach{
-      it.declaredClasses
+    val url = ClasspathHelper.forJavaClassPath().first().let {
+      File(it.path.replace("%20", " ").replace("/mcl.jar", "/plugins").substring(1))
+        .listFiles()!!.find { fileSet -> fileSet.name.contains("arona-arona")}!!.toURI().toURL()
     }
+
+    val config = ConfigurationBuilder().forPackage("net.diyigemt.arona.db")
+      .setUrls(url)
+      .setScanners(Scanners.TypesAnnotated)
+
+    val clazz = Reflections(config).get(Scanners.TypesAnnotated.with(DTOService::class.java))
+    tableSet.addAll(clazz)
   }
 
   override val coroutineContext: CoroutineContext

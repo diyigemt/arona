@@ -7,6 +7,7 @@ import org.reflections.util.ClasspathHelper
 import org.reflections.util.ConfigurationBuilder
 import java.io.File
 import java.net.URL
+import kotlin.reflect.KClass
 
 /**
  *@Author hjn
@@ -28,7 +29,7 @@ object ReflectionUtil : ReflectionUtils(){
    * 如需DIY配置属性，新建变量并使用该变量赋值后再调用方法修改*/
   val defaultConfig: ConfigurationBuilder = ConfigurationBuilder().forPackage("net.diyigemt.arona")
     .setUrls(aronaUrl)
-    .setScanners(Scanners.TypesAnnotated)
+    .setScanners(Scanners.TypesAnnotated, Scanners.SubTypes)
 
   /**
    * 标准扫描结果
@@ -41,5 +42,13 @@ object ReflectionUtil : ReflectionUtils(){
   fun <T : Annotation> getTypeAnnotatedClass(annotation: Class<T>, config : ConfigurationBuilder = defaultConfig) : Set<String>{
     return if(config == defaultConfig) reflections.get(Scanners.TypesAnnotated.with(annotation))
     else Reflections(config).get(Scanners.TypesAnnotated.with(annotation))
+  }
+
+  /**
+   * 获取继承接口的类路径
+   * 本方法因轮子自带的强转方法容易失败故不负责反射，自己用Class.forName()搞去*/
+  fun <T : Any> getInterfacePetClass(clazz: Class<T>, config : ConfigurationBuilder = defaultConfig) : Set<String>{
+    return if(config == defaultConfig) reflections.get(Scanners.SubTypes.with(clazz))
+    else Reflections(config).get(Scanners.SubTypes.with(clazz))
   }
 }

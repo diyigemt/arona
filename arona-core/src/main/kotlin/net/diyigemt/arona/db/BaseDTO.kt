@@ -1,4 +1,4 @@
-package net.diyigemt.arona.entity.dto
+package net.diyigemt.arona.db
 
 import org.jetbrains.exposed.sql.ResultRow
 

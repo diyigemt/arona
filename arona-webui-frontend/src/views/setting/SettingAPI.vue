@@ -21,7 +21,7 @@
       </el-row>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="testConnection">测试</el-button>
+      <el-button type="primary" :loading="loading.testLoading" @click="testConnection">测试</el-button>
       <el-button @click="doSave">保存</el-button>
     </el-form-item>
   </el-form>
@@ -40,19 +40,32 @@ const form = reactive<APISettingForm>({
   host: settingStore.api.host || "http://127.0.0.1",
   port: settingStore.api.port || 8080,
 });
+const loading = reactive<ILoading>({
+  testLoading: false,
+});
 function testConnection() {
+  loading.testLoading = true;
   updateAPIService(form.host!, form.port!);
-  heartbeat().then((res) => {
-    if (res) {
-      settingStore.saveAPISetting(form.host!, form.port!);
-    } else {
-      warningMessage("连接失败");
-    }
-  });
+  heartbeat()
+    .then((res) => {
+      if (res) {
+        settingStore.saveAPISetting(form.host!, form.port!);
+      } else {
+        warningMessage("连接失败");
+      }
+      loading.testLoading = false;
+    })
+    .catch((err) => {
+      console.log(err);
+      loading.testLoading = true;
+    });
 }
 function doSave() {
   settingStore.saveAPISetting(form.host!, form.port!);
   successMessage("保存成功!");
+}
+interface ILoading {
+  testLoading: boolean;
 }
 </script>
 

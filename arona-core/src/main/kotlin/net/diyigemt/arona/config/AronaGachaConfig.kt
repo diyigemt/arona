@@ -9,13 +9,13 @@ import net.mamoe.mirai.console.data.value
 object AronaGachaConfig: AutoSavePluginConfig("arona-gacha") {
 
   @ValueDescription("1星总出率百分比")
-  var star1Rate: Float by value(79F)
+  var star1Rate: Float by value(78.5F)
 
   @ValueDescription("2星总出率百分比")
   var star2Rate: Float by value(18.5F)
 
   @ValueDescription("3星总出率百分比")
-  var star3Rate: Float by value(2.5F)
+  var star3Rate: Float by value(3.0F)
 
   @ValueDescription("2星限定出率百分比")
   var star2PickupRate: Float by value(3F)

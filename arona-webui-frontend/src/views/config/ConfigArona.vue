@@ -1,5 +1,5 @@
 <template>
-  <el-form :model="form" label-width="180px" label-position="left">
+  <el-form v-loading="loading.loading" :model="form" label-width="180px" label-position="left">
     <el-form-item label="qq">
       <el-row :gutter="16" class="w-full">
         <el-col :span="12">
@@ -149,7 +149,7 @@
       </el-row>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="doSave">保存</el-button>
+      <el-button type="primary" :loading="loading.confirmLoading" @click="doSave">保存</el-button>
       <el-button @click="doFetchMainConfig">重置</el-button>
     </el-form-item>
   </el-form>
@@ -161,11 +161,11 @@ import { AronaConfigForm } from "@/interface";
 import { Friend, Group } from "@/types/contact";
 import { fetchBotContacts } from "@/api/modules/contact";
 import { fetchAronaMainConfig, saveAronaMainConfig } from "@/api/modules/config";
-import { successMessage } from "@/utils/message";
+import { errorMessage, successMessage, warningMessage } from "@/utils/message";
 
 const form = ref<AronaConfigForm>({
   qq: null,
-  groups: [123123],
+  groups: [],
   managerGroup: [],
   permissionDeniedMessage: "",
   sendOnlineMessage: false,
@@ -178,6 +178,10 @@ const form = ref<AronaConfigForm>({
   uuid: "",
   remoteCheckInterval: 1,
 });
+const loading = reactive<ILoading>({
+  loading: false,
+  confirmLoading: false,
+});
 const select = reactive<Select>({
   groups: [],
   friends: [],
@@ -188,22 +192,38 @@ function doSave() {
   });
 }
 function doFetchMainConfig() {
-  fetchAronaMainConfig().then((res) => {
-    forOwn(res.data, (value, key) => {
-      Reflect.set(form.value, key, value.value);
+  fetchAronaMainConfig()
+    .then((res) => {
+      forOwn(res.data, (value, key) => {
+        Reflect.set(form.value, key, value.value);
+      });
+      loading.loading = false;
+    })
+    .catch((err) => {
+      errorMessage("获取主配置信息失败");
+      console.log(err);
     });
-  });
 }
 onMounted(() => {
-  fetchBotContacts().then((res) => {
-    select.groups = res.data.groups;
-    select.friends = res.data.friends;
-  });
+  loading.loading = true;
+  fetchBotContacts()
+    .then((res) => {
+      select.groups = res.data.groups;
+      select.friends = res.data.friends;
+    })
+    .catch((err) => {
+      warningMessage("获取bot联系人列表失败");
+      console.log(err);
+    });
   doFetchMainConfig();
 });
 interface Select {
   groups: Omit<Group, "permission">[];
   friends: Friend[];
+}
+interface ILoading {
+  loading: boolean;
+  confirmLoading: boolean;
 }
 </script>
 

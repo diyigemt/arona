@@ -8,6 +8,7 @@
  */
 package net.diyigemt.arona
 
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import net.diyigemt.arona.config.*
 import net.diyigemt.arona.db.DataBaseProvider
@@ -125,6 +126,10 @@ object Arona : KotlinPlugin(
   }
 
   fun runSuspend(block: suspend () -> Unit) = launch(coroutineContext) {
+    block()
+  }
+
+  fun <R> async(block: suspend () -> R) = async(coroutineContext) {
     block()
   }
 

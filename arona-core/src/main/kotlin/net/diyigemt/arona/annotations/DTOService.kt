@@ -6,5 +6,4 @@ package net.diyigemt.arona.annotations
  * 在数据类添加此注解以作为DTO供数据库接口使用
  */
 @Target(AnnotationTarget.CLASS)
-@Retention(AnnotationRetention.RUNTIME)
-annotation class DTOService()
+annotation class DTOService

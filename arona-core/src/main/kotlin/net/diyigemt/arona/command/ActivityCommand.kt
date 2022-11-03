@@ -52,11 +52,6 @@ object ActivityCommand : CompositeCommand(
   override val id: Int = 3
   override val name: String = "活动查询"
   override var enable: Boolean = true
-  override fun init() {
-    registerService()
-    registerInterceptor()
-    register()
-  }
 
    override val level: Int = 1
    private val ACTIVITY_COMMAND = "${CommandManager.commandPrefix}活动"

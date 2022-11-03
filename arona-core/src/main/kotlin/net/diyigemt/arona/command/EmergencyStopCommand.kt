@@ -45,9 +45,5 @@ object EmergencyStopCommand : SimpleCommand(
   override val id: Int = 17
   override val name: String = "紧急停止"
   override var enable: Boolean = true
-  override fun init() {
-    registerService()
-    register()
-  }
 
 }

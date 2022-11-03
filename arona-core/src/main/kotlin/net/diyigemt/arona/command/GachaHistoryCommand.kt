@@ -43,8 +43,4 @@ object GachaHistoryCommand : SimpleCommand(
   override val id: Int = 7
   override val name: String = "抽卡历史查询"
   override var enable: Boolean = true
-  override fun init() {
-    registerService()
-    register()
-  }
 }

@@ -30,6 +30,7 @@ object NGAImageTranslatePusher : AronaQuartzService {
   override var jobKey: JobKey? = null
   override val id: Int = 13
   override val name: String = "nga图楼推送"
+  override val description: String = name
   override var enable: Boolean = true
 
   class TranslatePusherJob : Job {
@@ -174,10 +175,6 @@ object NGAImageTranslatePusher : AronaQuartzService {
 
   enum class NGASource(val url: String) {
     MAIN("ngabbs.com"), SUB("nga.178.com")
-  }
-
-  override fun init() {
-    registerService()
   }
 
   override fun enableService() {

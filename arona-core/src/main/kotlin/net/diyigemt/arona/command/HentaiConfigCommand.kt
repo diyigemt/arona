@@ -39,9 +39,5 @@ object HentaiConfigCommand : CompositeCommand(
   override val id: Int = 2
   override val name: String = "发情配置"
   override var enable: Boolean = true
-  override fun init() {
-    registerService()
-    register()
-  }
 
 }

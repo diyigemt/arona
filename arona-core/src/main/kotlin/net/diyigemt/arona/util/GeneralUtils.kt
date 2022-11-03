@@ -15,7 +15,7 @@ import net.diyigemt.arona.db.name.TeacherName
 import net.diyigemt.arona.db.name.TeacherNameTable
 import net.diyigemt.arona.entity.FuzzyImageResult
 import net.diyigemt.arona.entity.ImageRequestResult
-import net.diyigemt.arona.interfaces.InitializedFunction
+import net.diyigemt.arona.interfaces.Initialize
 import net.diyigemt.arona.util.NetworkUtil.BACKEND_ADDRESS
 import net.diyigemt.arona.util.NetworkUtil.BACKEND_IMAGE_FOLDER
 import net.diyigemt.arona.util.NetworkUtil.downloadImageFile
@@ -30,7 +30,7 @@ import org.jetbrains.exposed.sql.and
 import java.io.File
 import java.security.MessageDigest
 
-object GeneralUtils : InitializedFunction() {
+object GeneralUtils : Initialize {
 
   private const val BACKEND_IMAGE_RESOURCE = "${BACKEND_ADDRESS}$BACKEND_IMAGE_FOLDER"
   private lateinit var PinyinObject: PinIn

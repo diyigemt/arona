@@ -1,16 +1,12 @@
 package net.diyigemt.arona.quartz
 
-import kotlinx.coroutines.Dispatchers
-import net.diyigemt.arona.Arona
-import net.diyigemt.arona.interfaces.BaseFunctionProvider
-import net.mamoe.mirai.console.util.safeCast
+import net.diyigemt.arona.interfaces.CoroutineFunctionProvider
 import org.quartz.*
 import org.quartz.impl.StdSchedulerFactory
-import java.text.SimpleDateFormat
 import java.util.*
 import java.util.Calendar
 
-object QuartzProvider: BaseFunctionProvider(Dispatchers.IO) {
+object QuartzProvider: CoroutineFunctionProvider() {
 
   private val quartzScheduler: Scheduler = StdSchedulerFactory.getDefaultScheduler().also { it.start() }
   private const val SimpleDelayJobKey: String = "SimpleDelayJobKey"

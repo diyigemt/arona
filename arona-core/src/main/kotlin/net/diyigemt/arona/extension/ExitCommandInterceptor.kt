@@ -1,7 +1,6 @@
 package net.diyigemt.arona.extension
 
 import net.diyigemt.arona.Arona
-import net.diyigemt.arona.interfaces.InitializedFunction
 import net.diyigemt.arona.util.NetworkUtil
 import net.diyigemt.arona.web.WebUIService
 import net.mamoe.mirai.console.command.CommandManager

@@ -27,9 +27,5 @@ object TransferCommand : SimpleCommand(
   override val id: Int = 15
   override val name: String = "合并转发"
   override var enable: Boolean = true
-  override fun init() {
-    registerService()
-    register()
-  }
 
 }

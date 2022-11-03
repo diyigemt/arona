@@ -19,11 +19,8 @@ object AronaRemoteActionChecker : AronaQuartzService {
   override var jobKey: JobKey? = null
   override val id: Int = 23
   override val name: String = "远端服务"
+  override val description: String = name
   override var enable: Boolean = true
-
-  override fun init() {
-    registerService()
-  }
 
   class RemoteActionCheckJob : Job {
     override fun execute(context: JobExecutionContext?) {

@@ -6,12 +6,13 @@ import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.cors.routing.*
 import net.diyigemt.arona.Arona
+import net.diyigemt.arona.interfaces.Initialize
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.web.database.DBOptionService
 import net.diyigemt.arona.web.plugins.configureRouting
 import net.diyigemt.arona.web.plugins.configureSerialization
 
-object WebUIService : AronaService {
+object WebUIService : AronaService, Initialize {
 
   private lateinit var server: ApplicationEngine
 
@@ -59,10 +60,11 @@ object WebUIService : AronaService {
 
   override val id: Int = 24
   override val name: String = "WebUI"
+  override val description: String = "webui服务"
   override var enable: Boolean = true
+  override val priority: Int = 0
 
   override fun init() {
-    registerService()
     DBOptionService.init()
   }
 }

@@ -9,6 +9,7 @@ import net.diyigemt.arona.config.AronaTrainerConfig
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.image.ImageTableModel
 import net.diyigemt.arona.entity.TrainerOverride
+import net.diyigemt.arona.interfaces.Initialize
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.GeneralUtils.toHex
@@ -26,7 +27,7 @@ import java.io.File
 object TrainerCommand : SimpleCommand(
   Arona,"trainer", "攻略",
   description = "主线地图和学生攻略"
-), AronaService {
+), AronaService, Initialize {
   const val StudentRankFolder: String = "/student_rank"
   const val ChapterMapFolder: String = "/chapter_map"
   const val OtherFolder: String = "/some"
@@ -176,6 +177,8 @@ object TrainerCommand : SimpleCommand(
   override val id: Int = 20
   override val name: String = "地图与学生攻略"
   override var enable: Boolean = true
+  override val priority: Int = 1
+
   override fun init() {
     registerService()
     register()

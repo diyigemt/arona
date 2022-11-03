@@ -1,7 +1,6 @@
 package net.diyigemt.arona.extension
 
-import net.diyigemt.arona.command.CallMeCommand
-import net.diyigemt.arona.interfaces.InitializedFunction
+import net.diyigemt.arona.interfaces.Initialize
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.descriptor.ExperimentalCommandDescriptors
 import net.mamoe.mirai.console.command.parse.CommandCall
@@ -9,7 +8,7 @@ import net.mamoe.mirai.console.util.ConsoleExperimentalApi
 import net.mamoe.mirai.message.data.Message
 
 @OptIn(ExperimentalCommandDescriptors::class, ConsoleExperimentalApi::class)
-object CommandInterceptorManager: InitializedFunction() {
+object CommandInterceptorManager: Initialize {
   private val ITEMS: MutableList<CommandInterceptor> = mutableListOf()
   fun registerItem(item: CommandInterceptor) {
     ITEMS.add(item)

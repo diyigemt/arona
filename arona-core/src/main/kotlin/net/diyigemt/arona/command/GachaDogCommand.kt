@@ -36,9 +36,5 @@ object GachaDogCommand : SimpleCommand(
   override val id: Int = 6
   override val name: String = "抽卡狗叫查询"
   override var enable: Boolean = true
-  override fun init() {
-    registerService()
-    register()
-  }
 
 }

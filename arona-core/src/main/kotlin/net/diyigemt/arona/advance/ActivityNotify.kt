@@ -200,10 +200,6 @@ object ActivityNotify: AronaQuartzService {
 
   private fun isJPServer(activity: Activity) = activity.serverLocale == ServerLocale.JP
 
-  override fun init() {
-    registerService()
-  }
-
   override fun enableService() {
     // 每天早上8点触发
     jobKey = QuartzProvider.createCronTask(
@@ -219,6 +215,7 @@ object ActivityNotify: AronaQuartzService {
 
   override val id: Int = 12
   override val name: String = "活动推送"
+  override val description: String = name
   override var enable: Boolean = true
 }
 

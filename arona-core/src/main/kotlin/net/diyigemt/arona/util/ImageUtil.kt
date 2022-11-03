@@ -1,7 +1,7 @@
 package net.diyigemt.arona.util
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.entity.*
-import net.diyigemt.arona.interfaces.InitializedFunction
+import net.diyigemt.arona.interfaces.Initialize
 import net.diyigemt.arona.util.ActivityUtil.DEFAULT_CALENDAR_FONT_SIZE
 import net.diyigemt.arona.util.ActivityUtil.DEFAULT_CALENDAR_LINE_MARGIN
 import okhttp3.OkHttpClient
@@ -12,7 +12,7 @@ import java.io.File
 import javax.imageio.ImageIO
 import kotlin.math.max
 
-object ImageUtil : InitializedFunction() {
+object ImageUtil : Initialize {
 
   private const val DEFAULT_PADDING: Int = 10
   private const val FONT_NAME = "SourceHanSansCN-Normal.otf"

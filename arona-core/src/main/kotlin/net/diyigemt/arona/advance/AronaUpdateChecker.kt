@@ -1,19 +1,12 @@
 package net.diyigemt.arona.advance
 
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.jsonArray
-import kotlinx.serialization.json.jsonObject
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.config.AronaConfig
-import net.diyigemt.arona.interfaces.InitializedFunction
 import net.diyigemt.arona.quartz.QuartzProvider
 import net.diyigemt.arona.service.AronaQuartzService
-import net.diyigemt.arona.util.GeneralUtils
-import net.diyigemt.arona.util.GeneralUtils.clearExtraQute
 import net.diyigemt.arona.util.NetworkUtil
 import net.mamoe.mirai.console.plugin.version
 import net.mamoe.mirai.console.util.SemVersion
-import org.jsoup.Jsoup
 import org.quartz.Job
 import org.quartz.JobExecutionContext
 import org.quartz.JobKey
@@ -23,11 +16,8 @@ object AronaUpdateChecker: AronaQuartzService {
   override var jobKey: JobKey? = null
   override val id: Int = 14
   override val name: String = "自动更新检查"
+  override val description: String = name
   override var enable: Boolean = true
-
-  override fun init() {
-    registerService()
-  }
 
   @kotlinx.serialization.Serializable
   data class VersionInfo(

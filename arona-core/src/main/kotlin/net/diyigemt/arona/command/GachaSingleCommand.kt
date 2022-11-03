@@ -50,8 +50,4 @@ object GachaSingleCommand : SimpleCommand(
   override val id: Int = 4
   override val name: String = "抽卡单抽"
   override var enable: Boolean = true
-  override fun init() {
-    registerService()
-    register()
-  }
 }

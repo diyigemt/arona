@@ -1,12 +1,13 @@
 package net.diyigemt.arona.config
 
 import net.diyigemt.arona.Arona.reload
+import net.diyigemt.arona.interfaces.Initialize
 import net.mamoe.mirai.console.data.AutoSavePluginConfig
 import net.mamoe.mirai.console.data.ValueDescription
 import net.mamoe.mirai.console.data.value
 
 @ValueDescription("注意总出率加起来要等于100, 2,3星限定出率要低于其总出率")
-object AronaGachaConfig: AutoSavePluginConfig("arona-gacha") {
+object AronaGachaConfig: AutoSavePluginConfig("arona-gacha"), Initialize {
 
   @ValueDescription("1星总出率百分比")
   var star1Rate: Float by value(78.5F)
@@ -38,7 +39,8 @@ object AronaGachaConfig: AutoSavePluginConfig("arona-gacha") {
 
   var maxDot: Int = 10
 
-  fun init() {
+  override val priority: Int = 0
+  override fun init() {
     reload()
     maxDot = listOf<Int>(
       getDotPosition(star1Rate.toString()),

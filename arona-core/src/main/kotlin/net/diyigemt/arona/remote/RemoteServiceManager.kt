@@ -6,12 +6,13 @@ import net.diyigemt.arona.Arona
 import net.diyigemt.arona.advance.RemoteActionItem
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.announcement.RemoteActionModel
-import net.diyigemt.arona.interfaces.InitializedFunction
+import net.diyigemt.arona.interfaces.Initialize
 import net.diyigemt.arona.remote.action.AnnouncementRemoteService
 import net.diyigemt.arona.remote.action.GachaPoolUpdateRemoteService
+import net.diyigemt.arona.util.ReflectionUtil
 import kotlin.reflect.full.createType
 
-object RemoteServiceManager: InitializedFunction() {
+object RemoteServiceManager: Initialize {
 
   private val MAP: MutableMap<RemoteServiceAction, RemoteService<Any>> = mutableMapOf()
   private val JsonObject: Json = Json { ignoreUnknownKeys = true }
@@ -46,9 +47,11 @@ object RemoteServiceManager: InitializedFunction() {
     MAP[type] = self
   }
 
+  @Suppress("UNCHECKED_CAST")
   override fun init() {
-    AnnouncementRemoteService().init()
-    GachaPoolUpdateRemoteService().init()
+    ReflectionUtil.getInterfacePetObjectInstance(RemoteService::class.java).forEach {
+      registerService(it.type, it as RemoteService<Any>)
+    }
   }
 
 }

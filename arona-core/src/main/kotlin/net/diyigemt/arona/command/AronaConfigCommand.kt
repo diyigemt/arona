@@ -69,9 +69,5 @@ object AronaConfigCommand: CompositeCommand(
   override val id: Int = 0
   override val name: String = "配置"
   override var enable: Boolean = true
-  override fun init() {
-    registerService()
-    register()
-  }
 
 }

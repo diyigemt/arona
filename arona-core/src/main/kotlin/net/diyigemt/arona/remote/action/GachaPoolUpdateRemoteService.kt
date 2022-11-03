@@ -15,7 +15,7 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import net.diyigemt.arona.db.gacha.GachaCharacter as GC
 
-class GachaPoolUpdateRemoteService : RemoteService<GachaPoolUpdateData> {
+object GachaPoolUpdateRemoteService : RemoteService<GachaPoolUpdateData> {
   //  override val kType: KType = List::class.createType(listOf(KTypeProjection.invariant(AnnouncementItem::class.starProjectedType)))
   override val kType: KType = GachaPoolUpdateData::class.createType()
   override val type: RemoteServiceAction = RemoteServiceAction.POOL_UPDATE

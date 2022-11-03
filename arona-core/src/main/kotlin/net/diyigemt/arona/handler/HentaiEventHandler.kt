@@ -32,8 +32,5 @@ object HentaiEventHandler: AronaEventHandler<GroupMessageEvent>, AronaGroupServi
   override val id: Int = 9
   override val name: String = "发情"
   override var enable: Boolean = true
-
-  override fun init() {
-    registerService()
-  }
+  override val description: String = name
 }

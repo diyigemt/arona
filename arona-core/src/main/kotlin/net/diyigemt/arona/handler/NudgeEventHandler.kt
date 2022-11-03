@@ -40,10 +40,7 @@ object NudgeEventHandler: AronaGroupService {
 
   override val id: Int = 10
   override val name: String = "摸头回复"
+  override val description: String = name
   override var enable: Boolean = true
-
-  override fun init() {
-    registerService()
-  }
 
 }

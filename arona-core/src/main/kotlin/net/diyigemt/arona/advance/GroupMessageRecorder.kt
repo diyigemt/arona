@@ -11,9 +11,6 @@ object GroupMessageRecorder: AronaEventHandler<GroupMessageEvent>, AronaGroupSer
 
   override val id: Int = 11
   override val name: String = "岁月史书"
+  override val description: String = name
   override var enable: Boolean = true
-
-  override fun init() {
-    registerService()
-  }
 }

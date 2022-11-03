@@ -17,15 +17,19 @@ import net.diyigemt.arona.extension.CommandResolver
 import net.diyigemt.arona.handler.GroupRepeaterHandler
 import net.diyigemt.arona.handler.HentaiEventHandler
 import net.diyigemt.arona.handler.NudgeEventHandler
-import net.diyigemt.arona.interfaces.InitializedFunction
+import net.diyigemt.arona.interfaces.CoroutineFunctionProvider
+import net.diyigemt.arona.interfaces.Initialize
 import net.diyigemt.arona.quartz.QuartzProvider
 import net.diyigemt.arona.remote.RemoteServiceManager
+import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.service.AronaServiceManager
 import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.ImageUtil
 import net.diyigemt.arona.util.NetworkUtil
+import net.diyigemt.arona.util.ReflectionUtil
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.descriptor.ExperimentalCommandDescriptors
+import net.mamoe.mirai.console.data.AutoSavePluginConfig
 import net.mamoe.mirai.console.extension.PluginComponentStorage
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
@@ -34,10 +38,14 @@ import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.NormalMember
 import net.mamoe.mirai.contact.UserOrBot
+import net.mamoe.mirai.event.events.BotEvent
 import net.mamoe.mirai.event.events.BotOnlineEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
 import net.mamoe.mirai.event.events.NudgeEvent
 import net.mamoe.mirai.event.globalEventChannel
+import net.mamoe.mirai.event.subscribeGroupMessages
+import net.mamoe.mirai.event.subscribeMessages
+import net.mamoe.mirai.event.subscribeUserMessages
 import net.mamoe.mirai.message.code.MiraiCode.deserializeMiraiCode
 import net.mamoe.mirai.message.data.MessageChain
 import net.mamoe.mirai.message.data.MessageChainBuilder
@@ -49,14 +57,6 @@ object Arona : KotlinPlugin(
   JvmPluginDescription.loadFromResource()
 ) {
   var arona: Bot? = null
-  private val INIT: List<InitializedFunction> =
-    listOf(
-      GeneralUtils,
-      AronaServiceManager,
-      CommandInterceptorManager,
-      RemoteServiceManager,
-      ImageUtil
-    )
 
   @OptIn(ExperimentalCommandDescriptors::class, ConsoleExperimentalApi::class)
   override fun onEnable() {
@@ -79,7 +79,7 @@ object Arona : KotlinPlugin(
         GroupRepeaterHandler.preHandle(this)
         HentaiEventHandler.preHandle(this)
       }
-      logger.info { "arona loaded" }
+      info { "arona loaded" }
     } else error("arona database init failed, arona will not start")
   }
 
@@ -89,40 +89,37 @@ object Arona : KotlinPlugin(
   }
 
   private fun init() {
-    AronaConfig.reload()
-    AronaGachaConfig.init()
-    AronaNudgeConfig.reload()
-    AronaHentaiConfig.reload()
-    AronaRepeatConfig.reload()
-    AronaNotifyConfig.reload()
-    NGAPushConfig.reload()
-    AronaTarotConfig.reload()
-    AronaEmergencyConfig.reload()
-    AronaTrainerConfig.reload()
-    DataBaseProvider.start()
-    QuartzProvider.start()
+    // 查找所有需要初始化的类, 所有指令, 所有配置文件
+    // 重载配置文件
+    ReflectionUtil.getInterfacePetObjectInstance(AutoSavePluginConfig::class.java).forEach {
+      it.reload()
+    }
+    // 需要协程的类
+    ReflectionUtil.getInterfacePetObjectInstance(CoroutineFunctionProvider::class.java).forEach {
+      it.start()
+    }
+    // 需要初始化的类
     runSuspend {
-      INIT.forEach {
+      ReflectionUtil.getInterfacePetObjectInstance(Initialize::class.java).sortedBy { it.priority }.forEach {
         it.init()
       }
+    }
+    // 注册service
+    ReflectionUtil.getInterfacePetObjectInstance(AronaService::class.java).forEach {
+      AronaServiceManager.register(it)
+    }
+
+    runSuspend {
       NetworkUtil.registerInstance()
     }
-//    startUpload() // 上传图片获取mirai-code
   }
 
   override fun onDisable() {
-    AronaConfig.save()
-    AronaNudgeConfig.save()
-    AronaGachaConfig.save()
-    AronaHentaiConfig.save()
-    AronaRepeatConfig.save()
-    AronaNotifyConfig.save()
-    AronaServiceConfig.save()
-    AronaTarotConfig.save()
-    AronaEmergencyConfig.save()
-    AronaTrainerConfig.save()
+    ReflectionUtil.getInterfacePetObjectInstance(AutoSavePluginConfig::class.java).forEach {
+      it.save()
+    }
     AronaServiceManager.saveServiceStatus()
-    AronaWebUIConfig.save()
+    AronaServiceConfig.save()
   }
 
   fun runSuspend(block: suspend () -> Unit) = launch(coroutineContext) {

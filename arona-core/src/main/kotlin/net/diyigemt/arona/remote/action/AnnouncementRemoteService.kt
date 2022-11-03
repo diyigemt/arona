@@ -6,7 +6,7 @@ import net.diyigemt.arona.remote.RemoteServiceAction
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 
-class AnnouncementRemoteService : RemoteService<String> {
+object AnnouncementRemoteService : RemoteService<String> {
 //  override val kType: KType = List::class.createType(listOf(KTypeProjection.invariant(AnnouncementItem::class.starProjectedType)))
   override val kType: KType = String::class.createType()
   override val type: RemoteServiceAction = RemoteServiceAction.ANNOUNCEMENT

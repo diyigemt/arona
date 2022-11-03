@@ -31,6 +31,7 @@ object SchaleDBDataSyncService : AronaQuartzService{
   lateinit var birthdayJobKey: JobKey
   override val id: Int = 19
   override val name: String = "数据同步服务"
+  override val description: String = name
   override var enable: Boolean = true
   private const val SchaleDBDataSyncServiceJobKey = "SchaleDBDataSyncService"
   private const val BirthdayJobKey = "Birthday"
@@ -185,8 +186,6 @@ object SchaleDBDataSyncService : AronaQuartzService{
       }
     }
   }
-
-  override fun init() = registerService()
 
   // TODO start cron task
   override fun enableService() {

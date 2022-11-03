@@ -57,9 +57,5 @@ object GameNameSearchCommand : SimpleCommand(
   override val id: Int = 22
   override val name: String = "游戏名反查"
   override var enable: Boolean = true
-  override fun init() {
-    registerService()
-    register()
-  }
 
 }

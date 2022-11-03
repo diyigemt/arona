@@ -1,5 +1,6 @@
 package net.diyigemt.arona.util
 
+import net.diyigemt.arona.Arona
 import org.reflections.ReflectionUtils
 import org.reflections.Reflections
 import org.reflections.scanners.Scanners
@@ -39,7 +40,7 @@ object ReflectionUtil : ReflectionUtils(){
   /**
    * 获取目标注解过的类路径
    * 本方法因轮子自带的强转方法容易失败故不负责反射，自己用Class.forName()搞去*/
-  fun <T : Annotation> getTypeAnnotatedClass(annotation: Class<T>, config : ConfigurationBuilder = defaultConfig) : Set<String>{
+  fun <T : Annotation> getTypeAnnotatedClass(annotation: Class<T>, config : ConfigurationBuilder = defaultConfig) : Set<String> {
     return if(config == defaultConfig) reflections.get(Scanners.TypesAnnotated.with(annotation))
     else Reflections(config).get(Scanners.TypesAnnotated.with(annotation))
   }
@@ -47,8 +48,25 @@ object ReflectionUtil : ReflectionUtils(){
   /**
    * 获取继承接口的类路径
    * 本方法因轮子自带的强转方法容易失败故不负责反射，自己用Class.forName()搞去*/
-  fun <T : Any> getInterfacePetClass(clazz: Class<T>, config : ConfigurationBuilder = defaultConfig) : Set<String>{
+  fun <T : Any> getInterfacePetClass(clazz: Class<T>, config : ConfigurationBuilder = defaultConfig) : Set<String> {
     return if(config == defaultConfig) reflections.get(Scanners.SubTypes.with(clazz))
     else Reflections(config).get(Scanners.SubTypes.with(clazz))
+  }
+
+  /**
+   * 获取继承接口/类的单列类
+   * 本方法因轮子自带的强转方法容易失败故不负责反射，自己用Class.forName()搞去*/
+  @Suppress("UNCHECKED_CAST")
+  fun <T : Any> getInterfacePetObjectInstance(clazz: Class<T>, config : ConfigurationBuilder = defaultConfig) : List<T> {
+    val paths = if(config == defaultConfig) reflections.get(Scanners.SubTypes.with(clazz))
+    else Reflections(config).get(Scanners.SubTypes.with(clazz))
+    kotlin.runCatching {
+      return paths.mapNotNull {
+        Class.forName(it).kotlin.objectInstance
+      } as List<T>
+    }.onFailure {
+      Arona.error { it.stackTraceToString() }
+    }
+    return listOf()
   }
 }

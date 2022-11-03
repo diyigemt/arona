@@ -118,9 +118,5 @@ object TarotCommand : SimpleCommand(
   override val id: Int = 16
   override val name: String = "塔罗牌"
   override var enable: Boolean = true
-  override fun init() {
-    registerService()
-    register()
-  }
 
 }

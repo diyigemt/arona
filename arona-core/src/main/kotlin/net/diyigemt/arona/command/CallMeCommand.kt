@@ -8,23 +8,21 @@ import net.diyigemt.arona.extension.CommandInterceptor
 import net.diyigemt.arona.service.AronaGroupService
 import net.diyigemt.arona.util.GeneralUtils.queryTeacherNameFromDB
 import net.diyigemt.arona.util.MessageUtil
-import net.mamoe.mirai.console.command.CommandManager
-import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
-import net.mamoe.mirai.console.command.CommandSender
-import net.mamoe.mirai.console.command.MemberCommandSenderOnMessage
-import net.mamoe.mirai.console.command.SimpleCommand
+import net.mamoe.mirai.console.command.*
+import net.mamoe.mirai.console.util.ConsoleExperimentalApi
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.User
 import net.mamoe.mirai.message.data.Message
 import org.jetbrains.exposed.sql.and
 
 object CallMeCommand : SimpleCommand(
-  Arona,"call_me", "叫我",
+  Arona, "call_me", "叫我",
   description = "给自己自定义昵称"
 ), AronaGroupService, CommandInterceptor {
 
+  @OptIn(ConsoleExperimentalApi::class)
   @Handler
-  suspend fun MemberCommandSenderOnMessage.callMe(name: String) {
+  suspend fun MemberCommandSenderOnMessage.callMe(@Name("昵称") name: String) {
     var teacherName = name
     if (teacherName.length > 20) {
       subject.sendMessage(MessageUtil.at(user, "太长了, 爬"))

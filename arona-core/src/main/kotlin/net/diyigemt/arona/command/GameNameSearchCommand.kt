@@ -4,29 +4,23 @@ import net.diyigemt.arona.Arona
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.name.GameName
 import net.diyigemt.arona.db.name.GameNameTable
-import net.diyigemt.arona.extension.CommandInterceptor
 import net.diyigemt.arona.service.AronaService
-import net.diyigemt.arona.util.MessageUtil
-import net.mamoe.mirai.console.command.CommandManager
-import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
-import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.UserCommandSender
+import net.mamoe.mirai.console.util.ConsoleExperimentalApi
 import net.mamoe.mirai.contact.Group
-import net.mamoe.mirai.contact.User
 import net.mamoe.mirai.contact.nameCardOrNick
-import net.mamoe.mirai.message.data.At
-import net.mamoe.mirai.message.data.Message
 import net.mamoe.mirai.message.data.MessageChainBuilder
 import net.mamoe.mirai.message.data.PlainText
 
 object GameNameSearchCommand : SimpleCommand(
-  Arona,"game_name_search", "谁是", "谁叫",
+  Arona, "game_name_search", "谁是", "谁叫",
   description = "根据游戏名反查群友"
 ), AronaService {
 
+  @OptIn(ConsoleExperimentalApi::class)
   @Handler
-  suspend fun UserCommandSender.gameName(myName: String) {
+  suspend fun UserCommandSender.gameName(@Name("要查询的游戏名") myName: String) {
     val res = DataBaseProvider.query {
       GameName.find { GameNameTable.name like "%$myName%" }.toList()
     }!!

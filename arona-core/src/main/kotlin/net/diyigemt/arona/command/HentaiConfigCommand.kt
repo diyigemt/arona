@@ -4,14 +4,13 @@ import net.diyigemt.arona.Arona
 import net.diyigemt.arona.config.AronaHentaiConfig
 import net.diyigemt.arona.entity.NudgeMessage
 import net.diyigemt.arona.service.AronaManageService
-import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.console.command.UserCommandSender
 import net.mamoe.mirai.contact.Member
 import net.mamoe.mirai.contact.remarkOrNameCardOrNick
 
 object HentaiConfigCommand : CompositeCommand(
-  Arona,"hentai", "发情",
+  Arona, "hentai", "发情",
   description = "设置发情触发的关键词"
 ), AronaManageService {
 

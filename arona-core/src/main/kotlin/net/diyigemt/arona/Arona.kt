@@ -10,6 +10,7 @@ package net.diyigemt.arona
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import net.diyigemt.arona.annotations.HideService
 import net.diyigemt.arona.config.*
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.extension.CommandInterceptorManager
@@ -28,9 +29,19 @@ import net.diyigemt.arona.util.ImageUtil
 import net.diyigemt.arona.util.NetworkUtil
 import net.diyigemt.arona.util.ReflectionUtil
 import net.mamoe.mirai.Bot
+import net.mamoe.mirai.console.command.AbstractCommand
+import net.mamoe.mirai.console.command.BuiltInCommands
+import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
+import net.mamoe.mirai.console.command.CommandManager.INSTANCE.registeredCommands
+import net.mamoe.mirai.console.command.ConsoleCommandSender
 import net.mamoe.mirai.console.command.descriptor.ExperimentalCommandDescriptors
+import net.mamoe.mirai.console.command.executeCommand
 import net.mamoe.mirai.console.data.AutoSavePluginConfig
 import net.mamoe.mirai.console.extension.PluginComponentStorage
+import net.mamoe.mirai.console.permission.AbstractPermitteeId
+import net.mamoe.mirai.console.permission.PermissionService.Companion.getPermittedPermissions
+import net.mamoe.mirai.console.permission.PermitteeId
+import net.mamoe.mirai.console.permission.RootPermission
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
 import net.mamoe.mirai.console.util.ConsoleExperimentalApi
@@ -52,12 +63,13 @@ import net.mamoe.mirai.message.data.MessageChainBuilder
 import net.mamoe.mirai.utils.info
 import java.io.File
 import kotlin.io.path.absolutePathString
+import kotlin.reflect.full.hasAnnotation
 
 object Arona : KotlinPlugin(
   JvmPluginDescription.loadFromResource()
 ) {
   var arona: Bot? = null
-
+  private const val CommandPrefix = "/permission add * net.diyigemt.arona:command."
   @OptIn(ExperimentalCommandDescriptors::class, ConsoleExperimentalApi::class)
   override fun onEnable() {
     init()
@@ -72,12 +84,8 @@ object Arona : KotlinPlugin(
           sendMessage(deserializeMiraiCode(AronaConfig.onlineMessage))
         }
       }
-      pluginEventChannel.subscribeAlways<NudgeEvent>(priority = AronaNudgeConfig.priority) {
-        NudgeEventHandler.preHandle(this)
-      }
-      pluginEventChannel.subscribeAlways<GroupMessageEvent> {
-        GroupRepeaterHandler.preHandle(this)
-        HentaiEventHandler.preHandle(this)
+      pluginEventChannel.subscribeAlways<BotEvent> {
+        AronaServiceManager.emit(this)
       }
       info { "arona loaded" }
     } else error("arona database init failed, arona will not start")
@@ -91,22 +99,43 @@ object Arona : KotlinPlugin(
   private fun init() {
     // 查找所有需要初始化的类, 所有指令, 所有配置文件
     // 重载配置文件
-    ReflectionUtil.getInterfacePetObjectInstance(AutoSavePluginConfig::class.java).forEach {
+    ReflectionUtil.getInterfacePetObjectInstance<AutoSavePluginConfig>().forEach {
       it.reload()
     }
     // 需要协程的类
-    ReflectionUtil.getInterfacePetObjectInstance(CoroutineFunctionProvider::class.java).forEach {
+    ReflectionUtil.getInterfacePetObjectInstance<CoroutineFunctionProvider>().forEach {
       it.start()
     }
     // 需要初始化的类
     runSuspend {
-      ReflectionUtil.getInterfacePetObjectInstance(Initialize::class.java).sortedBy { it.priority }.forEach {
+      ReflectionUtil.getInterfacePetObjectInstance<Initialize>().sortedBy { it.priority }.forEach {
         it.init()
       }
     }
+    val grantCommandName = mutableListOf<String>()
     // 注册service
-    ReflectionUtil.getInterfacePetObjectInstance(AronaService::class.java).forEach {
+    ReflectionUtil.getInterfacePetObjectInstance<AronaService>().forEach {
+      // 向控制台注册指令
+      if (it is AbstractCommand) {
+        it.register()
+        // 直接提供指令执行权限
+        if (!it::class.hasAnnotation<HideService>()) {
+          grantCommandName.add(it.primaryName)
+        }
+      }
+      BuiltInCommands.PermissionCommand
       AronaServiceManager.register(it)
+    }
+
+    // 自动赋予指令权限
+    if (AronaConfig.autoGrantPermission) {
+      // 获取已经赋予的权限
+      val grantedList = AbstractPermitteeId.AnyContact.getPermittedPermissions().toList()
+      grantCommand(grantCommandName.filter {
+        !grantedList.any {
+            already -> already.id.toString().endsWith(it)
+        }
+      })
     }
 
     runSuspend {
@@ -115,11 +144,20 @@ object Arona : KotlinPlugin(
   }
 
   override fun onDisable() {
-    ReflectionUtil.getInterfacePetObjectInstance(AutoSavePluginConfig::class.java).forEach {
+    ReflectionUtil.getInterfacePetObjectInstance<AutoSavePluginConfig>().forEach {
       it.save()
     }
     AronaServiceManager.saveServiceStatus()
     AronaServiceConfig.save()
+  }
+
+  @OptIn(ExperimentalCommandDescriptors::class, ConsoleExperimentalApi::class)
+  private fun grantCommand(name: List<String>) {
+    runSuspend {
+      name.forEach { n ->
+        ConsoleCommandSender.executeCommand("$CommandPrefix$n")
+      }
+    }
   }
 
   fun runSuspend(block: suspend () -> Unit) = launch(coroutineContext) {
@@ -215,13 +253,5 @@ object Arona : KotlinPlugin(
   fun verbose(message: () -> String?) = logger.verbose(message())
 
   fun error(message: () -> String?) = logger.error(message())
-
-  private fun startUpload() {
-    QuartzProvider.createSimpleDelayJob(20) {
-      runSuspend {
-        GeneralUtils.uploadStudentInfo()
-      }
-    }
-  }
 
 }

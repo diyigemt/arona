@@ -8,7 +8,6 @@ import net.diyigemt.arona.extension.CommandInterceptor
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.util.ActivityUtil
 import net.mamoe.mirai.console.command.CommandManager
-import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.console.command.UserCommandSender
@@ -17,7 +16,7 @@ import net.mamoe.mirai.contact.Contact.Companion.uploadImage
 import net.mamoe.mirai.message.data.Message
 
 object ActivityCommand : CompositeCommand(
-  Arona,"active", "活动",
+  Arona, "active", "活动",
   description = "通过bili wiki获取活动列表"
 ), AronaService, CommandInterceptor {
 
@@ -43,7 +42,11 @@ object ActivityCommand : CompositeCommand(
     send(subject, jpActivity)
   }
 
-  private suspend fun send(subject: Contact, activities: Pair<List<Activity>, List<Activity>>, serverLocale: ServerLocale = ServerLocale.JP) {
+  private suspend fun send(
+    subject: Contact,
+    activities: Pair<List<Activity>, List<Activity>>,
+    serverLocale: ServerLocale = ServerLocale.JP
+  ) {
     val imageFile = ActivityUtil.createActivityImage(activities, serverLocale)
     val image = subject.uploadImage(imageFile, "png")
     subject.sendMessage(image)
@@ -53,33 +56,33 @@ object ActivityCommand : CompositeCommand(
   override val name: String = "活动查询"
   override var enable: Boolean = true
 
-   override val level: Int = 1
-   private val ACTIVITY_COMMAND = "${CommandManager.commandPrefix}活动"
-   override fun interceptBeforeCall(message: Message, caller: CommandSender): String? {
-     if (message.contentToString() != ACTIVITY_COMMAND) return null
-     if (caller !is UserCommandSender) return null
-     val subject = caller.subject
-     if (AronaNotifyConfig.defaultActivityCommandServer == ServerLocale.JP) {
-       kotlin.runCatching {
-         Arona.runSuspend {
-           sendJP(subject)
-         }
-       }.onFailure {
-         Arona.runSuspend {
-           subject.sendMessage("指令执行失败")
-         }
-       }
-     } else {
-       kotlin.runCatching {
-         Arona.runSuspend {
-           sendEN(subject)
-         }
-       }.onFailure {
-         Arona.runSuspend {
-           subject.sendMessage("指令执行失败")
-         }
-       }
-     }
-     return ""
-   }
+  override val level: Int = 1
+  private val ACTIVITY_COMMAND = "${CommandManager.commandPrefix}活动"
+  override fun interceptBeforeCall(message: Message, caller: CommandSender): String? {
+    if (message.contentToString() != ACTIVITY_COMMAND) return null
+    if (caller !is UserCommandSender) return null
+    val subject = caller.subject
+    if (AronaNotifyConfig.defaultActivityCommandServer == ServerLocale.JP) {
+      kotlin.runCatching {
+        Arona.runSuspend {
+          sendJP(subject)
+        }
+      }.onFailure {
+        Arona.runSuspend {
+          subject.sendMessage("指令执行失败")
+        }
+      }
+    } else {
+      kotlin.runCatching {
+        Arona.runSuspend {
+          sendEN(subject)
+        }
+      }.onFailure {
+        Arona.runSuspend {
+          subject.sendMessage("指令执行失败")
+        }
+      }
+    }
+    return ""
+  }
 }

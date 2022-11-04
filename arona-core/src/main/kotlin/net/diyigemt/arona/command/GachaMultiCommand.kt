@@ -12,12 +12,11 @@ import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.GeneralUtils.queryTeacherNameFromDB
 import net.diyigemt.arona.util.MessageUtil
 import net.diyigemt.arona.util.MessageUtil.atMessageAndCTRL
-import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.MemberCommandSenderOnMessage
 import net.mamoe.mirai.console.command.SimpleCommand
 
 object GachaMultiCommand : SimpleCommand(
-  Arona,"gacha_multi", "十连",
+  Arona, "gacha_multi", "十连",
   description = "模拟十连"
 ), AronaGroupService {
 

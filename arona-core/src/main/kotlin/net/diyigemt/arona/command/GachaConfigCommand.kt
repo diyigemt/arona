@@ -7,7 +7,6 @@ import net.diyigemt.arona.Arona
 import net.diyigemt.arona.advance.RemoteActionItem
 import net.diyigemt.arona.command.cache.GachaCache
 import net.diyigemt.arona.config.AronaGachaConfig
-import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.DataBaseProvider.query
 import net.diyigemt.arona.db.gacha.*
 import net.diyigemt.arona.remote.RemoteServiceAction
@@ -16,9 +15,9 @@ import net.diyigemt.arona.remote.action.GachaPoolUpdateData
 import net.diyigemt.arona.service.AronaManageService
 import net.diyigemt.arona.util.GachaUtil
 import net.diyigemt.arona.util.NetworkUtil
-import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.console.command.UserCommandSender
+import net.mamoe.mirai.console.util.ConsoleExperimentalApi
 import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.Group
 import org.jetbrains.exposed.sql.SortOrder
@@ -27,14 +26,15 @@ import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.select
 import net.diyigemt.arona.db.gacha.GachaCharacter as GC
 
+@OptIn(ConsoleExperimentalApi::class)
 object GachaConfigCommand : CompositeCommand(
-  Arona,"gacha", "抽卡",
+  Arona, "gacha", "抽卡",
   description = "设置发情触发的关键词"
 ), AronaManageService {
 
   @SubCommand("setpool")
   @Description("设置激活的池子")
-  suspend fun UserCommandSender.setPool(pool: Int) {
+  suspend fun UserCommandSender.setPool(@Name("数据库卡池id") pool: Int) {
     val targetPool = GachaCache.updatePool(pool)
     if (targetPool == null) {
       subject.sendMessage("没有找到池子")
@@ -45,7 +45,7 @@ object GachaConfigCommand : CompositeCommand(
 
   @SubCommand
   @Description("重置某一池子的记录")
-  suspend fun UserCommandSender.reset(pool: Int = AronaGachaConfig.activePool) {
+  suspend fun UserCommandSender.reset(@Name("数据库卡池id") pool: Int = AronaGachaConfig.activePool) {
     query {
       GachaHistoryTable.deleteWhere { (GachaHistoryTable.pool eq pool) and (GachaHistoryTable.group eq (subject as Group).id) }
     }
@@ -55,7 +55,7 @@ object GachaConfigCommand : CompositeCommand(
 
   @SubCommand("1s")
   @Description("设置1星出货率")
-  suspend fun UserCommandSender.s1(rate: Float) {
+  suspend fun UserCommandSender.s1(@Name("浮点数") rate: Float) {
     AronaGachaConfig.star1Rate = rate
     subject.sendMessage("1星出货率设置为${rate}%")
     AronaGachaConfig.init()
@@ -63,14 +63,15 @@ object GachaConfigCommand : CompositeCommand(
 
   @SubCommand("2s")
   @Description("设置2星出货率")
-  suspend fun UserCommandSender.s2(rate: Float) {
+  suspend fun UserCommandSender.s2(@Name("浮点数") rate: Float) {
     AronaGachaConfig.star2Rate = rate
     subject.sendMessage("2星出货率设置为${rate}%")
     AronaGachaConfig.init()
   }
+
   @SubCommand("3s")
   @Description("设置3星出货率")
-  suspend fun UserCommandSender.s3(rate: Float) {
+  suspend fun UserCommandSender.s3(@Name("浮点数") rate: Float) {
     AronaGachaConfig.star3Rate = rate
     subject.sendMessage("3星出货率设置为${rate}%")
     AronaGachaConfig.init()
@@ -78,7 +79,7 @@ object GachaConfigCommand : CompositeCommand(
 
   @SubCommand("p2s")
   @Description("设置2星PickUp出货率")
-  suspend fun UserCommandSender.ps2(rate: Float) {
+  suspend fun UserCommandSender.ps2(@Name("浮点数") rate: Float) {
     AronaGachaConfig.star2PickupRate = rate
     subject.sendMessage("2星PickUp出货率设置为${rate}%")
     AronaGachaConfig.init()
@@ -86,7 +87,7 @@ object GachaConfigCommand : CompositeCommand(
 
   @SubCommand("p3s")
   @Description("设置3星PickUp出货率")
-  suspend fun UserCommandSender.ps3(rate: Float) {
+  suspend fun UserCommandSender.ps3(@Name("浮点数") rate: Float) {
     AronaGachaConfig.star3PickupRate = rate
     subject.sendMessage("3星PickUp出货率设置为${rate}%")
     AronaGachaConfig.init()
@@ -94,7 +95,7 @@ object GachaConfigCommand : CompositeCommand(
 
   @SubCommand("time")
   @Description("设置设置撤回时间")
-  suspend fun UserCommandSender.time(time: Int) {
+  suspend fun UserCommandSender.time(@Name("以秒为单位") time: Int) {
     if (time > 0) {
       AronaGachaConfig.revokeTime = time
       subject.sendMessage("撤回时间设置为${time}")
@@ -106,8 +107,8 @@ object GachaConfigCommand : CompositeCommand(
   }
 
   @SubCommand("limit")
-  @Description("设置设置撤回时间")
-  suspend fun UserCommandSender.gachalimit(time: Int) {
+  @Description("设置每日限制次数")
+  suspend fun UserCommandSender.gachalimit(@Name("整数") time: Int) {
     if (time > 0) {
       AronaGachaConfig.limit = time
       subject.sendMessage("每日限制次数设置为${time}")
@@ -121,13 +122,13 @@ object GachaConfigCommand : CompositeCommand(
 
   @SubCommand("update")
   @Description("从远端更新池子")
-  suspend fun UserCommandSender.updatePool(id: Int) {
+  suspend fun UserCommandSender.updatePool(@Name("公告中的池子id") id: Int) {
     doUpdate(id, subject)
   }
 
   @SubCommand("update2")
   @Description("从远端更新池子并重命名")
-  suspend fun UserCommandSender.updatePool2(id: Int, name: String) {
+  suspend fun UserCommandSender.updatePool2(@Name("公告中的池子id") id: Int, @Name("新池子名称") name: String) {
     doUpdate(id, subject, name)
   }
 
@@ -157,29 +158,27 @@ object GachaConfigCommand : CompositeCommand(
       return@map if (students.isEmpty()) {
         "${it.name}(id: ${it.id}): 没有关联的学生"
       } else {
-        "${it.name}(id: ${it.id}): ${students.joinToString(", ") { s -> GachaUtil.mapStudentInfo(s[GachaCharacterTable.name], s[GachaCharacterTable.star]) }}"
+        "${it.name}(id: ${it.id}): ${
+          students.joinToString(", ") { s ->
+            GachaUtil.mapStudentInfo(
+              s[GachaCharacterTable.name],
+              s[GachaCharacterTable.star]
+            )
+          }
+        }"
       }
     }.reversed().joinToString("\n")
     subject.sendMessage(msg)
   }
 
-//  @SubCommand("adds")
-//  @Description("给卡池添加新学生")
-  suspend fun UserCommandSender.adds(name: String, star: Int, limit: Int) {
-  // 模糊搜索判断是否重名
-    val data = query {
-      GC.find {
-        GachaCharacterTable.name eq name
-      }
-    }
-  }
-
   @OptIn(InternalSerializationApi::class)
   private suspend fun doUpdate(id: Int, subject: Contact, poolName: String? = null) {
     val data = kotlin.runCatching {
-      val resp = NetworkUtil.fetchDataFromServer<RemoteActionItem>("/action/one", mapOf(
-        "id" to id.toString()
-      ))
+      val resp = NetworkUtil.fetchDataFromServer<RemoteActionItem>(
+        "/action/one", mapOf(
+          "id" to id.toString()
+        )
+      )
       if (resp.data.action != RemoteServiceAction.POOL_UPDATE.action) {
         subject.sendMessage("id错误")
         return
@@ -203,11 +202,13 @@ object GachaConfigCommand : CompositeCommand(
     } else {
       // 有同名池子, 根据用户输入判断是否继续
       if (poolName == null) {
-        subject.sendMessage("""
+        subject.sendMessage(
+          """
           同名池子: ${data.name} 已经存在, 请使用
           /gacha update2 $id 新池子名字
           来更新
-        """.trimIndent())
+        """.trimIndent()
+        )
         return
       }
       query {

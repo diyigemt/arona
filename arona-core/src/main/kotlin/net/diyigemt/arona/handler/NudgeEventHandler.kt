@@ -2,23 +2,15 @@ package net.diyigemt.arona.handler
 
 import net.diyigemt.arona.Arona.sendTeacherNameMessage
 import net.diyigemt.arona.config.AronaNudgeConfig
-import net.diyigemt.arona.service.AronaGroupService
-import net.diyigemt.arona.service.AronaService
-import net.diyigemt.arona.service.AronaServiceManager
+import net.diyigemt.arona.service.*
 import net.diyigemt.arona.util.MessageUtil
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.User
 import net.mamoe.mirai.event.events.NudgeEvent
 
-object NudgeEventHandler: AronaGroupService {
+object NudgeEventHandler: AronaReactService<NudgeEvent>, AronaGroupService {
 
-  suspend fun preHandle(event: NudgeEvent) {
-    if (AronaServiceManager.checkService(this, event.from as User, event.subject) == null) {
-      handle(event)
-    }
-  }
-
-  private suspend fun handle(event: NudgeEvent) {
+  override suspend fun handle(event: NudgeEvent) {
     val messageList = AronaNudgeConfig.messageList
     val target = event.target
     val from = event.from
@@ -38,6 +30,8 @@ object NudgeEventHandler: AronaGroupService {
     }
   }
 
+  override val eventName: String? = NudgeEvent::class.simpleName
+  override fun checkService(event: NudgeEvent): Boolean = AronaServiceManager.checkService(this, event.from as User, event.subject) == null
   override val id: Int = 10
   override val name: String = "摸头回复"
   override val description: String = name

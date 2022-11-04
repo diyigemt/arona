@@ -10,12 +10,11 @@ import net.diyigemt.arona.util.GachaUtil.resultData2String
 import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.GeneralUtils.queryTeacherNameFromDB
 import net.diyigemt.arona.util.MessageUtil
-import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.MemberCommandSenderOnMessage
 import net.mamoe.mirai.console.command.SimpleCommand
 
 object GachaSingleCommand : SimpleCommand(
-  Arona,"gacha_one", "单抽",
+  Arona, "gacha_one", "单抽",
   description = "单抽一次"
 ), AronaGroupService {
 

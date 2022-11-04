@@ -8,20 +8,21 @@ import net.diyigemt.arona.extension.CommandInterceptor
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.util.MessageUtil
 import net.mamoe.mirai.console.command.CommandManager
-import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.UserCommandSender
+import net.mamoe.mirai.console.util.ConsoleExperimentalApi
 import net.mamoe.mirai.contact.User
 import net.mamoe.mirai.message.data.Message
 
 object GameNameCommand : SimpleCommand(
-  Arona,"game_name", "游戏名",
+  Arona, "game_name", "游戏名",
   description = "记录游戏名与群名的对应关系"
 ), AronaService, CommandInterceptor {
 
+  @OptIn(ConsoleExperimentalApi::class)
   @Handler
-  suspend fun UserCommandSender.gameName(myName: String) {
+  suspend fun UserCommandSender.gameName(@Name("游戏名") myName: String) {
     if (myName.length > 50) {
       subject.sendMessage(MessageUtil.at(user, "太长了, 爬"))
       return

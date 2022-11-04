@@ -49,7 +49,7 @@ object RemoteServiceManager: Initialize {
 
   @Suppress("UNCHECKED_CAST")
   override fun init() {
-    ReflectionUtil.getInterfacePetObjectInstance(RemoteService::class.java).forEach {
+    ReflectionUtil.getInterfacePetObjectInstance<RemoteService<*>>().forEach {
       registerService(it.type, it as RemoteService<Any>)
     }
   }

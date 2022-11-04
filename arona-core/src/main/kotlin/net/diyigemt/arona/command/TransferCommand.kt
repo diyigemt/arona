@@ -2,7 +2,6 @@ package net.diyigemt.arona.command
 
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.service.AronaService
-import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.UserCommandSender
 import net.mamoe.mirai.event.GlobalEventChannel
@@ -10,7 +9,7 @@ import net.mamoe.mirai.event.events.MessageEvent
 import net.mamoe.mirai.message.data.ForwardMessageBuilder
 
 object TransferCommand : SimpleCommand(
-  Arona,"transfer", "转发",
+  Arona, "transfer", "转发",
   description = "合并转发一段时间内的内容"
 ), AronaService {
 

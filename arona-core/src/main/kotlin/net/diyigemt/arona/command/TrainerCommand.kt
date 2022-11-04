@@ -25,7 +25,7 @@ import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
 import java.io.File
 
 object TrainerCommand : SimpleCommand(
-  Arona,"trainer", "攻略",
+  Arona, "trainer", "攻略",
   description = "主线地图和学生攻略"
 ), AronaService, Initialize {
   const val StudentRankFolder: String = "/student_rank"
@@ -37,6 +37,7 @@ object TrainerCommand : SimpleCommand(
   private var ConfigFileMd5: String = ""
   private val FuzzySearch = mutableListOf<List<String>>()
   private val overrideList = mutableListOf<TrainerOverride>()
+
   @Handler
   suspend fun UserCommandSender.trainer(str: String) {
     if (str == "阿罗娜" || str == "彩奈") {
@@ -45,8 +46,9 @@ object TrainerCommand : SimpleCommand(
     }
     val override = overrideList
       .filter { it.name.contains(str) }
-      .firstOrNull { it.name.split(",")
-        .any { s -> s.trim() == str }
+      .firstOrNull {
+        it.name.split(",")
+          .any { s -> s.trim() == str }
       } ?: TrainerOverride(TrainerOverride.OverrideType.RAW, str, str)
     val value = override.value
     when (override.type) {
@@ -58,6 +60,7 @@ object TrainerCommand : SimpleCommand(
         }
         sendImage(subject, file)
       }
+
       TrainerOverride.OverrideType.RAW -> {
         val result = GeneralUtils.loadImageOrUpdate(value)
         val list = result.list.map { it.name }.toMutableList()
@@ -72,10 +75,12 @@ object TrainerCommand : SimpleCommand(
             FuzzySearchSource.ALL -> {
               list.addAll(fuzzySearch(str))
             }
+
             FuzzySearchSource.LOCAL_CONFIG -> {
               list.clear()
               list.addAll(fuzzySearch(str))
             }
+
             FuzzySearchSource.REMOTE -> {}
           }
           // 如果仍然没有搜索建议 说明真的找不到
@@ -100,6 +105,7 @@ object TrainerCommand : SimpleCommand(
           sendImage(subject, result.file)
         }
       }
+
       TrainerOverride.OverrideType.CODE -> {
         sendMessage(override.value.deserializeMiraiCode(subject))
       }
@@ -113,7 +119,8 @@ object TrainerCommand : SimpleCommand(
     }.filter { it.isNotBlank() }.toMutableList()
     // 从数据库查找
     list.addAll(DataBaseProvider.query { _ ->
-      ImageTableModel.all().map { it.name }.filter { GeneralUtils.fuzzySearch(it, source) || GeneralUtils.fuzzySearch(source, it) }
+      ImageTableModel.all().map { it.name }
+        .filter { GeneralUtils.fuzzySearch(it, source) || GeneralUtils.fuzzySearch(source, it) }
     }!!)
     return list
   }

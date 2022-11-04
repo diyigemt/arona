@@ -11,7 +11,6 @@ import net.diyigemt.arona.db.tarot.TarotRecordTable
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.GeneralUtils.queryTeacherNameFromDB
-import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.UserCommandSender
 import net.mamoe.mirai.contact.Contact
@@ -24,11 +23,12 @@ import org.jetbrains.exposed.sql.update
 import java.util.*
 
 object TarotCommand : SimpleCommand(
-  Arona,"tarot", "塔罗牌",
+  Arona, "tarot", "塔罗牌",
   description = "抽一张塔罗牌"
 ), AronaService {
   private const val TarotCount = 22
   const val TarotImageFolder: String = "/tarot" // 塔罗牌图片
+
   @Handler
   suspend fun UserCommandSender.tarot() {
     val group0 = if (subject is Group) subject.id else user.id

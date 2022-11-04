@@ -3,11 +3,12 @@ package net.diyigemt.arona.handler
 import net.diyigemt.arona.Arona.sendTeacherNameMessage
 import net.diyigemt.arona.config.AronaHentaiConfig
 import net.diyigemt.arona.service.AronaGroupService
+import net.diyigemt.arona.service.AronaMessageReactService
 import net.diyigemt.arona.util.MessageUtil
 import net.mamoe.mirai.contact.UserOrBot
 import net.mamoe.mirai.event.events.GroupMessageEvent
 
-object HentaiEventHandler: AronaEventHandler<GroupMessageEvent>, AronaGroupService {
+object HentaiEventHandler: AronaMessageReactService<GroupMessageEvent>, AronaGroupService {
 
   override suspend fun handle(event: GroupMessageEvent) {
     val source = event.message.contentToString()
@@ -29,6 +30,7 @@ object HentaiEventHandler: AronaEventHandler<GroupMessageEvent>, AronaGroupServi
     }
   }
 
+  override val eventName: String? = GroupMessageEvent::class.simpleName
   override val id: Int = 9
   override val name: String = "发情"
   override var enable: Boolean = true

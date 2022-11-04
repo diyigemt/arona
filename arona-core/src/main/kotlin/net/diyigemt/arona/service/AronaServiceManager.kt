@@ -2,7 +2,7 @@ package net.diyigemt.arona.service
 
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.config.AronaServiceConfig
-import net.diyigemt.arona.interfaces.DefaultCommand
+import net.diyigemt.arona.interfaces.Command
 import net.diyigemt.arona.interfaces.Initialize
 import net.diyigemt.arona.util.GeneralUtils
 import net.mamoe.mirai.contact.Contact
@@ -10,9 +10,11 @@ import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.User
 import net.mamoe.mirai.event.events.BotEvent
 import net.mamoe.mirai.event.events.MessageEvent
+import kotlin.reflect.KClass
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.declaredFunctions
 import kotlin.reflect.full.hasAnnotation
+import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.jvm.isAccessible
 import kotlin.system.exitProcess
 
@@ -20,9 +22,7 @@ object AronaServiceManager: Initialize {
 
   override val priority: Int = 0
   private val MAP: MutableMap<String, AronaService> = mapOf<String, AronaService>().toMutableMap()
-  private val COMMAND_MAP: MutableMap<String, AronaCommandService> = mapOf<String, AronaCommandService>().toMutableMap()
   private val REACT_MAP: MutableMap<String, AronaReactService<BotEvent>> = mapOf<String, AronaReactService<BotEvent>>().toMutableMap()
-  private val MESSAGE_MAP: MutableMap<String, AronaReactService<MessageEvent>> = mapOf<String, AronaReactService<MessageEvent>>().toMutableMap()
 
   /**
    * 注册一个服务
@@ -32,9 +32,10 @@ object AronaServiceManager: Initialize {
     val service0 = findServiceByName(service.name)
     if (service0 != null) {
       Arona.error("指令${service.name}重复, 请检查")
-      exitProcess(-1)
+//      exitProcess(-1)
+    } else {
+      registerService(service)
     }
-    registerService(service)
   }
 
   /**
@@ -42,30 +43,11 @@ object AronaServiceManager: Initialize {
    */
   suspend fun emit(event: BotEvent) {
     val eventName = event::class.simpleName
-    when (event) {
-      is MessageEvent -> {
-        MESSAGE_MAP[eventName].let {
-          it?.handle(event)
-        }
-        // 进入自定义指令处理流程
-        val rawStringMessage = event.message.toString()
-        if (!rawStringMessage.startsWith("/")) {
-          return
-        }
-        val parse = rawStringMessage.replaceFirst("/", "").split(" ").toList()
-        val command = parse[0]
-        val service = COMMAND_MAP[command] ?: return // 没找着
-        // 以@DefaultCommand为注解的方法, 或者第一个public并且第一个参数是它自己监听的事件名称的方法作为指令处理函数
-        service::class.declaredFunctions
-          .firstOrNull { it.hasAnnotation<DefaultCommand>() } ?:
-          service::class.declaredFunctions
-            .firstOrNull { it.isAccessible && it.parameters.isNotEmpty() && it.parameters[0].type == event::class.createType() } ?: return
-      }
-      else -> {
-        REACT_MAP[eventName].let {
-          it?.handle(event)
-        }
-      }
+    val service = REACT_MAP[eventName] ?: return
+    if ((event is MessageEvent) && (checkService(service, event.sender, event.subject) == null)) {
+      service.handle(event)
+    } else if (service.checkService(event)) {
+      service.handle(event)
     }
   }
 
@@ -168,9 +150,13 @@ object AronaServiceManager: Initialize {
 
   private fun findServiceById(id: Int): AronaService? = MAP[id.toString()]
 
+  @Suppress("UNCHECKED_CAST")
   private fun registerService(service: AronaService) {
     MAP[service.name] = service
     MAP[service.id.toString()] = service
+    if (service is AronaReactService<*>) {
+      REACT_MAP[service.eventName ?: ""] = service as AronaReactService<BotEvent>
+    }
   }
 
   private fun unregisterService(service: AronaService) {

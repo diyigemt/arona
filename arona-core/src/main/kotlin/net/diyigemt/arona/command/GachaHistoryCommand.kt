@@ -5,17 +5,13 @@ import net.diyigemt.arona.service.AronaGroupService
 import net.diyigemt.arona.util.GachaUtil
 import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.GeneralUtils.queryTeacherNameFromDB
-import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.MemberCommandSenderOnMessage
 import net.mamoe.mirai.console.command.SimpleCommand
-import net.mamoe.mirai.console.command.UserCommandSender
-import net.mamoe.mirai.contact.Contact.Companion.uploadImage
-import net.mamoe.mirai.contact.Group
-import net.mamoe.mirai.contact.nameCardOrNick
-import java.io.ByteArrayInputStream
+import net.mamoe.mirai.console.util.ConsoleExperimentalApi
 
+@OptIn(ConsoleExperimentalApi::class)
 object GachaHistoryCommand : SimpleCommand(
-  Arona,"gacha_history", "历史",
+  Arona, "gacha_history", "历史",
   description = "抽卡历史记录"
 ), AronaGroupService {
 
@@ -35,11 +31,12 @@ object GachaHistoryCommand : SimpleCommand(
         "${teacherName}(${it.id.value}): ${it.points}抽/${it.count3}个3星 = $rate"
       }
       .subList(0, if (history.size > 6) 6 else history.size)
-      .forEachIndexed {
-        index, s -> ss += "${index + 1}. $s\n"
+      .forEachIndexed { index, s ->
+        ss += "${index + 1}. $s\n"
       }
     subject.sendMessage(ss.subSequence(0, ss.length - 1).toString())
   }
+
   override val id: Int = 7
   override val name: String = "抽卡历史查询"
   override var enable: Boolean = true

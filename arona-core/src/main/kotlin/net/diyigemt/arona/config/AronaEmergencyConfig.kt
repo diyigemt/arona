@@ -4,7 +4,7 @@ import net.mamoe.mirai.console.data.AutoSavePluginConfig
 import net.mamoe.mirai.console.data.ValueDescription
 import net.mamoe.mirai.console.data.value
 
-object AronaEmergencyConfig: AutoSavePluginConfig("arona-emergency") {
+object AronaEmergencyConfig : AutoSavePluginConfig("arona-emergency") {
 
   @ValueDescription("投票人数")
   val times: Int by value(5)

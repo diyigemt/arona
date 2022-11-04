@@ -57,9 +57,9 @@ object ReflectionUtil : ReflectionUtils(){
    * 获取继承接口/类的单列类
    * 本方法因轮子自带的强转方法容易失败故不负责反射，自己用Class.forName()搞去*/
   @Suppress("UNCHECKED_CAST")
-  fun <T : Any> getInterfacePetObjectInstance(clazz: Class<T>, config : ConfigurationBuilder = defaultConfig) : List<T> {
-    val paths = if(config == defaultConfig) reflections.get(Scanners.SubTypes.with(clazz))
-    else Reflections(config).get(Scanners.SubTypes.with(clazz))
+  inline fun <reified T> getInterfacePetObjectInstance(config : ConfigurationBuilder = defaultConfig) : List<T> {
+    val paths = if(config == defaultConfig) reflections.get(Scanners.SubTypes.with(T::class.java))
+    else Reflections(config).get(Scanners.SubTypes.with(T::class.java))
     kotlin.runCatching {
       return paths.mapNotNull {
         Class.forName(it).kotlin.objectInstance

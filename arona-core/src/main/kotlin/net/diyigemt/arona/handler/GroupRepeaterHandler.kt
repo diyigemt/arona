@@ -2,10 +2,11 @@ package net.diyigemt.arona.handler
 
 import net.diyigemt.arona.config.AronaRepeatConfig
 import net.diyigemt.arona.service.AronaGroupService
+import net.diyigemt.arona.service.AronaMessageReactService
 import net.mamoe.mirai.event.events.GroupMessageEvent
 
 // 复读
-object GroupRepeaterHandler: AronaEventHandler<GroupMessageEvent>, AronaGroupService {
+object GroupRepeaterHandler: AronaMessageReactService<GroupMessageEvent>, AronaGroupService {
   private var last: String = ""
   private var lastSender: Long = 0
   private var count: Int = 0
@@ -27,6 +28,8 @@ object GroupRepeaterHandler: AronaEventHandler<GroupMessageEvent>, AronaGroupSer
       count = 1
     }
   }
+
+  override val eventName: String? = GroupMessageEvent::class.simpleName
 
   override val id: Int = 8
   override val name: String = "复读"

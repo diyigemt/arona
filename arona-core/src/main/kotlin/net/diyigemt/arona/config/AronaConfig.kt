@@ -1,13 +1,11 @@
 package net.diyigemt.arona.config
 
-import net.diyigemt.arona.Arona
 import net.diyigemt.arona.annotations.Const
-import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.data.AutoSavePluginConfig
 import net.mamoe.mirai.console.data.ValueDescription
 import net.mamoe.mirai.console.data.value
 
-object AronaConfig: AutoSavePluginConfig("arona") {
+object AronaConfig : AutoSavePluginConfig("arona") {
 
   @ValueDescription("运行arona的qq")
   var qq: Long by value()
@@ -38,6 +36,9 @@ object AronaConfig: AutoSavePluginConfig("arona") {
 
   @ValueDescription("名称是否自动带上后缀, 默认是\"老师\"")
   var endWithSensei: String by value("老师")
+
+  @ValueDescription("是否自动配置权限")
+  var autoGrantPermission: Boolean by value(true)
 
   @ValueDescription("是否允许arona收集匿名统计信息")
   var sendStatus: Boolean by value(false)

@@ -21,12 +21,12 @@ const ConfigRouter: Array<RouteRecordRaw> = [
         component: () => import("@/views/config/ConfigArona.vue"),
       },
       {
-        path: "config-arona-emergency",
-        name: "config-arona-emergency",
+        path: "config-arona-gacha",
+        name: "config-arona-gacha",
         meta: {
-          title: "紧急停止服务配置文件",
+          title: "抽卡服务配置文件",
         },
-        component: () => import("@/views/config/ConfigAronaEmergency.vue"),
+        component: () => import("@/views/config/ConfigAronaGacha.vue"),
       },
     ],
   },

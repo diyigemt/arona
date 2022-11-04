@@ -156,12 +156,12 @@
 </template>
 
 <script setup lang="ts">
-import { forOwn } from "lodash";
 import { AronaConfigForm } from "@/interface";
 import { Friend, Group } from "@/types/contact";
 import { fetchBotContacts } from "@/api/modules/contact";
 import { fetchAronaMainConfig, saveAronaMainConfig } from "@/api/modules/config";
 import { errorMessage, successMessage, warningMessage } from "@/utils/message";
+import { fillConfigMap } from "@/utils";
 
 const form = ref<AronaConfigForm>({
   qq: null,
@@ -194,13 +194,11 @@ function doSave() {
 function doFetchMainConfig() {
   fetchAronaMainConfig()
     .then((res) => {
-      forOwn(res.data, (value, key) => {
-        Reflect.set(form.value, key, value.value);
-      });
+      fillConfigMap(res.data, form.value);
       loading.loading = false;
     })
     .catch((err) => {
-      errorMessage("获取主配置信息失败");
+      errorMessage("获取抽卡配置信息失败");
       console.log(err);
     });
 }

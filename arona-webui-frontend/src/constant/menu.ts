@@ -12,8 +12,8 @@ const ConfigMenu: SubMenuItem[] = [
     path: "/config/config-arona",
   },
   {
-    name: "arona-emergency.yml",
-    path: "/config/config-arona-emergency",
+    name: "arona-gacha.yml",
+    path: "/config/config-arona-gacha",
   },
 ];
 const DatabaseMenu: SubMenuItem[] = [

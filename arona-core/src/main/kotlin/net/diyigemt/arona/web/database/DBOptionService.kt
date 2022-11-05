@@ -60,6 +60,7 @@ object DBOptionService{
         }!!
         Class.forName(className).kotlin
       }.getOrElse {
+        it.printStackTrace()
         return@async ServerResponse(
           HttpStatusCode.InternalServerError.value,
           HttpStatusCode.InternalServerError.description,
@@ -91,7 +92,7 @@ object DBOptionService{
             var values = ""
 
             job.properties.task.args?.forEach { entry ->
-              rows += (entry.key + ",")
+              rows += (columnNameVerifier(entry.key) + ",")
               values += entry.value?.let { dataTypeVerifier(it) } ?: "null,"
             }.apply {
               rows = rows.substring(0, rows.length - 1)
@@ -144,7 +145,7 @@ object DBOptionService{
   private fun keyEqualValueParser(map: Map<String, Any?>?) : String {
     var res = ""
     map?.forEach { entry ->
-      res += entry.key + "="
+      res += columnNameVerifier(entry.key) + "="
       res += entry.value?.let { dataTypeVerifier(it) } ?: "null,"
     }
 
@@ -158,6 +159,12 @@ object DBOptionService{
       if ((data as String).isEmpty()) "''," else "'$data',"
     }
     else -> "$data,"
+  }
+
+  private fun columnNameVerifier(name : String) : String = when(name.lowercase()){
+    "limit" -> "'limit'"
+    "group" -> "'group'"
+    else -> name
   }
 
   fun init(){

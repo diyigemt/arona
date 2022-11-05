@@ -7,7 +7,6 @@ import net.diyigemt.arona.Arona
 import net.diyigemt.arona.advance.RemoteActionItem
 import net.diyigemt.arona.command.cache.GachaCache
 import net.diyigemt.arona.config.AronaGachaConfig
-import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.DataBaseProvider.query
 import net.diyigemt.arona.db.gacha.*
 import net.diyigemt.arona.remote.RemoteServiceAction
@@ -25,7 +24,7 @@ import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.select
-import net.diyigemt.arona.db.gacha.GachaCharacter as GC
+import net.diyigemt.arona.db.gacha.GachaCharacters as GC
 
 object GachaConfigCommand : CompositeCommand(
   Arona,"gacha", "抽卡",
@@ -135,9 +134,9 @@ object GachaConfigCommand : CompositeCommand(
   @Description("查看最近两个卡池的pickup内容")
   suspend fun UserCommandSender.list() {
     val poolList = query {
-      GachaPool
+      GachaPools
         .all()
-        .orderBy(GachaPoolTable.id to SortOrder.DESC)
+        .orderBy(GachaPoolsTable.id to SortOrder.DESC)
         .limit(2)
         .toList()
     }!!
@@ -147,17 +146,17 @@ object GachaConfigCommand : CompositeCommand(
     }
     val msg = poolList.map {
       val students = query { _ ->
-        GachaPoolCharacterTable
-          .innerJoin(GachaCharacterTable)
-          .slice(GachaCharacterTable.name, GachaCharacterTable.star)
+        GachaPoolCharactersTable
+          .innerJoin(GachaCharactersTable)
+          .slice(GachaCharactersTable.name, GachaCharactersTable.star)
           .select {
-            GachaPoolCharacterTable.poolId eq it.id
+            GachaPoolCharactersTable.poolId eq it.id
           }.toList()
       }!!
       return@map if (students.isEmpty()) {
         "${it.name}(id: ${it.id}): 没有关联的学生"
       } else {
-        "${it.name}(id: ${it.id}): ${students.joinToString(", ") { s -> GachaUtil.mapStudentInfo(s[GachaCharacterTable.name], s[GachaCharacterTable.star]) }}"
+        "${it.name}(id: ${it.id}): ${students.joinToString(", ") { s -> GachaUtil.mapStudentInfo(s[GachaCharactersTable.name], s[GachaCharactersTable.star]) }}"
       }
     }.reversed().joinToString("\n")
     subject.sendMessage(msg)
@@ -169,7 +168,7 @@ object GachaConfigCommand : CompositeCommand(
   // 模糊搜索判断是否重名
     val data = query {
       GC.find {
-        GachaCharacterTable.name eq name
+        GachaCharactersTable.name eq name
       }
     }
   }
@@ -191,12 +190,12 @@ object GachaConfigCommand : CompositeCommand(
       return
     }.getOrNull() ?: return
     var pool = query {
-      GachaPool.find { GachaPoolTable.name eq data.name }.firstOrNull()
+      GachaPools.find { GachaPoolsTable.name eq data.name }.firstOrNull()
     }
     // 没有同名池子 新建池子
     if (pool == null) {
       query {
-        pool = GachaPool.new {
+        pool = GachaPools.new {
           this.name = data.name
         }
       }
@@ -211,7 +210,7 @@ object GachaConfigCommand : CompositeCommand(
         return
       }
       query {
-        pool = GachaPool.new {
+        pool = GachaPools.new {
           this.name = poolName
         }
       }
@@ -221,8 +220,8 @@ object GachaConfigCommand : CompositeCommand(
     }.onFailure {
       // 不知道为什么创建失败, 删除创建的池子
       query {
-        GachaPoolTable.deleteWhere {
-          GachaPoolTable.id eq pool!!.id
+        GachaPoolsTable.deleteWhere {
+          GachaPoolsTable.id eq pool!!.id
         }
       }
       subject.sendMessage("新池子创建失败, 请查看控制台日志")
@@ -238,11 +237,11 @@ object GachaConfigCommand : CompositeCommand(
     subject.sendMessage(message)
   }
 
-  private fun insertCharacter(pool: GachaPool, list: List<GachaCharacter>): List<GC> {
+  private fun insertCharacter(pool: GachaPools, list: List<GachaCharacter>): List<GC> {
     return query { _ ->
       list.map {
         var gc = GC.find {
-          GachaCharacterTable.name eq it.name
+          GachaCharactersTable.name eq it.name
         }.firstOrNull()
         // 存在添加不存在删除
         if (gc == null) {
@@ -252,7 +251,7 @@ object GachaConfigCommand : CompositeCommand(
             this.limit = it.limit == 1
           }
         }
-        GachaPoolCharacter.new {
+        GachaPoolCharacters.new {
           this.poolId = pool.id
           this.characterId = gc.id
         }

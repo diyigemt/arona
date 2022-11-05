@@ -17,9 +17,9 @@ object BaseDataBase {
   fun init() {
     query {
       SchemaUtils.create(
-        GachaCharacterTable,
-        GachaPoolTable,
-        GachaPoolCharacterTable,
+        GachaCharactersTable,
+        GachaPoolsTable,
+        GachaPoolCharactersTable,
         GachaHistoryTable,
         GachaLimitTable,
         TarotTable,

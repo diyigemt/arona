@@ -9,20 +9,20 @@ import org.jetbrains.exposed.sql.select
 
 object GachaCache {
 
-  lateinit var star1List: MutableList<GachaCharacter>
-  lateinit var star2List: MutableList<GachaCharacter>
-  lateinit var star3List: MutableList<GachaCharacter>
-  lateinit var star2PickupList: MutableList<GachaCharacter>
-  lateinit var star3PickupList: MutableList<GachaCharacter>
+  lateinit var star1List: MutableList<GachaCharacters>
+  lateinit var star2List: MutableList<GachaCharacters>
+  lateinit var star3List: MutableList<GachaCharacters>
+  lateinit var star2PickupList: MutableList<GachaCharacters>
+  lateinit var star3PickupList: MutableList<GachaCharacters>
 
   fun init() {
     updateData()
     Arona.info("arona gacha module init success.")
   }
 
-  fun updatePool(pool: Int): GachaPool? {
+  fun updatePool(pool: Int): GachaPools? {
     val targetPool = query {
-      GachaPool.findById(pool)
+      GachaPools.findById(pool)
     } ?: return null
     if (!updateLimitData(pool)) return null
     AronaGachaConfig.activePool = pool
@@ -31,7 +31,7 @@ object GachaCache {
 
   private fun updateData() {
     val all = query {
-      GachaCharacter.find { GachaCharacterTable.limit eq false }
+      GachaCharacters.find { GachaCharactersTable.limit eq false }
     }!!
     star1List = all.filter { it.star == 1 }.toMutableList()
     star2List = all.filter { it.star == 2 }.toMutableList()
@@ -41,12 +41,12 @@ object GachaCache {
 
   private fun updateLimitData(pool: Int): Boolean {
     val limit = query {
-      GachaCharacterTable
-        .innerJoin(GachaPoolCharacterTable)
-        .innerJoin(GachaPoolTable)
-        .select { GachaPoolTable.id eq pool }
+      GachaCharactersTable
+        .innerJoin(GachaPoolCharactersTable)
+        .innerJoin(GachaPoolsTable)
+        .select { GachaPoolsTable.id eq pool }
         .map {
-          GachaCharacter.wrapRow(it)
+          GachaCharacters.wrapRow(it)
         }
     }?: return false
     star2PickupList = limit.filter { it.star == 2 }.toMutableList()

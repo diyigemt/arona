@@ -77,7 +77,11 @@ object DBOptionService{
         )
       }.createInstance() as BaseDTO<*>
 
-      Arona.info(job.properties.task.args.toString())
+      val args = keyEqualValueParser(job.properties.task.args)
+      val where = keyEqualValueParser(job.properties.task.where).let {
+        if(it.isNotEmpty()) "WHERE $it"
+        else ""
+      }
 
       val query = runCatching {
         when(job.properties.task.strategy.uppercase()){
@@ -88,23 +92,14 @@ object DBOptionService{
 
             job.properties.task.args?.forEach { entry ->
               rows += (entry.key + ",")
-              values += entry.value?.let {
-                when(it::class){
-                  String::class -> {
-                    if (it as String == "") "''," else "'$it',"
-                  }
-                  else -> "$it,"
-                }
-              } ?: "null,"
+              values += entry.value?.let { dataTypeVerifier(it) } ?: "null,"
             }.apply {
               rows = rows.substring(0, rows.length - 1)
               values = values.substring(0, values.length - 1)
             }
 
             runCatching {
-              "INSERT INTO ${job.properties.table} ($rows) VALUES ($values)".exec(db.ordinal){
-                
-              }
+              "INSERT INTO ${job.properties.table} ($rows) VALUES ($values)".exec(db.ordinal){}
             }.onFailure {
               it.printStackTrace()
               return@async ServerResponse(HttpStatusCode.BadRequest.value, it.localizedMessage, null as String?)
@@ -115,7 +110,7 @@ object DBOptionService{
 
           "UPDATE" -> {
             runCatching {
-              "UPDATE ${job.properties.table} SET nameCn='update' WHERE Id=9".exec(db.ordinal){}
+              "UPDATE ${job.properties.table} SET $args $where".exec(db.ordinal){}
             }.onFailure {
               it.printStackTrace()
               return@async ServerResponse(HttpStatusCode.BadRequest.value, it.localizedMessage, null as String?)
@@ -124,7 +119,18 @@ object DBOptionService{
             selectAll(targetInstance, db)
           }
 
-          else -> return@async ServerResponse(HttpStatusCode.BadRequest.value, "Undefined process strategy: ${job.properties.task.strategy}", null as String?)
+          "DELETE" -> {
+            runCatching {
+              "DELETE FROM ${job.properties.table} $where".exec(db.ordinal){}
+            }.onFailure {
+              it.printStackTrace()
+              return@async ServerResponse(HttpStatusCode.BadRequest.value, it.localizedMessage, null as String?)
+            }
+
+            selectAll(targetInstance, db)
+          }
+
+          else -> return@async ServerResponse(HttpStatusCode.BadRequest.value, "Undefined Process Strategy: ${job.properties.task.strategy}", null as String?)
         }
       }.getOrThrow()
 
@@ -134,6 +140,25 @@ object DBOptionService{
   private fun selectAll(instance : KClass<out Any>, db : DB) : List<ResultRow> = DataBaseProvider.query(db.ordinal) {
     Query(instance.objectInstance as FieldSet, null).toList()
   } ?: mutableListOf()
+
+  private fun keyEqualValueParser(map: Map<String, Any?>?) : String {
+    var res = ""
+    map?.forEach { entry ->
+      res += entry.key + "="
+      res += entry.value?.let { dataTypeVerifier(it) } ?: "null,"
+    }
+
+    if (res.isNotEmpty()) res = res.substring(0, res.length - 1)
+
+    return res
+  }
+
+  private fun dataTypeVerifier(data : Any) : String = when(data::class){
+    String::class -> {
+      if ((data as String).isEmpty()) "''," else "'$data',"
+    }
+    else -> "$data,"
+  }
 
   fun init(){
     val clazz = ReflectionUtil.getTypeAnnotatedClass(DTOService::class.java)

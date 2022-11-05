@@ -23,15 +23,6 @@ data class Properties(
 
 data class Task(
   val strategy: String,
-  val where: Map<String, Any?>? = null,
-  val args: Map<String, Any?>? = null
-){
-
-  fun getStrategyModel() : Strategy? = when(strategy.uppercase()){
-    Strategy.INSERT.name -> Strategy.INSERT
-    Strategy.DELETE.name -> Strategy.DELETE
-    Strategy.UPDATE.name -> Strategy.UPDATE
-    Strategy.SELECT.name -> Strategy.SELECT
-    else -> null
-  }
-}
+  val args: Map<String, Any?>? = null,
+  val where: Map<String, Any?>? = null
+)

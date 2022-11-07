@@ -7,13 +7,42 @@ import urllib.request
 from PIL import ImageDraw, ImageFont, Image
 import cv2
 import numpy as np
+import re
+import time
 headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"}
 font_size = 28
 fnt = ImageFont.truetype('C:\Windows\Fonts\msyh.ttc', font_size)
-def run(playwright: Playwright) -> None:
-    browser = playwright.chromium.launch(headless=True, slow_mo=50)
+def run(playwright: Playwright):
+    browser = playwright.chromium.launch(headless=True, slow_mo=100)
     context = browser.new_context(viewport={'width': 1920, 'height': 1080}, device_scale_factor=4.0)
     page = context.new_page()
+
+    # 从schaledb获取所有学生用于描述的姓名
+    page.goto("https://lonqie.github.io/SchaleDB")
+
+    student_list_link_btn = page.query_selector("#ba-navbar-link-students")
+    student_list_link_btn.click()
+    time.sleep(3)
+    student_list_btn = page.query_selector("#ba-student-list-btn")
+    student_list_btn.click()
+
+    re_replace = re.compile("loadStudent\('([\w_]+)'\)")
+    res = re.sub(re_replace, r"\1", "loadStudent('Akari')")
+
+    student_loma = list(map(lambda div: re.sub(re_replace, r"\1", div.get_attribute("onclick")), page.query_selector_all(".card-student")))
+    student_dict = {}
+    # 获取schaledb的描述信息
+    for loma in student_loma:
+        page.goto("https://lonqie.github.io/SchaleDB/?chara=%s" % loma)
+        stu_name = page.query_selector("#ba-student-name").text_content()
+        remote = query_remote_name(stu_name)
+        path = str(remote["path"])
+        png_name = path.replace("/student_rank/", "")
+        name_list = png_name.replace(".png", "").split("_")
+        first_name = name_list[0]
+        if not test_name_exist(first_name):
+            first_name = name_list[1]
+        student_dict[first_name] = loma
 
     page.goto("https://ba.game-db.tw/")
 
@@ -25,10 +54,24 @@ def run(playwright: Playwright) -> None:
     target_class = page.get_by_text("優香(体操服)").get_attribute("class")
     for name in page.query_selector_all(".%s" % target_class):
         name.click()
-        x_class = page.get_by_text("✖").element_handle().get_attribute("class")
-        outer_class = x_class[0: len(x_class) - 1] + str((int(x_class[len(x_class) - 1: len(x_class)]) - 1))
-        # 拿到最外层的div
-        outer = page.query_selector(".%s" % outer_class)
+        
+
+        # 下载远端图片
+        remote = query_remote_name(name.text_content())
+        path = str(remote["path"])
+        png_name = path.replace("/student_rank/", "")
+        name_list = png_name.replace(".png", "").split("_")
+        first_name = name_list[0]
+        if not test_name_exist(first_name):
+            first_name = name_list[1]
+            name_list.remove(first_name)
+            png_name = "_".join(name_list) + ".png"
+        local_path = "./image/parse/%s" % png_name
+        # 从远端下载原图
+        source_im = download_image("https://arona.cdn.diyigemt.com/image", path, local_path)
+
+        # 从shaledb下载
+        fetch_data_from_schaledb(student_dict[first_name])
 
         # 直接查看所需资源
         skill_resource_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[1]/div[2]/div[2]")
@@ -92,6 +135,32 @@ def run(playwright: Playwright) -> None:
         # parse_ba_game_db_image(source_im, resource_im, skill_im, local_path)
         break
 
+    context.close()
+    browser.close()
+
+def fetch_data_from_schaledb(name):
+    browser = playwright.chromium.launch(headless=True, slow_mo=100)
+    context = browser.new_context(viewport={'width': 1920, 'height': 1080}, device_scale_factor=4.0)
+    page = context.new_page()
+    page.goto("https://lonqie.github.io/SchaleDB/?chara=%s" % name)
+    weapon_btn = page.query_selector("#ba-student-tab-weapon")
+    weapon_btn.click()
+    weapon_name = page.query_selector("//*[@id='ba-student-page-weapon']/div[1]")
+    weapon_name.screenshot(path="./image/tmp/weapon_name.png")
+    weapon_img = page.query_selector("//*[@id='ba-student-page-weapon']/div[2]")
+    weapon_img.screenshot(path="./image/tmp/weapon_img.png")
+
+    base_info_btn = page.query_selector("#ba-student-tab-profile")
+    base_info_btn.click()
+
+    name_card = page.query_selector("//*[@id='ba-student-page-profile']/div[1]")
+    name_card.screenshot(path="./image/tmp/name_card.png")
+    base_card = page.query_selector("//*[@id='ba-student-page-profile']/div[2]")
+    base_card.screenshot(path="./image/tmp/name_card.png")
+    gift = page.query_selector("//*[@id='ba-student-page-profile']/div[6]")
+    gift.screenshot(path="./image/tmp/gift.png")
+    furniture = page.query_selector("//*[@id='ba-student-page-profile']/div[8]")
+    furniture.screenshot(path="./image/tmp/furniture.png")
     context.close()
     browser.close()
 

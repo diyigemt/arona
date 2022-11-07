@@ -11,28 +11,20 @@ package net.diyigemt.arona
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import net.diyigemt.arona.annotations.HideService
-import net.diyigemt.arona.config.*
+import net.diyigemt.arona.config.AronaConfig
+import net.diyigemt.arona.config.AronaServiceConfig
 import net.diyigemt.arona.db.DataBaseProvider
-import net.diyigemt.arona.extension.CommandInterceptorManager
 import net.diyigemt.arona.extension.CommandResolver
-import net.diyigemt.arona.handler.GroupRepeaterHandler
-import net.diyigemt.arona.handler.HentaiEventHandler
-import net.diyigemt.arona.handler.NudgeEventHandler
 import net.diyigemt.arona.interfaces.CoroutineFunctionProvider
 import net.diyigemt.arona.interfaces.Initialize
-import net.diyigemt.arona.quartz.QuartzProvider
-import net.diyigemt.arona.remote.RemoteServiceManager
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.service.AronaServiceManager
 import net.diyigemt.arona.util.GeneralUtils
-import net.diyigemt.arona.util.ImageUtil
 import net.diyigemt.arona.util.NetworkUtil
 import net.diyigemt.arona.util.ReflectionUtil
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.AbstractCommand
-import net.mamoe.mirai.console.command.BuiltInCommands
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
-import net.mamoe.mirai.console.command.CommandManager.INSTANCE.registeredCommands
 import net.mamoe.mirai.console.command.ConsoleCommandSender
 import net.mamoe.mirai.console.command.descriptor.ExperimentalCommandDescriptors
 import net.mamoe.mirai.console.command.executeCommand
@@ -40,8 +32,6 @@ import net.mamoe.mirai.console.data.AutoSavePluginConfig
 import net.mamoe.mirai.console.extension.PluginComponentStorage
 import net.mamoe.mirai.console.permission.AbstractPermitteeId
 import net.mamoe.mirai.console.permission.PermissionService.Companion.getPermittedPermissions
-import net.mamoe.mirai.console.permission.PermitteeId
-import net.mamoe.mirai.console.permission.RootPermission
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
 import net.mamoe.mirai.console.util.ConsoleExperimentalApi
@@ -51,16 +41,10 @@ import net.mamoe.mirai.contact.NormalMember
 import net.mamoe.mirai.contact.UserOrBot
 import net.mamoe.mirai.event.events.BotEvent
 import net.mamoe.mirai.event.events.BotOnlineEvent
-import net.mamoe.mirai.event.events.GroupMessageEvent
-import net.mamoe.mirai.event.events.NudgeEvent
 import net.mamoe.mirai.event.globalEventChannel
-import net.mamoe.mirai.event.subscribeGroupMessages
-import net.mamoe.mirai.event.subscribeMessages
-import net.mamoe.mirai.event.subscribeUserMessages
 import net.mamoe.mirai.message.code.MiraiCode.deserializeMiraiCode
 import net.mamoe.mirai.message.data.MessageChain
 import net.mamoe.mirai.message.data.MessageChainBuilder
-import net.mamoe.mirai.utils.info
 import java.io.File
 import kotlin.io.path.absolutePathString
 import kotlin.reflect.full.hasAnnotation
@@ -106,12 +90,6 @@ object Arona : KotlinPlugin(
     ReflectionUtil.getInterfacePetObjectInstance<CoroutineFunctionProvider>().forEach {
       it.start()
     }
-    // 需要初始化的类
-    runSuspend {
-      ReflectionUtil.getInterfacePetObjectInstance<Initialize>().sortedBy { it.priority }.forEach {
-        it.init()
-      }
-    }
     val grantCommandName = mutableListOf<String>()
     // 注册service
     ReflectionUtil.getInterfacePetObjectInstance<AronaService>().forEach {
@@ -123,8 +101,14 @@ object Arona : KotlinPlugin(
           grantCommandName.add(it.primaryName)
         }
       }
-      BuiltInCommands.PermissionCommand
       AronaServiceManager.register(it)
+    }
+
+    // 需要初始化的类
+    runSuspend {
+      ReflectionUtil.getInterfacePetObjectInstance<Initialize>().sortedBy { it.priority }.forEach {
+        it.init()
+      }
     }
 
     // 自动赋予指令权限

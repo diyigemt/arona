@@ -8,7 +8,7 @@ import io.ktor.server.routing.*
 import net.diyigemt.arona.web.api.v1.Contacts
 import net.diyigemt.arona.web.api.v1.data.Data
 import net.diyigemt.arona.web.api.v1.commit.CommitManager
-import net.diyigemt.arona.web.api.v1.config.GetAronaConfig
+import net.diyigemt.arona.web.api.v1.config.ConfigService
 import net.diyigemt.arona.web.api.v1.responseMessage
 
 fun Application.configureSerialization() {
@@ -20,8 +20,8 @@ fun Application.configureSerialization() {
       route("/api"){
         route("/v1"){
           route("/config"){
-            get("/aronaConfig"){
-              GetAronaConfig.worker(this)
+            get("/{config}"){
+              ConfigService.worker(this)
             }
 
             post("/commit"){

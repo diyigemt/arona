@@ -22,10 +22,8 @@ object Data : Worker {
   override suspend fun worker(context: PipelineContext<Unit, ApplicationCall>) {
     super.worker(context)
     kotlin.runCatching {
-
       val json = when(context.call.request.httpMethod){
         HttpMethod.Get -> DBJob(properties = Properties(task = Task("SELECT")))
-
         else -> MoshiUtil.reflect.adapter(DBJob::class.java).fromJson(context.call.receiveText())!!
       }
       json.properties.db = context.call.parameters["dataBase"]!!

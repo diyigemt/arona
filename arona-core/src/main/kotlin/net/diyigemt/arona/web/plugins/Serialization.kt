@@ -34,8 +34,9 @@ fun Application.configureSerialization() {
           }
 
           route("/db"){
-            post("/{dataBase}/{table}"){
-              Data.worker(this)
+            route("/{dataBase}/{table}"){
+              get { Data.worker(this) }
+              post { Data.worker(this) }
             }
           }
 

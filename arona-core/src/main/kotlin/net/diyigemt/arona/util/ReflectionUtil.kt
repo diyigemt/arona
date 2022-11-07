@@ -26,7 +26,7 @@ object ReflectionUtil : ReflectionUtils(){
   /**
    * 扫描默认配置
    * 扫描范围是整个插件（不包括依赖，除非你把依赖打包到jar里了）
-   * 扫描器是Type型注解
+   * 扫描器是Type型注解和子类关系
    * 如需DIY配置属性，新建变量并使用该变量赋值后再调用方法修改*/
   val defaultConfig: ConfigurationBuilder = ConfigurationBuilder().forPackage("net.diyigemt.arona")
     .setUrls(aronaUrl)
@@ -34,7 +34,7 @@ object ReflectionUtil : ReflectionUtils(){
 
   /**
    * 标准扫描结果
-   * 使用默认配置扫描整个插件范围内的所有class，符合需求可以直接使用该结果通过注解筛选你想要的类*/
+   * 使用默认配置扫描整个插件范围内的所有class，符合需求可以直接使用该结果通过注解或子类关系筛选你想要的类*/
   val reflections = Reflections(defaultConfig)
 
   /**

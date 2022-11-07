@@ -11,7 +11,7 @@ import org.jetbrains.exposed.sql.and
 object GachaUtil {
   private const val star = "★"
 
-  fun pickup(): GachaCharacter {
+  fun pickup(): GachaCharacters {
     val maxDot = pow10(AronaGachaConfig.maxDot)
     val star1Rate = (AronaGachaConfig.star1Rate * maxDot).toInt()
     val star2Rate = (AronaGachaConfig.star2Rate * maxDot).toInt()
@@ -22,7 +22,7 @@ object GachaUtil {
     }
   }
 
-  private fun pickup3(): GachaCharacter {
+  private fun pickup3(): GachaCharacters {
     val maxDot = pow10(AronaGachaConfig.maxDot)
     val star3List = GachaCache.star3List
     val star3PickupList = GachaCache.star3PickupList
@@ -31,7 +31,7 @@ object GachaUtil {
     return pickup(star3List, star3PickupList, star3Rate, star3PickupRate)
   }
 
-  fun pickup2(): GachaCharacter {
+  fun pickup2(): GachaCharacters {
     val maxDot = pow10(AronaGachaConfig.maxDot)
     val star2List = GachaCache.star2List
     val star2PickupList = GachaCache.star2PickupList
@@ -40,14 +40,14 @@ object GachaUtil {
     return pickup(star2List, star2PickupList, star2Rate, star2PickupRate)
   }
 
-  private fun pickup1(): GachaCharacter {
+  private fun pickup1(): GachaCharacters {
     val maxDot = pow10(AronaGachaConfig.maxDot)
     val star1List = GachaCache.star1List
     val star1Rate = (AronaGachaConfig.star1Rate * maxDot).toInt()
     return pickup(star1List, null, star1Rate)
   }
 
-  fun pickup(list: List<GachaCharacter>, pickupList: List<GachaCharacter>?, rate: Int, pickupRate: Int = 0) =
+  fun pickup(list: List<GachaCharacters>, pickupList: List<GachaCharacters>?, rate: Int, pickupRate: Int = 0) =
     if (pickupList != null && pickupList.isNotEmpty()) {
       if ((0 until rate).random() < pickupRate) {
         rollList(pickupList)
@@ -133,15 +133,15 @@ object GachaUtil {
     }
   }!!
 
-  fun resultData2String(result: GachaCharacter) = "${result.name}(${result.star}${star})${if (hitPickup(result)) "(pick up)" else ""}"
+  fun resultData2String(result: GachaCharacters) = "${result.name}(${result.star}${star})${if (hitPickup(result)) "(pick up)" else ""}"
 
-  fun hitPickup(result: GachaCharacter) = GachaCache.star2PickupList.contains(result) || GachaCache.star3PickupList.contains(result)
+  fun hitPickup(result: GachaCharacters) = GachaCache.star2PickupList.contains(result) || GachaCache.star3PickupList.contains(result)
 
-  fun mapStudentInfo(student: GachaCharacter) = mapStudentInfo(student.name, student.star)
+  fun mapStudentInfo(student: GachaCharacters) = mapStudentInfo(student.name, student.star)
 
   fun mapStudentInfo(name: String, star: Int) = "${name}(${star}${this.star})"
 
-  private fun rollList(list: List<GachaCharacter>) = list[(list.indices).random()]
+  private fun rollList(list: List<GachaCharacters>) = list[(list.indices).random()]
 
   private fun pow10(pow: Int) = Array<Int>(pow) { 10 }.sum()
 

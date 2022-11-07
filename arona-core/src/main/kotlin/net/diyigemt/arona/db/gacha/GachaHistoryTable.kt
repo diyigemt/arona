@@ -1,11 +1,15 @@
 package net.diyigemt.arona.db.gacha
 
+import net.diyigemt.arona.annotations.DTOService
+import net.diyigemt.arona.db.BaseDTO
 import org.jetbrains.exposed.dao.LongEntity
 import org.jetbrains.exposed.dao.LongEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.sql.Column
+import org.jetbrains.exposed.sql.ResultRow
 
+@DTOService
 object GachaHistoryTable: IdTable<Long>(name = "GachaHistory") {
   override val id: Column<EntityID<Long>> = long("qq").entityId()
   val group: Column<Long> = long("group")
@@ -15,6 +19,29 @@ object GachaHistoryTable: IdTable<Long>(name = "GachaHistory") {
   val dog: Column<Int> = integer("dog")
 
   override val primaryKey: PrimaryKey = PrimaryKey(id, group, pool)
+
+  data class GachaHistoryDTO(
+    val group: Long = 0,
+    val pool: Int = 0,
+    val points: Int = 0,
+    val count3: Int = 0,
+    val dog: Int = 0
+  ): BaseDTO<GachaHistoryDTO>{
+    override fun toModel(results: List<ResultRow>): List<GachaHistoryDTO> {
+      val res : MutableList<GachaHistoryDTO> = mutableListOf()
+      results.forEach{
+        res.add(GachaHistoryDTO(
+          it[GachaHistoryTable.group],
+          it[GachaHistoryTable.pool],
+          it[GachaHistoryTable.points],
+          it[GachaHistoryTable.count3],
+          it[GachaHistoryTable.dog],
+        ))
+      }
+
+      return res
+    }
+  }
 }
 
 class GachaHistory(id: EntityID<Long>): LongEntity(id) {

@@ -16,7 +16,7 @@ from functools import reduce
 headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"}
 font_size = 28
 fnt = ImageFont.truetype('C:\Windows\Fonts\msyh.ttc', font_size)
-cache_file_location = r"./config/student_cache.txt"
+cache_file_location = r"./config/student_cache.json"
 name_map_dict_file_location = r"./config/name_map_dict.txt"
 def run(playwright: Playwright):
     # 检查mapping
@@ -53,13 +53,27 @@ def run(playwright: Playwright):
     count = 0
     start_time = time.time()
     end_time = 0
-
+    # target_list = ["日奈", "阿露", "真白", "椿"]
+    target_list = ["爱莉", "枫香", "花子", "玲美", "凌音", "晴", "朱莉", "志美子", "喜美"]
+    local_file_name = {
+        "爱莉": "爱莉.png",
+        "枫香": "风华_枫香_煮饭婆.png",
+        "花子": "花子.png",
+        "玲美": "玲美.png",
+        "晴": "晴.png",
+        "凌音": "凌音.png",
+        "朱莉": "朱莉.png",
+        "志美子": "志美子_图书妹.png",
+        "喜美": "喜美.png",
+    }
     for name in jpNameBtnList:
-        if count < 97:
-            count = count + 1
-            continue
+        # if count != 98:
+        #     count = count + 1
+        #     continue
         jpName = name.get_attribute("jpName")
         info = student_dict[jpName]
+        # if info["cnName"] not in target_list:
+        #     continue
         # 下载远端图片
         remote = query_remote_name(info["cnName"])
         path = str(remote["path"])
@@ -79,7 +93,7 @@ def run(playwright: Playwright):
             continue
         # 从远端下载原图
         source_im = download_image("https://arona.cdn.diyigemt.com/image", path, local_path)
-
+        # source_im = cv2.imdecode(np.fromfile(local_path, dtype=np.uint8), -1)
         # 从shaledb下载
         fetch_data_from_schaledb(info["loma"])
         name.click()
@@ -87,7 +101,11 @@ def run(playwright: Playwright):
         # 下载拉满需要的资源图片之类的
         skill_resource_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[1]/div[2]/div[2]")
         skill_resource_btn.click()
-        
+
+        # 拿到资源列表的class判断是8行资源还是7行
+        target_class = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[4]").get_attribute("class")
+        resource_size = len(page.query_selector_all(".%s" % target_class))
+
         skill_resource_1 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[4]")
         skill_resource_1.screenshot(path="./image/tmp/skill_resource_1.png")
         skill_resource_2 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[5]")
@@ -96,14 +114,22 @@ def run(playwright: Playwright):
         skill_resource_3.screenshot(path="./image/tmp/skill_resource_3.png")
         skill_resource_4 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[7]")
         skill_resource_4.screenshot(path="./image/tmp/skill_resource_4.png")
-        skill_resource_5 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[8]")
-        skill_resource_5.screenshot(path="./image/tmp/skill_resource_5.png")
-        resource_1 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[9]")
-        resource_1.screenshot(path="./image/tmp/resource_1.png")
-        resource_2 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[10]")
-        resource_2.screenshot(path="./image/tmp/resource_2.png")
-        resource_3 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[11]")
-        resource_3.screenshot(path="./image/tmp/resource_3.png")
+        if resource_size == 8:
+            skill_resource_5 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[8]")
+            skill_resource_5.screenshot(path="./image/tmp/skill_resource_5.png")
+            resource_1 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[9]")
+            resource_1.screenshot(path="./image/tmp/resource_1.png")
+            resource_2 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[10]")
+            resource_2.screenshot(path="./image/tmp/resource_2.png")
+            resource_3 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[11]")
+            resource_3.screenshot(path="./image/tmp/resource_3.png")
+        else:
+            resource_1 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[8]")
+            resource_1.screenshot(path="./image/tmp/resource_1.png")
+            resource_2 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[9]")
+            resource_2.screenshot(path="./image/tmp/resource_2.png")
+            resource_3 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[10]")
+            resource_3.screenshot(path="./image/tmp/resource_3.png")
 
         equipment_resource_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[3]/div/div[2]")
         equipment_resource_btn.click()
@@ -130,7 +156,8 @@ def run(playwright: Playwright):
         path_list.append(base_path + "skill_resource_2.png")
         path_list.append(base_path + "skill_resource_3.png")
         path_list.append(base_path + "skill_resource_4.png")
-        path_list.append(base_path + "skill_resource_5.png")
+        if resource_size == 8:
+            path_list.append(base_path + "skill_resource_5.png")
         path_list.append(base_path + "resource_1.png")
         path_list.append(base_path + "resource_2.png")
         path_list.append(base_path + "resource_3.png")
@@ -156,7 +183,7 @@ def run(playwright: Playwright):
         final_db_im = concat_two_im(base_path + "game_db.png", base_path + "schaledb.png", base_path + "final_db.png")
 
         # 和夜喵拼在一起
-        source_im = cv2.cvtColor(source_im, cv2.COLOR_BGR2BGRA)
+        # source_im = cv2.cvtColor(source_im, cv2.COLOR_BGR2BGRA)
         source_row, source_col, _ = source_im.shape
         final_db_row, final_db_col, _ = final_db_im.shape
         if final_db_col > source_col:
@@ -179,7 +206,7 @@ def run(playwright: Playwright):
         cv2.imencode(".png", im)[1].tofile(local_path)
         count = count + 1
         end_time = time.time()
-        print("success: %s, %d/%d, spend: %ds" % (first_name, count, 118, (end_time - start_time)))
+        print("success: %s, %d/%d, spend: %ds" % (info["cnName"], count, 118, (end_time - start_time)))
         start_time = end_time
         # 关闭信息窗口
         close_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[1]")

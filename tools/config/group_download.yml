@@ -1,0 +1,10 @@
+image:
+  - name: 'test'
+    path: './image/some/'
+    url: ''
+  - name: '国际服未来视'
+    path: './image/some/'
+    url: 'https://i0.hdslb.com/bfs/new_dyn/d83d6272cdc08252d40d6d4a332dedb1425535005.jpg@1295w.webp'
+  - name: 'test'
+    path: './image/student_rank/'
+    url: ''

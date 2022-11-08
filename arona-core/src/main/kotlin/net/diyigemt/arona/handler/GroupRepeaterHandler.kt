@@ -3,6 +3,7 @@ package net.diyigemt.arona.handler
 import net.diyigemt.arona.config.AronaRepeatConfig
 import net.diyigemt.arona.service.AronaGroupService
 import net.diyigemt.arona.service.AronaMessageReactService
+import net.mamoe.mirai.contact.Contact.Companion.uploadImage
 import net.mamoe.mirai.event.events.GroupMessageEvent
 
 // 复读
@@ -12,6 +13,7 @@ object GroupRepeaterHandler: AronaMessageReactService<GroupMessageEvent>, AronaG
   private var count: Int = 0
   override suspend fun handle(event: GroupMessageEvent) {
     val now = event.message.serializeToMiraiCode()
+    event.subject.uploadImage()
     if (now.startsWith("/")) return
     val senderId = event.sender.id
     if (now == last && senderId != lastSender) {

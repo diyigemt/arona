@@ -10,6 +10,7 @@ import re
 import getpass
 import requests
 import paramiko
+import json
 
 from reflash_cdn import purgeFiles
 password_file = "C:\\Users\\%s\\.ssh\\arona-backend-password" % getpass.getuser()
@@ -173,7 +174,7 @@ def update_image_from_api(folder: str, type: int = 2):
         file_path = base_img_folder + folder + file
         file_path_absolute = folder + file
         
-        file_names = file_name.split("_")
+        file_names = list(map(lambda n: replace0(n), file_name.split("_")))
         
         # 将大于4.5M的图片进行压缩
         while os.path.getsize(file_path) / 1024 / 1024 > 3:
@@ -186,17 +187,20 @@ def update_image_from_api(folder: str, type: int = 2):
         with open(file_path, "rb") as f:
             hash = hashlib.md5(f.read()).digest().hex()
         # 插入主记录
+        main_name = file_names[0]
+        if not test_name_exist(main_name):
+            file_names.remove(main_name)
+            main_name = file_names[0]
         dict.append({
-            "name": file_names[0],
+            "name": main_name,
             "path": file_path_absolute,
             "hash": hash,
             "type": type
         })
         # 如果有别名
         if len(file_names) > 1:
-            file_names.remove(file_names[0])
+            file_names.remove(main_name)
             for a in file_names:
-                a = replace0(a)
                 dict.append({
                     "name": a,
                     "path": file_path_absolute,
@@ -250,6 +254,13 @@ def post_data(action: str, data: any, printResp: bool = True):
         print(resp.text)
     return resp
         
+def test_name_exist(name):
+    header = {
+        "Content-Type": "application/json"
+    }
+    resp = requests.get("https://arona.diyigemt.com/api/v1/image?name=%s" % name, headers=header)
+    result = json.loads(resp.content.decode())
+    return len(result["data"]) == 1
 
 replace_name = {
     "沙耶": "/老鼠/鼠鼠",

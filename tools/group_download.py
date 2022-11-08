@@ -4,7 +4,7 @@ from tools import draw_image
 
 if __name__ == "__main__":
     source = {}
-    with open(r"./group_download.yml", "r", encoding="UTF-8") as f:
+    with open(r"./config/group_download.yml", "r", encoding="UTF-8") as f:
         source = yaml.load(f, SafeLoader)
     count = 1
     images = list(filter(lambda item: item['name'] != 'test', list(source['image'])))

@@ -20,6 +20,7 @@
 /tools/img/
 /tools/image/
 /tools/__pycache__/
+/tools/config/
 tools/pixiv.db
 tools/pixiv.py
 tools/pixiv.db-journal

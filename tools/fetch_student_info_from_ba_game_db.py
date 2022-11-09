@@ -54,17 +54,20 @@ def run(playwright: Playwright):
     start_time = time.time()
     end_time = 0
     # target_list = ["日奈", "阿露", "真白", "椿"]
-    target_list = ["爱莉", "枫香", "花子", "玲美", "凌音", "晴", "朱莉", "志美子", "喜美"]
+    # target_list = ["爱莉", "枫香", "花子", "玲美", "凌音", "晴", "朱莉", "志美子", "喜美"]
+    target_list = ["喜美", "椿", "真白"]
     local_file_name = {
-        "爱莉": "爱莉.png",
-        "枫香": "风华_枫香_煮饭婆.png",
-        "花子": "花子.png",
-        "玲美": "玲美.png",
-        "晴": "晴.png",
-        "凌音": "凌音.png",
-        "朱莉": "朱莉.png",
-        "志美子": "志美子_图书妹.png",
-        "喜美": "喜美.png",
+        # "爱莉": "爱莉.png",
+        # "枫香": "风华_枫香_煮饭婆.png",
+        # "花子": "花子.png",
+        # "玲美": "玲美.png",
+        # "晴": "晴.png",
+        # "凌音": "凌音.png",
+        # "朱莉": "朱莉.png",
+        # "志美子": "志美子_图书妹.png",
+        "喜美": "喜美_好美.png",
+        "椿": "椿_狗盾.png",
+        "真白": "麻白.png"
     }
     for name in jpNameBtnList:
         # if count != 98:
@@ -72,28 +75,38 @@ def run(playwright: Playwright):
         #     continue
         jpName = name.get_attribute("jpName")
         info = student_dict[jpName]
-        # if info["cnName"] not in target_list:
-        #     continue
-        # 下载远端图片
-        remote = query_remote_name(info["cnName"])
-        path = str(remote["path"])
-        png_name = path.replace("/student_rank/", "")
-        name_list = png_name.replace(".png", "").split("_")
-        first_name = name_list[0]
-        if not test_name_exist(first_name):
-            name_list.remove(first_name)
-            first_name = name_list[0]
-            png_name = "_".join(name_list) + ".png"
-        local_path = "./image/parse/%s" % png_name
-        if os.path.exists(local_path):
-            count = count + 1
-            print("skip: %s, %d/%d" % (first_name, count, 118))
-            end_time = time.time()
-            start_time = end_time
+        if info["cnName"] not in target_list:
             continue
+        # 下载远端图片
+        # remote
+        # remote = query_remote_name(info["cnName"])
+        # path = str(remote["path"])
+        # png_name = path.replace("/student_rank/", "")
+        # name_list = png_name.replace(".png", "").split("_")
+        # first_name = name_list[0]
+        # if not test_name_exist(first_name):
+        #     name_list.remove(first_name)
+        #     first_name = name_list[0]
+        #     png_name = "_".join(name_list) + ".png"
+        # local_path = "./image/parse/%s" % png_name
+        # local
+        local_path = "./image/parse/%s" % local_file_name[info["cnName"]]
+
+        # remote
+        # if os.path.exists(local_path):
+        #     count = count + 1
+        #     print("skip: %s, %d/%d" % (info["cnName"], count, 118))
+        #     end_time = time.time()
+        #     start_time = end_time
+        #     continue
         # 从远端下载原图
-        source_im = download_image("https://arona.cdn.diyigemt.com/image", path, local_path)
-        # source_im = cv2.imdecode(np.fromfile(local_path, dtype=np.uint8), -1)
+
+        # remote
+        # source_im = download_image("https://arona.cdn.diyigemt.com/image", path, local_path)
+
+        # local
+        source_im = cv2.imdecode(np.fromfile(local_path, dtype=np.uint8), -1)
+
         # 从shaledb下载
         fetch_data_from_schaledb(info["loma"])
         name.click()
@@ -183,8 +196,11 @@ def run(playwright: Playwright):
         final_db_im = concat_two_im(base_path + "game_db.png", base_path + "schaledb.png", base_path + "final_db.png")
 
         # 和夜喵拼在一起
-        # source_im = cv2.cvtColor(source_im, cv2.COLOR_BGR2BGRA)
-        source_row, source_col, _ = source_im.shape
+
+        source_row, source_col, dimension = source_im.shape
+        if dimension == 3:
+            source_im = cv2.cvtColor(source_im, cv2.COLOR_BGR2BGRA)
+
         final_db_row, final_db_col, _ = final_db_im.shape
         if final_db_col > source_col:
             pp = base_path + "final_db.png"
@@ -206,7 +222,13 @@ def run(playwright: Playwright):
         cv2.imencode(".png", im)[1].tofile(local_path)
         count = count + 1
         end_time = time.time()
+
+        # remote
+        # print("success: %s, %d/%d, spend: %ds" % (first_name, count, 118, (end_time - start_time)))
+        
+        # loacal
         print("success: %s, %d/%d, spend: %ds" % (info["cnName"], count, 118, (end_time - start_time)))
+        
         start_time = end_time
         # 关闭信息窗口
         close_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[1]")
@@ -339,21 +361,39 @@ def build_stu_loma_map_from_schaledb(playwright: Playwright):
     context.close()
     browser.close()
 
-def concat_list(paths: list[str], save_path, margin = 0):
+def concat_list(paths: list[str], save_path, margin = 0, reshape = False):
     im_list = list(map(lambda path: cv2.imdecode(np.fromfile(path, dtype=np.uint8), -1), paths))
-    rows = reduce(lambda prv, im: im.shape[0] + prv, im_list, 0) + margin * (len(paths) - 1)
     cols = im_list[0].shape[1]
-    final = Image.new('RGBA', (cols, rows), color='white')
+    if reshape:
+        col_list = list(map(lambda im: im.shape[1], im_list))
+        cols = median(col_list)
+        final_im_list = []
+        for im in im_list:
+            row, col, _ = im.shape
+            rate = cols / col
+            final_im_list.append(cv2.resize(im, (int(col*rate), int(row*rate))))
+        im_list = final_im_list
+    rows = reduce(lambda prv, im: im.shape[0] + prv, im_list, 0) + margin * (len(paths) - 1)
+
+    final = Image.new('RGBA', (int(cols), int(rows)), color='white')
     final.save(save_path)
     final = cv2.imdecode(np.fromfile(save_path, dtype=np.uint8), -1)
     curRows = 0
     for im in im_list:
-        row, col, _ = im.shape
+        row, col, dimension = im.shape
+        if dimension == 3:
+            im = im = cv2.cvtColor(im, cv2.COLOR_BGR2BGRA)
         final[curRows:curRows + row, 0: col] = im
         curRows = curRows + row + margin
 
     cv2.imencode(".png", final)[1].tofile(save_path)
     return final
+
+# 获取数组中位数
+def median(data):
+    data.sort()
+    half = len(data) // 2
+    return (data[half] + data[~half])/2
 
 def concat_two_im(path_a: str, path_b: str, path: str, type: str = 'horizen', margin = 0):
     im_a = cv2.imdecode(np.fromfile(path_a, dtype=np.uint8), -1)
@@ -524,5 +564,6 @@ def query_remote_name(name):
 def replace_none_char(name: str) -> str:
     return name.replace("（", "(").replace("）", ")")
 
-with sync_playwright() as playwright:
-    run(playwright)
+if __name__ == "__main__":
+    with sync_playwright() as playwright:
+        run(playwright)

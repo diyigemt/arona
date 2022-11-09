@@ -1,12 +1,11 @@
-from tools import update_image_from_api, post_image_to_remote, replace0
+from tools import post_image_to_remote, replace0, update_image_from_api
 from fetch_student_info_from_ba_game_db import test_name_exist, download_image, query_remote_name
 import os
 import cv2
 import numpy as np
 base_folder = "/student_rank/"
 
-
-# 更新杂图
+# 更新学生
 
 if __name__ == '__main__':
     # 将夜喵的图和wiki图整合
@@ -46,5 +45,5 @@ if __name__ == '__main__':
             cv2.imencode(".png", source_im)[1].tofile(file_path)
             os.remove(local_path)
             print("student: %s process success" % stu_name)
-    # update_image_from_api(base_folder, type=1)
-    # post_image_to_remote(base_folder)
+    update_image_from_api(base_folder, type=1)
+    post_image_to_remote(base_folder)

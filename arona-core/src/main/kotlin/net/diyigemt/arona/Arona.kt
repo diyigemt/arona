@@ -40,6 +40,7 @@ import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.NormalMember
 import net.mamoe.mirai.contact.UserOrBot
 import net.mamoe.mirai.event.events.BotEvent
+import net.mamoe.mirai.event.events.BotOfflineEvent
 import net.mamoe.mirai.event.events.BotOnlineEvent
 import net.mamoe.mirai.event.globalEventChannel
 import net.mamoe.mirai.message.code.MiraiCode.deserializeMiraiCode
@@ -62,11 +63,16 @@ object Arona : KotlinPlugin(
       val pluginEventChannel = globalEventChannel()
       pluginEventChannel.filter {
         it is BotOnlineEvent && it.bot.id == AronaConfig.qq
-      }.subscribeOnce<BotOnlineEvent> {
+      }.subscribeAlways<BotOnlineEvent> {
         arona = it.bot
         if (AronaConfig.sendOnlineMessage) {
           sendMessage(deserializeMiraiCode(AronaConfig.onlineMessage))
         }
+      }
+      pluginEventChannel.filter {
+        it is BotOnlineEvent && it.bot.id == AronaConfig.qq
+      }.subscribeAlways<BotOfflineEvent> {
+        arona = null
       }
       pluginEventChannel.subscribeAlways<BotEvent> {
         AronaServiceManager.emit(this)

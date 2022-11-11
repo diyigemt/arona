@@ -188,9 +188,16 @@ def update_image_from_api(folder: str, type: int = 2):
             hash = hashlib.md5(f.read()).digest().hex()
         # 插入主记录
         main_name = file_names[0]
+        # 判断是否新增
+        # 第一个名字不存在
         if not test_name_exist(main_name):
-            file_names.remove(main_name)
-            main_name = file_names[0]
+            # 且没有第二个名字或者第二个名字也不存在, 说明是新增, 不做操作
+            if len(file_names) > 1:
+                if not test_name_exist(file_names[1]):
+                    pass
+                else:
+                    file_names.remove(main_name)
+                    main_name = file_names[0]
         dict.append({
             "name": main_name,
             "path": file_path_absolute,

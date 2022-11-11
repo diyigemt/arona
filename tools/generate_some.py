@@ -59,10 +59,10 @@ if __name__ == '__main__':
         else:
             other_list.append(file_name)
         index += 1
-    jp_list.sort()
-    en_list.sort()
-    other_list.sort()
-    battle_list.sort()
+    jp_list.sort(key=len)
+    en_list.sort(key=len)
+    other_list.sort(key=len)
+    battle_list.sort(key=len)
     jp_list = a(jp_list)
     en_list = a(en_list)
     other_list = a(other_list)

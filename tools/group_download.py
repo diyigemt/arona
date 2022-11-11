@@ -21,7 +21,7 @@ if __name__ == "__main__":
         path = item["path"]
         url = item["url"].split("@")[0]
         draw_image(url, name, path)
-        if item["group"] != "":
+        if "group" in item and item["group"] != "":
             if item["group"] in concat_group:
                 concat_group[item["group"]].append(path + name)
             else:

@@ -24,3 +24,5 @@ tools/pixiv.db
 tools/pixiv.py
 tools/pixiv.db-journal
 tools/skip
+tools/tmp.png
+tools/tmp2.png

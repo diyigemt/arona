@@ -1,5 +1,6 @@
 package net.diyigemt.arona.web.api.v1
 
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.util.pipeline.*
@@ -29,7 +30,7 @@ object Contacts : Worker{
       context.call.respond(responseMessage(res))
     }.onFailure {
       it.printStackTrace()
-      context.call.respond(fail())
+      context.call.respond(HttpStatusCode.InternalServerError, fail())
     }
   }
 

@@ -33,7 +33,7 @@ object Data : Worker {
       context.call.respond(MoshiUtil.reflect.adapter<ServerResponse<out Any>>(type).serializeNulls().toJson(res))
     }.onFailure {
       it.printStackTrace()
-      context.call.respond(fail())
+      context.call.respond(HttpStatusCode.InternalServerError, fail())
     }
   }
 }

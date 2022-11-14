@@ -1,6 +1,7 @@
 package net.diyigemt.arona.web.api.v1.commit
 
 import com.squareup.moshi.Types
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -53,7 +54,7 @@ object CommitManager :Worker {
       context.call.respond(responseMessage(resMap))
     }.onFailure {
       it.printStackTrace()
-      context.call.respond(fail())
+      context.call.respond(HttpStatusCode.UnprocessableEntity, fail())
     }
   }
 

@@ -37,11 +37,12 @@ object ConfigService : Worker{
     }.onFailure {
       when(it){
         is ClassNotFoundException -> context.call.respond(
+          HttpStatusCode.NotFound,
           ServerResponse(HttpStatusCode.NotFound.value, "No config named: $config found", null as String?)
         )
         else -> {
           it.printStackTrace()
-          context.call.respond(fail())
+          context.call.respond(HttpStatusCode.InternalServerError, fail())
         }
       }
     }

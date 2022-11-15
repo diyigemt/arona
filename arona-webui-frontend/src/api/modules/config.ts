@@ -24,7 +24,7 @@ export function saveAronaConfig<T, D>(config: Config2Form<T>, configKey: Availab
     Reflect.set(data, `${configKey}.${key}`, value);
   });
   return service.raw<D>({
-    url: "/commit",
+    url: "/config/commit",
     method: "POST",
     data,
   });

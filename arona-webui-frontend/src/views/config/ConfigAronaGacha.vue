@@ -96,55 +96,26 @@
     </el-form-item>
     <el-form-item>
       <el-button type="primary" :loading="loading.confirmLoading" @click="doSave">保存</el-button>
-      <el-button @click="doFetchMainConfig">重置</el-button>
+      <el-button @click="doFetchConfig">重置</el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script setup lang="ts">
-import { forOwn } from "lodash";
-import { AronaGachaConfigForm } from "@/interface";
-import { fetchAronaGachaConfig, saveAronaGachaConfig } from "@/api/modules/config";
-import { errorMessage, successMessage, warningMessage } from "@/utils/message";
+import { AronaGachaConfigForm, AvailableConfig } from "@/interface";
+import { warningMessage } from "@/utils/message";
 import { GachaPool } from "@/interface/modules/gacha";
 import { queryGachaPool } from "@/api/modules/db";
+import { buildConfigForm } from "@/views/config/util";
 
-const form = ref<AronaGachaConfigForm>({
-  star1Rate: 78.5,
-  star2Rate: 18.5,
-  star3Rate: 3,
-  star2PickupRate: 3.0,
-  star3PickupRate: 0.7,
-  activePool: 1,
-  revokeTime: 10,
-  limit: 0,
-  day: 4,
-});
-const loading = reactive<ILoading>({
-  loading: false,
-  confirmLoading: false,
-});
+const { form, loading, doFetchConfig, doSave } = buildConfigForm<AronaGachaConfigForm>(
+  AvailableConfig.AronaGachaConfig,
+);
+
 const select = reactive<Select>({
   pools: [],
 });
-function doSave() {
-  saveAronaGachaConfig(form.value).then(() => {
-    successMessage("更新成功");
-  });
-}
-function doFetchGachaConfig() {
-  fetchAronaGachaConfig()
-    .then((res) => {
-      forOwn(res.data, (value, key) => {
-        Reflect.set(form.value, key, value.value);
-      });
-      loading.loading = false;
-    })
-    .catch((err) => {
-      errorMessage("获取主配置信息失败");
-      console.log(err);
-    });
-}
+
 onMounted(() => {
   loading.loading = true;
   queryGachaPool()
@@ -155,14 +126,11 @@ onMounted(() => {
       warningMessage("获取卡池列表失败");
       console.log(err);
     });
-  doFetchGachaConfig();
+  doFetchConfig();
 });
+
 interface Select {
   pools: GachaPool[];
-}
-interface ILoading {
-  loading: boolean;
-  confirmLoading: boolean;
 }
 </script>
 

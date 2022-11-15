@@ -19,11 +19,11 @@ headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/
 tmp_file_path = "tmp.png"
 tmp_file_path2 = "tmp2.png"
 img_folder = "image/student_rank/"
-source_str = "图片来源: 巴哈姆特@夜喵貓貓咪喵(asaz5566a)"
+source_str = "巴哈姆特@夜喵貓貓咪喵(asaz5566a)"
 font_size = 28
 fnt = ImageFont.truetype('C:\Windows\Fonts\msyh.ttc', font_size)
 ## 获取图片并在图片上添加图片来源
-def draw_image(url: str, name: str, override_path: str = ""):
+def draw_image(url: str, name: str, override_path: str = "", source = source_str):
     request = urllib.request.Request(url=url,headers=headers)
     response = urllib.request.urlopen(request)
     img = response.read()
@@ -33,7 +33,7 @@ def draw_image(url: str, name: str, override_path: str = ""):
     rows, cols, _ = img.shape
     bg = Image.new('RGB', (cols, int(rows + font_size * 1.5)), color='white')
     draw = ImageDraw.Draw(bg)
-    draw.text((0 + 10, rows), source_str, font=fnt, fill=(0,0,0))
+    draw.text((0 + 10, rows), "图片来源: " + source, font=fnt, fill=(0,0,0))
     bg.save(tmp_file_path2)
     bg = cv2.imread(tmp_file_path2)
     bg[0:rows, 0:cols] = img

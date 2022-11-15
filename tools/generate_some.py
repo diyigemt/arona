@@ -50,12 +50,12 @@ if __name__ == '__main__':
     someImageList = json.loads(someList)["data"]
     for image in someImageList:
         file_name = image["name"]
-        if file_name.find(jp_str) != -1:
+        if len(list(filter(lambda name: file_name.find(name) != -1, DECISIVE_BATTLE))) > 0:
+            battle_list.append(file_name)
+        elif file_name.find(jp_str) != -1:
             jp_list.append(file_name)
         elif file_name.find(en_str) != -1:
             en_list.append(file_name)
-        elif file_name in DECISIVE_BATTLE:
-            battle_list.append(file_name)
         else:
             other_list.append(file_name)
         index += 1

@@ -20,7 +20,10 @@ if __name__ == "__main__":
             name = name + ".png"
         path = item["path"]
         url = item["url"].split("@")[0]
-        draw_image(url, name, path)
+        if "source" in item:
+            draw_image(url, name, path, source=item["source"])
+        else:
+            draw_image(url, name, path)
         if "group" in item and item["group"] != "":
             if item["group"] in concat_group:
                 concat_group[item["group"]].append(path + name)

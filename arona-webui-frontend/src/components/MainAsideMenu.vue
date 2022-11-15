@@ -31,7 +31,7 @@ function jump(path: string) {
 .main-menu {
   height: 100%;
   border-right: none;
-  ::v-deep .el-sub-menu {
+  :deep(.el-sub-menu) {
     .el-menu {
       .el-menu-item {
         border-radius: 4px;

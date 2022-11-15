@@ -126,11 +126,8 @@ object TrainerCommand : SimpleCommand(
   }
 
   private suspend fun sendImage(contact: Contact, image: File) {
-    val resource = image.toExternalResource()
+    val resource = image.toExternalResource().toAutoCloseable()
     contact.sendMessage(contact.uploadImage(resource))
-    withContext(Dispatchers.IO) {
-      resource.close()
-    }
   }
 
   // 模糊查询缓存
@@ -184,7 +181,7 @@ object TrainerCommand : SimpleCommand(
   override val id: Int = 20
   override val name: String = "地图与学生攻略"
   override var enable: Boolean = true
-  override val priority: Int = 1
+  override val priority: Int = 99
 
   override fun init() {
     registerService()

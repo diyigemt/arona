@@ -22,7 +22,7 @@ object AronaServiceManager: Initialize {
 
   override val priority: Int = 0
   private val MAP: MutableMap<String, AronaService> = mapOf<String, AronaService>().toMutableMap()
-  private val REACT_MAP: MutableMap<String, AronaReactService<BotEvent>> = mapOf<String, AronaReactService<BotEvent>>().toMutableMap()
+  private val REACT_MAP: MutableMap<String, MutableList<AronaReactService<BotEvent>>> = mapOf<String, MutableList<AronaReactService<BotEvent>>>().toMutableMap()
 
   /**
    * 注册一个服务
@@ -44,10 +44,14 @@ object AronaServiceManager: Initialize {
   suspend fun emit(event: BotEvent) {
     val eventName = event::class.simpleName
     val service = REACT_MAP[eventName] ?: return
-    if ((event is MessageEvent) && (checkService(service, event.sender, event.subject) == null)) {
-      service.handle(event)
-    } else if (service.checkService(event)) {
-      service.handle(event)
+    service.forEach {
+      Arona.runSuspend {
+        if ((event is MessageEvent) && (checkService(it, event.sender, event.subject) == null)) {
+          it.handle(event)
+        } else if (it.checkService(event)) {
+          it.handle(event)
+        }
+      }
     }
   }
 
@@ -91,9 +95,6 @@ object AronaServiceManager: Initialize {
 
   fun checkService(service: AronaService, user: User, subject: Contact): String? = when {
     !service.enable -> {
-      Arona.runSuspend {
-        subject.sendMessage("功能未启用")
-      }
       "功能未启用"
     }
     service is AronaGroupService -> when {
@@ -155,7 +156,13 @@ object AronaServiceManager: Initialize {
     MAP[service.name] = service
     MAP[service.id.toString()] = service
     if (service is AronaReactService<*>) {
-      REACT_MAP[service.eventName ?: ""] = service as AronaReactService<BotEvent>
+      var list = REACT_MAP[service.eventName ?: ""]
+      if (list == null) {
+        list = mutableListOf<AronaReactService<BotEvent>>().also { it.add(service as AronaReactService<BotEvent>) }
+        REACT_MAP[service.eventName ?: ""] = list
+      } else {
+        list.add(service as AronaReactService<BotEvent>)
+      }
     }
   }
 

@@ -218,7 +218,12 @@ def update_image_from_api(folder: str, type: int = 2):
     if len(dict) == 0:
         print("empty!")
         return
-    #信息收集完成, 提交到后端进行处理
+    #信息收集完成
+    print(list(map(lambda item: item["name"], dict)))
+    if str(input("process update?:[Y/N]")).lower() != "y":
+        print("abort")
+        exit(0)
+    #提交到后端进行处理
     post_data("imageUpdate", dict)
 
 def post_image_to_remote(folder: str):

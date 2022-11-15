@@ -10,11 +10,10 @@ import numpy as np
 from fetch_student_info_from_ba_game_db import concat_list, concat_two_im, download_image, fetch_data_from_game_db, fetch_data_from_schaledb, query_remote_name, replace_none_char, test_name_exist
 
 # 要生成的目标 日文名
-target = ["チヒロ", "マシロ"]
+target = ["ノア"]
 # 如果本地有图片
 local_file_path = {
-    "チヒロ": "各务_千寻.png",
-    "マシロ": "静山_真白_麻白.png",
+    "チヒロ": "生盐_诺亚.png",
 }
 
 def run(playwright: Playwright):
@@ -87,6 +86,8 @@ def run(playwright: Playwright):
         source_im = None
         if jpName in local_file_path:
             local_path = "./image/parse/%s" % local_file_path[jpName]
+            if local_path.find(".png") == -1:
+                local_path = local_path + ".png"
             source_im = cv2.imdecode(np.fromfile(local_path, dtype=np.uint8), -1)
         else:
             source_im = download_image("https://arona.cdn.diyigemt.com/image", path, local_path)

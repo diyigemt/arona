@@ -17,8 +17,8 @@ import net.mamoe.mirai.console.command.SimpleCommand
 import java.util.*
 
 object WebUIService : AronaService, Initialize, SimpleCommand(
-  Arona, "token", "生成一个WebUI登录密钥（1小时内有效，程序中途退出依然失效）",
-  description = "抽卡历史记录"
+  Arona, "token",
+  description = "生成一个WebUI登录密钥（1小时内有效，程序中途退出依然失效）"
 ){
   private lateinit var server: ApplicationEngine
   const val jwtAudience = "http://127.0.0.1/api/v1"
@@ -50,7 +50,7 @@ object WebUIService : AronaService, Initialize, SimpleCommand(
 
   override fun disableService() {
     kotlin.runCatching {
-      server.stop()
+      server.stop(timeoutMillis = 1000)
     }
   }
 

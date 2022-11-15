@@ -21,7 +21,8 @@ object ReflectionUtil : ReflectionUtils(){
   private val aronaUrl: URL = ClasspathHelper.forJavaClassPath().first().let {
     if(it.path.contains(".gradle")){
       val file = File(System.getProperty("user.dir") + "/plugins")
-      file.listFiles()!!.find { fileSet -> fileSet.name.contains("arona-arona")}!!.toURI().toURL() }
+      file.listFiles()!!.find { fileSet -> fileSet.name.contains("arona-arona")}!!.toURI().toURL()
+    }
     else {
       File(it.path.replace("%20", " ").replace("/mcl.jar", "/plugins").substring(1))
         .listFiles()!!.find { fileSet -> fileSet.name.contains("arona-arona")}!!.toURI().toURL()

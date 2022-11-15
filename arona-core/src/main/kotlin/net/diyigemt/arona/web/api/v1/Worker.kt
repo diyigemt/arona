@@ -25,6 +25,6 @@ interface Worker {
   fun noContent() = json.encodeToString(ServerResponse(204, HttpStatusCode.NoContent.description, null as String?))
 }
 
-inline fun <reified T> responseMessage(json: T) = Json.encodeToString(
-  ServerResponse(200, HttpStatusCode.OK.description, json)
+inline fun <reified T> responseMessage(json: T, code: Int = 200) = Json.encodeToString(
+  ServerResponse(code, HttpStatusCode.OK.description, json)
 )

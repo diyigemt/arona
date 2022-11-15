@@ -7,6 +7,7 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import net.diyigemt.arona.web.api.v1.Contacts
+import net.diyigemt.arona.web.api.v1.PowerSupplyManager
 import net.diyigemt.arona.web.api.v1.commit.CommitManager
 import net.diyigemt.arona.web.api.v1.config.ConfigService
 import net.diyigemt.arona.web.api.v1.data.Data
@@ -44,8 +45,13 @@ fun Application.configureSerialization() {
         get("/ping") {
           this.call.respond(responseMessage("pong"))
         }
+
+        route("/psu"){
+          post("/{option}"){
+            PowerSupplyManager.worker(this)
+          }
+        }
       }
     }
-
   }
 }

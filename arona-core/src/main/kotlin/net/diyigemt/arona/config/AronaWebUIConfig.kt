@@ -6,7 +6,6 @@ import net.mamoe.mirai.console.data.value
 
 object AronaWebUIConfig: AutoSavePluginConfig("arona-webui") {
 
-  @ValueDescription("webui的认证密码")
-  val auth: String by value()
-
+  @ValueDescription("WebUI服务端口")
+  val port: Int by value(8080)
 }

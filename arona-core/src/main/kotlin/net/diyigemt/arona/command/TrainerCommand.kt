@@ -191,11 +191,14 @@ object TrainerCommand : SimpleCommand(
     register()
     overrideList.addAll(AronaTrainerConfig.override)
     reloadConfig()
-    // 监视data文件夹下的arona-trainer.yml文件动态添加配置
-    ConfigFile = File(Arona.dataFolderPath("/${GeneralUtils.ConfigFolder}/${AutoReadConfigFileName}"))
-    if (!ConfigFile.exists()) {
-      ConfigFile.writeText("override: []", Charsets.UTF_8)
-    }
+    kotlin.runCatching {
+      // 监视data文件夹下的arona-trainer.yml文件动态添加配置
+      ConfigFile = File(Arona.dataFolderPath("/${GeneralUtils.ConfigFolder}/${AutoReadConfigFileName}"))
+      if (!ConfigFile.exists()) {
+        ConfigFile.parentFile.mkdirs()
+        ConfigFile.writeText("override: []", Charsets.UTF_8)
+      }
+    }.onFailure { it.printStackTrace() }
     Arona.runSuspend {
       ConfigFileWatcherChannel = ConfigFile.asWatchChannel(KWatchChannel.Mode.SingleFile)
       ConfigFileWatcherChannel.consumeEach {

@@ -12,6 +12,7 @@ import net.diyigemt.arona.web.api.v1.message.ServerResponse
 import net.mamoe.mirai.console.data.ValueDescription
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.full.hasAnnotation
 
 /**
  *@Author hjn
@@ -24,7 +25,7 @@ object ConfigService : Worker{
     val config = context.call.parameters["config"]!!
     kotlin.runCatching {
       val targetInstance = Class.forName("net.diyigemt.arona.config.$config").kotlin
-      targetInstance.declaredMemberProperties.forEach{
+      targetInstance.declaredMemberProperties.filter { it.hasAnnotation<ValueDescription>() }.forEach{
         res[it.name] = ContentUnit(it.getter.call(targetInstance.objectInstance)!!, it.findAnnotation<ValueDescription>()!!.value)
       }
     }.onSuccess {

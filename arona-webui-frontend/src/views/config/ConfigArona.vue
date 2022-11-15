@@ -156,13 +156,13 @@
 </template>
 
 <script setup lang="ts">
-import { AronaConfigForm, AvailableConfig } from "@/interface";
+import { AronaConfig, AvailableConfig } from "@/interface";
 import { Friend, Group } from "@/types/contact";
 import { fetchBotContacts } from "@/api/modules/contact";
 import { warningMessage } from "@/utils/message";
 import { buildConfigForm } from "@/views/config/util";
 
-const { form, loading, doFetchConfig, doSave } = buildConfigForm<AronaConfigForm>(AvailableConfig.AronaConfig);
+const { form, loading, doFetchConfig, doSave } = buildConfigForm<AronaConfig>(AvailableConfig.AronaConfig);
 const select = reactive<Select>({
   groups: [],
   friends: [],

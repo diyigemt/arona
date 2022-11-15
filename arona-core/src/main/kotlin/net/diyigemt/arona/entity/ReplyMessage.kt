@@ -6,7 +6,8 @@ package net.diyigemt.arona.entity
 @kotlinx.serialization.Serializable
 data class ReplyRule(
   val rule: ReplyMessageMatchTree,
-  val messages: List<ReplyMessage>
+  val messages: List<ReplyMessage>,
+  val messageType: ReplyMessageType
 )
 
 @kotlinx.serialization.Serializable
@@ -26,7 +27,7 @@ data class ReplyMessageMatchTree(
 
 @kotlinx.serialization.Serializable
 enum class ReplyMessageType {
-  Message, Nudge
+  MESSAGE, NUDGE
 }
 
 @kotlinx.serialization.Serializable

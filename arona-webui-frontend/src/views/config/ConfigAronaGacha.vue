@@ -102,15 +102,13 @@
 </template>
 
 <script setup lang="ts">
-import { AronaGachaConfigForm, AvailableConfig } from "@/interface";
+import { AronaGachaConfig, AvailableConfig } from "@/interface";
 import { warningMessage } from "@/utils/message";
 import { GachaPool } from "@/interface/modules/gacha";
 import { queryGachaPool } from "@/api/modules/db";
 import { buildConfigForm } from "@/views/config/util";
 
-const { form, loading, doFetchConfig, doSave } = buildConfigForm<AronaGachaConfigForm>(
-  AvailableConfig.AronaGachaConfig,
-);
+const { form, loading, doFetchConfig, doSave } = buildConfigForm<AronaGachaConfig>(AvailableConfig.AronaGachaConfig);
 
 const select = reactive<Select>({
   pools: [],

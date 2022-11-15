@@ -34,7 +34,44 @@ export interface AronaGachaConfig {
   day: number;
 }
 
-export type AronaConfigMap = Config2Map<AronaConfig>;
-export type AronaConfigForm = Config2Form<AronaConfig>;
-export type AronaGachaConfigMap = Config2Map<AronaGachaConfig>;
-export type AronaGachaConfigForm = Config2Form<AronaGachaConfig>;
+interface AronaReplyConfigReplyRule {
+  rule: AronaReplyConfigReplyMatchTree;
+  messages: AronaReplyConfigReplyMessage[];
+  messageType: AronaReplyConfigMessageType;
+}
+
+enum AronaReplyConfigCondition {
+  AND = "AND",
+  OR = "OR",
+  NOT = "NOT",
+}
+
+enum AronaReplyConfigMatchType {
+  SUFFIX = "SUFFIX",
+  PREFIX = "PREFIX",
+  CONTAINS = "CONTAINS",
+  ACCURATE = "ACCURATE",
+  TARGET = "TARGET",
+}
+
+enum AronaReplyConfigMessageType {
+  MESSAGE = "MESSAGE",
+  NUDGE = "NUDGE",
+}
+
+interface AronaReplyConfigReplyMatchTree {
+  left: AronaReplyConfigReplyMatchTree;
+  right: AronaReplyConfigReplyMatchTree;
+  condition: AronaReplyConfigCondition;
+  type: AronaReplyConfigMatchType;
+  value: string;
+}
+
+interface AronaReplyConfigReplyMessage {
+  message: string;
+  weight: number;
+}
+
+export interface AronaReplyConfig {
+  rules: AronaReplyConfigReplyRule[];
+}

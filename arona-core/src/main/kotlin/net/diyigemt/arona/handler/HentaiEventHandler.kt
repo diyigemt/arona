@@ -5,6 +5,7 @@ import net.diyigemt.arona.config.AronaHentaiConfig
 import net.diyigemt.arona.entity.ReplyMessageMatchCondition
 import net.diyigemt.arona.entity.ReplyMessageMatchTree
 import net.diyigemt.arona.entity.ReplyMessageMatchType
+import net.diyigemt.arona.entity.ReplyMessageType
 import net.diyigemt.arona.service.AronaGroupService
 import net.diyigemt.arona.service.AronaMessageReactService
 import net.diyigemt.arona.util.MessageUtil
@@ -17,6 +18,8 @@ object HentaiEventHandler : AronaMessageReactService<GroupMessageEvent>, AronaGr
 
   override suspend fun handle(event: GroupMessageEvent) {
     AronaHentaiConfig.rules.filter {
+      it.messageType == ReplyMessageType.MESSAGE
+    }.filter {
       test(event.message, event.sender, it.rule)
     }.forEach {
       val messageList = it.messages

@@ -1,5 +1,11 @@
 import { Config2Form, Config2Map } from "..";
 
+// eslint-disable-next-line import/prefer-default-export
+export const enum AvailableConfig {
+  AronaConfig = "AronaConfig",
+  AronaGachaConfig = "AronaGachaConfig",
+}
+
 export interface AronaConfig {
   qq: number;
   groups: number[];

@@ -13,7 +13,6 @@ object GroupRepeaterHandler: AronaMessageReactService<GroupMessageEvent>, AronaG
   private var count: Int = 0
   override suspend fun handle(event: GroupMessageEvent) {
     val now = event.message.serializeToMiraiCode()
-    event.subject.uploadImage()
     if (now.startsWith("/")) return
     val senderId = event.sender.id
     if (now == last && senderId != lastSender) {

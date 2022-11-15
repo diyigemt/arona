@@ -103,12 +103,11 @@
 
 <script setup lang="ts">
 import { forOwn } from "lodash";
-import { AronaConfigForm, AronaGachaConfigForm } from "@/interface";
-import { Friend, Group } from "@/types/contact";
-import { fetchBotContacts } from "@/api/modules/contact";
-import { fetchAronaMainConfig, saveAronaMainConfig } from "@/api/modules/config";
+import { AronaGachaConfigForm } from "@/interface";
+import { fetchAronaGachaConfig, saveAronaGachaConfig } from "@/api/modules/config";
 import { errorMessage, successMessage, warningMessage } from "@/utils/message";
-import {GachaPool} from "@/interface/modules/gacha";
+import { GachaPool } from "@/interface/modules/gacha";
+import { queryGachaPool } from "@/api/modules/db";
 
 const form = ref<AronaGachaConfigForm>({
   star1Rate: 78.5,
@@ -129,12 +128,12 @@ const select = reactive<Select>({
   pools: [],
 });
 function doSave() {
-  saveAronaMainConfig(form.value).then(() => {
+  saveAronaGachaConfig(form.value).then(() => {
     successMessage("更新成功");
   });
 }
-function doFetchMainConfig() {
-  fetchAronaMainConfig()
+function doFetchGachaConfig() {
+  fetchAronaGachaConfig()
     .then((res) => {
       forOwn(res.data, (value, key) => {
         Reflect.set(form.value, key, value.value);
@@ -148,19 +147,18 @@ function doFetchMainConfig() {
 }
 onMounted(() => {
   loading.loading = true;
-  fetchBotContacts()
+  queryGachaPool()
     .then((res) => {
-      select.groups = res.data.groups;
-      select.friends = res.data.friends;
+      select.pools = res.data;
     })
     .catch((err) => {
-      warningMessage("获取bot联系人列表失败");
+      warningMessage("获取卡池列表失败");
       console.log(err);
     });
-  doFetchMainConfig();
+  doFetchGachaConfig();
 });
 interface Select {
-  pools: GachaPool[]
+  pools: GachaPool[];
 }
 interface ILoading {
   loading: boolean;

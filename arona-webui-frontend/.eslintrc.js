@@ -37,5 +37,7 @@ module.exports = {
     "import/no-extraneous-dependencies": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": ["error"],
   },
 };

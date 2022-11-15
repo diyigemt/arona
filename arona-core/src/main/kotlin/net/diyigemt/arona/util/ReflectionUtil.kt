@@ -19,8 +19,13 @@ object ReflectionUtil : ReflectionUtils(){
   /**
    * Arona插件位置，用于设置扫描目标*/
   private val aronaUrl: URL = ClasspathHelper.forJavaClassPath().first().let {
-    File(it.path.replace("%20", " ").replace("/mcl.jar", "/plugins").substring(1))
-      .listFiles()!!.find { fileSet -> fileSet.name.contains("arona-arona")}!!.toURI().toURL()
+    if(it.path.contains(".gradle")){
+      val file = File(System.getProperty("user.dir") + "/plugins")
+      file.listFiles()!!.find { fileSet -> fileSet.name.contains("arona-arona")}!!.toURI().toURL() }
+    else {
+      File(it.path.replace("%20", " ").replace("/mcl.jar", "/plugins").substring(1))
+        .listFiles()!!.find { fileSet -> fileSet.name.contains("arona-arona")}!!.toURI().toURL()
+    }
   }
 
   /**

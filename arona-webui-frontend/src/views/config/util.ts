@@ -9,7 +9,7 @@ interface ILoading {
 }
 
 function buildConfigForm<T extends object>(config: AvailableConfig) {
-  const form = reactive<Config2Form<T>>({} as T);
+  const form = reactive<Config2Form<T>>({} as Config2Form<T>);
   const loading = reactive<ILoading>({
     loading: false,
     confirmLoading: false,

@@ -230,6 +230,7 @@ object GeneralUtils : Initialize {
   fun localImageFile(path: String) =
     File(imageFileFolder(path.let { return@let if (path.startsWith("/")) path else "/$it" }))
 
+  override val priority: Int = 1
   override fun init() {
     // 初始化本地图片文件夹
     File(imageFileFolder(TrainerCommand.ChapterMapFolder)).also { it.mkdirs() }

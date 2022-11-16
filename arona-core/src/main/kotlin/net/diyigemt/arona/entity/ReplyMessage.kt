@@ -32,7 +32,7 @@ enum class ReplyMessageType {
 
 @kotlinx.serialization.Serializable
 enum class ReplyMessageMatchType {
-  SUFFIX, PREFIX, CONTAINS, ACCURATE, TARGET
+  SUFFIX, PREFIX, CONTAINS, ACCURATE, SENDER, GROUP
 }
 
 @kotlinx.serialization.Serializable

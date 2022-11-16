@@ -15,6 +15,10 @@ const ConfigMenu: SubMenuItem[] = [
     name: "arona-gacha.yml",
     path: "/config/config-arona-gacha",
   },
+  {
+    name: "arona-reply.yml",
+    path: "/config/config-arona-reply",
+  },
 ];
 const DatabaseMenu: SubMenuItem[] = [
   {

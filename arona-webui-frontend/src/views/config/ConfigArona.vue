@@ -168,7 +168,6 @@ const select = reactive<Select>({
   friends: [],
 });
 onMounted(() => {
-  loading.loading = true;
   fetchBotContacts()
     .then((res) => {
       select.groups = res.data.groups;

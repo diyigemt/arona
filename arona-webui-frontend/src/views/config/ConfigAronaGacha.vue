@@ -115,7 +115,6 @@ const select = reactive<Select>({
 });
 
 onMounted(() => {
-  loading.loading = true;
   queryGachaPool()
     .then((res) => {
       select.pools = res.data;

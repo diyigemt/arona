@@ -4,6 +4,7 @@ import { Config2Form, Config2Map } from "..";
 export const enum AvailableConfig {
   AronaConfig = "AronaConfig",
   AronaGachaConfig = "AronaGachaConfig",
+  AronaReplyConfig = "AronaReplyConfig",
 }
 
 export interface AronaConfig {
@@ -34,40 +35,47 @@ export interface AronaGachaConfig {
   day: number;
 }
 
-interface AronaReplyConfigReplyRule {
+export interface AronaReplyConfigReplyRule {
+  name: string;
   rule: AronaReplyConfigReplyMatchTree;
   messages: AronaReplyConfigReplyMessage[];
   messageType: AronaReplyConfigMessageType;
 }
 
-enum AronaReplyConfigCondition {
+export enum AronaReplyConfigCondition {
   AND = "AND",
   OR = "OR",
   NOT = "NOT",
 }
 
-enum AronaReplyConfigMatchType {
+export enum AronaReplyConfigMatchType {
   SUFFIX = "SUFFIX",
   PREFIX = "PREFIX",
   CONTAINS = "CONTAINS",
   ACCURATE = "ACCURATE",
-  TARGET = "TARGET",
+  SENDER = "SENDER",
+  GROUP = "GROUP",
 }
 
-enum AronaReplyConfigMessageType {
+export enum AronaReplyConfigMessageType {
   MESSAGE = "MESSAGE",
   NUDGE = "NUDGE",
 }
 
-interface AronaReplyConfigReplyMatchTree {
-  left: AronaReplyConfigReplyMatchTree;
-  right: AronaReplyConfigReplyMatchTree;
-  condition: AronaReplyConfigCondition;
-  type: AronaReplyConfigMatchType;
-  value: string;
+export interface AronaReplyConfigReplyMatchTree {
+  left?: AronaReplyConfigReplyMatchTree;
+  right?: AronaReplyConfigReplyMatchTree;
+  condition?: AronaReplyConfigCondition;
+  type?: AronaReplyConfigMatchType;
+  value?: string;
+  id: string;
+  level: number;
+  children?: AronaReplyConfigReplyMatchTree[];
+  childrenCache?: AronaReplyConfigReplyMatchTree[];
+  leaf: boolean;
 }
 
-interface AronaReplyConfigReplyMessage {
+export interface AronaReplyConfigReplyMessage {
   message: string;
   weight: number;
 }

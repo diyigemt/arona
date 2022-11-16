@@ -14,3 +14,7 @@ export function fillConfigMap<T>(remote: Config2Map<T>, local: Config2Form<T>) {
     Reflect.set(local, key, value.value);
   });
 }
+
+export function deepCopy<T>(data: T): T {
+  return JSON.parse(JSON.stringify(data));
+}

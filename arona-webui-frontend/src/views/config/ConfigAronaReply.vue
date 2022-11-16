@@ -1,137 +1,177 @@
 <template>
-  <el-form v-loading="loading.loading" :model="form" label-width="180px" label-position="left">
-    <el-form-item label="star1Rate">
-      <el-row :gutter="16" class="w-full">
-        <el-col :span="12">
-          <el-input v-model.number="form.star1Rate" />
-        </el-col>
-        <el-col :span="12">
-          <div>1星总出率百分比</div>
-        </el-col>
-      </el-row>
-    </el-form-item>
-    <el-form-item label="star2Rate">
-      <el-row :gutter="16" class="w-full">
-        <el-col :span="12">
-          <el-input v-model.number="form.star2Rate" />
-        </el-col>
-        <el-col :span="12">
-          <div>2星总出率百分比</div>
-        </el-col>
-      </el-row>
-    </el-form-item>
-    <el-form-item label="star3Rate">
-      <el-row :gutter="16" class="w-full">
-        <el-col :span="12">
-          <el-input v-model.number="form.star3Rate" />
-        </el-col>
-        <el-col :span="12">
-          <div>3星总出率百分比</div>
-        </el-col>
-      </el-row>
-    </el-form-item>
-    <el-form-item label="star2PickupRate">
-      <el-row :gutter="16" class="w-full">
-        <el-col :span="12">
-          <el-input v-model.number="form.star2PickupRate" />
-        </el-col>
-        <el-col :span="12">
-          <div>2星限定出率百分比</div>
-        </el-col>
-      </el-row>
-    </el-form-item>
-    <el-form-item label="star3PickupRate">
-      <el-row :gutter="16" class="w-full">
-        <el-col :span="12">
-          <el-input v-model.number="form.star3PickupRate" />
-        </el-col>
-        <el-col :span="12">
-          <div>3星限定出率百分比</div>
-        </el-col>
-      </el-row>
-    </el-form-item>
-    <el-form-item label="activePool">
-      <el-row :gutter="16" class="w-full">
-        <el-col :span="12">
-          <el-select v-model="form.activePool" class="w-full">
-            <el-option v-for="(e, index) in select.pools" :key="index" :value="e.id" :label="e.name + '(' + e.id + ')'">
-              {{ e.name }}({{ e.id }})
-            </el-option>
-          </el-select>
-        </el-col>
-        <el-col :span="12">
-          <div>当前激活的池子</div>
-        </el-col>
-      </el-row>
-    </el-form-item>
-    <el-form-item label="revokeTime">
-      <el-row :gutter="16" class="w-full">
-        <el-col :span="12">
-          <el-input v-model.number="form.revokeTime" />
-        </el-col>
-        <el-col :span="12">
-          <div>撤回结果信息防止刷屏 撤回时间间隔(单位为秒) 为0表示不撤回</div>
-        </el-col>
-      </el-row>
-    </el-form-item>
-    <el-form-item label="limit">
-      <el-row :gutter="16" class="w-full">
-        <el-col :span="12">
-          <el-input v-model.number="form.limit" />
-        </el-col>
-        <el-col :span="12">
-          <div>每日限制次数, 0表示不限制</div>
-        </el-col>
-      </el-row>
-    </el-form-item>
-    <el-form-item label="day">
-      <el-row :gutter="16" class="w-full">
-        <el-col :span="12">
-          <el-input v-model.number="form.day" disabled />
-        </el-col>
-        <el-col :span="12">
-          <div>上次限制更新时间, 自动维护</div>
-        </el-col>
-      </el-row>
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" :loading="loading.confirmLoading" @click="doSave">保存</el-button>
-      <el-button @click="doFetchConfig">重置</el-button>
-    </el-form-item>
-  </el-form>
+  <el-collapse v-model="active">
+    <el-collapse-item v-for="(e, index) in testData.rules" :key="index" :name="index" :title="e.name">
+      <el-table :data="[e.rule]" row-key="id" border default-expand-all>
+        <el-table-column prop="level" label="层级">
+          <template #default="{ row }">
+            <div :style="{ '--level': row.level }" class="table-cell">
+              <div style="margin-bottom: 16px">第{{ row.level }}层</div>
+              <el-form :model="row">
+                <el-form-item label="规则类型">
+                  <el-select v-model="row.leaf" @change="switchNodeType(row)">
+                    <el-option label="判断规则" :value="true" />
+                    <el-option label="条件规则" :value="false" />
+                  </el-select>
+                </el-form-item>
+                <div v-if="row.leaf">
+                  <el-form-item label="判断">
+                    <el-select v-model="row.type">
+                      <el-option
+                        v-for="(j, jIndex) in Object.keys(AronaReplyConfigMatchType)"
+                        :key="index + '' + jIndex"
+                        :label="AronaReplyConfigMapper[j]"
+                        :value="j"
+                      />
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item label="值">
+                    <el-input v-model="row.value" />
+                  </el-form-item>
+                </div>
+                <div v-if="!row.leaf">
+                  <el-form-item label="条件">
+                    <el-select v-model="row.condition">
+                      <el-option
+                        v-for="(j, jIndex) in Object.keys(AronaReplyConfigCondition)"
+                        :key="index + '' + jIndex"
+                        :label="AronaReplyConfigMapper[j]"
+                        :value="j"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </div>
+              </el-form>
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-collapse-item>
+  </el-collapse>
+  <el-row style="margin-top: 16px">
+    <el-button type="primary" :loading="loading.confirmLoading" @click="doSave">保存</el-button>
+    <el-button @click="doFetchConfig">重置</el-button>
+  </el-row>
 </template>
 
 <script setup lang="ts">
-import { AronaGachaConfig, AvailableConfig } from "@/interface";
-import { warningMessage } from "@/utils/message";
-import { GachaPool } from "@/interface/modules/gacha";
-import { queryGachaPool } from "@/api/modules/db";
+import {
+  AronaReplyConfig,
+  AronaReplyConfigCondition,
+  AronaReplyConfigMatchType,
+  AronaReplyConfigReplyMatchTree,
+  AvailableConfig,
+} from "@/interface";
 import { buildConfigForm } from "@/views/config/util";
+import { AronaReplyConfigMapper } from "@/constant";
+import { Group } from "@/types/contact";
+import { fetchBotContacts } from "@/api/modules/contact";
+import { warningMessage } from "@/utils/message";
+import { deepCopy } from "@/utils";
 
-const { form, loading, doFetchConfig, doSave } = buildConfigForm<AronaGachaConfig>(
-  AvailableConfig.AronaGachaConfig,
-);
-
+const active = ref<string[]>();
+const { form, loading, doFetchConfig, doSave } = buildConfigForm<AronaReplyConfig>(AvailableConfig.AronaReplyConfig);
 const select = reactive<Select>({
-  pools: [],
+  groups: [],
 });
+// @ts-ignore
+const testData = ref<AronaReplyConfig>({
+  rules: [
+    {
+      name: "测试测试",
+      rule: {
+        left: {
+          // @ts-ignore
+          type: "SUFFIX",
+          value: "1231312",
+          leaf: false,
+        },
+        right: {
+          // @ts-ignore
+          type: "SUFFIX",
+          value: "1231312",
+          leaf: false,
+        },
+        // @ts-ignore
+        condition: "AND",
+        leaf: true,
+      },
+      messages: [
+        {
+          message: "123",
+          weight: 1,
+        },
+      ],
+      // @ts-ignore
+      messageType: "MESSAGE",
+    },
+  ],
+});
+function maps(rule: AronaReplyConfigReplyMatchTree, path: string, level = 0) {
+  if (rule.left) {
+    rule.children = [maps(rule.left, `${path}-left`, level + 1)];
+  }
+  if (rule.right) {
+    rule.children?.push(maps(rule.right, `${path}-right`, level + 1));
+  }
+  rule.id = path;
+  rule.level = level;
+  rule.leaf = !rule.left;
+  return rule;
+}
+function translate(rule: AronaReplyConfig) {
+  rule.rules = rule.rules.map((item, index) => {
+    item.rule = maps(item.rule, "root");
+    item.rule.id = `root-${index}`;
+    return item;
+  });
+}
+function switchNodeType(node: AronaReplyConfigReplyMatchTree) {
+  if (node.leaf) {
+    // 如果是判断规则, 直接保存选择分支(不管有没有)
+    node.childrenCache = deepCopy(node.children);
+    node.children = [];
+  } else {
+    // 是否是从判断规则切换过来的
+    // 有cache, 说明是条件->判断->条件
+    // eslint-disable-next-line no-lonely-if
+    if (node.childrenCache) {
+      node.children = deepCopy(node.childrenCache);
+    } else {
+      // 没有cache, 说明是直接判断->条件, 新建两个孩子
+      const left: AronaReplyConfigReplyMatchTree = {
+        id: `${node.id}-left`,
+        level: node.level + 1,
+        leaf: true,
+      };
+      const right: AronaReplyConfigReplyMatchTree = {
+        id: `${node.id}-right`,
+        level: node.level + 1,
+        leaf: true,
+      };
+      node.children = [left, right];
+    }
+  }
+}
 
 onMounted(() => {
-  loading.loading = true;
-  queryGachaPool()
+  translate(testData.value as any);
+  fetchBotContacts()
     .then((res) => {
-      select.pools = res.data;
+      select.groups = res.data.groups;
     })
     .catch((err) => {
-      warningMessage("获取卡池列表失败");
+      warningMessage("获取bot群列表失败");
       console.log(err);
     });
-  doFetchConfig();
+  // doFetchConfig();
 });
-
 interface Select {
-  pools: GachaPool[];
+  groups: Omit<Group, "permission">[];
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.table-cell {
+  padding-left: calc(16px * var(--level));
+}
+</style>

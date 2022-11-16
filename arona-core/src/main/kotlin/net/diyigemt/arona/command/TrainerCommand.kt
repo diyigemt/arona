@@ -184,8 +184,6 @@ object TrainerCommand : SimpleCommand(
   override val priority: Int = 99
 
   override fun init() {
-    registerService()
-    register()
     overrideList.addAll(AronaTrainerConfig.override)
     reloadConfig()
     // 监视data文件夹下的arona-trainer.yml文件动态添加配置

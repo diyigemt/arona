@@ -32,7 +32,6 @@ object AronaServiceManager: Initialize {
     val service0 = findServiceByName(service.name)
     if (service0 != null) {
       Arona.error("指令${service.name}重复, 请检查")
-//      exitProcess(-1)
     } else {
       registerService(service)
     }

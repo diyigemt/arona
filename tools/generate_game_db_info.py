@@ -10,7 +10,7 @@ import numpy as np
 from fetch_student_info_from_ba_game_db import concat_list, concat_two_im, download_image, fetch_data_from_game_db, fetch_data_from_schaledb, query_remote_name, replace_none_char, test_name_exist
 
 # 要生成的目标 日文名
-target = ["ノア"]
+target = ["ヒマリ"]
 # 如果本地有图片
 local_file_path = {
     "チヒロ": "生盐_诺亚.png",

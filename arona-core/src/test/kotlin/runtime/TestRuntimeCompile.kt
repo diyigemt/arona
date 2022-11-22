@@ -3,8 +3,10 @@ package org.example.mirai.plugin.runtime
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
 import org.jetbrains.kotlin.daemon.common.threadCpuTime
 import org.jetbrains.kotlin.cli.common.environment.setIdeaIoUseFallback
+import org.jetbrains.kotlin.script.jsr223.KotlinJsr223JvmLocalScriptEngine
+import org.jetbrains.kotlin.script.jsr223.KotlinJsr223JvmLocalScriptEngineFactory
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.lang.management.ManagementFactory
 import java.util.concurrent.TimeUnit
 import javax.script.*
@@ -13,7 +15,17 @@ class KotlinJsr223LocalScriptEngineIT {
 
   init {
     setIdeaIoUseFallback()
-  }https://stackoverflow.com/questions/56384889/run-kotlin-stored-as-a-string-is-giving-a-runtime-error
+  }
+
+  @Test
+  fun testMessage() {
+    val engine = ScriptEngineManager().getEngineByExtension("kts")!!
+    engine.eval("""
+      var message: String;
+      message = "test"
+      println(message)
+    """.trimIndent())
+  }
 
   @Test
   fun testEngineFactory() {

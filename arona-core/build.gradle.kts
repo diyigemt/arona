@@ -74,6 +74,14 @@ dependencies {
   testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
   testImplementation("net.mamoe:mirai-core-mock:2.13.0")
+
+  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
+  implementation("org.jetbrains.kotlin:kotlin-compiler-embeddable")
+  implementation("org.jetbrains.kotlin:kotlin-script-util")
+  implementation("org.jetbrains.kotlin:kotlin-script-runtime")
+
+  runtimeOnly ("org.jetbrains.kotlin:kotlin-scripting-compiler-embeddable")
 }
 
 tasks.test {

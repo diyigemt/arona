@@ -154,6 +154,7 @@ object GeneralUtils : Initialize {
           imageRequest(imageResult.path, localFile)
         }.onFailure {
           Arona.sendMessageToAdmin("在下载图片${imageResult.name}时失败,请查看控制台报错信息")
+          it.printStackTrace()
           return ImageRequestResult()
         }
         // 更新hash

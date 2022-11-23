@@ -1,27 +1,3 @@
-<script setup lang="ts">
-import zhCn from "element-plus/lib/locale/lang/zh-cn";
-import MainBanner from "@/components/MainBanner.vue";
-import useSettingStore from "./store/setting";
-import { warningMessage } from "./utils/message";
-import { heartbeat } from "./api";
-
-const locale = zhCn;
-const settingStore = useSettingStore();
-const router = useRouter();
-// TODO
-// if (!settingStore.isRestoreBackend) {
-//   warningMessage("未配置后端地址,将会跳转到配置界面");
-//   router.push("/setting/setting-api");
-// } else {
-//   heartbeat().then((res) => {
-//     if (!res) {
-//       warningMessage("后端连接失败,将会跳转到配置界面");
-//       router.push("/setting/setting-api");
-//     }
-//   });
-// }
-</script>
-
 <template>
   <el-config-provider :locale="locale">
     <MainBanner />
@@ -39,6 +15,30 @@ const router = useRouter();
     </el-container>
   </el-config-provider>
 </template>
+
+<script setup lang="ts">
+import zhCn from "element-plus/lib/locale/lang/zh-cn";
+import MainBanner from "@/components/MainBanner.vue";
+import useSettingStore from "./store/setting";
+import { warningMessage } from "./utils/message";
+import { heartbeat } from "./api";
+
+const locale = zhCn;
+const settingStore = useSettingStore();
+const router = useRouter();
+// TODO
+if (!settingStore.isRestoreBackend) {
+  warningMessage("未配置后端地址,将会跳转到配置界面");
+  router.push("/setting/setting-api");
+} else {
+  heartbeat().then((res) => {
+    if (!res) {
+      warningMessage("后端连接失败,将会跳转到配置界面");
+      router.push("/setting/setting-api");
+    }
+  });
+}
+</script>
 
 <style lang="scss" scoped>
 .main-container {

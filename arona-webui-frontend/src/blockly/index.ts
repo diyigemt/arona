@@ -2,7 +2,7 @@ import { BlocklyOptions } from "blockly";
 import ToolBox from "@/blockly/toolbox";
 
 const BlocklyConfig: BlocklyOptions = {
-  media: "media/",
+  media: "../media/",
   grid: {
     spacing: 25,
     length: 3,
@@ -10,6 +10,7 @@ const BlocklyConfig: BlocklyOptions = {
     snap: true,
   },
   toolbox: ToolBox,
+  theme: "Zelos",
 };
 
 export default BlocklyConfig;

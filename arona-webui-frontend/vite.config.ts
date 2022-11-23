@@ -3,7 +3,6 @@ import { resolve } from "path";
 import OptimizationPersist from "vite-plugin-optimize-persist";
 import PkgConfig from "vite-plugin-package-config";
 import VueTypeImports from "vite-plugin-vue-type-imports";
-import vue from "@vitejs/plugin-vue";
 // @ts-ignore
 import path from "node:path";
 import { viteStaticCopy } from "vite-plugin-static-copy";
@@ -17,14 +16,6 @@ export default defineConfig((env) => {
     base: viteEnv.VITE_BASE,
     // 插件
     plugins: [
-      vue({
-        template: {
-          compilerOptions: {
-            isCustomElement: (tag) =>
-              ["field", "block", "category", "xml", "mutation", "value", "sep", "shadow"].includes(tag),
-          },
-        },
-      }),
       presets(env),
       VueTypeImports(),
       PkgConfig(),

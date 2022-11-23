@@ -1,8 +1,12 @@
-import { defineConfig, loadEnv } from "vite";
+import { defineConfig, loadEnv, normalizePath } from "vite";
 import { resolve } from "path";
 import OptimizationPersist from "vite-plugin-optimize-persist";
 import PkgConfig from "vite-plugin-package-config";
 import VueTypeImports from "vite-plugin-vue-type-imports";
+import vue from "@vitejs/plugin-vue";
+// @ts-ignore
+import path from "node:path";
+import { viteStaticCopy } from "vite-plugin-static-copy";
 import presets from "./presets/presets";
 // https://vitejs.dev/config/
 export default defineConfig((env) => {
@@ -12,7 +16,29 @@ export default defineConfig((env) => {
   return {
     base: viteEnv.VITE_BASE,
     // 插件
-    plugins: [presets(env), VueTypeImports(), PkgConfig(), OptimizationPersist()],
+    plugins: [
+      vue({
+        template: {
+          compilerOptions: {
+            isCustomElement: (tag) =>
+              ["field", "block", "category", "xml", "mutation", "value", "sep", "shadow"].includes(tag),
+          },
+        },
+      }),
+      presets(env),
+      VueTypeImports(),
+      PkgConfig(),
+      OptimizationPersist(),
+      viteStaticCopy({
+        targets: [
+          {
+            // eslint-disable-next-line no-undef
+            src: normalizePath(path.resolve(__dirname, "./node_modules/blockly/media/*")),
+            dest: "media",
+          },
+        ],
+      }),
+    ],
     // 别名设置
     resolve: {
       alias: {

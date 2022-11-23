@@ -36,6 +36,14 @@ const ConfigRouter: Array<RouteRecordRaw> = [
         },
         component: () => import("@/views/config/ConfigAronaReply.vue"),
       },
+      {
+        path: "config-arona-blockly",
+        name: "config-arona-blockly",
+        meta: {
+          title: "条件执行配置文件",
+        },
+        component: () => import("@/views/config/ConfigAronaBlockly.vue"),
+      },
     ],
   },
 ];

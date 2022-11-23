@@ -57,6 +57,7 @@
     "unplugin-vue-components": "^0.21.1",
     "vite": "^3.0.5",
     "vite-plugin-fonts": "^0.6.0",
+    "vite-plugin-static-copy": "^0.12.0",
     "vite-plugin-optimize-persist": "^0.1.2",
     "vite-plugin-package-config": "^0.1.1",
     "vite-plugin-vue-markdown": "^0.21.1",

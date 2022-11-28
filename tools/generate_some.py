@@ -17,7 +17,7 @@ jp_str = "日服"
 en_str = "国际服"
 other_str = "其他"
 # 总力战
-DECISIVE_BATTLE = ["HOD", "大蛇", "黑白", "鸡斯拉", "寿司", "眼球", "主教", "GOZ"]
+DECISIVE_BATTLE = ["HOD", "大蛇", "黑白", "鸡斯拉", "寿司", "球", "主教", "GOZ"]
 # 生成杂图帮助
 
 def a(arr: list[str]):

@@ -296,6 +296,13 @@ def fetch_data_from_schaledb(pl: Playwright, name):
     page.goto("https://lonqie.github.io/SchaleDB/?chara=%s" % name)
     page.wait_for_load_state()
 
+    # 关闭change-log窗口
+    model = page.query_selector("#modal-changelog")
+    if model != None:
+        close_btn = model.query_selector(".btn-close")
+        if close_btn != None:
+            close_btn.click()
+
     # 换成日服中文
     setting_btn = page.query_selector("#ba-navbar-regionselector")
     setting_btn.click()
@@ -332,6 +339,10 @@ def fetch_data_from_schaledb(pl: Playwright, name):
     name_card.screenshot(path="./image/tmp/name_card.png")
     base_card = page.query_selector("//*[@id='ba-student-page-profile']/table/tbody")
     base_card.screenshot(path="./image/tmp/base_card.png")
+    live2d_bannder = page.query_selector("//*[@id='ba-student-page-profile']/div[2]/h5")
+    live2d_bannder.screenshot(path="./image/tmp/live2d_banner.png")
+    live2d = page.query_selector("//*[@id='ba-student-page-profile']/div[3]/div")
+    live2d.screenshot(path="./image/tmp/live2d.png")
     gift_banner = page.query_selector("//*[@id='ba-student-page-profile']/div[4]/h5")
     gift_banner.screenshot(path="./image/tmp/gift_banner.png")
     gift = page.query_selector("//*[@id='ba-student-favoured-items']")
@@ -349,12 +360,14 @@ def fetch_data_from_schaledb(pl: Playwright, name):
     path_list.append(base_path + "base_card.png")
     path_list.append(base_path + "weapon_name.png")
     path_list.append(base_path + "weapon_img.png")
+    path_list.append(base_path + "live2d_banner.png")
+    path_list.append(base_path + "live2d.png")
     path_list.append(base_path + "gift_banner.png")
     path_list.append(base_path + "gift.png")
     path_list.append(base_path + "furniture_banner.png")
     path_list.append(base_path + "furniture.png")
 
-    concat_list(path_list, save_path)
+    concat_list(path_list, save_path, margin=0, reshape=True)
     context.close()
     browser.close()
 
@@ -362,6 +375,8 @@ def fetch_data_from_game_db(page: Page, base_path = "./image/tmp/"):
 # 下载拉满需要的资源图片之类的
         skill_resource_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[1]/div[2]/div[2]")
         skill_resource_btn.click()
+
+        time.sleep(3)
 
         # 拿到资源列表的class判断是8行资源还是7行
         target_class = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[4]").get_attribute("class")

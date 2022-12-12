@@ -120,9 +120,10 @@ object NetworkUtil {
   private fun request(conn: Connection): Connection = conn
     .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
     .ignoreContentType(true)
-    .header(AUTH_HEADER, AronaConfig.uuid)
-    .header(VERSION_HEADER, Arona.version.toString())
-    .maxBodySize(1024 * 1024 * 15)
+    .header(AUTH_HEADER, AronaConfig.uuid) // 提供身份识别token
+    .header(VERSION_HEADER, Arona.version.toString()) // 提供客户端版本号
+    .maxBodySize(1024 * 1024 * 100) // 最大下载文件大小100M
+    .timeout(30 * 1000) // 30s连接失败抛出异常
 
   fun downloadImageFile(path: String, localFile: File): File = downloadCDNFile("${BACKEND_IMAGE_FOLDER}$path", localFile)
 

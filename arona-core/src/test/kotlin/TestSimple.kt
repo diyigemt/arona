@@ -182,7 +182,7 @@ class TestSimple {
     println(getPinyin("保洁"))
     println(p.format(p.getChar('阿').pinyins()[0]))
     println(p.contains("宝洁", PinyinPlus.to("保洁")))
-    println(p.contains("测试1", GeneralUtils.toPinyin("侧式")))
+//    println(p.contains("测试1", GeneralUtils.toPinyin("侧式")))
     val b = p.getPinyin("侧式")
     val a = "侧式".toCharArray()
       .joinToString("") {

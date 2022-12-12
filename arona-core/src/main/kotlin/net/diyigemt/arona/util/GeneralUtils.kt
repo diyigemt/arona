@@ -1,6 +1,5 @@
 package net.diyigemt.arona.util
 
-import com.taptap.pinyin.PinyinPlus
 import me.towdium.pinin.PinIn
 import me.towdium.pinin.utils.PinyinFormat
 import net.diyigemt.arona.Arona
@@ -16,23 +15,18 @@ import net.diyigemt.arona.db.name.TeacherNameTable
 import net.diyigemt.arona.entity.FuzzyImageResult
 import net.diyigemt.arona.entity.ImageRequestResult
 import net.diyigemt.arona.interfaces.Initialize
-import net.diyigemt.arona.util.NetworkUtil.BACKEND_ADDRESS
 import net.diyigemt.arona.util.NetworkUtil.BACKEND_IMAGE_FOLDER
 import net.diyigemt.arona.util.NetworkUtil.downloadImageFile
-import net.diyigemt.arona.util.other.KWatchChannel
-import net.diyigemt.arona.util.other.asWatchChannel
 import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.UserOrBot
 import net.mamoe.mirai.contact.nameCardOrNick
-import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
 import org.jetbrains.exposed.sql.and
 import java.io.File
 import java.security.MessageDigest
 
 object GeneralUtils : Initialize {
 
-  private const val BACKEND_IMAGE_RESOURCE = "${BACKEND_ADDRESS}$BACKEND_IMAGE_FOLDER"
   private lateinit var PinyinObject: PinIn
   private val Punctuation0: Regex = Regex("[\\u3002\\uff1f\\uff01\\uff0c\\u3001\\uff1b\\uff1a\\u201c\\u201d\\u2018\\u2019\\uff08\\uff09\\u300a\\u300b\\u3008\\u3009\\u3010\\u3011\\u300e\\u300f\\u300c\\u300d\\ufe43\\ufe44\\u3014\\u3015\\u2026\\u2014\\uff5e\\ufe4f\\uffe5]")
   private val Punctuation1: Regex = Regex("[.,/#!\$%^&*;:{}=\\-_+`~()\\[\\]]")
@@ -51,10 +45,12 @@ object GeneralUtils : Initialize {
     return s
   }
 
-  fun queryTeacherNameFromDB(contact: Contact, user: UserOrBot): String {
+  fun queryTeacherNameFromDB(contact: Contact, user: UserOrBot): String = queryTeacherNameFromDB(contact.id, user)
+
+  fun queryTeacherNameFromDB(contactId: Long, user: UserOrBot): String {
     if (!CallMeCommand.enable) return user.nameCardOrNick
     val name = query {
-      TeacherName.find { (TeacherNameTable.group eq contact.id) and (TeacherNameTable.id eq user.id) }.firstOrNull()
+      TeacherName.find { (TeacherNameTable.group eq contactId) and (TeacherNameTable.id eq user.id) }.firstOrNull()
     }?.name ?: user.nameCardOrNick
     return if (AronaConfig.endWithSensei.isNotBlank() && !name.endsWith(AronaConfig.endWithSensei)) "${name}${AronaConfig.endWithSensei}" else name
   }
@@ -63,29 +59,6 @@ object GeneralUtils : Initialize {
 
   fun randomBoolean(): Boolean = System.currentTimeMillis().toString().let {
     it.substring(it.length - 1).toInt() % 2 == 0
-  }
-
-  suspend fun uploadChapterHelper() {
-    doUpload("/map-cache")
-  }
-
-  suspend fun uploadStudentInfo() {
-    doUpload("/student_info")
-  }
-
-  @Deprecated("do not use it!!")
-  private suspend fun doUpload(path: String) {
-    val imageFileList = File(Arona.dataFolderPath() + path).listFiles() ?: return
-    val g = Arona.arona!!.groups[10024841]!!
-    imageFileList.forEach {
-      val name = it.name
-      val res = it.toExternalResource("png")
-      val upload = g.uploadImage(res)
-      val msg = g.sendMessage(upload)
-      Arona.info("$name ${msg.source.originalMessage.serializeToMiraiCode()}")
-      Thread.sleep(1000)
-      res.closed
-    }
   }
 
   /**
@@ -101,9 +74,8 @@ object GeneralUtils : Initialize {
     val localDB = query {
       ImageTableModel.find { ImageTable.name eq name }.firstOrNull()
     }
-    val result = kotlin.runCatching {
-      NetworkUtil.requestImage(name)
-    }.onFailure {
+    val result = NetworkUtil.requestImage(name)
+      .onFailure {
       // 服务器寄了 或者精确匹配与模糊查询结果均为空 尝试从本地拿
       // 如果本地数据库有精确匹配结果, 直接发送
       if (localDB != null) {
@@ -170,61 +142,14 @@ object GeneralUtils : Initialize {
     }
   }
 
-  fun toPinyin(str: String): String = toPinyin1(replacePunctuation(str))
-
-  fun toPinyin0(str: String): String = str
-    .toCharArray()
-    .joinToString("") {
-      PinyinObject.getChar(it).pinyins().let { list ->
-        return@let if (list.isEmpty()) {
-          it.toString()
-        } else {
-          PinyinObject.format(list[0])
-        }
-      }
-    }
-
-  fun toPinyin1(str: String): String = PinyinPlus.to(str).replace(" ", "")
-
-  fun fuzzySearch(str: String, dict: List<String>): Int {
-    val pinyin = toPinyin(str)
-    dict.forEachIndexed { index, s ->
-      if (PinyinObject.contains(s, pinyin)) {
-        return index
-      }
-    }
-    return -1
-  }
-
-  fun fuzzySearchDouble(str: String, dict: List<String>): Int {
-    val pinyin = toPinyin(str)
-    dict.forEachIndexed { index, s ->
-      if (PinyinObject.contains(s, pinyin) || fuzzySearch(str, s)) {
-        return index
-      }
-    }
-    return -1
-  }
-
-
-  fun fuzzySearch(source: String, target: String): Boolean = PinyinObject.contains(source, toPinyin(target))
-
   private fun replacePunctuation(str: String): String = str.replace(Punctuation0, "")
     .replace(Punctuation1, "")
     .replace(Punctuation2, "")
 
-  fun fileWatchChannel(path: String): KWatchChannel {
-    val file = File(path)
-    if (!file.exists()) {
-      file.writeText("")
-    }
-    return file.asWatchChannel(KWatchChannel.Mode.SingleFile)
-  }
-
-  fun md5(str: String): ByteArray = MessageDigest.getInstance("MD5").digest(str.toByteArray(Charsets.UTF_8))
+  fun md5(str: String): String = MessageDigest.getInstance("MD5").digest(str.toByteArray(Charsets.UTF_8)).toHex()
   fun ByteArray.toHex() = joinToString(separator = "") { byte -> "%02x".format(byte) }
 
-  fun imageRequest(path: String, localFile: File): File = downloadImageFile(path, localFile)
+  fun imageRequest(path: String, localFile: File): Result<File> = downloadImageFile(path, localFile)
 
   private fun imageFileFolder(subFolder: String = "") = Arona.dataFolderPath(BACKEND_IMAGE_FOLDER) + subFolder
 

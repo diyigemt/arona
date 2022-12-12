@@ -1,8 +1,6 @@
 package net.diyigemt.arona.command
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.config.AronaTrainerConfig
@@ -16,7 +14,6 @@ import net.diyigemt.arona.util.GeneralUtils.toHex
 import net.diyigemt.arona.util.other.KWatchChannel
 import net.diyigemt.arona.util.other.KWatchEvent
 import net.diyigemt.arona.util.other.asWatchChannel
-import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.UserCommandSender
 import net.mamoe.mirai.contact.Contact
@@ -35,7 +32,6 @@ object TrainerCommand : SimpleCommand(
   private lateinit var ConfigFileWatcherChannel: KWatchChannel
   private lateinit var ConfigFile: File
   private var ConfigFileMd5: String = ""
-  private val FuzzySearch = mutableListOf<List<String>>()
   private val overrideList = mutableListOf<TrainerOverride>()
 
   @Handler
@@ -70,32 +66,11 @@ object TrainerCommand : SimpleCommand(
           if (!AronaTrainerConfig.tipWhenNull) {
             return
           }
-          // 根据配置对数据源进行模糊搜索
-          when (AronaTrainerConfig.fuzzySearchSource) {
-            FuzzySearchSource.ALL -> {
-              list.addAll(fuzzySearch(str))
-            }
-
-            FuzzySearchSource.LOCAL_CONFIG -> {
-              list.clear()
-              list.addAll(fuzzySearch(str))
-            }
-
-            FuzzySearchSource.REMOTE -> {}
-          }
-          // 如果仍然没有搜索建议 说明真的找不到
-          if (list.isEmpty()) {
-            if (AronaTrainerConfig.tipWhenNull) {
-              sendMessage("没有对应信息, 请联系作者添加别名或者在配置文件中指定")
-            }
+          // 远端没有搜索建议
+          if (list.isEmpty() && AronaTrainerConfig.tipWhenNull) {
+            sendMessage("没有对应信息, 请联系作者添加别名或者在配置文件中指定")
           } else {
             // 无精确匹配结果, 但是有搜索建议, 发送建议
-            // 根据相似度进行排序
-            val sourceSet = str.toSet()
-            list.sortByDescending {
-              it.toSet().sumOf { ch -> (if (sourceSet.contains(ch)) 1 else 0).toInt() }
-            }
-            // 去重
             sendMessage("没有与${str}对应的信息, 是否想要输入:\n${
               list.toSet().filterIndexed { index, _ -> index < 4 }
                 .joinToString("\n") { "/攻略 $it" }
@@ -112,33 +87,20 @@ object TrainerCommand : SimpleCommand(
     }
   }
 
-  private fun fuzzySearch(source: String): List<String> {
-    val list = FuzzySearch.map {
-      val index = GeneralUtils.fuzzySearchDouble(source, it)
-      return@map if (index == -1) "" else it[index]
-    }.filter { it.isNotBlank() }.toMutableList()
-    // 从数据库查找
-    list.addAll(DataBaseProvider.query { _ ->
-      ImageTableModel.all().map { it.name }
-        .filter { GeneralUtils.fuzzySearch(it, source) || GeneralUtils.fuzzySearch(source, it) }
-    }!!)
-    return list
-  }
-
   private suspend fun sendImage(contact: Contact, image: File) {
     val resource = image.toExternalResource().toAutoCloseable()
     contact.sendMessage(contact.uploadImage(resource))
   }
 
   // 模糊查询缓存
-  private fun rebuildFuzzySearchCache() {
+  private fun rebuildOverrideCache() {
     kotlin.runCatching {
       val read = ConfigFile.readText(Charsets.UTF_8).also {
         if (it.isBlank()) {
           return
         }
       }
-      GeneralUtils.md5(read).toHex().also {
+      GeneralUtils.md5(read).also {
         if (it == ConfigFileMd5) {
           return
         } else {
@@ -152,31 +114,18 @@ object TrainerCommand : SimpleCommand(
       err.printStackTrace()
       return
     }.onSuccess {
-      FuzzySearch.clear()
-      overrideList.clear()
       overrideList.addAll(it.override)
     }
     overrideList.addAll(AronaTrainerConfig.override.filter {
       !overrideList.any { already -> already.name == it.name }
     })
-    reloadConfig()
     Arona.info("别名配置更新成功")
-  }
-
-  private fun reloadConfig() {
-    overrideList.forEach {
-      FuzzySearch.add(it.name.split(",").map { s -> s.trim() })
-    }
   }
 
   @Serializable
   data class TrainerFileConfig(
     val override: List<TrainerOverride>
   )
-
-  enum class FuzzySearchSource {
-    ALL, LOCAL_CONFIG, REMOTE
-  }
 
   override val id: Int = 20
   override val name: String = "地图与学生攻略"
@@ -185,7 +134,6 @@ object TrainerCommand : SimpleCommand(
 
   override fun init() {
     overrideList.addAll(AronaTrainerConfig.override)
-    reloadConfig()
     // 监视data文件夹下的arona-trainer.yml文件动态添加配置
     ConfigFile = File(Arona.dataFolderPath("/${GeneralUtils.ConfigFolder}/${AutoReadConfigFileName}"))
     if (!ConfigFile.exists()) {
@@ -195,7 +143,7 @@ object TrainerCommand : SimpleCommand(
       ConfigFileWatcherChannel = ConfigFile.asWatchChannel(KWatchChannel.Mode.SingleFile)
       ConfigFileWatcherChannel.consumeEach {
         when (it.kind) {
-          KWatchEvent.Kind.Modified, KWatchEvent.Kind.Initialized -> rebuildFuzzySearchCache()
+          KWatchEvent.Kind.Modified, KWatchEvent.Kind.Initialized -> rebuildOverrideCache()
           else -> {}
         }
       }

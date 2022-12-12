@@ -25,6 +25,7 @@ import net.diyigemt.arona.util.ReflectionUtil
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.AbstractCommand
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
+import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.ConsoleCommandSender
 import net.mamoe.mirai.console.command.descriptor.ExperimentalCommandDescriptors
 import net.mamoe.mirai.console.command.executeCommand
@@ -224,6 +225,12 @@ object Arona : KotlinPlugin(
 
   suspend fun Group.sendTeacherNameMessage(user: UserOrBot, message: MessageChain) {
     val name = GeneralUtils.queryTeacherNameFromDB(this, user)
+    val s = message.serializeToMiraiCode().replace("\${teacherName}", name).deserializeMiraiCode()
+    this.sendMessage(s)
+  }
+
+  suspend fun CommandSender.sendTeacherNameMessage(user: UserOrBot, message: MessageChain) {
+    val name = GeneralUtils.queryTeacherNameFromDB(this.subject?.id ?: 0L, user)
     val s = message.serializeToMiraiCode().replace("\${teacherName}", name).deserializeMiraiCode()
     this.sendMessage(s)
   }

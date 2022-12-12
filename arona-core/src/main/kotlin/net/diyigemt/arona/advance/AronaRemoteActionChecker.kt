@@ -1,6 +1,5 @@
 package net.diyigemt.arona.advance
 
-import net.diyigemt.arona.Arona
 import net.diyigemt.arona.config.AronaConfig
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.announcement.RemoteActionModel
@@ -28,12 +27,15 @@ object AronaRemoteActionChecker : AronaQuartzService {
       val read = DataBaseProvider.query {
         RemoteActionModel.all().limit(10).orderBy(RemoteActionTable.id to SortOrder.DESC).map { it.aid }
       }!!
-      val response = NetworkUtil.fetchDataFromServer<List<RemoteActionItem>>(
+      NetworkUtil.fetchDataFromServer<List<RemoteActionItem>>(
         "/action", mutableMapOf(
           "read" to read.joinToString(",")
         )
-      )
-      RemoteServiceManager.dispatchService(response.data)
+      ).onSuccess {
+        RemoteServiceManager.dispatchService(it.data)
+      }.onFailure {
+        it.printStackTrace()
+      }
     }
   }
 

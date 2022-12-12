@@ -163,7 +163,7 @@ object GachaConfigCommand : CompositeCommand(
   
   @OptIn(InternalSerializationApi::class)
   private suspend fun doUpdate(id: Int, subject: Contact, poolName: String? = null) {
-    val data = NetworkUtil.fetchDataFromServer<RemoteActionItem>("/action/one", mapOf(
+    val data = NetworkUtil.fetchDataFromServerV1<RemoteActionItem>("/action/one", mapOf(
       "id" to id.toString()
     )).map { resp ->
       if (resp.data.action != RemoteServiceAction.POOL_UPDATE.action) {

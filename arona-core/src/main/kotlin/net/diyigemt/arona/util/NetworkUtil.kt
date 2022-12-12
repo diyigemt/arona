@@ -19,7 +19,6 @@ object NetworkUtil {
   const val BACKEND_ADDRESS = "https://arona.diyigemt.com"
   private const val CDN_ADDRESS = "https://arona.cdn.diyigemt.com"
 //  const val BACKEND_ADDRESS = "http://localhost:12201"
-  private const val BACKEND_API_ADDRESS = "$BACKEND_ADDRESS/api/v1"
   const val BACKEND_IMAGE_FOLDER = "/image"
   private const val BACKEND_FILE_FOLDER = "/file"
   private const val BACKEND_FILE_RESOURCE = "${BACKEND_ADDRESS}$BACKEND_FILE_FOLDER"
@@ -32,7 +31,7 @@ object NetworkUtil {
     if (sysSave == null) {
       // 清除旧的配置文件
       AronaConfig.uuid = ""
-      sendDataToServerSource("/user/register")
+      sendDataToServerSourceV1("/user/register")
         .onSuccess {
           val header = it.header(AUTH_HEADER)
           if (header.isNullOrBlank()) {
@@ -51,44 +50,64 @@ object NetworkUtil {
   }
 
   fun logoutInstance() {
-    sendDataToServerSource("/user/offline")
+    sendDataToServerSourceV1("/user/offline")
   }
 
   fun requestImage(name: String): Result<ServerResponse<List<ImageResult>>> =
-    fetchDataFromServer(BACKEND_IMAGE_FOLDER, mapOf("name" to name))
+    fetchDataFromServerV1(BACKEND_IMAGE_FOLDER, mapOf("name" to name))
 
-  inline fun <reified T> fetchDataFromServer(
+  inline fun <reified T> fetchDataFromServerV1(
     api: String,
     data: Map<String, String> = mutableMapOf()
   ): Result<ServerResponse<T>> =
-    fetchDataFromServerSource(api, data).map {
+    fetchDataFromServerSourceV1(api, data).map {
       Json.decodeFromString(it.body())
     }
-
-  fun fetchDataFromServerSource(api: String, data: Map<String, String> = mutableMapOf()): Result<Response> =
+  fun fetchDataFromServerSourceV1(api: String, data: Map<String, String> = mutableMapOf()): Result<Response> =
     kotlin.runCatching {
-      baseRequest(api)
+      baseRequest(api, ApiVersion.V1)
         .data(data)
         .execute()
     }
-
-  private inline fun <reified T> sendDataToServer(
+  private inline fun <reified T> sendDataToServerV1(
     api: String,
     data: Map<String, String> = mutableMapOf()
-  ): Result<ServerResponse<T>> = sendDataToServerSource(api, data).map {
+  ): Result<ServerResponse<T>> = sendDataToServerSourceV1(api, data).map {
     Json.decodeFromString(it.body())
   }
-
-  private fun sendDataToServerSource(api: String, data: Map<String, String> = mutableMapOf()): Result<Response> =
+  private fun sendDataToServerSourceV1(api: String, data: Map<String, String> = mutableMapOf()): Result<Response> =
+    sendDataToServerSource(api, ApiVersion.V1, data)
+  inline fun <reified T> fetchDataFromServer(
+    api: String,
+    version: ApiVersion,
+    data: Map<String, String> = mutableMapOf()
+  ): Result<ServerResponse<T>> =
+    fetchDataFromServerSource(api, version, data).map {
+      Json.decodeFromString(it.body())
+    }
+  fun fetchDataFromServerSource(api: String, version: ApiVersion, data: Map<String, String> = mutableMapOf()): Result<Response> =
     kotlin.runCatching {
-      baseRequest(api)
+      baseRequest(api, version)
+        .data(data)
+        .execute()
+    }
+  private inline fun <reified T> sendDataToServer(
+    api: String,
+    version: ApiVersion,
+    data: Map<String, String> = mutableMapOf()
+  ): Result<ServerResponse<T>> = sendDataToServerSource(api, version, data).map {
+    Json.decodeFromString(it.body())
+  }
+  private fun sendDataToServerSource(api: String, version: ApiVersion, data: Map<String, String> = mutableMapOf()): Result<Response> =
+    kotlin.runCatching {
+      baseRequest(api, version)
         .data(data)
         .method(Connection.Method.POST)
         .execute()
     }
 
-  private fun baseRequest(api: String, source: String = BACKEND_API_ADDRESS): Connection =
-    request("$source${api}")
+  private fun baseRequest(api: String, version: ApiVersion): Connection =
+    request("${version.getAddress()}${api}")
 
   private fun cdnRequest(api: String, source: String = CDN_ADDRESS): Connection =
     request("$source${api}")
@@ -124,5 +143,11 @@ object NetworkUtil {
     stream.close()
     byteOutputStream.close()
     return localFile
+  }
+
+  enum class ApiVersion(val path: String) {
+    V1("/api/v1"),
+    V2("/api/v2");
+    fun getAddress(): String = "$BACKEND_ADDRESS$path"
   }
 }

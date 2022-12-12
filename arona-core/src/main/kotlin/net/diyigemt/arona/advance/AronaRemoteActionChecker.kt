@@ -27,7 +27,7 @@ object AronaRemoteActionChecker : AronaQuartzService {
       val read = DataBaseProvider.query {
         RemoteActionModel.all().limit(10).orderBy(RemoteActionTable.id to SortOrder.DESC).map { it.aid }
       }!!
-      NetworkUtil.fetchDataFromServer<List<RemoteActionItem>>(
+      NetworkUtil.fetchDataFromServerV1<List<RemoteActionItem>>(
         "/action", mutableMapOf(
           "read" to read.joinToString(",")
         )

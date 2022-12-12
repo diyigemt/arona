@@ -27,7 +27,7 @@ object AronaUpdateChecker: AronaQuartzService {
 
   class UpdateCheckJob: Job {
     override fun execute(context: JobExecutionContext?) {
-      NetworkUtil.fetchDataFromServer<VersionInfo>("/version")
+      NetworkUtil.fetchDataFromServerV1<VersionInfo>("/version")
         .onSuccess { response ->
           val version = response.data.version
           val nowVersion = SemVersion(version.replace("v", ""))

@@ -1,7 +1,5 @@
 package net.diyigemt.arona.util
 
-import me.towdium.pinin.PinIn
-import me.towdium.pinin.utils.PinyinFormat
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.command.CallMeCommand
 import net.diyigemt.arona.command.TarotCommand
@@ -27,11 +25,10 @@ import java.security.MessageDigest
 
 object GeneralUtils : Initialize {
 
-  private lateinit var PinyinObject: PinIn
   private val Punctuation0: Regex = Regex("[\\u3002\\uff1f\\uff01\\uff0c\\u3001\\uff1b\\uff1a\\u201c\\u201d\\u2018\\u2019\\uff08\\uff09\\u300a\\u300b\\u3008\\u3009\\u3010\\u3011\\u300e\\u300f\\u300c\\u300d\\ufe43\\ufe44\\u3014\\u3015\\u2026\\u2014\\uff5e\\ufe4f\\uffe5]")
   private val Punctuation1: Regex = Regex("[.,/#!\$%^&*;:{}=\\-_+`~()\\[\\]]")
   private val Punctuation2: Regex = Regex("\\s{2,}")
-  const val ConfigFolder: String = "/config"
+  private const val ConfigFolder: String = "/config"
 
   fun checkService(group: Contact?): Boolean = when (group) {
     is Group -> AronaConfig.groups.contains(group.id)
@@ -151,12 +148,14 @@ object GeneralUtils : Initialize {
 
   fun imageRequest(path: String, localFile: File): Result<File> = downloadImageFile(path, localFile)
 
+  fun configFileFolder(subFolder: String) = Arona.dataFolderPath("/${ConfigFolder}") + subFolder
+
   private fun imageFileFolder(subFolder: String = "") = Arona.dataFolderPath(BACKEND_IMAGE_FOLDER) + subFolder
 
   fun localImageFile(path: String) =
     File(imageFileFolder(path.let { return@let if (path.startsWith("/")) path else "/$it" }))
 
-  override val priority: Int = 1
+  override val priority: Int = 3
   override fun init() {
     // 初始化本地图片文件夹
     File(imageFileFolder(TrainerCommand.ChapterMapFolder)).also { it.mkdirs() }
@@ -164,6 +163,5 @@ object GeneralUtils : Initialize {
     File(imageFileFolder(TrainerCommand.OtherFolder)).also { it.mkdirs() }
     File(imageFileFolder(TarotCommand.TarotImageFolder)).also { it.mkdirs() }
     File(Arona.dataFolderPath(ConfigFolder)).also { it.mkdirs() }
-    PinyinObject = PinIn().config().format(PinyinFormat.RAW).fSh2S(true).commit()
   }
 }

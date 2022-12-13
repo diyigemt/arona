@@ -4,13 +4,10 @@ import kotlinx.coroutines.channels.consumeEach
 import kotlinx.serialization.Serializable
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.config.AronaTrainerConfig
-import net.diyigemt.arona.db.DataBaseProvider
-import net.diyigemt.arona.db.image.ImageTableModel
 import net.diyigemt.arona.entity.TrainerOverride
 import net.diyigemt.arona.interfaces.Initialize
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.util.GeneralUtils
-import net.diyigemt.arona.util.GeneralUtils.toHex
 import net.diyigemt.arona.util.other.KWatchChannel
 import net.diyigemt.arona.util.other.KWatchEvent
 import net.diyigemt.arona.util.other.asWatchChannel
@@ -92,7 +89,7 @@ object TrainerCommand : SimpleCommand(
     contact.sendMessage(contact.uploadImage(resource))
   }
 
-  // 模糊查询缓存
+  // 别名覆盖缓存
   private fun rebuildOverrideCache() {
     kotlin.runCatching {
       val read = ConfigFile.readText(Charsets.UTF_8).also {
@@ -135,7 +132,7 @@ object TrainerCommand : SimpleCommand(
   override fun init() {
     overrideList.addAll(AronaTrainerConfig.override)
     // 监视data文件夹下的arona-trainer.yml文件动态添加配置
-    ConfigFile = File(Arona.dataFolderPath("/${GeneralUtils.ConfigFolder}/${AutoReadConfigFileName}"))
+    ConfigFile = File(GeneralUtils.configFileFolder("/$AutoReadConfigFileName"))
     if (!ConfigFile.exists()) {
       ConfigFile.writeText("override: []", Charsets.UTF_8)
     }

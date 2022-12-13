@@ -58,7 +58,7 @@ object WebUIService : AronaService, Initialize, SimpleCommand(
   override val name: String = "WebUI"
   override val description: String = "WebUI服务"
   override var enable: Boolean = true
-  override val priority: Int = 0
+  override val priority: Int = 10
 
   override fun init() {
     DBOptionService.init()

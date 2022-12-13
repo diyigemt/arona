@@ -1,16 +1,11 @@
 package org.example.mirai.plugin
 
-import com.taptap.pinyin.PinyinPlus
 import io.kotest.common.runBlocking
 import kotlinx.coroutines.channels.consumeEach
-import me.towdium.pinin.PinIn
-import me.towdium.pinin.utils.PinyinFormat
-import me.xdrop.fuzzywuzzy.FuzzySearch
 import net.diyigemt.arona.advance.AronaUpdateChecker
 import net.diyigemt.arona.command.TrainerCommand
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.entity.ActivityType
-import net.diyigemt.arona.entity.TrainerOverride
 import net.diyigemt.arona.util.ActivityUtil
 import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.NetworkUtil
@@ -150,57 +145,18 @@ class TestSimple {
   @Test
   fun testVersionCheck() {
     val cur = SemVersion("1.0.6")
-    val response = NetworkUtil.fetchDataFromServer<AronaUpdateChecker.VersionInfo>("/version")
-    val version = response.data.version
-    val nowVersion = SemVersion(version.replace("v", ""))
-    if (cur == nowVersion) return
-    val newFuture = response.data.newFuture
-      .mapIndexed { index, element ->
-        "${index + 1}. $element"
-      }.joinToString("\n")
-    val concat = "检测到版本更新,当前版本:${cur}, 新版本:${nowVersion}\n更新日志:\n${newFuture}"
-    println(concat)
-  }
-
-  @Test
-  fun testFuzzySearch() {
-    val dict = listOf(
-      "鼠鼠, test2", "沙耶", "私服鼠鼠", "私服沙耶", "老鼠"
-    )
-    println(FuzzySearch.extractSorted("鼠", dict))
-    println(PinyinPlus.to("鼠鼠"))
-  }
-
-  @Test
-  fun testFuzzySearch2() {
-    val p = PinIn().config().format(PinyinFormat.RAW).fSh2S(true).commit()
-    val dict = listOf(
-      "宝洁",
-      "报界"
-    )
-    println(PinyinPlus.to("侧式"))
-    println(getPinyin("保洁"))
-    println(p.format(p.getChar('阿').pinyins()[0]))
-    println(p.contains("宝洁", PinyinPlus.to("保洁")))
-//    println(p.contains("测试1", GeneralUtils.toPinyin("侧式")))
-    val b = p.getPinyin("侧式")
-    val a = "侧式".toCharArray()
-      .joinToString("") {
-        p.getChar(it).pinyins().let { list ->
-          println("a")
-          return@let if (list.isEmpty()) {
-            it.toString()
-          } else {
-            p.format(list[0])
-          }
-        }
+    NetworkUtil.fetchDataFromServerV1<AronaUpdateChecker.VersionInfo>("/version")
+      .onSuccess { response ->
+        val version = response.data.version
+        val nowVersion = SemVersion(version.replace("v", ""))
+        if (cur == nowVersion) return
+        val newFuture = response.data.newFuture
+          .mapIndexed { index, element ->
+            "${index + 1}. $element"
+          }.joinToString("\n")
+        val concat = "检测到版本更新,当前版本:${cur}, 新版本:${nowVersion}\n更新日志:\n${newFuture}"
+        println(concat)
       }
-    println(a)
-  }
-
-  private fun getPinyin(str: String): String {
-    val p = PinIn().config().format(PinyinFormat.RAW).fSh2S(true).commit()
-    return str.toCharArray().joinToString("") { p.format(p.getChar(it).pinyins()[0]) }
   }
 
   @Test

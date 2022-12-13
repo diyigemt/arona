@@ -39,7 +39,7 @@ object AronaGachaConfig: AutoSavePluginConfig("arona-gacha"), Initialize {
 
   var maxDot: Int = 10
 
-  override val priority: Int = 0
+  override val priority: Int = 99
   override fun init() {
     reload()
     maxDot = listOf(

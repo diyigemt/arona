@@ -20,7 +20,7 @@ import kotlin.system.exitProcess
 
 object AronaServiceManager: Initialize {
 
-  override val priority: Int = 0
+  override val priority: Int = 5
   private val MAP: MutableMap<String, AronaService> = mapOf<String, AronaService>().toMutableMap()
   private val REACT_MAP: MutableMap<String, MutableList<AronaReactService<BotEvent>>> = mapOf<String, MutableList<AronaReactService<BotEvent>>>().toMutableMap()
 

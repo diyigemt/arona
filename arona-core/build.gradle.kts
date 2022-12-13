@@ -52,11 +52,6 @@ dependencies {
   implementation("org.slf4j:slf4j-api:1.7.36")
   implementation("com.google.code.gson:gson:2.9.0")
   implementation("com.squareup.moshi:moshi-kotlin:1.14.0")
-  // https://mvnrepository.com/artifact/me.xdrop/fuzzywuzzy
-  implementation("me.xdrop:fuzzywuzzy:1.4.0")
-  // https://mvnrepository.com/artifact/com.github.taptap/pinyin-plus
-  implementation("com.github.taptap:pinyin-plus:1.0")
-  implementation("com.github.Towdium:PinIn:1.5.1")
   implementation("net.mamoe.yamlkt:yamlkt-jvm:0.10.2")
   implementation("org.reflections:reflections:0.10.2")
 
@@ -73,7 +68,9 @@ dependencies {
 //  implementation("ch.qos.logback:logback-classic:$logback_version")
   testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
-  testImplementation("net.mamoe:mirai-core-mock:2.13.0")
+  // 配置文件序列化
+  implementation("com.akuleshov7:ktoml-core:0.3.0")
+  implementation("com.akuleshov7:ktoml-file:0.3.0")
 }
 
 tasks.test {

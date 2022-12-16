@@ -474,10 +474,17 @@
     "ヒマリ": {
         "cnName": "日鞠",
         "loma": "Himari"
-    }
-    ,
+    },
     "シグレ": {
         "cnName": "时雨",
         "loma": "Shigure"
+    },
+    "セリナ(クリスマス)": {
+        "cnName": "芹娜(圣诞节)",
+        "loma": "Serina_Christmas"
+    },
+    "ハナエ(クリスマス)": {
+        "cnName": "花绘(圣诞节)",
+        "loma": "Hanae_Christmas"
     }
 }

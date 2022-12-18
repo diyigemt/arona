@@ -289,7 +289,7 @@ def concat_two_im(path_a: str, path_b: str, path: str, type: str = 'horizen', ma
     cv2.imencode(".png", im)[1].tofile(path)
     return im
 
-def fetch_data_from_schaledb(pl: Playwright, name):
+def fetch_data_from_schaledb(pl: Playwright, name, dict):
     browser = pl.chromium.launch(headless=True, slow_mo=100)
     context = browser.new_context(viewport={'width': 1920, 'height': 1080}, device_scale_factor=4.0)
     page = context.new_page()
@@ -326,14 +326,28 @@ def fetch_data_from_schaledb(pl: Playwright, name):
     progress = page.query_selector("#ba-weaponpreview-levelrange")
     page.evaluate("input => input.value = '50'", progress)
     page.evaluate("input => input.oninput(input)", progress)
+
+    # 替换专武名称和描述
+    page.eval_on_selector('//*[@id="ba-student-weapon-name"]', "node => node.innerText = '%s'" % dict["wp_name"])
+    page.eval_on_selector('//*[@id="ba-weapon-description"]', "node => node.innerText = '%s'" % (dict["wp_desc_1"] + "\\n" + dict["wp_desc_2"]))
+
     weapon_name = page.query_selector("//*[@id='ba-student-page-weapon']/div[1]")
     weapon_name.screenshot(path="./image/tmp/weapon_name.png")
+    
     weapon_img = page.query_selector("//*[@id='ba-student-page-weapon']/div[2]")
     weapon_img.screenshot(path="./image/tmp/weapon_img.png")
 
     base_info_btn = page.query_selector("#ba-student-tab-profile")
     base_info_btn.click()
     time.sleep(2)
+
+    # 替换介绍名称
+    page.eval_on_selector('//*[@id="ba-student-profile-hobbies"]', "node => node.innerText = '%s'" % dict["hobby"])
+    desc = page.eval_on_selector('//*[@id="ba-student-profile-text"]', "node => node.innerHTML")
+    desc_i = str(desc).find("<i class")
+    if desc_i != -1:
+        desc = dict["desc"] + "\\n" + str(desc)[desc_i:]
+    page.eval_on_selector('//*[@id="ba-student-profile-text"]', "node => node.innerHTML = '%s'" % desc.replace("\n", "\\n"))
 
     name_card = page.query_selector("//*[@id='ba-student-page-profile']/div[1]")
     name_card.screenshot(path="./image/tmp/name_card.png")
@@ -371,7 +385,7 @@ def fetch_data_from_schaledb(pl: Playwright, name):
     context.close()
     browser.close()
 
-def fetch_data_from_game_db(page: Page, base_path = "./image/tmp/"):
+def fetch_data_from_game_db(page: Page, dict, base_path = "./image/tmp/"):
 # 下载拉满需要的资源图片之类的
         skill_resource_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[1]/div[2]/div[2]")
         skill_resource_btn.click()
@@ -414,6 +428,33 @@ def fetch_data_from_game_db(page: Page, base_path = "./image/tmp/"):
 
         skill_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[1]/div/div[2]")
         skill_btn.click()
+
+        # 替换技能描述文案
+        page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[1]/div/div[1]', "node => node.innerText = '%s'" % dict["ex_name"])
+        page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]/div/div[1]', "node => node.innerText = '%s'" % dict["ns_name"])
+        page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[1]/div/div[1]', "node => node.innerText = '%s'" % dict["bs_name"])
+        page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[2]/div/div[1]', "node => node.innerText = '%s'" % dict["ss_name"])
+        # 拿到具体数据对应的class
+        ex_desc_detail = page.query_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[1]/div/div[3]/span')
+        detail_class = ex_desc_detail.get_attribute("class")
+        detail_list = page.query_selector_all(".%s" % detail_class)
+        offset = 0
+        def replace(s: str, offset):
+            while s.find("$value") != -1:
+                s = s.replace("$value", '<span class="%s">%s</span>' % (detail_class, detail_list[offset].text_content()), 1)
+                offset = offset + 1
+            return s, offset
+        ex_desc, offset = replace(dict["ex_desc"], offset)
+        ns_desc, offset = replace(dict["ns_desc"], offset)
+        bs_desc, offset = replace(dict["bs_desc"], offset)
+        ss_desc, offset = replace(dict["ss_desc"], offset)
+        wp_skill, offset = replace(dict["wp_skill"], offset)
+        page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[1]/div/div[3]', "node => node.innerHTML = '%s'" % ex_desc)
+        page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]/div/div[3]', "node => node.innerHTML = '%s'" % ns_desc)
+        page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[1]/div/div[3]', "node => node.innerHTML = '%s'" % bs_desc)
+        page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[2]/div/div[3]', "node => node.innerHTML = '%s'" % ss_desc)
+        page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[1]/div/div[4]/div[2]', "node => node.innerHTML = '%s'" % wp_skill)
+
 
         ex_skill = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[1]")
         ex_skill.screenshot(path="./image/tmp/ex_skill.png")

@@ -97,7 +97,7 @@ def run(playwright: Playwright):
         cn_info = get_cn_info_from_gamekee(playwright, info["gamekee"])
 
         # 从shaledb下载
-        fetch_data_from_schaledb(playwright, loma)
+        fetch_data_from_schaledb(playwright, loma, cn_info)
 
         # 从gamedb下载
         btnFilterList[0].click()
@@ -105,7 +105,7 @@ def run(playwright: Playwright):
 
         base_path = "./image/tmp/"
         # 下载拉满需要的资源图片之类的
-        fetch_data_from_game_db(page, base_path)
+        fetch_data_from_game_db(page, cn_info, base_path)
 
         # 和schaledb的拼在一起
 
@@ -162,6 +162,8 @@ def get_cn_info_from_gamekee(playwright: Playwright, path: str):
     ex_name = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/tr[1]/td/div/span')
     ex_desc = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/tr[2]/td[2]')
     ex_desc = skill_bounds.sub("$value", ex_desc)
+    if ex_desc.find("COST") != -1:
+        ex_desc = ex_desc[0:ex_desc.find("COST")]
 
     ns_name = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/tr[5]/td/div/span')
     ns_desc = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/tr[6]/td[2]')
@@ -190,7 +192,11 @@ def get_cn_info_from_gamekee(playwright: Playwright, path: str):
     wp_skill = skill_bounds.sub("$value", wp_skill)
 
     hobby = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[4]/div/div/table/tbody/tr[6]/td[2]/div')
+    # 处理换行
     desc = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[4]/div/div/table/tbody/tr[9]/td[2]')
+    desc_list = desc.split("。")
+    desc = desc_list[0] + "\n" + "".join(desc_list[1:])
+
     info["ex_name"] = ex_name
     info["ex_desc"] = ex_desc
     info["ns_name"] = ns_name

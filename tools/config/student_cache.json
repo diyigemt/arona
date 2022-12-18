@@ -1,490 +1,612 @@
 {
     "初音ミク": {
         "cnName": "初音",
-        "loma": "Hatsune_Miku"
+        "loma": "Hatsune_Miku",
+        "gamekee": "https://ba.gamekee.com/90749.html"
     },
     "アイリ": {
         "cnName": "爱莉",
-        "loma": "Airi"
+        "loma": "Airi",
+        "gamekee": "https://ba.gamekee.com/66274.html"
     },
     "アカネ": {
         "cnName": "茜",
-        "loma": "Akane"
+        "loma": "Akane",
+        "gamekee": "https://ba.gamekee.com/66752.html"
     },
     "アカネ(バニーガール)": {
         "cnName": "兔女郎茜",
-        "loma": "Akane_Bunny"
+        "loma": "Akane_Bunny",
+        "gamekee": "https://ba.gamekee.com/168947.html"
     },
     "アカリ": {
         "cnName": "亚伽里",
-        "loma": "Akari"
+        "loma": "Akari",
+        "gamekee": "https://ba.gamekee.com/62126.html"
     },
     "アコ": {
         "cnName": "亚子",
-        "loma": "Ako"
+        "loma": "Ako",
+        "gamekee": "https://ba.gamekee.com/150113.html"
     },
     "アズサ": {
         "cnName": "梓",
-        "loma": "Azusa"
+        "loma": "Azusa",
+        "gamekee": "https://ba.gamekee.com/77111.html"
     },
     "アズサ(水着)": {
         "cnName": "泳装梓",
-        "loma": "Azusa_Swimsuit"
+        "loma": "Azusa_Swimsuit",
+        "gamekee": "https://ba.gamekee.com/81811.html"
     },
     "アスナ": {
         "cnName": "明日奈",
-        "loma": "Asuna"
+        "loma": "Asuna",
+        "gamekee": "https://ba.gamekee.com/66646.html"
     },
     "アスナ(バニーガール)": {
         "cnName": "兔女郎明日奈",
-        "loma": "Asuna_Bunny"
+        "loma": "Asuna_Bunny",
+        "gamekee": "https://ba.gamekee.com/89742.html"
     },
     "アツコ": {
         "cnName": "亚津子",
-        "loma": "Atsuko"
+        "loma": "Atsuko",
+        "gamekee": "https://ba.gamekee.com/158662.html"
     },
     "アヤネ": {
         "cnName": "凌音",
-        "loma": "Ayane"
+        "loma": "Ayane",
+        "gamekee": "https://ba.gamekee.com/46923.html"
     },
     "アヤネ(水着)": {
         "cnName": "泳装绫音",
-        "loma": "Ayane_Swimsuit"
+        "loma": "Ayane_Swimsuit",
+        "gamekee": "https://ba.gamekee.com/160191.html"
     },
     "アリス": {
         "cnName": "爱丽丝",
-        "loma": "Aris"
+        "loma": "Aris",
+        "gamekee": "https://ba.gamekee.com/72904.html"
     },
     "アル": {
         "cnName": "阿露",
-        "loma": "Aru"
+        "loma": "Aru",
+        "gamekee": "https://ba.gamekee.com/57763.html"
     },
     "アル(正月)": {
         "cnName": "正月亚瑠",
-        "loma": "Aru_NewYear"
+        "loma": "Aru_NewYear",
+        "gamekee": "https://ba.gamekee.com/150220.html"
     },
     "イオリ": {
         "cnName": "伊织",
-        "loma": "Iori"
+        "loma": "Iori",
+        "gamekee": "https://ba.gamekee.com/59300.html"
     },
     "イオリ(水着)": {
         "cnName": "泳装伊织",
-        "loma": "Iori_Swimsuit"
+        "loma": "Iori_Swimsuit",
+        "gamekee": "https://ba.gamekee.com/83867.html"
     },
     "イズナ": {
         "cnName": "泉奈",
-        "loma": "Izuna"
+        "loma": "Izuna",
+        "gamekee": "https://ba.gamekee.com/70510.html"
     },
     "イズナ(水着)": {
         "cnName": "泳装泉奈",
-        "loma": "Izuna_Swimsuit"
+        "loma": "Izuna_Swimsuit",
+        "gamekee": "https://ba.gamekee.com/162985.html"
     },
     "イズミ": {
         "cnName": "泉",
-        "loma": "Izumi"
+        "loma": "Izumi",
+        "gamekee": "https://ba.gamekee.com/61498.html"
     },
     "イズミ(水着)": {
         "cnName": "泳装泉",
-        "loma": "Izumi_Swimsuit"
+        "loma": "Izumi_Swimsuit",
+        "gamekee": "https://ba.gamekee.com/83936.html"
     },
     "イロハ": {
         "cnName": "伊吕波",
-        "loma": "Iroha"
+        "loma": "Iroha",
+        "gamekee": "https://ba.gamekee.com/155254.html"
     },
     "ウイ": {
         "cnName": "忧",
-        "loma": "Ui"
+        "loma": "Ui",
+        "gamekee": "https://ba.gamekee.com/151345.html"
     },
     "ウタハ": {
         "cnName": "歌原",
-        "loma": "Utaha"
+        "loma": "Utaha",
+        "gamekee": "https://ba.gamekee.com/67656.html"
     },
     "ウタハ(応援団)": {
         "cnName": "啦啦队歌原",
-        "loma": "Utaha_Cheerleader"
+        "loma": "Utaha_Cheerleader",
+        "gamekee": "https://ba.gamekee.com/168189.html"
     },
     "エイミ": {
         "cnName": "艾米",
-        "loma": "Eimi"
+        "loma": "Eimi",
+        "gamekee": "https://ba.gamekee.com/68820.html"
     },
     "カエデ": {
         "cnName": "枫",
-        "loma": "Kaede"
+        "loma": "Kaede",
+        "gamekee": "https://ba.gamekee.com/155250.html"
     },
     "カズサ": {
         "cnName": "和纱",
-        "loma": "Kazusa"
+        "loma": "Kazusa",
+        "gamekee": "https://ba.gamekee.com/165671.html"
     },
     "カヨコ": {
         "cnName": "佳代子",
-        "loma": "Kayoko"
+        "loma": "Kayoko",
+        "gamekee": "https://ba.gamekee.com/56393.html"
     },
     "カリン": {
         "cnName": "花凛",
-        "loma": "Karin"
+        "loma": "Karin",
+        "gamekee": "https://ba.gamekee.com/67011.html"
     },
     "カリン(バニーガール)": {
         "cnName": "兔女郎花凛",
-        "loma": "Karin_Bunny"
+        "loma": "Karin_Bunny",
+        "gamekee": "https://ba.gamekee.com/89275.html"
     },
     "キリノ": {
         "cnName": "桐乃",
-        "loma": "Kirino"
+        "loma": "Kirino",
+        "gamekee": "https://ba.gamekee.com/86655.html"
     },
     "ココナ": {
         "cnName": "心奈",
-        "loma": "Kokona"
+        "loma": "Kokona",
+        "gamekee": "https://ba.gamekee.com/167809.html"
     },
     "コタマ": {
         "cnName": "小玉",
-        "loma": "Kotama"
+        "loma": "Kotama",
+        "gamekee": "https://ba.gamekee.com/67035.html"
     },
     "コトリ": {
         "cnName": "柯托莉",
-        "loma": "Kotori"
+        "loma": "Kotori",
+        "gamekee": "https://ba.gamekee.com/67655.html"
     },
     "コハル": {
         "cnName": "小春",
-        "loma": "Koharu"
+        "loma": "Koharu",
+        "gamekee": "https://ba.gamekee.com/78300.html"
     },
     "サオリ": {
         "cnName": "纱织",
-        "loma": "Saori"
+        "loma": "Saori",
+        "gamekee": "https://ba.gamekee.com/164453.html"
     },
     "サキ": {
         "cnName": "咲",
-        "loma": "Saki"
+        "loma": "Saki",
+        "gamekee": "https://ba.gamekee.com/153367.html"
     },
     "サヤ": {
         "cnName": "沙耶",
-        "loma": "Saya"
+        "loma": "Saya",
+        "gamekee": "https://ba.gamekee.com/68521.html"
     },
     "サヤ(私服)": {
         "cnName": "私服沙耶",
-        "loma": "Saya_Casual"
-    },
-    "シズコ": {
-        "cnName": "静子",
-        "loma": "Shizuko"
-    },
-    "シズコ(水着)": {
-        "cnName": "泳装静子",
-        "loma": "Shizuko_Swimsuit"
-    },
-    "シミコ": {
-        "cnName": "志美子",
-        "loma": "Shimiko"
-    },
-    "ジュリ": {
-        "cnName": "朱莉",
-        "loma": "Juri"
-    },
-    "シュン": {
-        "cnName": "瞬",
-        "loma": "Shun"
-    },
-    "シュン(幼女)": {
-        "cnName": "幼女旬",
-        "loma": "Shun_Small"
-    },
-    "ジュンコ": {
-        "cnName": "淳子",
-        "loma": "Junko"
-    },
-    "シロコ": {
-        "cnName": "白子",
-        "loma": "Shiroko"
-    },
-    "シロコ(ライディング)": {
-        "cnName": "自行车装城子",
-        "loma": "Shiroko_Cycling"
-    },
-    "スズミ": {
-        "cnName": "玲美",
-        "loma": "Suzumi"
-    },
-    "スミレ": {
-        "cnName": "堇",
-        "loma": "Sumire"
-    },
-    "セナ": {
-        "cnName": "濑名",
-        "loma": "Sena"
-    },
-    "セリカ": {
-        "cnName": "芹香",
-        "loma": "Serika"
-    },
-    "セリカ(正月)": {
-        "cnName": "正月茜香",
-        "loma": "Serika_NewYear"
-    },
-    "セリナ": {
-        "cnName": "芹奈",
-        "loma": "Serina"
-    },
-    "チェリノ": {
-        "cnName": "切里诺",
-        "loma": "Cherino"
-    },
-    "チェリノ(温泉)": {
-        "cnName": "温泉切里诺",
-        "loma": "Cherino_HotSpring"
-    },
-    "チセ": {
-        "cnName": "千世",
-        "loma": "Chise"
-    },
-    "チセ(水着)": {
-        "cnName": "泳装知世",
-        "loma": "Chise_Swimsuit"
-    },
-    "チナツ": {
-        "cnName": "千夏",
-        "loma": "Chinatsu"
-    },
-    "チナツ(温泉)": {
-        "cnName": "温泉千夏",
-        "loma": "Chinatsu_HotSpring"
-    },
-    "チヒロ": {
-        "cnName": "千寻",
-        "loma": "Chihiro"
-    },
-    "ツクヨ": {
-        "cnName": "月咏",
-        "loma": "Tsukuyo"
-    },
-    "ツバキ": {
-        "cnName": "椿",
-        "loma": "Tsubaki"
-    },
-    "ツルギ": {
-        "cnName": "鹤城",
-        "loma": "Tsurugi"
-    },
-    "ツルギ(水着)": {
-        "cnName": "泳装鹤城",
-        "loma": "Tsurugi_Swimsuit"
-    },
-    "トモエ": {
-        "cnName": "智惠",
-        "loma": "Tomoe"
-    },
-    "ナツ": {
-        "cnName": "夏",
-        "loma": "Natsu"
-    },
-    "ネル": {
-        "cnName": "尼禄",
-        "loma": "Neru"
-    },
-    "ネル(バニーガール)": {
-        "cnName": "兔女郎尼禄",
-        "loma": "Neru_Bunny"
-    },
-    "ノア": {
-        "cnName": "诺亚",
-        "loma": "Noa"
-    },
-    "ノドカ": {
-        "cnName": "和香",
-        "loma": "Nodoka"
-    },
-    "ノドカ(温泉)": {
-        "cnName": "温泉和香",
-        "loma": "Nodoka_HotSpring"
-    },
-    "ノノミ": {
-        "cnName": "富婆",
-        "loma": "Nonomi"
-    },
-    "ノノミ(水着)": {
-        "cnName": "泳装野乃美",
-        "loma": "Nonomi_Swimsuit"
-    },
-    "ハスミ": {
-        "cnName": "莲见",
-        "loma": "Hasumi"
-    },
-    "ハスミ(体操服)": {
-        "cnName": "运动服莲见",
-        "loma": "Hasumi_Track"
-    },
-    "ハナエ": {
-        "cnName": "花绘",
-        "loma": "Hanae"
-    },
-    "ハナコ": {
-        "cnName": "花子",
-        "loma": "Hanako"
-    },
-    "ハルカ": {
-        "cnName": "遥香",
-        "loma": "Haruka"
-    },
-    "ハルナ": {
-        "cnName": "晴奈",
-        "loma": "Haruna"
-    },
-    "ハレ": {
-        "cnName": "晴",
-        "loma": "Hare"
-    },
-    "ヒナ": {
-        "cnName": "日奈",
-        "loma": "Hina"
-    },
-    "ヒナ(水着)": {
-        "cnName": "泳装阳奈",
-        "loma": "Hina_Swimsuit"
-    },
-    "ヒナタ": {
-        "cnName": "日向",
-        "loma": "Hinata"
-    },
-    "ヒビキ": {
-        "cnName": "响",
-        "loma": "Hibiki"
-    },
-    "ヒビキ(応援団)": {
-        "cnName": "拉拉响",
-        "loma": "Hibiki_Cheerleader"
-    },
-    "ヒフミ": {
-        "cnName": "日富美",
-        "loma": "Hifumi"
-    },
-    "ヒフミ(水着)": {
-        "cnName": "泳装日富美",
-        "loma": "Hifumi_Swimsuit"
-    },
-    "ヒヨリ": {
-        "cnName": "日和",
-        "loma": "Hiyori"
-    },
-    "フィーナ": {
-        "cnName": "菲娜",
-        "loma": "Pina"
-    },
-    "フウカ": {
-        "cnName": "枫香",
-        "loma": "Fuuka"
-    },
-    "フブキ": {
-        "cnName": "吹雪",
-        "loma": "Fubuki"
-    },
-    "ホシノ": {
-        "cnName": "星野",
-        "loma": "Hoshino"
-    },
-    "ホシノ(水着)": {
-        "cnName": "泳装星野",
-        "loma": "Hoshino_Swimsuit"
-    },
-    "マキ": {
-        "cnName": "真纪",
-        "loma": "Maki"
-    },
-    "マシロ": {
-        "cnName": "真白",
-        "loma": "Mashiro"
-    },
-    "マシロ(水着)": {
-        "cnName": "泳装真白",
-        "loma": "Mashiro_Swimsuit"
-    },
-    "マリー": {
-        "cnName": "玛莉",
-        "loma": "Mari"
-    },
-    "マリー(体操服)": {
-        "cnName": "运动服玛丽",
-        "loma": "Mari_Track"
-    },
-    "マリナ": {
-        "cnName": "玛丽娜",
-        "loma": "Marina"
-    },
-    "ミサキ": {
-        "cnName": "美咲",
-        "loma": "Misaki"
-    },
-    "ミチル": {
-        "cnName": "满",
-        "loma": "Michiru"
-    },
-    "ミドリ": {
-        "cnName": "绿",
-        "loma": "Midori"
-    },
-    "ミモリ": {
-        "cnName": "三森",
-        "loma": "Mimori"
-    },
-    "ミヤコ": {
-        "cnName": "宫子",
-        "loma": "Miyako"
-    },
-    "ミユ": {
-        "cnName": "美游",
-        "loma": "Miyu"
-    },
-    "ムツキ": {
-        "cnName": "睦月",
-        "loma": "Mutsuki"
-    },
-    "ムツキ(正月)": {
-        "cnName": "正月睦月",
-        "loma": "Mutsuki_NewYear"
-    },
-    "モエ": {
-        "cnName": "萌惠",
-        "loma": "Moe"
-    },
-    "モモイ": {
-        "cnName": "桃井",
-        "loma": "Momoi"
-    },
-    "ユウカ": {
-        "cnName": "优香",
-        "loma": "Yuuka"
-    },
-    "ユウカ(体操服)": {
-        "cnName": "运动服佑香",
-        "loma": "Yuuka_Track"
-    },
-    "ユズ": {
-        "cnName": "柚子",
-        "loma": "Yuzu"
-    },
-    "ヨシミ": {
-        "cnName": "喜美",
-        "loma": "Yoshimi"
-    },
-    "ワカモ": {
-        "cnName": "若藻",
-        "loma": "Wakamo"
-    },
-    "ワカモ(水着)": {
-        "cnName": "泳装若藻",
-        "loma": "Wakamo_Swimsuit"
-    },
-    "ヒマリ": {
-        "cnName": "日鞠",
-        "loma": "Himari"
+        "loma": "Saya_Casual",
+        "gamekee": "https://ba.gamekee.com/87912.html"
     },
     "シグレ": {
         "cnName": "时雨",
-        "loma": "Shigure"
+        "loma": "Shigure",
+        "gamekee": "https://ba.gamekee.com/577249.html"
+    },
+    "シズコ": {
+        "cnName": "静子",
+        "loma": "Shizuko",
+        "gamekee": "https://ba.gamekee.com/70511.html"
+    },
+    "シズコ(水着)": {
+        "cnName": "泳装静子",
+        "loma": "Shizuko_Swimsuit",
+        "gamekee": "https://ba.gamekee.com/162572.html"
+    },
+    "シミコ": {
+        "cnName": "志美子",
+        "loma": "Shimiko",
+        "gamekee": "https://ba.gamekee.com/66269.html"
+    },
+    "ジュリ": {
+        "cnName": "茱莉",
+        "loma": "Juri",
+        "gamekee": "https://ba.gamekee.com/63927.html"
+    },
+    "シュン": {
+        "cnName": "瞬",
+        "loma": "Shun",
+        "gamekee": "https://ba.gamekee.com/68522.html"
+    },
+    "シュン(幼女)": {
+        "cnName": "幼女旬",
+        "loma": "Shun_Small",
+        "gamekee": "https://ba.gamekee.com/86656.html"
+    },
+    "ジュンコ": {
+        "cnName": "淳子",
+        "loma": "Junko",
+        "gamekee": "https://ba.gamekee.com/60879.html"
+    },
+    "シロコ": {
+        "cnName": "白子",
+        "loma": "Shiroko",
+        "gamekee": "https://ba.gamekee.com/46677.html"
+    },
+    "シロコ(ライディング)": {
+        "cnName": "骑行白子",
+        "loma": "Shiroko_Cycling",
+        "gamekee": "https://ba.gamekee.com/85351.html"
+    },
+    "スズミ": {
+        "cnName": "铃美",
+        "loma": "Suzumi",
+        "gamekee": "https://ba.gamekee.com/66259.html"
+    },
+    "スミレ": {
+        "cnName": "堇",
+        "loma": "Sumire",
+        "gamekee": "https://ba.gamekee.com/67664.html"
+    },
+    "セナ": {
+        "cnName": "濑名",
+        "loma": "Sena",
+        "gamekee": "https://ba.gamekee.com/150696.html"
+    },
+    "セリカ": {
+        "cnName": "芹香",
+        "loma": "Serika",
+        "gamekee": "https://ba.gamekee.com/46678.html"
+    },
+    "セリカ(正月)": {
+        "cnName": "正月茜香",
+        "loma": "Serika_NewYear",
+        "gamekee": "https://ba.gamekee.com/150380.html"
+    },
+    "セリナ": {
+        "cnName": "圣诞节芹娜",
+        "loma": "Serina",
+        "gamekee": "https://ba.gamekee.com/578734.html"
     },
     "セリナ(クリスマス)": {
-        "cnName": "芹娜(圣诞节)",
-        "loma": "Serina_Christmas"
+        "cnName": "圣诞节芹娜",
+        "loma": "Serina_Christmas",
+        "gamekee": "https://ba.gamekee.com/578734.html"
+    },
+    "チェリノ": {
+        "cnName": "切里诺",
+        "loma": "Cherino",
+        "gamekee": "https://ba.gamekee.com/75150.html"
+    },
+    "チェリノ(温泉)": {
+        "cnName": "温泉切里诺",
+        "loma": "Cherino_HotSpring",
+        "gamekee": "https://ba.gamekee.com/150144.html"
+    },
+    "チセ": {
+        "cnName": "千世",
+        "loma": "Chise",
+        "gamekee": "https://ba.gamekee.com/68284.html"
+    },
+    "チセ(水着)": {
+        "cnName": "泳装知世",
+        "loma": "Chise_Swimsuit",
+        "gamekee": "https://ba.gamekee.com/162817.html"
+    },
+    "チナツ": {
+        "cnName": "千夏",
+        "loma": "Chinatsu",
+        "gamekee": "https://ba.gamekee.com/58280.html"
+    },
+    "チナツ(温泉)": {
+        "cnName": "温泉千夏",
+        "loma": "Chinatsu_HotSpring",
+        "gamekee": "https://ba.gamekee.com/150145.html"
+    },
+    "チヒロ": {
+        "cnName": "千寻",
+        "loma": "Chihiro",
+        "gamekee": "https://ba.gamekee.com/150698.html"
+    },
+    "ツクヨ": {
+        "cnName": "月咏",
+        "loma": "Tsukuyo",
+        "gamekee": "https://ba.gamekee.com/155968.html"
+    },
+    "ツバキ": {
+        "cnName": "椿",
+        "loma": "Tsubaki",
+        "gamekee": "https://ba.gamekee.com/68177.html"
+    },
+    "ツルギ": {
+        "cnName": "鹤城",
+        "loma": "Tsurugi",
+        "gamekee": "https://ba.gamekee.com/66645.html"
+    },
+    "ツルギ(水着)": {
+        "cnName": "泳装鹤城",
+        "loma": "Tsurugi_Swimsuit",
+        "gamekee": "https://ba.gamekee.com/81813.html"
+    },
+    "トモエ": {
+        "cnName": "智惠",
+        "loma": "Tomoe",
+        "gamekee": "https://ba.gamekee.com/161281.html"
+    },
+    "ナツ": {
+        "cnName": "夏",
+        "loma": "Natsu",
+        "gamekee": "https://ba.gamekee.com/90626.html"
+    },
+    "ネル": {
+        "cnName": "尼禄",
+        "loma": "Neru",
+        "gamekee": "https://ba.gamekee.com/67012.html"
+    },
+    "ネル(バニーガール)": {
+        "cnName": "兔女郎尼禄",
+        "loma": "Neru_Bunny",
+        "gamekee": "https://ba.gamekee.com/89274.html"
+    },
+    "ノア": {
+        "cnName": "诺亚",
+        "loma": "Noa",
+        "gamekee": "https://ba.gamekee.com/168193.html"
+    },
+    "ノドカ": {
+        "cnName": "和香",
+        "loma": "Nodoka",
+        "gamekee": "https://ba.gamekee.com/75151.html"
+    },
+    "ノドカ(温泉)": {
+        "cnName": "温泉和香",
+        "loma": "Nodoka_HotSpring",
+        "gamekee": "https://ba.gamekee.com/150174.html"
+    },
+    "ノノミ": {
+        "cnName": "富婆",
+        "loma": "Nonomi",
+        "gamekee": "https://ba.gamekee.com/68803.html"
+    },
+    "ノノミ(水着)": {
+        "cnName": "泳装野乃美",
+        "loma": "Nonomi_Swimsuit",
+        "gamekee": "https://ba.gamekee.com/159935.html"
+    },
+    "ハスミ": {
+        "cnName": "莲见",
+        "loma": "Hasumi",
+        "gamekee": "https://ba.gamekee.com/66394.html"
+    },
+    "ハスミ(体操服)": {
+        "cnName": "运动服莲见",
+        "loma": "Hasumi_Track",
+        "gamekee": "https://ba.gamekee.com/170322.html"
+    },
+    "ハナエ": {
+        "cnName": "花绘",
+        "loma": "Hanae",
+        "gamekee": "https://ba.gamekee.com/68915.html"
     },
     "ハナエ(クリスマス)": {
-        "cnName": "花绘(圣诞节)",
-        "loma": "Hanae_Christmas"
+        "cnName": "圣诞节花绘",
+        "loma": "Hanae_Christmas",
+        "gamekee": "https://ba.gamekee.com/578738.html"
+    },
+    "ハナコ": {
+        "cnName": "花子",
+        "loma": "Hanako",
+        "gamekee": "https://ba.gamekee.com/77113.html"
+    },
+    "ハルカ": {
+        "cnName": "遥香",
+        "loma": "Haruka",
+        "gamekee": "https://ba.gamekee.com/53921.html"
+    },
+    "ハルナ": {
+        "cnName": "晴奈",
+        "loma": "Haruna",
+        "gamekee": "https://ba.gamekee.com/62592.html"
+    },
+    "ハレ": {
+        "cnName": "晴",
+        "loma": "Hare",
+        "gamekee": "https://ba.gamekee.com/67140.html"
+    },
+    "ヒナ": {
+        "cnName": "日奈",
+        "loma": "Hina",
+        "gamekee": "https://ba.gamekee.com/59934.html"
+    },
+    "ヒナ(水着)": {
+        "cnName": "泳装阳奈",
+        "loma": "Hina_Swimsuit",
+        "gamekee": "https://ba.gamekee.com/83729.html"
+    },
+    "ヒナタ": {
+        "cnName": "日向",
+        "loma": "Hinata",
+        "gamekee": "https://ba.gamekee.com/151348.html"
+    },
+    "ヒビキ": {
+        "cnName": "响",
+        "loma": "Hibiki",
+        "gamekee": "https://ba.gamekee.com/67657.html"
+    },
+    "ヒビキ(応援団)": {
+        "cnName": "拉拉响",
+        "loma": "Hibiki_Cheerleader",
+        "gamekee": "https://ba.gamekee.com/168196.html"
+    },
+    "ヒフミ": {
+        "cnName": "日富美",
+        "loma": "Hifumi",
+        "gamekee": "https://ba.gamekee.com/66256.html"
+    },
+    "ヒフミ(水着)": {
+        "cnName": "泳装日富美",
+        "loma": "Hifumi_Swimsuit",
+        "gamekee": "https://ba.gamekee.com/83596.html"
+    },
+    "ヒマリ": {
+        "cnName": "日鞠",
+        "loma": "Himari",
+        "gamekee": "https://ba.gamekee.com/575949.html"
+    },
+    "ヒヨリ": {
+        "cnName": "日和",
+        "loma": "Hiyori",
+        "gamekee": "https://ba.gamekee.com/156962.html"
+    },
+    "フィーナ": {
+        "cnName": "菲娜",
+        "loma": "Pina",
+        "gamekee": "https://ba.gamekee.com/68176.html"
+    },
+    "フウカ": {
+        "cnName": "枫香",
+        "loma": "Fuuka",
+        "gamekee": "https://ba.gamekee.com/64384.html"
+    },
+    "フブキ": {
+        "cnName": "吹雪",
+        "loma": "Fubuki",
+        "gamekee": "https://ba.gamekee.com/150694.html"
+    },
+    "ホシノ": {
+        "cnName": "星野",
+        "loma": "Hoshino",
+        "gamekee": "https://ba.gamekee.com/46680.html"
+    },
+    "ホシノ(水着)": {
+        "cnName": "泳装星野",
+        "loma": "Hoshino_Swimsuit",
+        "gamekee": "https://ba.gamekee.com/162560.html"
+    },
+    "マキ": {
+        "cnName": "真纪",
+        "loma": "Maki",
+        "gamekee": "https://ba.gamekee.com/67654.html"
+    },
+    "マシロ": {
+        "cnName": "真白",
+        "loma": "Mashiro",
+        "gamekee": "https://ba.gamekee.com/69549.html"
+    },
+    "マシロ(水着)": {
+        "cnName": "泳装真白",
+        "loma": "Mashiro_Swimsuit",
+        "gamekee": "https://ba.gamekee.com/81812.html"
+    },
+    "マリー": {
+        "cnName": "玛莉",
+        "loma": "Mari",
+        "gamekee": "https://ba.gamekee.com/90627.html"
+    },
+    "マリー(体操服)": {
+        "cnName": "运动服玛丽",
+        "loma": "Mari_Track",
+        "gamekee": "https://ba.gamekee.com/170297.html"
+    },
+    "マリナ": {
+        "cnName": "玛丽娜",
+        "loma": "Marina",
+        "gamekee": "https://ba.gamekee.com/151713.html"
+    },
+    "ミサキ": {
+        "cnName": "美咲",
+        "loma": "Misaki",
+        "gamekee": "https://ba.gamekee.com/156959.html"
+    },
+    "ミチル": {
+        "cnName": "满",
+        "loma": "Michiru",
+        "gamekee": "https://ba.gamekee.com/155255.html"
+    },
+    "ミドリ": {
+        "cnName": "绿",
+        "loma": "Midori",
+        "gamekee": "https://ba.gamekee.com/68802.html"
+    },
+    "ミモリ": {
+        "cnName": "三森",
+        "loma": "Mimori",
+        "gamekee": "https://ba.gamekee.com/151016.html"
+    },
+    "ミヤコ": {
+        "cnName": "宫子",
+        "loma": "Miyako",
+        "gamekee": "https://ba.gamekee.com/153368.html"
+    },
+    "ミユ": {
+        "cnName": "美游",
+        "loma": "Miyu",
+        "gamekee": "https://ba.gamekee.com/153606.html"
+    },
+    "ムツキ": {
+        "cnName": "睦月",
+        "loma": "Mutsuki",
+        "gamekee": "https://ba.gamekee.com/54505.html"
+    },
+    "ムツキ(正月)": {
+        "cnName": "正月睦月",
+        "loma": "Mutsuki_NewYear",
+        "gamekee": "https://ba.gamekee.com/150223.html"
+    },
+    "モエ": {
+        "cnName": "萌惠",
+        "loma": "Moe",
+        "gamekee": "https://ba.gamekee.com/165669.html"
+    },
+    "モモイ": {
+        "cnName": "桃井",
+        "loma": "Momoi",
+        "gamekee": "https://ba.gamekee.com/68801.html"
+    },
+    "ユウカ": {
+        "cnName": "优香",
+        "loma": "Yuuka",
+        "gamekee": "https://ba.gamekee.com/67658.html"
+    },
+    "ユウカ(体操服)": {
+        "cnName": "运动服佑香",
+        "loma": "Yuuka_Track",
+        "gamekee": "https://ba.gamekee.com/170295.html"
+    },
+    "ユズ": {
+        "cnName": "柚子",
+        "loma": "Yuzu",
+        "gamekee": "https://ba.gamekee.com/77109.html"
+    },
+    "ヨシミ": {
+        "cnName": "好美",
+        "loma": "Yoshimi",
+        "gamekee": "https://ba.gamekee.com/66272.html"
+    },
+    "ワカモ": {
+        "cnName": "若藻",
+        "loma": "Wakamo",
+        "gamekee": "https://ba.gamekee.com/150695.html"
+    },
+    "ワカモ(水着)": {
+        "cnName": "泳装若藻",
+        "loma": "Wakamo_Swimsuit",
+        "gamekee": "https://ba.gamekee.com/159948.html"
     }
 }

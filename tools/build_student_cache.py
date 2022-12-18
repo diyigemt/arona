@@ -6,7 +6,11 @@ import time
 from playwright.sync_api import Playwright, sync_playwright
 from fetch_student_info_from_ba_game_db import query_remote_name, replace_none_char
 from config import cache_file_location, name_map_dict_file_location
+game_kee_prefix = "https://ba.gamekee.com"
+name_map_dict = {}
 def run(playwright: Playwright):
+    build_name_map_dict()
+    build_game_kee_student_mapping(playwright)
     build_stu_loma_map_from_schaledb(playwright)
     check_ba_game_db_name_mapping(playwright)
 
@@ -18,10 +22,19 @@ def build_stu_loma_map_from_schaledb(playwright: Playwright):
     # 加载缓存
     cache_dict = {}
     with codecs.open(cache_file_location, "r", encoding="utf-8") as f:
-        cache_dict = json.loads(f.read())
+    # todo
+        pass
+        #cache_dict = json.loads(f.read())
 
     # 从schaledb获取所有学生用于描述的姓名
     page.goto("https://lonqie.github.io/SchaleDB")
+
+    # 关闭change-log窗口
+    model = page.query_selector("#modal-changelog")
+    if model != None:
+        close_btn = model.query_selector(".btn-close")
+        if close_btn != None:
+            close_btn.click()
 
     # 换成日服中文
     setting_btn = page.query_selector("#ba-navbar-regionselector")
@@ -57,11 +70,8 @@ def build_stu_loma_map_from_schaledb(playwright: Playwright):
     for item in page.query_selector_all(".card-student"):
         loma = re.sub(re_replace, r"\1", item.get_attribute("onclick"))
         name = item.query_selector(".card-label").query_selector(".label-text").text_content()
-        # 人工替换正确名字
-        if name in name_map_dict:
-            name = name_map_dict[name]
-        remote = query_remote_name(name)
-        remote_name = str(remote["name"])
+        # 人工替换可以识别的文字
+        remote_name = get_cn_name_from_remote(name)
         # 理论上不会发生
         if loma in stu_loma_dict:
             print("crash: local: %s, loma: %s, remote: %s" % (name, loma, remote_name))
@@ -103,6 +113,16 @@ def build_stu_loma_map_from_schaledb(playwright: Playwright):
                 "cnName": stu_loma_dict[loma],
                 "loma": loma
                 }
+    # 通过中文名关联gamekee页面
+    game_kee_dict = build_game_kee_student_mapping(playwright)
+    for key in cache_dict:
+        item = cache_dict[key]
+        cnName = item["cnName"]
+        if cnName in game_kee_dict:
+            item["gamekee"] = game_kee_dict[cnName]
+        else:
+            print("game cn name: %s not found match" % cnName)
+
     if os.path.exists(cache_file_location):
         os.remove(cache_file_location)
     with codecs.open(cache_file_location, "w", encoding="utf-8") as f:
@@ -142,6 +162,44 @@ def check_ba_game_db_name_mapping(playwright: Playwright):
     print("error: %d/118" % error_count)
     context.close()
     browser.close()
+
+def build_game_kee_student_mapping(playwright: Playwright):
+    student_dict = {}
+    browser = playwright.chromium.launch(headless=True, slow_mo=100)
+    context = browser.new_context(viewport={'width': 1920, 'height': 1080})
+    page = context.new_page()
+    page.goto("https://ba.gamekee.com/")
+    time.sleep(2)
+
+    container = page.query_selector('//*[@id="menu-23941"]/div[3]/div[2]/div[1]/div[2]')
+    for item in container.query_selector_all("a"):
+        href = item.get_attribute("href")
+        student_name = replace_none_char(item.get_attribute("title"))
+        # 替换人工名字
+        student_name = get_cn_name_from_remote(student_name)
+        student_dict[student_name] = game_kee_prefix + href
+    context.close()
+    browser.close()
+    return student_dict
+
+def get_cn_name_from_remote(name: str) -> str:
+    # 人工替换正确名字
+    name = replace_none_char(name)
+    if name in name_map_dict:
+        name = name_map_dict[name]
+    remote = query_remote_name(name)
+    return str(remote["name"])
+
+def build_name_map_dict():
+    if os.path.exists(name_map_dict_file_location):
+        with open(name_map_dict_file_location, "r", encoding="UTF-8") as f:
+            for cache in f.readlines():
+                cache = cache.replace("\n", "")
+                cache = cache.replace("\r", "")
+                if len(cache) == 0:
+                    continue
+                sp = cache.split(",")
+                name_map_dict[sp[0]] = sp[1]
 
 if __name__ == "__main__":
     with sync_playwright() as playwright:

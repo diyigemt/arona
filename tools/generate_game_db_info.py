@@ -8,12 +8,12 @@ import json
 from config import cache_file_location
 import numpy as np
 from fetch_student_info_from_ba_game_db import concat_list, concat_two_im, download_image, fetch_data_from_game_db, fetch_data_from_schaledb, query_remote_name, replace_none_char, test_name_exist
-
+import re
 # 要生成的目标 日文名
-target = ["シグレ"]
+target = ["ミユ"]
 # 如果本地有图片
 local_file_path = {
-    "チヒロ": "生盐_诺亚.png",
+    "ミユ": "美游.png",
 }
 
 def run(playwright: Playwright):
@@ -92,6 +92,10 @@ def run(playwright: Playwright):
         else:
             source_im = download_image("https://arona.cdn.diyigemt.com/image", path, local_path)
 
+        # 获取gamekee的中文翻译
+
+        cn_info = get_cn_info_from_gamekee(playwright, info["gamekee"])
+
         # 从shaledb下载
         fetch_data_from_schaledb(playwright, loma)
 
@@ -143,6 +147,72 @@ def run(playwright: Playwright):
         close_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[1]")
         close_btn.click()
 
+def get_cn_info_from_gamekee(playwright: Playwright, path: str):
+    browser = playwright.chromium.launch(headless=True, slow_mo=100)
+    context = browser.new_context(viewport={'width': 1920, 'height': 1080}, device_scale_factor=4.0)
+    page = context.new_page()
+
+    page.goto(path)
+    time.sleep(2)
+    page.eval_on_selector_all(".dailog-data-wrapper", "nodes => nodes.forEach(el => el.remove())")
+    time.sleep(2)
+    skill_bounds = re.compile("\d+%?~\d+%?")
+
+    info = {}
+    ex_name = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/tr[1]/td/div/span')
+    ex_desc = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/tr[2]/td[2]')
+    ex_desc = skill_bounds.sub("$value", ex_desc)
+
+    ns_name = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/tr[5]/td/div/span')
+    ns_desc = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/tr[6]/td[2]')
+    ns_desc = skill_bounds.sub("$value", ns_desc)
+
+    bs_name = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/tr[9]/td/div/span')
+    bs_desc = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/tr[10]/td[2]')
+    bs_desc = skill_bounds.sub("$value", bs_desc)
+
+    ss_name = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/tr[13]/td/div/span')
+    ss_desc = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/tr[14]/td[2]')
+    ss_desc = skill_bounds.sub("$value", ss_desc)
+
+    wp_name = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[2]/td/div/div[1]/span')
+    
+    wp_desc_1_el = page.query_selector('//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/span/span[1]/span/div/span/span[2]/span/span/span/span/span/div/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[3]/span/span/div/span/span[2]/span/span/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[2]/td/div/div[2]')
+    wp_desc_2_el = page.query_selector('//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/span/span[1]/span/div/span/span[2]/span/span/span/span/span/div/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[3]/span/span/div/span/span[2]/span/span/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[2]/td/div/div[3]')
+    if wp_desc_1_el == None:
+        wp_desc_1_el = page.query_selector('//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[2]/td/div/div[2]')
+        wp_desc_2_el = page.query_selector('//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[2]/td/div/div[3]')
+
+    wp_desc_1 = wp_desc_1_el.text_content().replace(".", "").replace("\n", "")
+    wp_desc_2 = wp_desc_2_el.text_content().replace(".", "").replace("\n", "")
+    
+    wp_skill = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[15]/td')
+    wp_skill = skill_bounds.sub("$value", wp_skill)
+
+    hobby = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[4]/div/div/table/tbody/tr[6]/td[2]/div')
+    desc = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[4]/div/div/table/tbody/tr[9]/td[2]')
+    info["ex_name"] = ex_name
+    info["ex_desc"] = ex_desc
+    info["ns_name"] = ns_name
+    info["ns_desc"] = ns_desc
+    info["bs_name"] = bs_name
+    info["bs_desc"] = bs_desc
+    info["ss_name"] = ss_name
+    info["ss_desc"] = ss_desc
+    info["wp_name"] = wp_name
+    info["wp_desc_1"] = wp_desc_1
+    info["wp_desc_2"] = wp_desc_2
+    info["wp_skill"] = wp_skill
+    info["hobby"] = hobby
+    info["desc"] = desc
+
+    context.close()
+    browser.close()
+    return info
+
+def get_content(page, xPath: str) -> str:
+    content = page.query_selector(xPath).text_content()
+    return content.replace(".", "").replace("\n", "").replace(" ", "")
 if __name__ == "__main__":
     with sync_playwright() as playwright:
         run(playwright)

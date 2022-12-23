@@ -17,6 +17,7 @@ import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.message.code.MiraiCode.deserializeMiraiCode
 import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
 import java.io.File
+import kotlin.reflect.full.hasAnnotation
 
 object TrainerCommand : SimpleCommand(
   Arona, "trainer", "攻略",

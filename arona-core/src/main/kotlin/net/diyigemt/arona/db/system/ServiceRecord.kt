@@ -12,7 +12,7 @@ object ServiceRecord: LongIdTable(name = "System") {
 }
 
 class ServiceRecordModel(id: EntityID<Long>): LongEntity(id) {
-  companion object: LongEntityClass<SystemTableModel>(SystemTable)
-  var key by SystemTable.key
-  var value by SystemTable.value
+  companion object: LongEntityClass<SystemConfigTableModel>(SystemConfigTable)
+  var key by SystemConfigTable.key
+  var value by SystemConfigTable.value
 }

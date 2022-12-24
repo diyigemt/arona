@@ -1,8 +1,8 @@
 package net.diyigemt.arona.util
 
 import net.diyigemt.arona.db.DataBaseProvider
-import net.diyigemt.arona.db.system.SystemTable
-import net.diyigemt.arona.db.system.SystemTableModel
+import net.diyigemt.arona.db.system.SystemConfigTable
+import net.diyigemt.arona.db.system.SystemConfigTableModel
 import net.diyigemt.arona.util.sys.SysStatic
 
 /**
@@ -13,7 +13,7 @@ import net.diyigemt.arona.util.sys.SysStatic
 object SysDataUtil {
 
   fun get(key: SysStatic): String? = DataBaseProvider.query {
-    SystemTableModel.find { SystemTable.key eq key.key }.firstOrNull()?.value
+    SystemConfigTableModel.find { SystemConfigTable.key eq key.key }.firstOrNull()?.value
   }
 
   fun get(key: SysStatic, default: String): String = get(key) ?: default
@@ -22,7 +22,7 @@ object SysDataUtil {
     // 防止重复key
     try {
       DataBaseProvider.query {
-        SystemTableModel.new {
+        SystemConfigTableModel.new {
           this.key = key.key
           this.value = value
         }
@@ -32,7 +32,7 @@ object SysDataUtil {
 
   fun increase(key: SysStatic, value: Int = 1) {
     DataBaseProvider.query {
-      val record = SystemTableModel.find { SystemTable.key eq key.key }.firstOrNull()
+      val record = SystemConfigTableModel.find { SystemConfigTable.key eq key.key }.firstOrNull()
       if (record == null) {
         save(key, value.toString())
       } else {
@@ -49,7 +49,7 @@ object SysDataUtil {
 
   fun saveRegisterData(value: String) {
     DataBaseProvider.query {
-      SystemTableModel.new {
+      SystemConfigTableModel.new {
         this.key = SysStatic.UUID.key
         this.value = value
       }

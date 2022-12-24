@@ -4,6 +4,7 @@ package net.diyigemt.arona.util
 
 import net.diyigemt.arona.command.cache.GachaCache
 import net.diyigemt.arona.config.AronaGachaConfig
+import net.diyigemt.arona.config.GlobalConfigProvider
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.gacha.*
 import org.jetbrains.exposed.sql.and
@@ -11,8 +12,18 @@ import org.jetbrains.exposed.sql.and
 object GachaUtil {
   private const val star = "★"
 
-  fun pickup(): GachaCharacters {
-    val maxDot = pow10(AronaGachaConfig.maxDot)
+  fun pickup(group: Long, time: Int = 1): List<GachaCharacters> {
+    GlobalConfigProvider.getGroup<String>("start1Rate", group)
+//    val maxDot = listOf(
+//      AronaGachaConfig.getDotPosition(AronaGachaConfig.star1Rate.toString()),
+//      AronaGachaConfig.getDotPosition(AronaGachaConfig.star2Rate.toString()),
+//      AronaGachaConfig.getDotPosition(AronaGachaConfig.star3Rate.toString()),
+//      AronaGachaConfig.getDotPosition(AronaGachaConfig.star2PickupRate.toString()),
+//      AronaGachaConfig.getDotPosition(AronaGachaConfig.star3PickupRate.toString()),
+//    ).maxOf { it }.let { pow10(it) }
+
+    val maxDot = 10
+
     val star1Rate = (AronaGachaConfig.star1Rate * maxDot).toInt()
     val star2Rate = (AronaGachaConfig.star2Rate * maxDot).toInt()
     return when ((0 until 100 * maxDot).random()) {
@@ -143,6 +154,8 @@ object GachaUtil {
 
   private fun rollList(list: List<GachaCharacters>) = list[(list.indices).random()]
 
-  private fun pow10(pow: Int) = Array<Int>(pow) { 10 }.sum()
+  private fun pow10(pow: Int) = Array(pow) { 10 }.sum()
+
+  private fun getDotPosition(s: String): Int = if (s.indexOf(".") == -1) 1 else s.length - s.indexOf(".") - 1
 
 }

@@ -68,9 +68,6 @@ dependencies {
 //  implementation("ch.qos.logback:logback-classic:$logback_version")
   testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
-  // 配置文件序列化
-  implementation("com.akuleshov7:ktoml-core:0.3.0")
-  implementation("com.akuleshov7:ktoml-file:0.3.0")
 }
 
 tasks.test {

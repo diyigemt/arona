@@ -10,11 +10,19 @@ import numpy as np
 from fetch_student_info_from_ba_game_db import concat_list, concat_two_im, download_image, fetch_data_from_game_db, fetch_data_from_schaledb, query_remote_name, replace_none_char, test_name_exist
 import re
 # 要生成的目标 日文名
-target = ["ミユ"]
+target = [
+    "アカネ(バニーガール)","イズミ(水着)"
+    # "アイリ","アカネ","アカネ(バニーガール)","アカリ","アコ","アズサ","アズサ(水着)",
+# "アスナ","アスナ(バニーガール)",
+# "アツコ","アヤネ",
+# "アヤネ(水着)","アリス",
+# "アル","アル(正月)","イオリ",
+# "イオリ(水着)","イズナ","イズナ(水着)","イズミ","イズミ(水着)","イロハ","ウイ","ウタハ","ウタハ(応援団)","エイミ","カエデ","カズサ","カヨコ","カリン","カリン(バニーガール)","キリノ","ココナ","コタマ","コトリ","コハル","サオリ","サキ","サヤ","サヤ(私服)","シグレ","シズコ","シズコ(水着)","シミコ","ジュリ","シュン","シュン(幼女)","ジュンコ","シロコ","シロコ(ライディング)","スズミ","スミレ","セナ","セリカ","セリカ(正月)","セリナ","セリナ(クリスマス)","チェリノ","チェリノ(温泉)","チセ","チセ(水着)","チナツ","チナツ(温泉)",
+# "チヒロ","ツクヨ","ツバキ","ツルギ","ツルギ(水着)","トモエ","ナツ","ネル","ネル(バニーガール)","ノア","ノドカ","ノドカ(温泉)","ノノミ","ノノミ(水着)","ハスミ","ハスミ(体操服)","ハナエ","ハナエ(クリスマス)","ハナコ","ハルカ","ハルナ","ハレ",
+# "ヒナ","ヒナ(水着)","ヒナタ","ヒビキ","ヒビキ(応援団)","ヒフミ","ヒフミ(水着)","ヒマリ","ヒヨリ","フィーナ","フウカ","フブキ","ホシノ","ホシノ(水着)","マキ","マシロ","マシロ(水着)","マリー","マリー(体操服)","マリナ","ミサキ","ミチル","ミドリ","ミモリ","ミヤコ","ミユ","ムツキ","ムツキ(正月)","モエ","モモイ","ユウカ","ユウカ(体操服)","ユズ","ヨシミ","ワカモ","ワカモ(水着)"
+]
 # 如果本地有图片
-local_file_path = {
-    "ミユ": "美游.png",
-}
+local_file_path = {"初音ミク":"初音.png","アイリ":"爱莉.png","アカネ":"茜.png","アカネ(バニーガール)":"兔女郎茜.png","アカリ":"亚伽里.png","アコ":"亚子.png","アズサ":"梓.png","アズサ(水着)":"泳装梓.png","アスナ":"明日奈.png","アスナ(バニーガール)":"兔女郎明日奈.png","アツコ":"亚津子.png","アヤネ":"凌音.png","アヤネ(水着)":"泳装绫音.png","アリス":"爱丽丝.png","アル":"阿露.png","アル(正月)":"正月亚瑠.png","イオリ":"伊织.png","イオリ(水着)":"泳装伊织.png","イズナ":"泉奈.png","イズナ(水着)":"泳装泉奈.png","イズミ":"泉.png","イズミ(水着)":"泳装泉.png","イロハ":"伊吕波.png","ウイ":"忧.png","ウタハ":"歌原.png","ウタハ(応援団)":"啦啦队歌原.png","エイミ":"艾米.png","カエデ":"枫.png","カズサ":"和纱.png","カヨコ":"佳代子.png","カリン":"花凛.png","カリン(バニーガール)":"兔女郎花凛.png","キリノ":"桐乃.png","ココナ":"心奈.png","コタマ":"小玉.png","コトリ":"柯托莉.png","コハル":"小春.png","サオリ":"纱织.png","サキ":"咲.png","サヤ":"沙耶.png","サヤ(私服)":"私服沙耶.png","シグレ":"时雨.png","シズコ":"静子.png","シズコ(水着)":"泳装静子.png","シミコ":"志美子.png","ジュリ":"茱莉.png","シュン":"瞬.png","シュン(幼女)":"幼女旬.png","ジュンコ":"淳子.png","シロコ":"白子.png","シロコ(ライディング)":"骑行白子.png","スズミ":"铃美.png","スミレ":"堇.png","セナ":"濑名.png","セリカ":"芹香.png","セリカ(正月)":"正月茜香.png","セリナ":"芹娜.png","セリナ(クリスマス)":"圣诞节芹娜.png","チェリノ":"切里诺.png","チェリノ(温泉)":"温泉切里诺.png","チセ":"千世.png","チセ(水着)":"泳装知世.png","チナツ":"千夏.png","チナツ(温泉)":"温泉千夏.png","チヒロ":"千寻.png","ツクヨ":"月咏.png","ツバキ":"椿.png","ツルギ":"鹤城.png","ツルギ(水着)":"泳装鹤城.png","トモエ":"智惠.png","ナツ":"夏.png","ネル":"尼禄.png","ネル(バニーガール)":"兔女郎尼禄.png","ノア":"诺亚.png","ノドカ":"和香.png","ノドカ(温泉)":"温泉和香.png","ノノミ":"富婆.png","ノノミ(水着)":"泳装野乃美.png","ハスミ":"莲见.png","ハスミ(体操服)":"运动服莲见.png","ハナエ":"花绘.png","ハナエ(クリスマス)":"圣诞节花绘.png","ハナコ":"花子.png","ハルカ":"遥香.png","ハルナ":"晴奈.png","ハレ":"晴.png","ヒナ":"日奈.png","ヒナ(水着)":"泳装阳奈.png","ヒナタ":"日向.png","ヒビキ":"响.png","ヒビキ(応援団)":"拉拉响.png","ヒフミ":"日富美.png","ヒフミ(水着)":"泳装日富美.png","ヒマリ":"日鞠.png","ヒヨリ":"日和.png","フィーナ":"菲娜.png","フウカ":"枫香.png","フブキ":"吹雪.png","ホシノ":"星野.png","ホシノ(水着)":"泳装星野.png","マキ":"真纪.png","マシロ":"真白.png","マシロ(水着)":"泳装真白.png","マリー":"玛莉.png","マリー(体操服)":"运动服玛丽.png","マリナ":"玛丽娜.png","ミサキ":"美咲.png","ミチル":"满.png","ミドリ":"绿.png","ミモリ":"三森.png","ミヤコ":"宫子.png","ミユ":"美游.png","ムツキ":"睦月.png","ムツキ(正月)":"正月睦月.png","モエ":"萌惠.png","モモイ":"桃井.png","ユウカ":"优香.png","ユウカ(体操服)":"运动服佑香.png","ユズ":"柚子.png","ヨシミ":"好美.png","ワカモ":"若藻.png","ワカモ(水着)":"泳装若藻.png"}
 
 def run(playwright: Playwright):
     browser = playwright.chromium.launch(headless=True, slow_mo=100)
@@ -88,6 +96,10 @@ def run(playwright: Playwright):
             local_path = "./image/parse/%s" % local_file_path[jpName]
             if local_path.find(".png") == -1:
                 local_path = local_path + ".png"
+            if not os.path.exists(local_path):
+                count = count + 1
+                print("local file not found, skip: %s, %d/%d" % (cnName, count, 118))
+                continue
             source_im = cv2.imdecode(np.fromfile(local_path, dtype=np.uint8), -1)
         else:
             source_im = download_image("https://arona.cdn.diyigemt.com/image", path, local_path)
@@ -102,10 +114,29 @@ def run(playwright: Playwright):
         # 从gamedb下载
         btnFilterList[0].click()
         time.sleep(2)
-
+        # 中日切换判断是否有翻译
+        cn_skill = page.query_selector('//*[@id="skill1"]/div/div[1]').text_content()
+        # 关闭信息窗口
+        close_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[1]")
+        close_btn.click()
+        # 切换回日文
+        page.locator("svg").click()
+        page.locator("#react-select-2-option-0").click()
+        btnFilterList[0].click()
+        time.sleep(2)
+        jp_skill = page.query_selector('//*[@id="skill1"]/div/div[1]').text_content()
+        # 关闭信息窗口
+        close_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[1]")
+        close_btn.click()
+        # 切换回中文
+        page.locator("svg").click()
+        page.locator("#react-select-2-option-1").click()
+        time.sleep(2)
+        btnFilterList[0].click()
+        time.sleep(2)
         base_path = "./image/tmp/"
         # 下载拉满需要的资源图片之类的
-        fetch_data_from_game_db(page, cn_info, base_path)
+        fetch_data_from_game_db(page, cn_info, cn_skill == jp_skill and cn_info["ex_name"] != "")
 
         # 和schaledb的拼在一起
 
@@ -158,42 +189,125 @@ def get_cn_info_from_gamekee(playwright: Playwright, path: str):
     time.sleep(2)
     skill_bounds = re.compile("\d+%?~\d+%?")
 
+    # info = {}
+    # ex_name = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/tr[1]')
+    # ex_desc = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/tr[2]/td[2]')
+    # ex_desc = skill_bounds.sub("$value", ex_desc)
+    # if ex_desc.find("COST") != -1:
+    #     ex_desc = ex_desc[0:ex_desc.find("COST")]
+
+    # ns_name = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/tr[5]')
+    # ns_desc = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/tr[6]/td[2]')
+    # ns_desc = skill_bounds.sub("$value", ns_desc)
+
+    # bs_name = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/tr[9]')
+    # bs_desc = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/tr[10]/td[2]')
+    # bs_desc = skill_bounds.sub("$value", bs_desc)
+
+    # ss_name = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/tr[9]')
+    # ss_desc = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/tr[14]/td[2]')
+    # ss_desc = skill_bounds.sub("$value", ss_desc)
+
+    # wp_name = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[2]/td/div/div[1]')
+    
+    # wp_desc_1_el = page.query_selector('//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/span/span[1]/span/div/span/span[2]/span/span/span/span/span/div/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[3]/span/span/div/span/span[2]/span/span/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[2]/td/div/div[2]')
+    # wp_desc_2_el = page.query_selector('//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/span/span[1]/span/div/span/span[2]/span/span/span/span/span/div/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[3]/span/span/div/span/span[2]/span/span/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[2]/td/div/div[3]')
+    # if wp_desc_1_el == None:
+    #     wp_desc_1_el = page.query_selector('//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[2]/td/div/div[2]')
+    #     wp_desc_2_el = page.query_selector('//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[2]/td/div/div[3]')
+    # if wp_desc_1_el == None:
+    #     wp_desc_1_el = page.query_selector('//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[2]/td/div/div[2]')
+    #     wp_desc_2_el = page.query_selector('//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[2]/td/div/div[3]')
+       
+    # wp_desc_1 = wp_desc_1_el.text_content().replace(".", "").replace("\n", "")
+    # wp_desc_2 = wp_desc_2_el.text_content().replace(".", "").replace("\n", "")
+    
+    # wp_skill = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[16]/td')
+    # wp_skill = skill_bounds.sub("$value", wp_skill)
+
+    # hobby = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[4]/div/div/table/tbody/tr[6]/td[2]')
+    # # 处理换行
+    # desc = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[4]/div/div/table/tbody/tr[9]/td[2]')
+    # desc_list = desc.split("。")
+    # desc = desc_list[0] + "\n" + "".join(desc_list[1:])
+
     info = {}
-    ex_name = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/tr[1]/td/div/span')
-    ex_desc = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/tr[2]/td[2]')
+    prefix = [
+        '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/span/span/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/div[3]/span/span/span/span[2]/span/span/span/span/div[1]/div[1]/div/div/table/tbody/',
+        '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/',
+        '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/span/div/div/span/div/span/div/div/span/div/span/div/div/div/span/div/span/div/div/div[3]/span/div/span/div/div[1]/div[1]/div/div/table/tbody/',
+        '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div[2]/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/',
+        '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/div[1]/span/div/span/div/div/span/div/span/div/div/div/span/div/span/div/div/div[3]/span/div/span/div/div[1]/div[1]/div/div/table/tbody/',
+        '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/',
+    ]
+    ex_name = get_content(page, list(map(lambda x: x + 'tr[1]', prefix)))
+    ex_desc = get_content(page, list(map(lambda x: x + 'tr[2]/td[2]', prefix)))
+    
     ex_desc = skill_bounds.sub("$value", ex_desc)
     if ex_desc.find("COST") != -1:
         ex_desc = ex_desc[0:ex_desc.find("COST")]
 
-    ns_name = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/tr[5]/td/div/span')
-    ns_desc = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/tr[6]/td[2]')
+    ns_name = get_content(page, list(map(lambda x: x + 'tr[5]', prefix)))
+    ns_desc = get_content(page, list(map(lambda x: x + 'tr[6]/td[2]', prefix)))
     ns_desc = skill_bounds.sub("$value", ns_desc)
 
-    bs_name = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/tr[9]/td/div/span')
-    bs_desc = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/tr[10]/td[2]')
+    bs_name = get_content(page, list(map(lambda x: x + 'tr[9]', prefix)))
+    bs_desc = get_content(page, list(map(lambda x: x + 'tr[10]/td[2]', prefix)))
     bs_desc = skill_bounds.sub("$value", bs_desc)
 
-    ss_name = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/tr[13]/td/div/span')
-    ss_desc = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/tr[14]/td[2]')
+    ss_name = get_content(page, list(map(lambda x: x + 'tr[13]', prefix)))
+    ss_desc = get_content(page, list(map(lambda x: x + 'tr[14]/td[2]', prefix)))
     ss_desc = skill_bounds.sub("$value", ss_desc)
 
-    wp_name = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[2]/td/div/div[1]/span')
-    
-    wp_desc_1_el = page.query_selector('//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/span/span[1]/span/div/span/span[2]/span/span/span/span/span/div/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[3]/span/span/div/span/span[2]/span/span/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[2]/td/div/div[2]')
-    wp_desc_2_el = page.query_selector('//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/span/span[1]/span/div/span/span[2]/span/span/span/span/span/div/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[3]/span/span/div/span/span[2]/span/span/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[2]/td/div/div[3]')
-    if wp_desc_1_el == None:
-        wp_desc_1_el = page.query_selector('//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[2]/td/div/div[2]')
-        wp_desc_2_el = page.query_selector('//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[2]/td/div/div[3]')
+    wp_prefix = [
+    '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/span/span/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/div[3]/span/span/span/span[2]/span/span/span/span/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[2]/td/div/',
+    '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[2]/td/div/',
+    '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/span/div/div/span/div/span/div/div/span/div/span/div/div/div/span/div/span/div/div/div[3]/span/div/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[2]/td/div/',
+    '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div[2]/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[3]/div[1]/div/div/table/tbody/tr[2]/td/div/',
+    '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/div[1]/span/div/span/div/div/span/div/span/div/div/div/span/div/span/div/div/div[3]/span/div/span/div/div[1]/div[2]/div[2]/div/div/table/tbody/tr[2]/td/div/',
+    '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[3]/div[1]/div/div/table/tbody/tr[2]/td/div/span/',
+    '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[3]/div[1]/div/div/table/tbody/tr[2]/td/div/'
+    ]
 
-    wp_desc_1 = wp_desc_1_el.text_content().replace(".", "").replace("\n", "")
-    wp_desc_2 = wp_desc_2_el.text_content().replace(".", "").replace("\n", "")
+    wp_name = get_content(page, list(map(lambda x: x + 'div[1]', wp_prefix)))
     
-    wp_skill = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[1]/span/span/div/span/span[2]/span/span/span/span/span/div/div[1]/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[15]/td')
+    wp_desc_1 = get_content(page, list(map(lambda x: x + 'div[2]', wp_prefix)))
+    wp_desc_2 = get_content(page, list(map(lambda x: x + 'div[3]', wp_prefix)))
+
+    wp_skill = get_content(page,
+    [
+    '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/span/span/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/div[3]/span/span/span/span[2]/span/span/span/span/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[16]/td',
+    '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[15]/td',
+    '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/span/div/div/span/div/span/div/div/span/div/span/div/div/div/span/div/span/div/div/div[3]/span/div/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[15]/td',
+    '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div[2]/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[3]/div[1]/div/div/table/tbody/tr[15]/td',
+    '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/div[1]/span/div/span/div/div/span/div/span/div/div/div/span/div/span/div/div/div[3]/span/div/span/div/div[1]/div[2]/div[2]/div/div/table/tbody/tr[15]/td',
+    '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[3]/div[1]/div/div/table/tbody/tr[16]/td',
+    '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[3]/div[1]/div/div/table/tbody/tr[15]/td'
+    ]
+    )
     wp_skill = skill_bounds.sub("$value", wp_skill)
 
-    hobby = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[4]/div/div/table/tbody/tr[6]/td[2]/div')
+    hobby = get_content(page,
+    [
+    '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/span/span/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/div[3]/span/span/span/span[2]/span/span/span/span/div[1]/div[2]/div[2]/div[4]/div/div/table/tbody/tr[6]/td[2]',
+    '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[4]/div/div/table/tbody/tr[6]/td[2]',
+    '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/span/div/div/span/div/span/div/div/span/div/span/div/div/div/span/div/span/div/div/div[3]/span/div/span/div/div[1]/div[2]/div[2]/div[4]/div/div/table/tbody/tr[6]/td[2]',
+    '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div[2]/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[3]/div[5]/div/div/table/tbody/tr[6]/td[2]',
+    '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/div[1]/span/div/span/div/div/span/div/span/div/div/div/span/div/span/div/div/div[3]/span/div/span/div/div[1]/div[2]/div[5]/div[1]/div/div/table/tbody/tr[6]/td[2]',
+    '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[3]/div[5]/div/div/table/tbody/tr[6]/td[2]',
+    ]
+    )
     # 处理换行
-    desc = get_content(page,'//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[4]/div/div/table/tbody/tr[9]/td[2]')
+    desc = get_content(page,
+    [
+    '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/span/span/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/div[3]/span/span/span/span[2]/span/span/span/span/div[1]/div[2]/div[2]/div[4]/div/div/table/tbody/tr[9]/td[2]',
+    '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[4]/div/div/table/tbody/tr[9]/td[2]',
+    '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/span/div/div/span/div/span/div/div/span/div/span/div/div/div/span/div/span/div/div/div[3]/span/div/span/div/div[1]/div[2]/div[2]/div[4]/div/div/table/tbody/tr[9]/td[2]',
+    '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div[2]/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[3]/div[5]/div/div/table/tbody/tr[9]/td[2]',
+    '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/div[1]/span/div/span/div/div/span/div/span/div/div/div/span/div/span/div/div/div[3]/span/div/span/div/div[1]/div[2]/div[5]/div[1]/div/div/table/tbody/tr[9]/td[2]',
+    '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[3]/div[5]/div/div/table/tbody/tr[9]/td[2]',
+    ]
+    )
     desc_list = desc.split("。")
     desc = desc_list[0] + "\n" + "".join(desc_list[1:])
 
@@ -216,9 +330,14 @@ def get_cn_info_from_gamekee(playwright: Playwright, path: str):
     browser.close()
     return info
 
-def get_content(page, xPath: str) -> str:
-    content = page.query_selector(xPath).text_content()
-    return content.replace(".", "").replace("\n", "").replace(" ", "")
+def get_content(page, xPaths: str) -> str:
+    for xPath in xPaths:
+        el = page.query_selector(xPath)
+        if el != None:
+            content = el.text_content().replace(".", "").replace("\n", "\\n").replace(" ", "")
+            return content
+    # print(xPaths)
+    return ""
 if __name__ == "__main__":
     with sync_playwright() as playwright:
         run(playwright)

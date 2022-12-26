@@ -5,9 +5,10 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.advance.RemoteActionItem
-import net.diyigemt.arona.config.AronaGachaConfig
 import net.diyigemt.arona.db.DataBaseProvider.query
 import net.diyigemt.arona.db.gacha.*
+import net.diyigemt.arona.interfaces.ConfigReader
+import net.diyigemt.arona.interfaces.setGroupConfig
 import net.diyigemt.arona.remote.RemoteServiceAction
 import net.diyigemt.arona.remote.action.GachaCharacter
 import net.diyigemt.arona.remote.action.GachaPoolUpdateData
@@ -27,18 +28,20 @@ import net.diyigemt.arona.db.gacha.GachaCharacters as GC
 object GachaConfigCommand : CompositeCommand(
   Arona,"gacha", "抽卡",
   description = "设置发情触发的关键词"
-), AronaManageService {
+), AronaManageService, ConfigReader {
 
   @SubCommand("setpool")
   @Description("设置激活的池子")
   suspend fun UserCommandSender.setPool(pool: Int) {
-    //TODO update pool
-//    val targetPool = GachaCache.updatePool(pool)
-    if (targetPool == null) {
+    val target = query {
+      GachaPools.findById(pool)
+    }
+    if (target == null) {
       subject.sendMessage("没有找到池子")
       return
     }
-    subject.sendMessage("池子设置为:${targetPool.name}")
+    setGroupConfig("pool", subject.id, pool)
+    subject.sendMessage("池子设置为:${target.name}")
   }
 
   @SubCommand
@@ -250,5 +253,6 @@ object GachaConfigCommand : CompositeCommand(
   override val id: Int = 1
   override val name: String = "抽卡配置"
   override var enable: Boolean = true
+  override val configPrefix: String = "gacha"
 
 }

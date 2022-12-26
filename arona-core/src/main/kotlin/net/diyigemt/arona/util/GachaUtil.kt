@@ -2,6 +2,7 @@
 
 package net.diyigemt.arona.util
 
+import net.diyigemt.arona.config.AronaGachaConfig
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.gacha.*
 import net.diyigemt.arona.interfaces.ConfigReader
@@ -9,6 +10,7 @@ import net.diyigemt.arona.interfaces.Initialize
 import net.diyigemt.arona.interfaces.getGroupConfig
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.update
 
 object GachaUtil: Initialize, ConfigReader {
   private const val star = "★"
@@ -79,7 +81,7 @@ object GachaUtil: Initialize, ConfigReader {
     }
 
   fun checkTime(userId: Long, group: Long, time: Int = 10): Int {
-    GachaLimitTable.update()
+    updateGachaLimit()
     val limit = getGroupConfig<Int>("limit", group)
     if (limit == 0) return time
     val record = getLimit(userId, group)
@@ -182,6 +184,27 @@ object GachaUtil: Initialize, ConfigReader {
   private fun pow10(pow: Int) = Array(pow) { 10 }.sum()
 
   private fun getDotPosition(s: String): Int = if (s.indexOf(".") == -1) 1 else s.length - s.indexOf(".") - 1
+
+  private fun updateGachaLimit() {
+    val today = TimeUtil.today()
+    if (AronaGachaConfig.day == today) return
+    AronaGachaConfig.day = today
+    forceUpdateGachaLimit()
+  }
+
+  private fun forceUpdateGachaLimit(group0: Long? = null) {
+    DataBaseProvider.query {
+      if (group0 == null) {
+        GachaLimitTable.update {
+          it[count] = 0
+        }
+      } else {
+        GachaLimitTable.update({ GachaLimitTable.group eq group0 }) {
+          it[count] = 0
+        }
+      }
+    }
+  }
 
   override val configPrefix: String = "gacha"
   override val priority: Int = 11

@@ -2,7 +2,6 @@ package net.diyigemt.arona.service
 
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.config.AronaServiceConfig
-import net.diyigemt.arona.interfaces.Command
 import net.diyigemt.arona.interfaces.Initialize
 import net.diyigemt.arona.util.GeneralUtils
 import net.mamoe.mirai.contact.Contact
@@ -10,13 +9,6 @@ import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.User
 import net.mamoe.mirai.event.events.BotEvent
 import net.mamoe.mirai.event.events.MessageEvent
-import kotlin.reflect.KClass
-import kotlin.reflect.full.createType
-import kotlin.reflect.full.declaredFunctions
-import kotlin.reflect.full.hasAnnotation
-import kotlin.reflect.full.primaryConstructor
-import kotlin.reflect.jvm.isAccessible
-import kotlin.system.exitProcess
 
 object AronaServiceManager: Initialize {
 

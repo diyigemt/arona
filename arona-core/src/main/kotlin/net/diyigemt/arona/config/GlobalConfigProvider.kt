@@ -5,6 +5,7 @@ import net.diyigemt.arona.annotations.ConfigKey
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.system.SystemConfigTableModel
 import net.diyigemt.arona.interfaces.Initialize
+import net.mamoe.mirai.console.util.cast
 import kotlin.reflect.full.declaredMemberProperties
 
 
@@ -14,17 +15,45 @@ object GlobalConfigProvider: Initialize {
   inline fun <reified T> get(key: String): T =
     when (val value = CONFIG[key]) {
       is T -> value
-      is String -> GsonInstance.fromJson(value, T::class.java).also {
+      is String -> when (T::class) {
+        String::class -> value as T
+        Int::class,
+        Double::class,
+        Float::class -> value.cast()
+        else -> GsonInstance.fromJson(value, T::class.java).also {
+          CONFIG[key] = it
+        }
+      }
+      else -> throw RuntimeException("get config: $key error")
+    }
+
+  @Suppress("UNCHECKED_CAST")
+  fun <T> get(key: String, clazz: Class<T>): T {
+    val value = CONFIG[key] ?: throw RuntimeException("get config: $key error")
+    return when {
+      value::class.java == clazz -> value as T
+      value is String -> GsonInstance.fromJson(value, clazz).also {
         CONFIG[key] = it
       }
       else -> throw RuntimeException("get config: $key error")
     }
+  }
+
+  fun <T> getOrDefault(key: String, clazz: Class<T>, default: T): T = get(key, clazz) ?: default
 
   inline fun <reified T> getOrDefault(key: String, default: T): T = get(key) ?: default
 
   inline fun <reified T> getGroup(key: String, group: Long): T = get(concatGroupKey(key, group)) ?: get(key)
 
   inline fun <reified T> getGroupOrDefault(key: String, group: Long, default: T): T = getOrDefault(concatGroupKey(key, group), default) ?: getOrDefault(key, default)
+
+  fun set(key: String, value: Any) {
+    CONFIG[key] = value
+  }
+
+  fun setGroup(key: String, group: Long, value: Any) {
+    CONFIG[concatGroupKey(key, group)] = value
+  }
 
   fun concatGroupKey(key: String, group: Long) = "$group.$key"
 

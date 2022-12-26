@@ -5,7 +5,6 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.advance.RemoteActionItem
-import net.diyigemt.arona.command.cache.GachaCache
 import net.diyigemt.arona.config.AronaGachaConfig
 import net.diyigemt.arona.db.DataBaseProvider.query
 import net.diyigemt.arona.db.gacha.*
@@ -33,7 +32,8 @@ object GachaConfigCommand : CompositeCommand(
   @SubCommand("setpool")
   @Description("设置激活的池子")
   suspend fun UserCommandSender.setPool(pool: Int) {
-    val targetPool = GachaCache.updatePool(pool)
+    //TODO update pool
+//    val targetPool = GachaCache.updatePool(pool)
     if (targetPool == null) {
       subject.sendMessage("没有找到池子")
       return

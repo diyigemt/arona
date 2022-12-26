@@ -1,6 +1,5 @@
 package net.diyigemt.arona.db
 
-import net.diyigemt.arona.command.cache.GachaCache
 import net.diyigemt.arona.db.DataBaseProvider.query
 import net.diyigemt.arona.util.ReflectionUtil
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -12,6 +11,5 @@ object BaseDataBase {
     query {
       SchemaUtils.create(*ReflectionUtil.getInterfacePetObjectInstance<Table>().toTypedArray())
     }
-    GachaCache.init()
   }
 }

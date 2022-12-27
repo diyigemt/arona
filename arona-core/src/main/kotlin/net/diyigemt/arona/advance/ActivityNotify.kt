@@ -17,7 +17,6 @@ import org.quartz.JobExecutionContext
 import org.quartz.JobKey
 import java.io.File
 import java.util.*
-import kotlin.math.max
 
 object ActivityNotify: AronaQuartzService {
   private const val ActivityNotifyJobKey = "ActivityNotify"

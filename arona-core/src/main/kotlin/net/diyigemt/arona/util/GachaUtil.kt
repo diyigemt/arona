@@ -2,12 +2,12 @@
 
 package net.diyigemt.arona.util
 
-import net.diyigemt.arona.config.AronaGachaConfig
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.gacha.*
 import net.diyigemt.arona.interfaces.ConfigReader
 import net.diyigemt.arona.interfaces.Initialize
 import net.diyigemt.arona.interfaces.getGroupConfig
+import net.diyigemt.arona.interfaces.setGroupConfig
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.update
@@ -19,11 +19,11 @@ object GachaUtil: Initialize, ConfigReader {
   private val star3List: MutableList<GachaCharacters> = mutableListOf()
 
   fun pickup(group: Long, time: Int = 1): List<GachaCharacters> {
-    val star1Rate = getGroupConfig<String>("start1Rate", group)
-    val star2Rate = getGroupConfig<String>("star2Rate", group)
-    val star3Rate = getGroupConfig<String>("star3Rate", group)
-    val star2PickupRate = getGroupConfig<String>("star2PickupRate", group)
-    val star3PickupRate = getGroupConfig<String>("star3PickupRate", group)
+    val star1Rate = getGroupConfig<Float>("start1Rate", group)
+    val star2Rate = getGroupConfig<Float>("star2Rate", group)
+    val star3Rate = getGroupConfig<Float>("star3Rate", group)
+    val star2PickupRate = getGroupConfig<Float>("star2PickupRate", group)
+    val star3PickupRate = getGroupConfig<Float>("star3PickupRate", group)
 
     val maxDot = listOf(
       getDotPosition(star1Rate),
@@ -46,15 +46,27 @@ object GachaUtil: Initialize, ConfigReader {
     val star2PickupList = limit.filter { it.star == 2 }.toMutableList()
     val star3PickupList = limit.filter { it.star == 3 }.toMutableList()
 
-    val star1RateInt = (star1Rate.toFloat() * maxDot).toInt()
-    val star2RateInt = (star2Rate.toFloat() * maxDot).toInt()
-    return (0 until time).map {
+    val star1RateInt = (star1Rate * maxDot).toInt()
+    val star2RateInt = (star2Rate * maxDot).toInt()
+    val star2PickupRateInt = (star2PickupRate * maxDot).toInt()
+    val star3RateInt = (star3Rate * maxDot).toInt()
+    val star3PickupRateInt = (star3PickupRate * maxDot).toInt()
+    val result = (0 until time).map {
       when ((0 until 100 * maxDot).random()) {
-        in (0 until star1RateInt) -> pickup1((star1Rate.toFloat() * maxDot).toInt())
-        in (star1RateInt until (star1RateInt + star2RateInt)) -> pickup2((star3Rate.toFloat() * maxDot).toInt(), (star3PickupRate.toFloat() * maxDot).toInt(), star2PickupList)
-        else -> pickup3((star3Rate.toFloat() * maxDot).toInt(), (star3PickupRate.toFloat() * maxDot).toInt(), star3PickupList)
+        in (0 until star1RateInt) -> pickup1()
+        in (star1RateInt until (star1RateInt + star2RateInt)) -> pickup2(star2RateInt, star2PickupRateInt, star2PickupList)
+        else -> pickup3(star3RateInt, star3PickupRateInt, star3PickupList)
+      }
+    }.toMutableList()
+    // 保底
+    for (i in 0 until time step 10) {
+      val end = if (i + 10 > time) time else i + 10
+      val sub = result.subList(i, end)
+      if (sub.sumOf { it.star } == 10 && end == 10) {
+        sub[9] = pickup2(star2RateInt, star2PickupRateInt, star2PickupList)
       }
     }
+    return result
   }
 
   private fun pickup3(rate: Int, pickupRate: Int ,pickupList: List<GachaCharacters>): GachaCharacters {
@@ -65,13 +77,13 @@ object GachaUtil: Initialize, ConfigReader {
     return pickup(star2List, pickupList, rate, pickupRate)
   }
 
-  private fun pickup1(rate: Int): GachaCharacters {
-    return pickup(star1List, null, rate)
+  private fun pickup1(): GachaCharacters {
+    return pickup(star1List, null, 0)
   }
 
   fun pickup(list: List<GachaCharacters>, pickupList: List<GachaCharacters>?, rate: Int, pickupRate: Int = 0) =
     if (!pickupList.isNullOrEmpty()) {
-      if ((0 until rate).random() < pickupRate) {
+      if ((0 until rate + pickupRate).random() < pickupRate) {
         rollList(pickupList)
       } else {
         rollList(list)
@@ -81,7 +93,7 @@ object GachaUtil: Initialize, ConfigReader {
     }
 
   fun checkTime(userId: Long, group: Long, time: Int = 10): Int {
-    updateGachaLimit()
+    updateGachaLimit(group)
     val limit = getGroupConfig<Int>("limit", group)
     if (limit == 0) return time
     val record = getLimit(userId, group)
@@ -183,16 +195,24 @@ object GachaUtil: Initialize, ConfigReader {
 
   private fun pow10(pow: Int) = Array(pow) { 10 }.sum()
 
-  private fun getDotPosition(s: String): Int = if (s.indexOf(".") == -1) 1 else s.length - s.indexOf(".") - 1
-
-  private fun updateGachaLimit() {
-    val today = TimeUtil.today()
-    if (AronaGachaConfig.day == today) return
-    AronaGachaConfig.day = today
-    forceUpdateGachaLimit()
+  private fun getDotPosition(num: Float): Int {
+    val s = num.toString()
+    return if (s.indexOf(".") == -1) 1 else s.length - s.indexOf(".") - 1
   }
 
-  private fun forceUpdateGachaLimit(group0: Long? = null) {
+  private fun updateGachaLimit(group: Long?) {
+    if (group == null) {
+      forceUpdateGachaLimit()
+    } else {
+      val today = TimeUtil.today()
+      val config = getGroupConfig<Int>("today", group)
+      if (config == today) return
+      setGroupConfig("today", group, today)
+      forceUpdateGachaLimit(group)
+    }
+  }
+
+  fun forceUpdateGachaLimit(group0: Long? = null) {
     DataBaseProvider.query {
       if (group0 == null) {
         GachaLimitTable.update {

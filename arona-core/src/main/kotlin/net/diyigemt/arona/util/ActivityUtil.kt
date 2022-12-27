@@ -649,7 +649,7 @@ object ActivityUtil {
       ServerLocale.GLOBAL -> AronaNotifyConfig.defaultENActivitySource.source
     }
     ImageUtil.drawText(image, "数据来源: $comeFrom", calcY())
-    val imageFile = File(Arona.dataFolder.absolutePath + "/activity.png")
+    val imageFile = File(Arona.dataFolder.absolutePath + "/activity-${server.dbName}.png")
     ImageIO.write(image.first.scale(DEFAULT_IMAGE_SCALE), "png", imageFile)
     return imageFile
   }

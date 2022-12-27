@@ -1,7 +1,9 @@
 package net.diyigemt.arona.command
 
 import net.diyigemt.arona.Arona
-import net.diyigemt.arona.config.AronaGachaConfig
+import net.diyigemt.arona.interfaces.ConfigReader
+import net.diyigemt.arona.interfaces.getContactId
+import net.diyigemt.arona.interfaces.getGroupConfig
 import net.diyigemt.arona.service.AronaGroupService
 import net.diyigemt.arona.util.GachaUtil
 import net.diyigemt.arona.util.GachaUtil.hitPickup
@@ -16,7 +18,7 @@ import net.mamoe.mirai.console.command.SimpleCommand
 object GachaSingleCommand : SimpleCommand(
   Arona, "gacha_one", "单抽",
   description = "单抽一次"
-), AronaGroupService {
+), AronaGroupService, ConfigReader {
 
   @Handler
   suspend fun MemberCommandSenderOnMessage.gachaOne() {
@@ -29,7 +31,7 @@ object GachaSingleCommand : SimpleCommand(
       subject.sendMessage(MessageUtil.at(user, "${teacherName},石头不够了哦,明天再来抽吧"))
       return
     }
-    val result = pickup()
+    val result = pickup(getContactId(), 1)[0]
     val stars = result.star
     val history = GachaUtil.getHistory(userId, groupId)
     var star3 = 0
@@ -41,12 +43,14 @@ object GachaSingleCommand : SimpleCommand(
     val s = "${resultData2String(result)}\n${history.points + 1} points"
     val dog = if (hitPickup) "恭喜${teacherName},出货了呢" else ""
     val handler = subject.sendMessage(MessageUtil.atMessageAndCTRL(user, dog, s))
-    if (AronaGachaConfig.revokeTime > 0) {
-      MessageUtil.recall(handler, AronaGachaConfig.revokeTime * 1000L)
+    val revokeTime = getGroupConfig<Int>("revokeTime", getContactId())
+    if (revokeTime > 0) {
+      MessageUtil.recall(handler, revokeTime * 1000L)
     }
   }
 
   override val id: Int = 4
   override val name: String = "抽卡单抽"
   override var enable: Boolean = true
+  override val configPrefix: String = "gacha"
 }

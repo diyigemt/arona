@@ -15,6 +15,7 @@ import net.diyigemt.arona.config.AronaConfig
 import net.diyigemt.arona.config.AronaServiceConfig
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.extension.CommandResolver
+import net.diyigemt.arona.interfaces.ConfigReader
 import net.diyigemt.arona.interfaces.CoroutineFunctionProvider
 import net.diyigemt.arona.interfaces.Initialize
 import net.diyigemt.arona.service.AronaService
@@ -53,8 +54,7 @@ import kotlin.reflect.full.hasAnnotation
 
 object Arona : KotlinPlugin(
   JvmPluginDescription.loadFromResource()
-) {
-  var arona: Bot? = null
+), ConfigReader {
   private const val CommandPrefix = "/permission add * net.diyigemt.arona:command."
   @OptIn(ExperimentalCommandDescriptors::class, ConsoleExperimentalApi::class)
   override fun onEnable() {

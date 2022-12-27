@@ -8,6 +8,8 @@ import net.diyigemt.arona.advance.RemoteActionItem
 import net.diyigemt.arona.db.DataBaseProvider.query
 import net.diyigemt.arona.db.gacha.*
 import net.diyigemt.arona.interfaces.ConfigReader
+import net.diyigemt.arona.interfaces.getContactId
+import net.diyigemt.arona.interfaces.getGroupConfig
 import net.diyigemt.arona.interfaces.setGroupConfig
 import net.diyigemt.arona.remote.RemoteServiceAction
 import net.diyigemt.arona.remote.action.GachaCharacter
@@ -40,83 +42,42 @@ object GachaConfigCommand : CompositeCommand(
       subject.sendMessage("没有找到池子")
       return
     }
-    setGroupConfig("pool", subject.id, pool)
+    setGroupConfig("pool", getContactId(), pool)
     subject.sendMessage("池子设置为:${target.name}")
   }
 
   @SubCommand
   @Description("重置某一池子的记录")
-  suspend fun UserCommandSender.reset(pool: Int = AronaGachaConfig.activePool) {
+  suspend fun UserCommandSender.reset(pool: Int = getGroupConfig("pool", getContactId())) {
     query {
       GachaHistoryTable.deleteWhere { (GachaHistoryTable.pool eq pool) and (GachaHistoryTable.group eq (subject as Group).id) }
     }
-    GachaLimitTable.forceUpdate(if (subject is Group) subject.id else null)
+    GachaUtil.forceUpdateGachaLimit(if (subject is Group) subject.id else null)
     subject.sendMessage("历史记录重置成功")
-  }
-
-  @SubCommand("1s")
-  @Description("设置1星出货率")
-  suspend fun UserCommandSender.s1(rate: Float) {
-    AronaGachaConfig.star1Rate = rate
-    subject.sendMessage("1星出货率设置为${rate}%")
-    AronaGachaConfig.init()
-  }
-
-  @SubCommand("2s")
-  @Description("设置2星出货率")
-  suspend fun UserCommandSender.s2(rate: Float) {
-    AronaGachaConfig.star2Rate = rate
-    subject.sendMessage("2星出货率设置为${rate}%")
-    AronaGachaConfig.init()
-  }
-  @SubCommand("3s")
-  @Description("设置3星出货率")
-  suspend fun UserCommandSender.s3(rate: Float) {
-    AronaGachaConfig.star3Rate = rate
-    subject.sendMessage("3星出货率设置为${rate}%")
-    AronaGachaConfig.init()
-  }
-
-  @SubCommand("p2s")
-  @Description("设置2星PickUp出货率")
-  suspend fun UserCommandSender.ps2(rate: Float) {
-    AronaGachaConfig.star2PickupRate = rate
-    subject.sendMessage("2星PickUp出货率设置为${rate}%")
-    AronaGachaConfig.init()
-  }
-
-  @SubCommand("p3s")
-  @Description("设置3星PickUp出货率")
-  suspend fun UserCommandSender.ps3(rate: Float) {
-    AronaGachaConfig.star3PickupRate = rate
-    subject.sendMessage("3星PickUp出货率设置为${rate}%")
-    AronaGachaConfig.init()
   }
 
   @SubCommand("time")
   @Description("设置设置撤回时间")
   suspend fun UserCommandSender.time(time: Int) {
     if (time > 0) {
-      AronaGachaConfig.revokeTime = time
+      setGroupConfig("revokeTime", getContactId(), time)
       subject.sendMessage("撤回时间设置为${time}")
     } else {
-      AronaGachaConfig.revokeTime = 0
+      setGroupConfig("revokeTime", getContactId(), 0)
       subject.sendMessage("关闭抽卡结果撤回")
     }
-    AronaGachaConfig.init()
   }
 
   @SubCommand("limit")
-  @Description("设置设置撤回时间")
+  @Description("设置每日限制次数")
   suspend fun UserCommandSender.gachalimit(time: Int) {
     if (time > 0) {
-      AronaGachaConfig.limit = time
+      setGroupConfig("limit", getContactId(), time)
       subject.sendMessage("每日限制次数设置为${time}")
     } else {
-      AronaGachaConfig.limit = 0
+      setGroupConfig("limit", getContactId(), 0)
       subject.sendMessage("每日限制次数设置为不限制每日抽卡次数")
     }
-    AronaGachaConfig.init()
   }
 
 

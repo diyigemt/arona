@@ -244,6 +244,11 @@
         "loma": "Junko",
         "gamekee": "https://ba.gamekee.com/60879.html"
     },
+    "ジュンコ(正月)": {
+        "cnName": "春纯子",
+        "loma": "Junko_NewYear",
+        "gamekee": "https://ba.gamekee.com/579691.html"
+    },
     "シロコ": {
         "cnName": "白子",
         "loma": "Shiroko",
@@ -424,6 +429,11 @@
         "loma": "Haruna",
         "gamekee": "https://ba.gamekee.com/62592.html"
     },
+    "ハルナ(正月)": {
+        "cnName": "正月羽留奈",
+        "loma": "Haruna_NewYear",
+        "gamekee": "https://ba.gamekee.com/579682.html"
+    },
     "ハレ": {
         "cnName": "晴",
         "loma": "Hare",
@@ -483,6 +493,11 @@
         "cnName": "枫香",
         "loma": "Fuuka",
         "gamekee": "https://ba.gamekee.com/64384.html"
+    },
+    "フウカ(正月)": {
+        "cnName": "春枫香",
+        "loma": "Fuuka_NewYear",
+        "gamekee": "https://ba.gamekee.com/579686.html"
     },
     "フブキ": {
         "cnName": "吹雪",

@@ -371,6 +371,8 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict):
         desc_i = str(desc).find("<i class")
         if desc_i != -1:
             desc = dict["desc"] + "\\n" + str(desc)[desc_i:]
+        else:
+            desc = dict["desc"]
         page.eval_on_selector('//*[@id="ba-student-profile-text"]', "node => node.innerHTML = '%s'" % desc.replace("\n", "\\n"))
 
     name_card = page.query_selector("//*[@id='ba-student-page-profile']/div[1]")

@@ -12,8 +12,8 @@ import re
 # 要生成的目标 日文名
 target = [
     # "ジュンコ(正月)",
-    # "ハルナ(正月)",
-    "フウカ(正月)"
+    "ハルナ(正月)",
+    # "フウカ(正月)"
     # "アカネ(バニーガール)","イズミ(水着)"
     # "アイリ","アカネ","アカネ(バニーガール)","アカリ","アコ","アズサ","アズサ(水着)",
 # "アスナ","アスナ(バニーガール)",
@@ -345,7 +345,7 @@ def get_content(page, xPaths: str, isSingleLine = False) -> str:
                 content = content.replace("\n", "")
             else:
                 content = content.replace("\n", "\\n")
-            if content == '':
+            if content.replace("\\n", "") == '':
                 continue
             return content
     # print(xPaths)

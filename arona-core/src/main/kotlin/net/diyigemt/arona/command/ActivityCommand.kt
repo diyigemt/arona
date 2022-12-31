@@ -5,7 +5,6 @@ import net.diyigemt.arona.config.AronaNotifyConfig
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.entity.ServerLocale
 import net.diyigemt.arona.extension.CommandInterceptor
-import net.diyigemt.arona.getConfig
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.util.ActivityUtil
 import net.mamoe.mirai.console.command.CommandManager

@@ -9,6 +9,15 @@ interface ConfigReader {
 
 }
 
+/**
+ * 拿到无configPrefix前缀的全局单一配置
+ */
+inline fun <reified T> ConfigReader.getMainConfig(key: String): T = GlobalConfigProvider.get(key)
+
+/**
+ * 拿到服务的开关配置, 如果没有则使用全局配置
+ */
+inline fun <reified T> ConfigReader.getGroupServiceConfig(key: String, group: Long): T = GlobalConfigProvider.getGroup(key, group)
 inline fun <reified T> ConfigReader.getConfig(key: String): T = GlobalConfigProvider.get("$configPrefix.$key")
 inline fun <reified T> ConfigReader.getGroupConfig(key: String, group: Long): T = GlobalConfigProvider.getGroup("$configPrefix.$key", group)
 inline fun <reified T> ConfigReader.getConfigOrDefault(key: String, default: T): T = GlobalConfigProvider.getOrDefault("$configPrefix.$key", default)

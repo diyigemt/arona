@@ -1,10 +1,10 @@
 package net.diyigemt.arona.advance
 
 import net.diyigemt.arona.Arona
-import net.diyigemt.arona.config.AronaNotifyConfig
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.entity.ActivityType
 import net.diyigemt.arona.entity.ServerLocale
+import net.diyigemt.arona.interfaces.*
 import net.diyigemt.arona.quartz.QuartzProvider
 import net.diyigemt.arona.service.AronaQuartzService
 import net.diyigemt.arona.util.ActivityUtil
@@ -18,7 +18,7 @@ import org.quartz.JobKey
 import java.io.File
 import java.util.*
 
-object ActivityNotify: AronaQuartzService {
+object ActivityNotify: AronaQuartzService, ConfigReader {
   private const val ActivityNotifyJobKey = "ActivityNotify"
   private const val ActivityNotifyDataInitKey = "init"
   private const val ActivityNotifyOneHour = "ActivityNotifyOneHour"
@@ -32,46 +32,38 @@ object ActivityNotify: AronaQuartzService {
     override fun execute(context: JobExecutionContext?) {
       val jp: Pair<List<Activity>, List<Activity>> = ActivityUtil.fetchJPActivity()
       val en = ActivityUtil.fetchENActivity()
-      val alertListJP = mutableListOf<Activity>()
-      val alertListEN = mutableListOf<Activity>()
-      val filterJP = jp.first
-        .filter {
-          filterActive(it, alertListJP)
-        } to jp.second
-        .filter {
-          filterPending(it)
-        }
-      val filterEN = en.first
-        .filter {
-          filterActive(it, alertListEN)
-        } to en.second
-        .filter {
-          filterPending(it)
-        }
-      insertAlert(alertListJP)
-      insertAlert(alertListEN)
+      val alertListJP = jp.first.filter { extraHAndD(it).second == 0 }
+      val alertListEN = en.first.filter { extraHAndD(it).second == 0 }
+      insertAlert(alertListJP.toMutableList())
+      insertAlert(alertListEN.toMutableList())
       // 初始化不显示信息
       val init = context?.mergedJobDataMap?.getBoolean(ActivityNotifyDataInitKey) ?: false
       if (init) return
-      if (AronaNotifyConfig.enableEveryDay) {
-        if (AronaNotifyConfig.enableJP) {
-          val jpMessage = ActivityUtil.createActivityImage(filterJP)
-          sendMessage(jpMessage, AronaNotifyConfig.notifyStringJP)
-        }
-        if (AronaNotifyConfig.enableEN) {
-          val enMessage = ActivityUtil.createActivityImage(filterEN, ServerLocale.GLOBAL)
-          sendMessage(enMessage, AronaNotifyConfig.notifyStringEN)
-        }
+      val activeGroup = getMainConfig<List<Long>>("groups")
+      val enableJP = activeGroup.filter { getGroupConfig("enableJP", it) }
+      val enableEN = activeGroup.filter { getGroupConfig("enableEN", it) }
+      // 如果有群开启了日服通知
+      if (enableJP.isNotEmpty()) {
+        val jpMessage = ActivityUtil.createActivityImage(jp)
+        sendMessage(jpMessage, enableJP, ServerLocale.JP)
+      }
+      // 如果有群开启了国际服通知
+      if (enableJP.isNotEmpty()) {
+        val jpMessage = ActivityUtil.createActivityImage(en)
+        sendMessage(jpMessage, enableEN, ServerLocale.GLOBAL)
       }
     }
 
-    private fun sendMessage(imageFile: File, source: String) {
-      Arona.sendMessageWithFile() { group ->
-        val image = group.uploadImage(imageFile, "png")
-        MessageUtil.deserializeMiraiCodeAndBuild(source, group) {
-          it.add("\n")
-          it.add(image)
-          it.build()
+    private fun sendMessage(imageFile: File, groups: List<Long>, locale: ServerLocale) {
+      groups.forEach { group ->
+        Arona.sendMessageWithFile(group) { contact ->
+          val tip = getGroupConfig<String>(if (locale == ServerLocale.JP) "notifyStringJP" else "notifyStringEN", group)
+          val image = contact.uploadImage(imageFile, "png")
+          MessageUtil.deserializeMiraiCodeAndBuild(tip, contact) { builder ->
+            builder.add("\n")
+            builder.add(image)
+            builder.build()
+          }
         }
       }
     }
@@ -106,36 +98,6 @@ object ActivityNotify: AronaQuartzService {
       if (dropActivities.isNotEmpty()) {
         doInsert(dropActivities, DropActivityTime)
       }
-    }
-
-    private fun insertMaintenanceAlert(activity: Activity, h: Int) {
-      doInsert(listOf(activity), Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + h - 1, extraKey = MaintenanceKey)
-    }
-
-    private fun filterPending(activity: Activity): Boolean {
-      val extra = extraHAndD(activity)
-      val h = extra.first
-      val d = extra.second
-      if ((d == 0) && isMaintenanceActivity(activity)) {
-        insertMaintenanceAlert(activity, h)
-      }
-      return doFilter(d, h)
-    }
-
-    private fun filterActive(activity: Activity, list: MutableList<Activity>): Boolean {
-      val extra = extraHAndD(activity)
-      val h = extra.first
-      val d = extra.second
-      if (d == 0) {
-        list.add(activity)
-      }
-      return doFilter(d, h)
-    }
-
-    private fun doFilter(d: Int, h: Int): Boolean = when(AronaNotifyConfig.notifyType) {
-      NotifyType.ALL -> true
-      NotifyType.ONLY_24H -> d * 24 + h < 24
-      NotifyType.ONLY_48H -> d * 24 + h < 48
     }
 
     private fun extraHAndD(activity: Activity): Pair<Int, Int> {
@@ -173,6 +135,8 @@ object ActivityNotify: AronaQuartzService {
       val activityString = activity
         .map { at -> "${at.content}\n" }
         .reduceOrNull { prv, cur -> prv + cur }
+      val activeGroup = getMainConfig<List<Long>>("groups")
+      val serviceGroup = activeGroup.filter { getGroupServiceConfig("active-push", it) }
       val serverString = MiraiCode.deserializeMiraiCode(if (server) AronaNotifyConfig.notifyStringJP else AronaNotifyConfig.notifyStringEN)
       val endTime = if (isMidnightEndActivity(activity[0])) {
         DropEndTime
@@ -200,10 +164,11 @@ object ActivityNotify: AronaQuartzService {
   private fun isJPServer(activity: Activity) = activity.serverLocale == ServerLocale.JP
 
   override fun enableService() {
+    val time = getMainConfig<Int>("everyDayHour")
     // 每天早上8点触发
     jobKey = QuartzProvider.createCronTask(
       ActivityNotifyJob::class.java,
-      "0 0 ${AronaNotifyConfig.everyDayHour} * * ? *",
+      "0 0 $time * * ? *",
       ActivityNotifyJobKey,
       ActivityNotifyJobKey
     ).first
@@ -216,6 +181,7 @@ object ActivityNotify: AronaQuartzService {
   override val name: String = "活动推送"
   override val description: String = name
   override var enable: Boolean = true
+  override val configPrefix: String = "notify"
 }
 
 // 每日防侠提醒类型

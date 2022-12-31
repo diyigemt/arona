@@ -47,12 +47,22 @@ object GlobalConfigProvider: Initialize {
 
   inline fun <reified T> getGroupOrDefault(key: String, group: Long, default: T): T = getOrDefault(concatGroupKey(key, group), default) ?: getOrDefault(key, default)
 
-  fun set(key: String, value: Any) {
-    CONFIG[key] = value
+  fun setGroup(key: String, group: Long, value: Any) {
+    set(concatGroupKey(key, group), value)
   }
 
-  fun setGroup(key: String, group: Long, value: Any) {
-    CONFIG[concatGroupKey(key, group)] = value
+  fun set(key: String, value: Any) {
+    CONFIG[key] = value
+    DataBaseProvider.query { _ ->
+      SystemConfigTableModel.new {
+        this.key = key
+        this.value = when (value) {
+          is String -> value
+          is Float, is Double, is Int -> value.cast()
+          else -> GsonInstance.toJson(value)
+        }
+      }
+    }
   }
 
   fun concatGroupKey(key: String, group: Long) = "$group.$key"

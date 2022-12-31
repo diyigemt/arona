@@ -14,10 +14,12 @@ import net.diyigemt.arona.annotations.HideService
 import net.diyigemt.arona.config.AronaConfig
 import net.diyigemt.arona.config.AronaServiceConfig
 import net.diyigemt.arona.db.DataBaseProvider
+import net.diyigemt.arona.entity.BotGroupConfig
 import net.diyigemt.arona.extension.CommandResolver
 import net.diyigemt.arona.interfaces.ConfigReader
 import net.diyigemt.arona.interfaces.CoroutineFunctionProvider
 import net.diyigemt.arona.interfaces.Initialize
+import net.diyigemt.arona.interfaces.getMainConfig
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.service.AronaServiceManager
 import net.diyigemt.arona.util.GeneralUtils
@@ -165,12 +167,13 @@ object Arona : KotlinPlugin(
     }
   }
 
-  fun sendMessageWithFile(block: suspend (group: Contact) -> MessageChain) {
+  fun sendMessageWithFile(group0: Long, block: suspend (group: Contact) -> MessageChain) {
     runSuspend {
-      AronaConfig.groups.forEach {
-        val group = arona?.groups?.get(it) ?: return@forEach
-        group.sendMessage(block(group))
-      }
+      val botConfig = getMainConfig<List<BotGroupConfig>>("bots")
+      val bot0 = botConfig.firstOrNull { it.groups.contains(group0) }?.bot ?: return@runSuspend
+      val bot = Bot.getInstanceOrNull(bot0) ?: return@runSuspend
+      val group = bot.getGroup(group0) ?: return@runSuspend
+      group.sendMessage(block(group))
     }
   }
 
@@ -250,5 +253,6 @@ object Arona : KotlinPlugin(
   fun verbose(message: () -> String?) = logger.verbose(message())
 
   fun error(message: () -> String?) = logger.error(message())
+  override val configPrefix: String = ""
 
 }

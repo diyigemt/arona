@@ -419,7 +419,7 @@ def fetch_data_from_game_db(page: Page, dict, is_no_translate, base_path = "./im
         
         skill_resource_btn.click()
 
-        time.sleep(10)
+        time.sleep(12)
 
         # 拿到资源列表的class判断是8行资源还是7行
         target_class = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[4]").get_attribute("class")

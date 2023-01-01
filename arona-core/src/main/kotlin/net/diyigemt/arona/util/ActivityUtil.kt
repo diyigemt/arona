@@ -2,7 +2,6 @@ package net.diyigemt.arona.util
 
 import kotlinx.serialization.json.*
 import net.diyigemt.arona.Arona
-import net.diyigemt.arona.config.AronaNotifyConfig
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.entity.ActivityType
 import net.diyigemt.arona.entity.ServerLocale
@@ -79,11 +78,7 @@ object ActivityUtil {
       ActivityUtil::fetchENActivityFromBiliBili,
       ActivityUtil::fetchENActivityFromGameKee
     )
-    val targetFunction = when(AronaNotifyConfig.defaultENActivitySource) {
-      ActivityENSource.SCHALE_DB -> ActivityUtil::fetchENActivityFromSchaleDB
-      ActivityENSource.BILIBILI -> ActivityUtil::fetchENActivityFromBiliBili
-      ActivityENSource.GAME_KEE -> ActivityUtil::fetchENActivityFromGameKee
-    }
+    val targetFunction = ActivityUtil::fetchENActivityFromGameKee
     return doFetch(list, targetFunction).let {
       // 加入生日信息
       it.first to it.second.toMutableList().also { a -> a.addAll(SchaleDBUtil.getENBirthdayData()) }
@@ -97,12 +92,7 @@ object ActivityUtil {
       ActivityUtil::fetchJPActivityFromGameKee,
       ActivityUtil::fetchJPActivityFromSchaleDB
     )
-    val targetFunction = when(AronaNotifyConfig.defaultJPActivitySource) {
-      ActivityJPSource.B_WIKI -> ActivityUtil::fetchJPActivityFromCN
-      ActivityJPSource.WIKI_RU -> ActivityUtil::fetchJPActivityFromJP
-      ActivityJPSource.GAME_KEE -> ActivityUtil::fetchJPActivityFromGameKee
-      ActivityJPSource.SCHALE_DB -> ActivityUtil::fetchJPActivityFromSchaleDB
-    }
+    val targetFunction = ActivityUtil::fetchJPActivityFromGameKee
     return doFetch(list, targetFunction).let {
       // 加入生日信息
       it.first to it.second.toMutableList().also { a -> a.addAll(SchaleDBUtil.getJPBirthdayData()) }
@@ -645,8 +635,8 @@ object ActivityUtil {
     lineIndex++
     drawActivity(pending)
     val comeFrom = when(server) {
-      ServerLocale.JP -> AronaNotifyConfig.defaultJPActivitySource.source
-      ServerLocale.GLOBAL -> AronaNotifyConfig.defaultENActivitySource.source
+      ServerLocale.JP -> ActivityJPSource.GAME_KEE
+      ServerLocale.GLOBAL -> ActivityENSource.GAME_KEE
     }
     ImageUtil.drawText(image, "数据来源: $comeFrom", calcY())
     val imageFile = File(Arona.dataFolder.absolutePath + "/activity-${server.dbName}.png")

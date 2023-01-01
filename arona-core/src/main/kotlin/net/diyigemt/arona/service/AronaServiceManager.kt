@@ -1,7 +1,6 @@
 package net.diyigemt.arona.service
 
 import net.diyigemt.arona.Arona
-import net.diyigemt.arona.config.AronaServiceConfig
 import net.diyigemt.arona.interfaces.Initialize
 import net.diyigemt.arona.util.GeneralUtils
 import net.mamoe.mirai.contact.Contact

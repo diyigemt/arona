@@ -1,12 +1,17 @@
 package net.diyigemt.arona.handler
 
-import net.diyigemt.arona.config.AronaRepeatConfig
+import net.diyigemt.arona.interfaces.ConfigReader
+import net.diyigemt.arona.interfaces.getGroupConfig
 import net.diyigemt.arona.service.AronaGroupService
 import net.diyigemt.arona.service.AronaMessageReactService
 import net.mamoe.mirai.event.events.GroupMessageEvent
 
 // 复读
-object GroupRepeaterHandler: AronaMessageReactService<GroupMessageEvent>, AronaGroupService {
+object GroupRepeaterHandler:
+  AronaMessageReactService<GroupMessageEvent>,
+  AronaGroupService,
+  ConfigReader
+{
   private var last: String = ""
   private var lastSender: Long = 0
   private var count: Int = 0
@@ -14,9 +19,10 @@ object GroupRepeaterHandler: AronaMessageReactService<GroupMessageEvent>, AronaG
     val now = event.message.serializeToMiraiCode()
     if (now.startsWith("/")) return
     val senderId = event.sender.id
+    val group = event.group.id
     if (now == last && senderId != lastSender) {
       count++
-      if (count >= AronaRepeatConfig.times) {
+      if (count >= getGroupConfig<Int>("times", group)) {
         event.subject.sendMessage(event.message)
         count = 0
         last = now
@@ -35,4 +41,5 @@ object GroupRepeaterHandler: AronaMessageReactService<GroupMessageEvent>, AronaG
   override val name: String = "复读"
   override var enable: Boolean = true
   override val description: String = name
+  override val configPrefix = "repeat"
 }

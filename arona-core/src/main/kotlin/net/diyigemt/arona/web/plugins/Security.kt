@@ -9,7 +9,7 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.response.*
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import net.diyigemt.arona.config.AronaWebUIConfig
+import net.diyigemt.arona.config.GlobalConfigProvider
 import net.diyigemt.arona.web.WebUIService
 import net.diyigemt.arona.web.api.v1.message.ServerResponse
 
@@ -33,7 +33,7 @@ fun Application.configureSecurity() {
         if (credential.payload.audience.contains(WebUIService.jwtAudience)) JWTPrincipal(credential.payload) else null
       }
       challenge { _, _ ->
-        if(AronaWebUIConfig.port == 57920) return@challenge
+        if(GlobalConfigProvider.get<Int>("webui.port") == 57920) return@challenge
         val json = Json { encodeDefaults = true }
         val res = json.encodeToString(ServerResponse(401, HttpStatusCode.Unauthorized.description, null as String?))
         call.response.header("Content-Type", "application/json")

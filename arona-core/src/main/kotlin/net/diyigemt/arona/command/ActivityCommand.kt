@@ -1,10 +1,11 @@
 package net.diyigemt.arona.command
 
 import net.diyigemt.arona.Arona
-import net.diyigemt.arona.config.AronaNotifyConfig
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.entity.ServerLocale
 import net.diyigemt.arona.extension.CommandInterceptor
+import net.diyigemt.arona.interfaces.ConfigReader
+import net.diyigemt.arona.interfaces.getGroupConfig
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.util.ActivityUtil
 import net.mamoe.mirai.console.command.CommandManager
@@ -18,7 +19,7 @@ import net.mamoe.mirai.message.data.Message
 object ActivityCommand : CompositeCommand(
   Arona, "active", "活动",
   description = "通过bili wiki获取活动列表"
-), AronaService, CommandInterceptor {
+), AronaService, CommandInterceptor, ConfigReader {
 
   @SubCommand("en")
   @Description("查看国际服活动")
@@ -55,6 +56,7 @@ object ActivityCommand : CompositeCommand(
   override val id: Int = 3
   override val name: String = "活动查询"
   override var enable: Boolean = true
+  override val configPrefix = "notify"
 
   override val level: Int = 1
   private val ACTIVITY_COMMAND = "${CommandManager.commandPrefix}活动"
@@ -62,7 +64,7 @@ object ActivityCommand : CompositeCommand(
     if (message.contentToString() != ACTIVITY_COMMAND) return null
     if (caller !is UserCommandSender) return null
     val subject = caller.subject
-    if (AronaNotifyConfig.defaultActivityCommandServer == ServerLocale.JP) {
+    if (getGroupConfig<ServerLocale>("defaultActivityCommandServer", subject.id) == ServerLocale.JP) {
       kotlin.runCatching {
         Arona.runSuspend {
           sendJP(subject)

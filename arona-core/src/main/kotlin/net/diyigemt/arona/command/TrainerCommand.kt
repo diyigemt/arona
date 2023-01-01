@@ -3,9 +3,10 @@ package net.diyigemt.arona.command
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.serialization.Serializable
 import net.diyigemt.arona.Arona
-import net.diyigemt.arona.config.AronaTrainerConfig
 import net.diyigemt.arona.entity.TrainerOverride
+import net.diyigemt.arona.interfaces.ConfigReader
 import net.diyigemt.arona.interfaces.Initialize
+import net.diyigemt.arona.interfaces.getGroupConfig
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.other.KWatchChannel
@@ -22,7 +23,7 @@ import kotlin.reflect.full.hasAnnotation
 object TrainerCommand : SimpleCommand(
   Arona, "trainer", "攻略",
   description = "主线地图和学生攻略"
-), AronaService, Initialize {
+), AronaService, Initialize, ConfigReader {
   const val StudentRankFolder: String = "/student_rank"
   const val ChapterMapFolder: String = "/chapter_map"
   const val OtherFolder: String = "/some"
@@ -60,12 +61,13 @@ object TrainerCommand : SimpleCommand(
         val list = result.list.map { it.name }.toMutableList()
         // 没有本地文件
         if (result.file == null) {
+          val tipWhenNull = getGroupConfig<Boolean>("tipWhenNull", subject.id)
           // 模糊搜索建议关闭
-          if (!AronaTrainerConfig.tipWhenNull) {
+          if (!tipWhenNull) {
             return
           }
           // 远端没有搜索建议
-          if (list.isEmpty() && AronaTrainerConfig.tipWhenNull) {
+          if (list.isEmpty()) {
             sendMessage("没有对应信息, 请联系作者添加别名或者在配置文件中指定")
           } else {
             // 无精确匹配结果, 但是有搜索建议, 发送建议
@@ -114,9 +116,6 @@ object TrainerCommand : SimpleCommand(
     }.onSuccess {
       overrideList.addAll(it.override)
     }
-    overrideList.addAll(AronaTrainerConfig.override.filter {
-      !overrideList.any { already -> already.name == it.name }
-    })
     Arona.info("别名配置更新成功")
   }
 
@@ -129,9 +128,9 @@ object TrainerCommand : SimpleCommand(
   override val name: String = "地图与学生攻略"
   override var enable: Boolean = true
   override val priority: Int = 99
+  override val configPrefix = "trainer"
 
   override fun init() {
-    overrideList.addAll(AronaTrainerConfig.override)
     // 监视data文件夹下的arona-trainer.yml文件动态添加配置
     ConfigFile = File(GeneralUtils.configFileFolder("/$AutoReadConfigFileName"))
     if (!ConfigFile.exists()) {

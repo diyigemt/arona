@@ -12,7 +12,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import net.diyigemt.arona.annotations.HideService
 import net.diyigemt.arona.config.AronaConfig
-import net.diyigemt.arona.config.AronaServiceConfig
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.entity.BotGroupConfig
 import net.diyigemt.arona.extension.CommandResolver
@@ -167,13 +166,17 @@ object Arona : KotlinPlugin(
     }
   }
 
-  fun sendMessageWithFile(group0: Long, block: suspend (group: Contact) -> MessageChain) {
+  fun MessageChainBuilder.(group: Contact) {
+
+  }
+
+  fun sendGroupMessage(group0: Long, block: suspend (MessageChainBuilder.(group: Contact) -> MessageChain)) {
     runSuspend {
       val botConfig = getMainConfig<List<BotGroupConfig>>("bots")
       val bot0 = botConfig.firstOrNull { it.groups.contains(group0) }?.bot ?: return@runSuspend
       val bot = Bot.getInstanceOrNull(bot0) ?: return@runSuspend
       val group = bot.getGroup(group0) ?: return@runSuspend
-      group.sendMessage(block(group))
+      group.sendMessage(block(MessageChainBuilder(), group))
     }
   }
 
@@ -210,11 +213,6 @@ object Arona : KotlinPlugin(
           it.sendMessage(message)
         }
     }
-  }
-
-  // 用以支持消息撤回功能
-  suspend fun Contact.sendMessageSave(msg: String) {
-    this.sendMessage(msg)
   }
 
   fun dataFolderPath(subPath: String = ""): String = Arona.dataFolderPath.absolutePathString() + subPath

@@ -3,11 +3,12 @@ package net.diyigemt.arona.command
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.diyigemt.arona.Arona
-import net.diyigemt.arona.config.AronaTarotConfig
 import net.diyigemt.arona.db.DataBaseProvider.query
 import net.diyigemt.arona.db.tarot.Tarot
 import net.diyigemt.arona.db.tarot.TarotRecord
 import net.diyigemt.arona.db.tarot.TarotRecordTable
+import net.diyigemt.arona.interfaces.ConfigReader
+import net.diyigemt.arona.interfaces.getGroupConfig
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.GeneralUtils.queryTeacherNameFromDB
@@ -25,22 +26,23 @@ import java.util.*
 object TarotCommand : SimpleCommand(
   Arona, "tarot", "塔罗牌",
   description = "抽一张塔罗牌"
-), AronaService {
+), AronaService, ConfigReader {
   private const val TarotCount = 22
   const val TarotImageFolder: String = "/tarot" // 塔罗牌图片
 
   @Handler
   suspend fun UserCommandSender.tarot() {
-    val group0 = if (subject is Group) subject.id else user.id
+    val group0 = getGroup(subject, user)
     val userId = user.id
     val today = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+    val dayOne = getGroupConfig<Boolean>("dayOne", group0)
     // 获取历史记录
     val record = query {
       TarotRecord
         .find { (TarotRecordTable.id eq userId) and (TarotRecordTable.group eq group0) }
         .toList()
     }!!
-    if (AronaTarotConfig.dayOne) {
+    if (dayOne) {
       if (record.isNotEmpty() && record[0].day == today) {
         val tarotRecord = record[0]
         val tarot = query {
@@ -54,10 +56,9 @@ object TarotCommand : SimpleCommand(
     val tarot0 = query {
       Tarot.findById(tarotIndex)
     }!!
-    Thread.sleep((1..10).random().toLong())
     val positive = GeneralUtils.randomBoolean()
     send(user, subject, tarot0, positive)
-    if (AronaTarotConfig.dayOne) {
+    if (dayOne) {
       if (record.isNotEmpty()) {
         query {
           TarotRecordTable.update({ (TarotRecordTable.id eq userId) and (TarotRecordTable.group eq group0) }) {
@@ -87,7 +88,8 @@ object TarotCommand : SimpleCommand(
     val teacherName = queryTeacherNameFromDB(contact, user)
     val path = "${TarotImageFolder}/${tarot.id.value}-${fileSuffix}.png"
     val s = "看看${teacherName}抽到了什么:\n${tarot.name}(${resName})\n${res}"
-    if (AronaTarotConfig.image) {
+    val group0 = getGroup(contact, user)
+    if (getGroupConfig("image", group0)) {
       // 加载塔罗牌图片
       kotlin.runCatching {
         val imageFile = GeneralUtils.localImageFile(path)
@@ -115,8 +117,11 @@ object TarotCommand : SimpleCommand(
     }
   }
 
+  fun getGroup(group: Contact, user: User) = if (group is Group) group.id else user.id
+
   override val id: Int = 16
   override val name: String = "塔罗牌"
   override var enable: Boolean = true
+  override val configPrefix = "tarot"
 
 }

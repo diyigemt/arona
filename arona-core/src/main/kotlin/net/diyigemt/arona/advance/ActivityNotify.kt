@@ -10,7 +10,6 @@ import net.diyigemt.arona.service.AronaQuartzService
 import net.diyigemt.arona.util.ActivityUtil
 import net.diyigemt.arona.util.MessageUtil
 import net.mamoe.mirai.contact.Contact.Companion.uploadImage
-import net.mamoe.mirai.message.code.MiraiCode
 import org.quartz.InterruptableJob
 import org.quartz.Job
 import org.quartz.JobExecutionContext
@@ -23,7 +22,6 @@ object ActivityNotify: AronaQuartzService, ConfigReader {
   private const val ActivityNotifyDataInitKey = "init"
   private const val ActivityNotifyOneHour = "ActivityNotifyOneHour"
   private const val ActivityKey = "activity"
-  private const val MaintenanceKey = "maintenance"
   private const val DropActivityTime = 22
   private const val DropEndTime = 24 + 3 - DropActivityTime
   override var jobKey: JobKey? = null
@@ -56,7 +54,7 @@ object ActivityNotify: AronaQuartzService, ConfigReader {
 
     private fun sendMessage(imageFile: File, groups: List<Long>, locale: ServerLocale) {
       groups.forEach { group ->
-        Arona.sendMessageWithFile(group) { contact ->
+        Arona.sendGroupMessage(group) { contact ->
           val tip = getGroupConfig<String>(if (locale == ServerLocale.JP) "notifyStringJP" else "notifyStringEN", group)
           val image = contact.uploadImage(imageFile, "png")
           MessageUtil.deserializeMiraiCodeAndBuild(tip, contact) { builder ->
@@ -135,18 +133,27 @@ object ActivityNotify: AronaQuartzService, ConfigReader {
       val activityString = activity
         .map { at -> "${at.content}\n" }
         .reduceOrNull { prv, cur -> prv + cur }
-      val activeGroup = getMainConfig<List<Long>>("groups")
-      val serviceGroup = activeGroup.filter { getGroupServiceConfig("active-push", it) }
-      val serverString = MiraiCode.deserializeMiraiCode(if (server) AronaNotifyConfig.notifyStringJP else AronaNotifyConfig.notifyStringEN)
       val endTime = if (isMidnightEndActivity(activity[0])) {
         DropEndTime
       } else {
         1
       }
-      Arona.sendMessage("${serverString}\n" +
-        "$activityString" +
-        "将会在${endTime}小时后结束"
-      )
+
+      val activeGroup = getMainConfig<List<Long>>("groups")
+      val serviceGroup = activeGroup.filter { getGroupServiceConfig("active-push", it) }
+      // 根据防侠类型过滤掉打开通知的群
+      val configKey = if (server) "enableJP" else "enableEN"
+      val notifyConfigKey = if (server) "notifyStringJP" else "notifyStringEN"
+      val notifyGroup = serviceGroup.filter { getGroupServiceConfig(configKey, it) }
+      notifyGroup.forEach {
+        val serverString = getGroupConfig<String>(notifyConfigKey, it)
+        Arona.sendGroupMessage(it) {
+          this.add("${serverString}\n" +
+            "$activityString" +
+            "将会在${endTime}小时后结束")
+          this.build()
+        }
+      }
     }
 
     override fun interrupt() {
@@ -182,9 +189,4 @@ object ActivityNotify: AronaQuartzService, ConfigReader {
   override val description: String = name
   override var enable: Boolean = true
   override val configPrefix: String = "notify"
-}
-
-// 每日防侠提醒类型
-enum class NotifyType {
-  ALL, ONLY_24H, ONLY_48H
 }

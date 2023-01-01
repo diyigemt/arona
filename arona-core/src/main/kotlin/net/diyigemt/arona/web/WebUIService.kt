@@ -5,8 +5,9 @@ import com.auth0.jwt.algorithms.Algorithm
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import net.diyigemt.arona.Arona
-import net.diyigemt.arona.config.AronaWebUIConfig
+import net.diyigemt.arona.interfaces.ConfigReader
 import net.diyigemt.arona.interfaces.Initialize
+import net.diyigemt.arona.interfaces.getMainConfig
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.web.database.DBOptionService
 import net.diyigemt.arona.web.plugins.configureCROS
@@ -16,10 +17,10 @@ import net.diyigemt.arona.web.plugins.configureSerialization
 import net.mamoe.mirai.console.command.SimpleCommand
 import java.util.*
 
-object WebUIService : AronaService, Initialize, SimpleCommand(
+object WebUIService: SimpleCommand(
   Arona, "token", "生成一个WebUI登录密钥（1小时内有效，程序中途退出依然失效）",
   description = "抽卡历史记录"
-){
+), AronaService, Initialize, ConfigReader {
   private lateinit var server: ApplicationEngine
   const val jwtAudience = "http://127.0.0.1/api/v1"
   const val issuer = "http://127.0.0.1/"
@@ -28,7 +29,7 @@ object WebUIService : AronaService, Initialize, SimpleCommand(
 
   override fun enableService() {
     Arona.runSuspend {
-      server = embeddedServer(Netty, port = AronaWebUIConfig.port, host = "127.0.0.1") {
+      server = embeddedServer(Netty, port = getMainConfig("webui.port"), host = "127.0.0.1") {
         configureSecurity()
         configureCROS()
         configureSerialization()
@@ -59,6 +60,7 @@ object WebUIService : AronaService, Initialize, SimpleCommand(
   override val description: String = "WebUI服务"
   override var enable: Boolean = true
   override val priority: Int = 10
+  override val configPrefix = ""
 
   override fun init() {
     DBOptionService.init()
@@ -70,4 +72,5 @@ object WebUIService : AronaService, Initialize, SimpleCommand(
 
     return randomStr.toString()
   }
+
 }

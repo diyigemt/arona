@@ -27,9 +27,6 @@ object AronaConfig : AutoSavePluginConfig("arona") {
   @ConfigKey("webui.port")
   val webuiPort: Int by value(8080)
 
-  @ValueDescription("你自己的nga uid")
-  @ConfigKey("nga.uid")
-  var ngaUid: String by value("")
 
   @ValueDescription(
     """
@@ -39,24 +36,5 @@ object AronaConfig : AutoSavePluginConfig("arona") {
   )
   @ConfigKey("nga.cid")
   var ngaCid: String by value("")
-
-  @ValueDescription("扫描周期(单位min)")
-  @ConfigKey("nga.checkInterval")
-  var ngaCheckInterval: Int by value(30)
-
-  @ValueDescription("nga数据源(主站寄了的时候可以换一下),可选\"MAIN\"(主站)和\"SUB\"(备用站)")
-  @ConfigKey("nga.source")
-  var ngaSource: String by value(NGAImageTranslatePusher.NGASource.SUB.name)
-
-  @ValueDescription("要监听的发送者uid以及nga昵称")
-  var ngaWatch: MutableMap<String, String> by value(
-    mutableMapOf(
-      "42382305" to "xiwang399",
-      "40785736" to "安kuzuha",
-      "64124793" to "星泠鑫"
-    )
-  )
-  @ValueDescription("已发送的缓存")
-  var ngaCache: MutableList<Pair<Int, String>> by value(mutableListOf())
 
 }

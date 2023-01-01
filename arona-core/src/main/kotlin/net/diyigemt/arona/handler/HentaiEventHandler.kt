@@ -1,7 +1,6 @@
 package net.diyigemt.arona.handler
 
 import net.diyigemt.arona.Arona.sendTeacherNameMessage
-import net.diyigemt.arona.config.AronaReplyConfig
 import net.diyigemt.arona.entity.ReplyMessageMatchCondition
 import net.diyigemt.arona.entity.ReplyMessageMatchTree
 import net.diyigemt.arona.entity.ReplyMessageMatchType

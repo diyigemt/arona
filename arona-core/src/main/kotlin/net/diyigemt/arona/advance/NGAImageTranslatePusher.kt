@@ -2,7 +2,10 @@ package net.diyigemt.arona.advance
 
 import kotlinx.coroutines.runBlocking
 import net.diyigemt.arona.Arona
-import net.diyigemt.arona.config.NGAPushConfig
+import net.diyigemt.arona.interfaces.ConfigReader
+import net.diyigemt.arona.interfaces.getConfig
+import net.diyigemt.arona.interfaces.getGroupServiceConfig
+import net.diyigemt.arona.interfaces.getGroupServiceList
 import net.diyigemt.arona.quartz.QuartzProvider
 import net.diyigemt.arona.service.AronaQuartzService
 import net.mamoe.mirai.message.data.MessageChainBuilder
@@ -15,7 +18,7 @@ import org.quartz.JobKey
 import java.io.InputStream
 import java.util.*
 
-object NGAImageTranslatePusher : AronaQuartzService {
+object NGAImageTranslatePusher : AronaQuartzService, ConfigReader {
   private const val ImageTranslateCheckJobKey = "ImageTranslateCheck"
   private const val ImageSrcBaseAddress = "https://img.nga.178.com/attachments/"
   private const val ImageTranslateCheckInitKey = "init"
@@ -25,6 +28,11 @@ object NGAImageTranslatePusher : AronaQuartzService {
     "lastvisit" to "",
     "lastpath" to ""
   )
+  private val watchs = mutableMapOf(
+    "42382305" to "xiwang399",
+    "40785736" to "安kuzuha",
+    "64124793" to "星泠鑫"
+  )
   private const val ImageRegex = "\\[img][.]/([\\w/-]+[.](jpg|png|JPG|PNG))\\[/img]"
   private const val maxCache: Int = 3
   override var jobKey: JobKey? = null
@@ -32,6 +40,7 @@ object NGAImageTranslatePusher : AronaQuartzService {
   override val name: String = "nga图楼推送"
   override val description: String = name
   override var enable: Boolean = true
+  override val configPrefix = "nga"
 
   class TranslatePusherJob : Job {
     override fun execute(context: JobExecutionContext?) {
@@ -41,7 +50,7 @@ object NGAImageTranslatePusher : AronaQuartzService {
           return
         }
       }
-      val cache = NGAPushConfig.cache
+      val cache = getConfig<MutableList<Pair<Int, String>>>("cache")
       val isNew = cache.isEmpty()
       val pending = fetchNGA.filter {
         !cache.any { c -> c.second == it.postId }
@@ -53,24 +62,27 @@ object NGAImageTranslatePusher : AronaQuartzService {
       if (init && isNew) {
         return
       }
+      val groupList = getGroupServiceList("nga-pusher")
       pending.map { floor ->
-        Arona.sendMessageWithFile {
-          val builder = MessageChainBuilder()
-          val userName = NGAPushConfig.watch[floor.uid]
-          builder.add("$userName(${floor.uid}):\n")
-          builder.add("${floor.content}\n")
-          runBlocking {
-            floor.images.forEach { href ->
-              val i = fetchImageFromNGA(href)?.toExternalResource() ?: return@forEach
-              val image = it.uploadImage(i)
-              builder.add(image)
-              i.close()
+        groupList.forEach { group ->
+          Arona.sendGroupMessage(group) {
+            val builder = MessageChainBuilder()
+            val userName = watchs[floor.uid]
+            builder.add("$userName(${floor.uid}):\n")
+            builder.add("${floor.content}\n")
+            runBlocking {
+              floor.images.forEach forEach2@{ href ->
+                val i = fetchImageFromNGA(href)?.toExternalResource() ?: return@forEach2
+                val image = it.uploadImage(i)
+                builder.add(image)
+                i.close()
+              }
             }
+            builder.build()
           }
-          builder.build()
+          // 降低发送频率
+          Thread.sleep(2000)
         }
-        // 降低发送频率
-        Thread.sleep(2000)
       }
     }
   }
@@ -96,7 +108,8 @@ object NGAImageTranslatePusher : AronaQuartzService {
     val random = Calendar.getInstance().time.time - Random().nextInt(25) + 5
     cookies["lastvisit"] = random.toString()
     cookies["lastpath"] = "/read.php?tid=${cookies["ngaPassportUid"]}"
-    val body = Jsoup.connect("https://${NGAPushConfig.source.url}/read.php?tid=30843163")
+    val source = getConfig<NGASource>("source")
+    val body = Jsoup.connect("https://${source.url}/read.php?tid=30843163")
       .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
       .ignoreContentType(true)
       .cookies(cookies)
@@ -109,7 +122,7 @@ object NGAImageTranslatePusher : AronaQuartzService {
       val user =
         it.getElementsByClass("posterinfo")[0]?.getElementsByTag("a")?.get(0)?.attr("href")?.substringAfter("uid=")
           ?: return@forEach
-      if (!NGAPushConfig.watch.containsKey(user)) return@forEach
+      if (!watchs.containsKey(user)) return@forEach
       val time = it.getElementsByClass("postInfo")[0]?.getElementsByTag("span")?.text() ?: return@forEach
       val content = it.getElementsByClass("postcontent")[0]?.text() ?: return@forEach
       val reg = Regex(ImageRegex)
@@ -139,8 +152,9 @@ object NGAImageTranslatePusher : AronaQuartzService {
   }
 
   private fun fetchImageFromNGA(href: String): InputStream? {
+    val source = getConfig<NGASource>("source")
     val builder = OkHttpClient.Builder()
-    builder.cookieJar(CookieJarImp())
+    builder.cookieJar(CookieJarImp(source))
     val client = builder.build()
     val request = Request.Builder()
       .url("${ImageSrcBaseAddress}${href}")
@@ -157,14 +171,16 @@ object NGAImageTranslatePusher : AronaQuartzService {
     return null
   }
 
-  private class CookieJarImp : CookieJar {
+  private class CookieJarImp(
+    val source: NGASource
+  ) : CookieJar {
     override fun loadForRequest(url: HttpUrl): List<Cookie> {
       return cookies.entries.map {
         val builder = Cookie.Builder()
         return@map builder
           .name(it.key)
           .value(it.value)
-          .domain(NGAPushConfig.source.url)
+          .domain(source.url)
           .path("/")
           .build()
       }
@@ -178,15 +194,17 @@ object NGAImageTranslatePusher : AronaQuartzService {
   }
 
   override fun enableService() {
-    if (NGAPushConfig.cid == "" && NGAPushConfig.uid == "") {
+    val cid = getConfig<String>("cid")
+    val uid = getConfig<String>("uid")
+    if (cid == "" && uid == "") {
       Arona.warning("nga推送配置未初始化,请修改nga.yml配置文件")
       return
     }
-    cookies["ngaPassportUid"] = NGAPushConfig.uid
-    cookies["ngaPassportCid"] = NGAPushConfig.cid
+    cookies["ngaPassportUid"] = uid
+    cookies["ngaPassportCid"] = cid
     jobKey = QuartzProvider.createRepeatSingleTask(
       TranslatePusherJob::class.java,
-      NGAPushConfig.checkInterval,
+      getConfig("checkInterval"),
       ImageTranslateCheckJobKey,
       ImageTranslateCheckJobKey
     ).first

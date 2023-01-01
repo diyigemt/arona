@@ -1,6 +1,7 @@
 package net.diyigemt.arona.service
 
 import net.diyigemt.arona.Arona
+import net.diyigemt.arona.interfaces.ConfigReader
 import net.diyigemt.arona.interfaces.Initialize
 import net.diyigemt.arona.util.GeneralUtils
 import net.mamoe.mirai.contact.Contact
@@ -9,9 +10,10 @@ import net.mamoe.mirai.contact.User
 import net.mamoe.mirai.event.events.BotEvent
 import net.mamoe.mirai.event.events.MessageEvent
 
-object AronaServiceManager: Initialize {
+object AronaServiceManager: Initialize, ConfigReader {
 
   override val priority: Int = 5
+  override val configPrefix = "service"
   private val MAP: MutableMap<String, AronaService> = mapOf<String, AronaService>().toMutableMap()
   private val REACT_MAP: MutableMap<String, MutableList<AronaReactService<BotEvent>>> = mapOf<String, MutableList<AronaReactService<BotEvent>>>().toMutableMap()
 

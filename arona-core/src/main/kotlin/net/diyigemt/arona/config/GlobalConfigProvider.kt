@@ -12,17 +12,27 @@ import kotlin.reflect.full.declaredMemberProperties
 object GlobalConfigProvider: Initialize {
   val CONFIG: MutableMap<String, Any?> = mutableMapOf()
   val GsonInstance: Gson = Gson()
-  inline fun <reified T> get(key: String): T =
-    when (val value = CONFIG[key]) {
+  inline fun <reified T> get(key: String): T = parseValue(CONFIG[key], key)
+
+  /**
+   * 123456.service.notify false
+   * 789456.service.notify false
+   * service.notify true
+   */
+  inline fun <reified T> getPrefix(prefix: String): List<T> =
+    CONFIG
+      .filter { pair -> pair.key.startsWith(prefix) }
+      .map { pair -> parseValue(pair.value, pair.key) }
+
+  inline fun <reified T> parseValue(value: Any?, key: String): T =
+    when (value) {
       is T -> value
       is String -> when (T::class) {
         String::class -> value as T
         Int::class,
         Double::class,
         Float::class -> value.cast()
-        else -> GsonInstance.fromJson(value, T::class.java).also {
-          CONFIG[key] = it
-        }
+        else -> GsonInstance.fromJson(value, T::class.java)
       }
       else -> throw RuntimeException("get config: $key error")
     }

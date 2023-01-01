@@ -1,4 +1,5 @@
 <template>
+  <button style="height: 50px; width: 100px" @click="listener">Generate</button>
   <div class="container">
     <div ref="blocklyDiv" class="blocklyDiv"></div>
   </div>
@@ -6,14 +7,23 @@
 
 <script setup lang="ts">
 import Blockly from "blockly";
-import BlocklyConfig from "@/blockly";
+import BlocklyConfig, { workspaceBlocks, blocks } from "@/blockly";
+// @ts-ignore
+import aronaGenerator from "@/blockly/generator";
 
 const blocklyDiv = ref();
 const workspace = shallowRef();
 
 onMounted(() => {
+  Blockly.defineBlocksWithJsonArray(blocks);
   workspace.value = Blockly.inject(blocklyDiv.value, BlocklyConfig);
+  Blockly.Xml.domToWorkspace(workspaceBlocks, workspace.value);
 });
+function listener() {
+  const code = aronaGenerator.workspaceToCode(workspace.value);
+  // eslint-disable-next-line no-alert
+  alert(code);
+}
 </script>
 
 <style scoped lang="scss">

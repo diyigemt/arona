@@ -1,0 +1,122 @@
+[{
+  "type": "master_block",
+  "message0": "收到 %1 时，当 %2 执行 %3",
+  "args0": [
+    {
+      "type": "field_dropdown",
+      "name": "TriggerType",
+      "options": [
+        [
+          "群消息",
+          "GroupEvent"
+        ],
+        [
+          "好友消息",
+          "FriendEvent"
+        ]
+      ]
+    },
+    {
+      "type": "input_value",
+      "name": "Expressions",
+      "check": "ExpressionType"
+    },
+    {
+      "type": "input_statement",
+      "name": "Actions",
+      "check": "ActionType"
+    }
+  ],
+  "colour": 230,
+  "tooltip": "",
+  "helpUrl": ""
+},
+{
+  "type": "id_block",
+  "message0": "群号/QQ号为 %1 %2",
+  "args0": [
+    {
+      "type": "field_input",
+      "name": "ID",
+      "text": "123456"
+    },
+    {
+      "type": "input_value",
+      "name": "IDInput",
+      "check": "LogicType"
+    }
+  ],
+  "output": "ExpressionType",
+  "colour": 230,
+  "tooltip": "",
+  "helpUrl": ""
+},
+{
+  "type": "sender_block",
+  "message0": "发送者为 %1 %2",
+  "args0": [
+    {
+      "type": "field_input",
+      "name": "ID",
+      "text": "123456"
+    },
+    {
+      "type": "input_value",
+      "name": "NAME",
+      "check": "LogicType"
+    }
+  ],
+  "output": "ExpressionType",
+  "colour": 230,
+  "tooltip": "",
+  "helpUrl": ""
+},
+{
+  "type": "logic_block",
+  "message0": "%1 %2",
+  "args0": [
+    {
+      "type": "field_dropdown",
+      "name": "Logic",
+      "options": [
+        [
+          "且",
+          "And"
+        ],
+        [
+          "或",
+          "Or"
+        ],
+        [
+          "非",
+          "Not"
+        ]
+      ]
+    },
+    {
+      "type": "input_value",
+      "name": "NAME",
+      "check": "ExpressionType"
+    }
+  ],
+  "output": "LogicType",
+  "colour": 230,
+  "tooltip": "",
+  "helpUrl": ""
+},
+{
+  "type": "send_msg_block",
+  "message0": "发送消息： %1",
+  "args0": [
+    {
+      "type": "field_input",
+      "name": "Msg",
+      "text": "Hallo"
+    }
+  ],
+  "previousStatement": "ActionType",
+  "nextStatement": "ActionType",
+  "colour": 230,
+  "tooltip": "",
+  "helpUrl": ""
+}]

@@ -1,9 +1,11 @@
 package net.diyigemt.arona.service
 
 import net.diyigemt.arona.Arona
+import net.diyigemt.arona.config.GlobalConfigProvider
 import net.diyigemt.arona.interfaces.ConfigReader
 import net.diyigemt.arona.interfaces.Initialize
 import net.diyigemt.arona.util.GeneralUtils
+import net.diyigemt.arona.util.ReflectionUtil
 import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.User
@@ -126,6 +128,21 @@ object AronaServiceManager: Initialize, ConfigReader {
     MAP[serviceName]
   } else {
     MAP[name]
+  }
+
+  /**
+   * 拿到所有服务的开启与关闭
+   *
+   * 由默认部分和单独的群部分组成
+   *
+   * 如果默认开启但是所有群设置为关闭时  自动关闭?  设置为关闭(返回false)
+   *
+   * 只要有任意一个群设置为开启则开启(返回true)
+   */
+  private fun getServiceOpenList() {
+    // 首先拿到所有服务的suffix
+    ReflectionUtil.getInterfacePetObjectInstance<AronaService>().map { it.name }
+    val serviceKeyList = GlobalConfigProvider.getPrefixKey("service").map { key -> key.split(".").last() }
   }
 
   fun saveServiceStatus() {

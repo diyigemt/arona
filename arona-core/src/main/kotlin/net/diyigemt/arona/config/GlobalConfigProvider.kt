@@ -3,6 +3,7 @@ package net.diyigemt.arona.config
 import com.google.gson.Gson
 import net.diyigemt.arona.annotations.ConfigKey
 import net.diyigemt.arona.db.DataBaseProvider
+import net.diyigemt.arona.db.system.SystemConfigTable
 import net.diyigemt.arona.db.system.SystemConfigTableModel
 import net.diyigemt.arona.interfaces.Initialize
 import net.mamoe.mirai.console.util.cast
@@ -23,6 +24,11 @@ object GlobalConfigProvider: Initialize {
     CONFIG
       .filter { pair -> pair.key.startsWith(prefix) }
       .map { pair -> parseValue(pair.value, pair.key) }
+
+  /**
+   * 获取所有以prefix开头的配置项的key
+   */
+  fun getPrefixKey(prefix: String) = CONFIG.map { pair -> pair.key }.filter { key -> key.startsWith(prefix) }
 
   inline fun <reified T> parseValue(value: Any?, key: String): T =
     when (value) {
@@ -57,25 +63,45 @@ object GlobalConfigProvider: Initialize {
 
   inline fun <reified T> getGroupOrDefault(key: String, group: Long, default: T): T = getOrDefault(concatGroupKey(key, group), default) ?: getOrDefault(key, default)
 
+  /**
+   * 设置一个该群特有的配置项
+   */
   fun setGroup(key: String, group: Long, value: Any) {
     set(concatGroupKey(key, group), value)
   }
 
+  /**
+   * 更新/创建一个配置项
+   */
   fun set(key: String, value: Any) {
     CONFIG[key] = value
     DataBaseProvider.query { _ ->
-      SystemConfigTableModel.new {
-        this.key = key
-        this.value = when (value) {
-          is String -> value
-          is Float, is Double, is Int -> value.cast()
-          else -> GsonInstance.toJson(value)
+      val config = SystemConfigTableModel.find { SystemConfigTable.key eq key }.toList().firstOrNull()
+      val castValue = when (value) {
+        is String -> value
+        is Float, is Double, is Int -> value.cast()
+        else -> GsonInstance.toJson(value)
+      }
+      if (config == null) {
+        SystemConfigTableModel.new {
+          this.key = key
+          this.value = castValue
         }
+      } else {
+        config.value = castValue
       }
     }
   }
 
+  /**
+   * 获取该群特有的配置项前缀
+   */
   fun concatGroupKey(key: String, group: Long) = "$group.$key"
+
+  /**
+   * 拿到服务的群id列表
+   */
+  fun getGroupList(): List<Long> = get("groups")
 
   override val priority: Int
     get() = 5

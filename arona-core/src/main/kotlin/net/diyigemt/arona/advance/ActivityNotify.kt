@@ -1,6 +1,7 @@
 package net.diyigemt.arona.advance
 
 import net.diyigemt.arona.Arona
+import net.diyigemt.arona.config.GlobalConfigProvider
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.entity.ActivityType
 import net.diyigemt.arona.entity.ServerLocale
@@ -37,7 +38,7 @@ object ActivityNotify: AronaQuartzService, ConfigReader {
       // 初始化不显示信息
       val init = context?.mergedJobDataMap?.getBoolean(ActivityNotifyDataInitKey) ?: false
       if (init) return
-      val activeGroup = getMainConfig<List<Long>>("groups")
+      val activeGroup = GlobalConfigProvider.getGroupList()
       val enableJP = activeGroup.filter { getGroupConfig("enableJP", it) }
       val enableEN = activeGroup.filter { getGroupConfig("enableEN", it) }
       // 如果有群开启了日服通知
@@ -139,7 +140,7 @@ object ActivityNotify: AronaQuartzService, ConfigReader {
         1
       }
 
-      val activeGroup = getMainConfig<List<Long>>("groups")
+      val activeGroup = GlobalConfigProvider.getGroupList()
       val serviceGroup = activeGroup.filter { getGroupServiceConfig("active-push", it) }
       // 根据防侠类型过滤掉打开通知的群
       val configKey = if (server) "enableJP" else "enableEN"

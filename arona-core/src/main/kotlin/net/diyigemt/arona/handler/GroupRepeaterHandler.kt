@@ -12,26 +12,30 @@ object GroupRepeaterHandler:
   AronaGroupService,
   ConfigReader
 {
-  private var last: String = ""
-  private var lastSender: Long = 0
-  private var count: Int = 0
+  private val _last: MutableMap<Long, String> = mutableMapOf()
+  private val _lastSender: MutableMap<Long, Long> = mutableMapOf()
+  private val _count: MutableMap<Long, Int> = mutableMapOf()
   override suspend fun handle(event: GroupMessageEvent) {
     val now = event.message.serializeToMiraiCode()
     if (now.startsWith("/")) return
     val senderId = event.sender.id
     val group = event.group.id
+    val last = _last[group] ?: ""
+    val lastSender = _lastSender[group] ?: 0L
     if (now == last && senderId != lastSender) {
-      count++
+      val count = ((_count[group] ?: 0) + 1).also {
+        _count[group] = it
+      }
       if (count >= getGroupConfig<Int>("times", group)) {
         event.subject.sendMessage(event.message)
-        count = 0
-        last = now
-        lastSender = 0
+        _count[group] = 0
+        _last[group] = now
+        _lastSender[group] = 0L
       }
     } else {
-      last = now
-      lastSender = senderId
-      count = 1
+      _last[group] = now
+      _lastSender[group] = senderId
+      _count[group] = 1
     }
   }
 

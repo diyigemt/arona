@@ -1,5 +1,5 @@
 <template>
-  <el-select v-model="selectBlockIndex" style="margin-right: 16px;">
+  <el-select v-model="selectBlockIndex" style="margin-right: 16px">
     <el-option v-for="(e, index) in blockList" :key="index" :label="e.name" :value="index" @change="setBlock" />
   </el-select>
   <el-button type="primary" @click="listener">CreateProject</el-button>
@@ -73,7 +73,7 @@ function listener() {
 
 <style scoped lang="scss">
 .container {
-  width: 100%vw;
+  width: 100%;
   height: 50vh;
   min-height: 500px;
 }

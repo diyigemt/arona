@@ -19,13 +19,14 @@ object Contacts : Worker{
     val res = ContactsList(mutableListOf(), mutableListOf())
 
     kotlin.runCatching {
-      Arona.arona?.groups?.forEach{
-        res.groups.add(GroupContact(it.id, it.name))
-      }
-
-      Arona.arona?.friends?.forEach {
-        res.friends.add(FriendContact(it.id, it.nick, it.remark))
-      }
+      //TODO
+//      Arona.arona?.groups?.forEach{
+//        res.groups.add(GroupContact(it.id, it.name))
+//      }
+//
+//      Arona.arona?.friends?.forEach {
+//        res.friends.add(FriendContact(it.id, it.nick, it.remark))
+//      }
     }.onSuccess {
       context.call.respond(responseMessage(res))
     }.onFailure {

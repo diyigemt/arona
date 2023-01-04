@@ -30,7 +30,9 @@ object WebUIService: SimpleCommand(
 
   override fun enableService() {
     Arona.runSuspend {
-      server = embeddedServer(Netty, port = getMainConfig("webui.port"), host = "127.0.0.1") {
+      //TODO
+//      server = embeddedServer(Netty, port = getMainConfig("webui.port"), host = "127.0.0.1") {
+      server = embeddedServer(Netty, port = 8080, host = "127.0.0.1") {
         configureSecurity()
         configureCROS()
         configureSerialization()

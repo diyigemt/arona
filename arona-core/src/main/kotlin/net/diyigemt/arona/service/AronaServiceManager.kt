@@ -146,16 +146,18 @@ object AronaServiceManager: Initialize, ConfigReader {
   }
 
   fun saveServiceStatus() {
-    val map = AronaServiceConfig.config
-    MAP.forEach {
-      map[it.value.name] = it.value.enable
-    }
+    //TODO
+//    val map = AronaServiceConfig.config
+//    MAP.forEach {
+//      map[it.value.name] = it.value.enable
+//    }
   }
 
   fun disableAll() {
-    AronaServiceConfig.config.forEach {
-      disable(it.key)
-    }
+    //TODO
+//    AronaServiceConfig.config.forEach {
+//      disable(it.key)
+//    }
   }
 
   private fun findServiceById(id: Int): AronaService? = MAP[id.toString()]
@@ -181,12 +183,13 @@ object AronaServiceManager: Initialize, ConfigReader {
   }
 
   override fun init() {
-    AronaServiceConfig.config.forEach {
-      if (it.value) {
-        enable(it.key)
-      } else {
-        disable(it.key)
-      }
-    }
+    //TODO
+//    AronaServiceConfig.config.forEach {
+//      if (it.value) {
+//        enable(it.key)
+//      } else {
+//        disable(it.key)
+//      }
+//    }
   }
 }

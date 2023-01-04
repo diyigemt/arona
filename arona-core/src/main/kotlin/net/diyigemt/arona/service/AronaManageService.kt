@@ -9,14 +9,15 @@ import net.mamoe.mirai.message.code.MiraiCode
 interface AronaManageService: AronaService {
 
   fun checkAdmin(user: User, contact: Contact): Boolean {
-    if (!AronaConfig.managerGroup.contains(user.id)) {
-      if (AronaConfig.permissionDeniedMessage != "") {
-        Arona.runSuspend {
-          contact.sendMessage(MiraiCode.deserializeMiraiCode(AronaConfig.permissionDeniedMessage, contact))
-        }
-      }
-      return false
-    }
+    //TODO
+//    if (!AronaConfig.managerGroup.contains(user.id)) {
+//      if (AronaConfig.permissionDeniedMessage != "") {
+//        Arona.runSuspend {
+//          contact.sendMessage(MiraiCode.deserializeMiraiCode(AronaConfig.permissionDeniedMessage, contact))
+//        }
+//      }
+//      return false
+//    }
     return true
   }
 

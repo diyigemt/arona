@@ -24,6 +24,7 @@ import net.diyigemt.arona.service.AronaServiceManager
 import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.NetworkUtil
 import net.diyigemt.arona.util.ReflectionUtil
+import net.diyigemt.arona.web.WebUIService
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.AbstractCommand
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
@@ -63,22 +64,23 @@ object Arona : KotlinPlugin(
     System.setProperty("java.awt.headless", "true")
     if (DataBaseProvider.isConnected()) {
       val pluginEventChannel = globalEventChannel()
-      pluginEventChannel.filter {
-        it is BotOnlineEvent && it.bot.id == AronaConfig.qq
-      }.subscribeAlways<BotOnlineEvent> {
-        arona = it.bot
-        if (AronaConfig.sendOnlineMessage) {
-          sendMessage(deserializeMiraiCode(AronaConfig.onlineMessage))
-        }
-      }
-      pluginEventChannel.filter {
-        it is BotOnlineEvent && it.bot.id == AronaConfig.qq
-      }.subscribeAlways<BotOfflineEvent> {
-        arona = null
-      }
-      pluginEventChannel.subscribeAlways<BotEvent> {
-        AronaServiceManager.emit(this)
-      }
+      //TODO
+//      pluginEventChannel.filter {
+//        it is BotOnlineEvent && it.bot.id == AronaConfig.qq
+//      }.subscribeAlways<BotOnlineEvent> {
+//        arona = it.bot
+//        if (AronaConfig.sendOnlineMessage) {
+//          sendMessage(deserializeMiraiCode(AronaConfig.onlineMessage))
+//        }
+//      }
+//      pluginEventChannel.filter {
+//        it is BotOnlineEvent && it.bot.id == AronaConfig.qq
+//      }.subscribeAlways<BotOfflineEvent> {
+//        arona = null
+//      }
+//      pluginEventChannel.subscribeAlways<BotEvent> {
+//        AronaServiceManager.emit(this)
+//      }
       info { "arona loaded" }
     } else error("arona database init failed, arona will not start")
   }
@@ -89,58 +91,62 @@ object Arona : KotlinPlugin(
   }
 
   private fun init() {
+    WebUIService.enableService()
+    //TODO
     // 查找所有需要初始化的类, 所有指令, 所有配置文件
     // 重载配置文件
-    ReflectionUtil.getInterfacePetObjectInstance<AutoSavePluginConfig>().forEach {
-      it.reload()
-    }
+//    ReflectionUtil.getInterfacePetObjectInstance<AutoSavePluginConfig>().forEach {
+//      it.reload()
+//    }
     // 需要协程的类
-    ReflectionUtil.getInterfacePetObjectInstance<CoroutineFunctionProvider>().forEach {
-      it.start()
-    }
-    val grantCommandName = mutableListOf<String>()
-    // 注册service
-    ReflectionUtil.getInterfacePetObjectInstance<AronaService>().forEach {
-      // 向控制台注册指令
-      if (it is AbstractCommand) {
-        it.register()
-        // 直接提供指令执行权限
-        if (!it::class.hasAnnotation<HideService>()) {
-          grantCommandName.add(it.primaryName)
-        }
-      }
-      AronaServiceManager.register(it)
-    }
+//    ReflectionUtil.getInterfacePetObjectInstance<CoroutineFunctionProvider>().forEach {
+//      it.start()
+//    }
+//    val grantCommandName = mutableListOf<String>()
+//    // 注册service
+//    ReflectionUtil.getInterfacePetObjectInstance<AronaService>().forEach {
+//      // 向控制台注册指令
+//      if (it is AbstractCommand) {
+//        it.register()
+//        // 直接提供指令执行权限
+//        if (!it::class.hasAnnotation<HideService>()) {
+//          grantCommandName.add(it.primaryName)
+//        }
+//      }
+//      AronaServiceManager.register(it)
+//    }
 
     // 需要初始化的类
-    runSuspend {
-      ReflectionUtil.getInterfacePetObjectInstance<Initialize>().sortedBy { it.priority }.forEach {
-        it.init()
-      }
-    }
+//    runSuspend {
+//      ReflectionUtil.getInterfacePetObjectInstance<Initialize>().sortedBy { it.priority }.forEach {
+//        it.init()
+//      }
+//    }
 
     // 自动赋予指令权限
-    if (AronaConfig.autoGrantPermission) {
-      // 获取已经赋予的权限
-      val grantedList = AbstractPermitteeId.AnyContact.getPermittedPermissions().toList()
-      grantCommand(grantCommandName.filter {
-        !grantedList.any {
-            already -> already.id.toString().endsWith(it)
-        }
-      })
-    }
+    //TODO
+//    if (AronaConfig.autoGrantPermission) {
+//      // 获取已经赋予的权限
+//      val grantedList = AbstractPermitteeId.AnyContact.getPermittedPermissions().toList()
+//      grantCommand(grantCommandName.filter {
+//        !grantedList.any {
+//            already -> already.id.toString().endsWith(it)
+//        }
+//      })
+//    }
 
-    runSuspend {
-      NetworkUtil.registerInstance()
-    }
+//    runSuspend {
+//      NetworkUtil.registerInstance()
+//    }
   }
 
   override fun onDisable() {
-    ReflectionUtil.getInterfacePetObjectInstance<AutoSavePluginConfig>().forEach {
-      it.save()
-    }
-    AronaServiceManager.saveServiceStatus()
-    AronaServiceConfig.save()
+    //TODO
+//    ReflectionUtil.getInterfacePetObjectInstance<AutoSavePluginConfig>().forEach {
+//      it.save()
+//    }
+//    AronaServiceManager.saveServiceStatus()
+//    AronaServiceConfig.save()
   }
 
   @OptIn(ExperimentalCommandDescriptors::class, ConsoleExperimentalApi::class)
@@ -161,13 +167,10 @@ object Arona : KotlinPlugin(
   }
 
   fun sendExitMessage() {
-    if (AronaConfig.sendOfflineMessage) {
-      sendMessage(deserializeMiraiCode(AronaConfig.offlineMessage))
-    }
-  }
-
-  fun MessageChainBuilder.(group: Contact) {
-
+    //TODO
+//    if (AronaConfig.sendOfflineMessage) {
+//      sendMessage(deserializeMiraiCode(AronaConfig.offlineMessage))
+//    }
   }
 
   fun sendGroupMessage(group0: Long, block: suspend (MessageChainBuilder.(group: Contact) -> MessageChain)) {
@@ -187,32 +190,34 @@ object Arona : KotlinPlugin(
   }
 
   fun sendMessage(message: MessageChain) {
-    runSuspend {
-      AronaConfig.groups.forEach {
-        val group = arona?.groups?.get(it) ?: return@forEach
-        group.sendMessage(message)
-      }
-    }
+    //TODO
+//    runSuspend {
+//      AronaConfig.groups.forEach {
+//        val group = arona?.groups?.get(it) ?: return@forEach
+//        group.sendMessage(message)
+//      }
+//    }
   }
 
   fun sendMessageToAdmin(message: String) {
-    fun getAdmin(id: Long): NormalMember? {
-      AronaConfig.groups.forEach {
-        val admin = arona?.groups?.get(it)?.get(id)
-        if (admin != null) return admin
-      }
-      return null
-    }
-    runSuspend {
-      if (AronaConfig.groups.isEmpty() || AronaConfig.managerGroup.isEmpty()) return@runSuspend
-      AronaConfig.managerGroup
-        .mapNotNull {
-          getAdmin(it)
-        }
-        .forEach {
-          it.sendMessage(message)
-        }
-    }
+    //TODO
+//    fun getAdmin(id: Long): NormalMember? {
+//      AronaConfig.groups.forEach {
+//        val admin = arona?.groups?.get(it)?.get(id)
+//        if (admin != null) return admin
+//      }
+//      return null
+//    }
+//    runSuspend {
+//      if (AronaConfig.groups.isEmpty() || AronaConfig.managerGroup.isEmpty()) return@runSuspend
+//      AronaConfig.managerGroup
+//        .mapNotNull {
+//          getAdmin(it)
+//        }
+//        .forEach {
+//          it.sendMessage(message)
+//        }
+//    }
   }
 
   fun dataFolderPath(subPath: String = ""): String = Arona.dataFolderPath.absolutePathString() + subPath

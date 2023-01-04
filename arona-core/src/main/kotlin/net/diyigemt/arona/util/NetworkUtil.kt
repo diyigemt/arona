@@ -30,22 +30,23 @@ object NetworkUtil {
     val sysSave = SysDataUtil.get(SysStatic.UUID)
     if (sysSave == null) {
       // 清除旧的配置文件
-      AronaConfig.uuid = ""
-      sendDataToServerSourceV1("/user/register")
-        .onSuccess {
-          val header = it.header(AUTH_HEADER)
-          if (header.isNullOrBlank()) {
-            Arona.warning("register failure")
-            return
-          }
-          SysDataUtil.saveRegisterData(header)
-          AronaConfig.uuid = header
-          Arona.info("register success")
-        }.onFailure {
-          Arona.warning("register failure")
-        }
+      //TODO
+//      AronaConfig.uuid = ""
+//      sendDataToServerSourceV1("/user/register")
+//        .onSuccess {
+//          val header = it.header(AUTH_HEADER)
+//          if (header.isNullOrBlank()) {
+//            Arona.warning("register failure")
+//            return
+//          }
+//          SysDataUtil.saveRegisterData(header)
+//          AronaConfig.uuid = header
+//          Arona.info("register success")
+//        }.onFailure {
+//          Arona.warning("register failure")
+//        }
     } else {
-      AronaConfig.uuid = sysSave
+//      AronaConfig.uuid = sysSave
     }
   }
 
@@ -117,7 +118,8 @@ object NetworkUtil {
     Jsoup.connect(api)
     .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
     .ignoreContentType(true)
-    .header(AUTH_HEADER, AronaConfig.uuid) // 提供身份识别token
+      //TODO
+//      .header(AUTH_HEADER, AronaConfig.uuid) // 提供身份识别token
     .header(VERSION_HEADER, Arona.version.toString()) // 提供客户端版本号
     .maxBodySize(1024 * 1024 * 100) // 最大下载文件大小100M
     .timeout(30 * 1000) // 30s连接失败抛出异常

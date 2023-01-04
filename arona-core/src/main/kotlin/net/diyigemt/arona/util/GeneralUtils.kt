@@ -31,7 +31,8 @@ object GeneralUtils : Initialize {
   private const val ConfigFolder: String = "/config"
 
   fun checkService(group: Contact?): Boolean = when (group) {
-    is Group -> AronaConfig.groups.contains(group.id)
+    //TODO
+    is Group -> true
     else -> false
   }
 
@@ -49,7 +50,8 @@ object GeneralUtils : Initialize {
     val name = query {
       TeacherName.find { (TeacherNameTable.group eq contactId) and (TeacherNameTable.id eq user.id) }.firstOrNull()
     }?.name ?: user.nameCardOrNick
-    return if (AronaConfig.endWithSensei.isNotBlank() && !name.endsWith(AronaConfig.endWithSensei)) "${name}${AronaConfig.endWithSensei}" else name
+//    return if (AronaConfig.endWithSensei.isNotBlank() && !name.endsWith(AronaConfig.endWithSensei)) "${name}${AronaConfig.endWithSensei}" else name
+    return ""
   }
 
   fun randomInt(bound: Int): Int = (System.currentTimeMillis() % bound).toInt()

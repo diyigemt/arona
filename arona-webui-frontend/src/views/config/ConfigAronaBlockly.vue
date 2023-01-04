@@ -1,5 +1,5 @@
 <template>
-  <el-select v-model="selectBlockIndex">
+  <el-select v-model="selectBlockIndex" style="margin-right: 16px;">
     <el-option v-for="(e, index) in blockList" :key="index" :label="e.name" :value="index" @change="setBlock" />
   </el-select>
   <el-button type="primary" @click="listener">CreateProject</el-button>

@@ -141,6 +141,7 @@ object Arona : KotlinPlugin(
   }
 
   override fun onDisable() {
+    WebUIService.disableService()
     //TODO
 //    ReflectionUtil.getInterfacePetObjectInstance<AutoSavePluginConfig>().forEach {
 //      it.save()

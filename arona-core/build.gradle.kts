@@ -12,7 +12,7 @@ plugins {
 
 group = "net.diyigemt.arona"
 version = "1.0.13"
-val miraiVersion = "2.11.1"
+val miraiVersion = "2.12.3"
 val exposedVersion = "0.38.2"
 val sqliteVersion = "3.36.0.3"
 val quartzVersion = "2.3.2"
@@ -65,9 +65,13 @@ dependencies {
   implementation("io.ktor:ktor-server-auth-jvm:$ktor_version")
   implementation("io.ktor:ktor-server-auth-jwt:$ktor_version")
   implementation("io.ktor:ktor-server-auth-jwt-jvm:$ktor_version")
+  implementation("org.apache.commons:commons-jexl3:3.2.1")
+  implementation("net.lingala:zip4j:1.3.3")
 //  implementation("ch.qos.logback:logback-classic:$logback_version")
   testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+
+  implementation(files("C:\\Users\\Haythem Kenway\\Desktop\\mirai-console\\plugins\\MiraiPluginUpdater-0.1.0.mirai2.jar"))
 }
 
 tasks.test {

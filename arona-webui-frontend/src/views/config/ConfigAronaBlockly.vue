@@ -1,5 +1,5 @@
 <template>
-  <button style="height: 50px; width: 100px" @click="listener">Generate</button>
+  <button style="height: 50px; width: 100px" @click="listener">CreateProject</button>
   <div class="container">
     <div ref="blocklyDiv" class="blocklyDiv"></div>
   </div>
@@ -7,6 +7,7 @@
 
 <script setup lang="ts">
 import Blockly from "blockly";
+import axios from "axios";
 import BlocklyConfig, { workspaceBlocks, blocks } from "@/blockly";
 // @ts-ignore
 import aronaGenerator from "@/blockly/generator";
@@ -22,7 +23,26 @@ onMounted(() => {
 function listener() {
   const code = aronaGenerator.workspaceToCode(workspace.value);
   // eslint-disable-next-line no-alert
-  alert(code);
+  alert(
+    JSON.stringify({
+      mode: "CREATE",
+      trigger: JSON.parse(code),
+      projectName: "",
+      blocklyProject: JSON.stringify(Blockly.serialization.workspaces.save(workspace.value)),
+    }),
+  );
+  axios({
+    method: "post",
+    url: "http://localhost:57920/api/v1/blockly/commit",
+    data: {
+      mode: "CREATE",
+      trigger: JSON.parse(code),
+      projectName: "",
+      blocklyProject: JSON.stringify(Blockly.serialization.workspaces.save(workspace.value)),
+    },
+  }).then((response) => {
+    console.log(response.data);
+  });
 }
 </script>
 

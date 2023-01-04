@@ -11,7 +11,7 @@ object BlocklyService: Initialize {
   private val hooks: MutableList<BlocklyExpression> = mutableListOf()
 
   override fun init() {
-    //TODO("Not yet implemented")
+    SaveManager.init()
   }
 
   fun checkAndDeserialize(data: String): CommitData? = kotlin.runCatching {

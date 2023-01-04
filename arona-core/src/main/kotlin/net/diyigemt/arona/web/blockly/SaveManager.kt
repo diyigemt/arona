@@ -13,14 +13,14 @@ import java.io.File
  *@Author hjn
  *@Create 2023/1/1
  */
-object SaveManager: Initialize {
+object SaveManager {
   private val saveFolder = File(Arona.dataFolder.absolutePath, "blocklySave")
   private val saves: MutableList<BlocklySave> = mutableListOf()
   /**
    * 使用者需要复制该变量并设置fileNameInZip，不确定后果时不要修改任何其它成员变量，否则可能导致ZIP损坏*/
   val params = ZipParameters()
 
-  override fun init() {
+  fun init() {
     saveFolder.mkdirs()
     params.compressionMethod = Zip4jConstants.COMP_STORE
     params.compressionLevel = Zip4jConstants.DEFLATE_LEVEL_NORMAL

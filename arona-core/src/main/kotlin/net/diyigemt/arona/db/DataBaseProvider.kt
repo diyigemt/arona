@@ -73,7 +73,9 @@ object DataBaseProvider: CoroutineFunctionProvider() {
     }
   }
 
-  fun isConnected(id : Int = 0) = databaseConnectionList[id].connectionStatus == ConnectionStatus.CONNECTED
+  fun isConnected(id : Int = 0) = kotlin.runCatching {
+    databaseConnectionList[id].connectionStatus == ConnectionStatus.CONNECTED
+  }.getOrElse { return@getOrElse false }
 
   fun <T> query(db : Int = 0, block: (Transaction) -> T) : T? =
     if(databaseConnectionList[db].connectionStatus == ConnectionStatus.DISCONNECTED) {

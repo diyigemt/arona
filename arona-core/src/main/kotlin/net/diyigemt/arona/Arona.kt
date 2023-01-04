@@ -25,6 +25,8 @@ import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.NetworkUtil
 import net.diyigemt.arona.util.ReflectionUtil
 import net.diyigemt.arona.web.WebUIService
+import net.diyigemt.arona.web.blockly.BlocklyService
+import net.diyigemt.arona.web.blockly.SaveManager
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.AbstractCommand
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
@@ -91,7 +93,9 @@ object Arona : KotlinPlugin(
   }
 
   private fun init() {
+    WebUIService.init()
     WebUIService.enableService()
+    BlocklyService.init()
     //TODO
     // 查找所有需要初始化的类, 所有指令, 所有配置文件
     // 重载配置文件

@@ -33,7 +33,8 @@ fun Application.configureSecurity() {
         if (credential.payload.audience.contains(WebUIService.jwtAudience)) JWTPrincipal(credential.payload) else null
       }
       challenge { _, _ ->
-        if(GlobalConfigProvider.get<Int>("webui.port") == 57920) return@challenge
+        // if(GlobalConfigProvider.get<Int>("webui.port") == 57920) return@challenge
+        return@challenge
         val json = Json { encodeDefaults = true }
         val res = json.encodeToString(ServerResponse(401, HttpStatusCode.Unauthorized.description, null as String?))
         call.response.header("Content-Type", "application/json")

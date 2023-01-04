@@ -1,5 +1,6 @@
 package net.diyigemt.arona.web
 
+import io.ktor.server.application.Application
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import io.ktor.server.engine.*
@@ -28,12 +29,12 @@ object WebUIService : AronaService, Initialize, SimpleCommand(
 
   override fun enableService() {
     Arona.runSuspend {
-      server = embeddedServer(Netty, port = AronaWebUIConfig.port, host = "127.0.0.1") {
-        configureSecurity()
-        configureCROS()
-        configureSerialization()
-        configureRouting()
-      }.start(wait = false)
+      server = embeddedServer(
+        Netty,
+        port = AronaWebUIConfig.port,
+        host = "127.0.0.1",
+        module = Application::webUIModule
+      ).start(wait = false)
     }
   }
 
@@ -52,6 +53,7 @@ object WebUIService : AronaService, Initialize, SimpleCommand(
     kotlin.runCatching {
       server.stop(timeoutMillis = 1000)
     }
+    //unregister()
   }
 
   override val id: Int = 24
@@ -70,4 +72,11 @@ object WebUIService : AronaService, Initialize, SimpleCommand(
 
     return randomStr.toString()
   }
+}
+
+fun Application.webUIModule() {
+  configureSecurity()
+  configureCROS()
+  configureSerialization()
+  configureRouting()
 }

@@ -22,6 +22,7 @@ import net.diyigemt.arona.service.AronaServiceManager
 import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.NetworkUtil
 import net.diyigemt.arona.util.ReflectionUtil
+import net.diyigemt.arona.web.WebUIService
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.AbstractCommand
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
@@ -139,6 +140,7 @@ object Arona : KotlinPlugin(
     }
     AronaServiceManager.saveServiceStatus()
     AronaServiceConfig.save()
+    WebUIService.disableService()
   }
 
   @OptIn(ExperimentalCommandDescriptors::class, ConsoleExperimentalApi::class)

@@ -21,6 +21,7 @@ object WebUIService: SimpleCommand(
   Arona, "token", "生成一个WebUI登录密钥（1小时内有效，程序中途退出依然失效）",
   description = "抽卡历史记录"
 ), AronaService, Initialize, ConfigReader {
+
   private lateinit var server: ApplicationEngine
   const val jwtAudience = "http://127.0.0.1/api/v1"
   const val issuer = "http://127.0.0.1/"
@@ -51,7 +52,7 @@ object WebUIService: SimpleCommand(
 
   override fun disableService() {
     kotlin.runCatching {
-      server.stop()
+      server.stop(timeoutMillis = 1000)
     }
   }
 

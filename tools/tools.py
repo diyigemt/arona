@@ -177,7 +177,7 @@ def update_image_from_api(folder: str, type: int = 2):
         file_names = list(map(lambda n: replace0(n), file_name.split("_")))
         
         # 将大于4.5M的图片进行压缩
-        while os.path.getsize(file_path) / 1024 / 1024 > 4.5:
+        while os.path.getsize(file_path) / 1024 / 1024 > 5.5:
             im = Image.open(file_path)
             (x, y) = im.size
             resize = im.resize((int(x * 0.7), int(y * 0.7)), Image.ANTIALIAS)

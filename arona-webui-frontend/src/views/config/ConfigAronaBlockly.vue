@@ -6,6 +6,8 @@
     <el-button type="primary" @click="onCreateNewProject">新建项目</el-button>
     <el-button type="primary" @click="onSaveCurrentProject">保存当前项目</el-button>
     <el-button type="danger" @click="onResetWorkspace">重置</el-button>
+    <el-button type="danger" @click="onDebug">Debug</el-button>
+    <el-switch v-model="debugMode" active-text="format" inactive-text="raw" style="margin-left: 16px;" />
   </div>
   <el-row :gutter="16" style="margin-top: 16px">
     <el-col :span="16">
@@ -14,7 +16,7 @@
       </div>
     </el-col>
     <el-col :span="8">
-      <el-input v-model="output" type="textarea" :autosize="{ minRows: 10 }" />
+      <el-input v-model="output" type="textarea" :autosize="{ minRows: 20 }" />
     </el-col>
   </el-row>
 </template>
@@ -26,17 +28,20 @@ import BlocklyConfig, { blocks, workspaceBlocks } from "@/blockly";
 import aronaGenerator from "@/blockly/generator";
 import { BlocklyProject, BlocklyProjectWorkspace } from "@/interface/modules/blockly";
 import { fetchBlocklyProjectList, saveBlocklyProject } from "@/api/modules/blockly";
-import { IConfirm, infoMessage, IPrompt, successMessage } from "@/utils/message";
+import { IConfirm, infoMessage, IPrompt, successMessage, warningMessage } from "@/utils/message";
 
 const blocklyDiv = ref();
 const output = ref<string>();
 const workspace = shallowRef();
 const blockList = ref<BlocklyProject[]>();
 const selectBlockIndex = ref<number>();
+const debugMode = ref(true); // false 原生 true format好看
 onMounted(() => {
   doFetchBlocklyProjectList();
 });
 function doFetchBlocklyProjectList() {
+  Blockly.defineBlocksWithJsonArray(blocks);
+  workspace.value = Blockly.inject(blocklyDiv.value, BlocklyConfig);
   fetchBlocklyProjectList()
     .then((res) => {
       blockList.value = res.data.map((item) => {
@@ -45,10 +50,12 @@ function doFetchBlocklyProjectList() {
       });
     })
     .then(() => {
-      Blockly.defineBlocksWithJsonArray(blocks);
-      workspace.value = Blockly.inject(blocklyDiv.value, BlocklyConfig);
       // Blockly.Xml.domToWorkspace(workspaceBlocks, workspace.value);
       setBlock(0);
+    })
+    .catch(() => {
+      warningMessage("后端连接失败, 将新建空白项目");
+      onCreateNewProject(true);
     });
 }
 function setBlock(index: number) {
@@ -63,10 +70,7 @@ function setBlock(index: number) {
 }
 function onSaveCurrentProject() {
   const code = aronaGenerator.workspaceToCode(workspace.value);
-  output.value = JSON.stringify({
-    trigger: JSON.parse(code),
-    blocklyProject: JSON.stringify(Blockly.serialization.workspaces.save(workspace.value)),
-  });
+  onDebug();
   IPrompt("保存项目", "请输入项目名称:", {
     confirmButtonText: "保存",
     cancelButtonText: "取消",
@@ -84,18 +88,39 @@ function onSaveCurrentProject() {
   });
 }
 function onResetWorkspace() {
-  doReset("重置后所有未保存的内容都将丢失,是否确认?");
-}
-function onCreateNewProject() {
-  doReset("所有未保存的内容都将丢失,是否确认?");
-}
-function doReset(message: string) {
-  IConfirm("警告", message, {
+  IConfirm("警告", "重置后所有未保存的内容都将丢失,是否确认?", {
     type: "warning",
   }).then(() => {
     workspace.value.clear();
-    Blockly.Xml.domToWorkspace(workspaceBlocks, workspace.value);
+    setBlock(selectBlockIndex.value!);
   });
+}
+function onCreateNewProject(skipWarming: boolean) {
+  if (skipWarming) {
+    doCreate();
+  } else {
+    IConfirm("警告", "所有未保存的内容都将丢失,是否确认?", {
+      type: "warning",
+    }).then(() => {
+      doCreate();
+    });
+  }
+}
+function doCreate() {
+  workspace.value.clear();
+  Blockly.Xml.domToWorkspace(workspaceBlocks, workspace.value);
+}
+function onDebug() {
+  const code = aronaGenerator.workspaceToCode(workspace.value);
+  const row = Blockly.serialization.workspaces.save(workspace.value);
+  output.value = JSON.stringify(
+    {
+      trigger: JSON.parse(code),
+      blocklyProject: debugMode.value ? row : JSON.stringify(row),
+    },
+    null,
+    2,
+  );
 }
 </script>
 

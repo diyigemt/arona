@@ -10,6 +10,7 @@ export function fetchBlocklyProjectList() {
 
 interface BlocklyProjectSaveData {
   trigger: string;
+  uuid: string | null;
   projectName: string;
   blocklyProject: string;
 }
@@ -20,6 +21,17 @@ export function saveBlocklyProject(data: BlocklyProjectSaveData) {
     method: "POST",
     data: {
       mode: "CREATE",
+      ...data,
+    },
+  });
+}
+
+export function updateBlocklyProject(data: BlocklyProjectSaveData) {
+  return service.raw<null>({
+    url: "/blockly/commit",
+    method: "POST",
+    data: {
+      mode: "UPDATE",
       ...data,
     },
   });

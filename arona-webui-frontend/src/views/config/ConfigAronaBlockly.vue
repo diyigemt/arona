@@ -27,7 +27,7 @@ import BlocklyConfig, { blocks, workspaceBlocks } from "@/blockly";
 // @ts-ignore
 import aronaGenerator from "@/blockly/generator";
 import { BlocklyProject, BlocklyProjectWorkspace } from "@/interface/modules/blockly";
-import { fetchBlocklyProjectList, saveBlocklyProject } from "@/api/modules/blockly";
+import { fetchBlocklyProjectList, saveBlocklyProject, updateBlocklyProject } from "@/api/modules/blockly";
 import { IConfirm, infoMessage, IPrompt, successMessage, warningMessage } from "@/utils/message";
 
 const blocklyDiv = ref();
@@ -74,8 +74,7 @@ function setBlock(index: number) {
 function onSaveCurrentProject() {
   const code = aronaGenerator.workspaceToCode(workspace.value);
   onDebug();
-  console.log(isNewProject.value);
-  if (isNewProject.value) {
+  if (isNewProject.value || blockList.value?.length === 0) {
     IPrompt("保存项目", "请输入项目名称:", {
       confirmButtonText: "保存",
       cancelButtonText: "取消",
@@ -85,6 +84,7 @@ function onSaveCurrentProject() {
       saveBlocklyProject({
         trigger: JSON.parse(code),
         projectName: value,
+        uuid: null,
         blocklyProject: JSON.stringify(Blockly.serialization.workspaces.save(workspace.value)),
       }).then(() => {
         doFetchBlocklyProjectList();
@@ -92,9 +92,10 @@ function onSaveCurrentProject() {
       });
     });
   } else {
-    saveBlocklyProject({
+    updateBlocklyProject({
       trigger: JSON.parse(code),
       projectName: (blockList.value || [])[selectBlockIndex.value as number].name,
+      uuid: (blockList.value || [])[selectBlockIndex.value as number].uuid,
       blocklyProject: JSON.stringify(Blockly.serialization.workspaces.save(workspace.value)),
     }).then(() => {
       doFetchBlocklyProjectList();

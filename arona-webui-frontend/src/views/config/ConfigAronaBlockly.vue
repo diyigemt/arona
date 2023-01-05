@@ -37,11 +37,11 @@ const blockList = ref<BlocklyProject[]>();
 const selectBlockIndex = ref<number>();
 const debugMode = ref(true); // false 原生 true format好看
 onMounted(() => {
+  Blockly.defineBlocksWithJsonArray(blocks);
+  workspace.value = Blockly.inject(blocklyDiv.value, BlocklyConfig);
   doFetchBlocklyProjectList();
 });
 function doFetchBlocklyProjectList() {
-  Blockly.defineBlocksWithJsonArray(blocks);
-  workspace.value = Blockly.inject(blocklyDiv.value, BlocklyConfig);
   fetchBlocklyProjectList()
     .then((res) => {
       blockList.value = res.data.map((item) => {
@@ -64,6 +64,7 @@ function setBlock(index: number) {
     Blockly.Xml.domToWorkspace(workspaceBlocks, workspace.value);
     return;
   }
+  workspace.value.clear();
   const block = (blockList.value || [])[index];
   Blockly.serialization.workspaces.load(block.blocklyProject as BlocklyProjectWorkspace, workspace.value);
   selectBlockIndex.value = index;
@@ -91,7 +92,6 @@ function onResetWorkspace() {
   IConfirm("警告", "重置后所有未保存的内容都将丢失,是否确认?", {
     type: "warning",
   }).then(() => {
-    workspace.value.clear();
     setBlock(selectBlockIndex.value!);
   });
 }

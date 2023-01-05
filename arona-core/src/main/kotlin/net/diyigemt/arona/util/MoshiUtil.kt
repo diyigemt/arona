@@ -11,4 +11,6 @@ object MoshiUtil {
   val reflect: Moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
 
   val builtIn: Moshi = Moshi.Builder().build()
+
+  fun custom(adapter: Any): Moshi = Moshi.Builder().add(adapter).addLast(KotlinJsonAdapterFactory()).build()
 }

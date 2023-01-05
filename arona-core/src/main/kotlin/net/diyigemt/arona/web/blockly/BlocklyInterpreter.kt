@@ -2,7 +2,6 @@ package net.diyigemt.arona.web.blockly
 
 import com.squareup.moshi.Types
 import net.diyigemt.arona.Arona
-import net.diyigemt.arona.interfaces.Initialize
 import net.diyigemt.arona.util.MoshiUtil
 import net.mamoe.mirai.event.events.GroupMessageEvent
 import org.apache.commons.jexl3.JexlBuilder
@@ -49,7 +48,5 @@ object BlocklyInterpreter {
     return@getOrElse null
   }
 
-  fun serialize(value: MutableList<IfExpression>): String = MoshiUtil.reflect.adapter<List<IfExpression>>(type).toJson(value)
-
-  fun deserialize(value: String): CommitData = MoshiUtil.reflect.adapter(CommitData::class.java).fromJson(value)!!
+  fun deserialize(value: String): CommitData = MoshiUtil.custom(UUIDAdapter()).adapter(CommitData::class.java).fromJson(value)!!
 }

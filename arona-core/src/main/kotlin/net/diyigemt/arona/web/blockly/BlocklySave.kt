@@ -14,15 +14,24 @@ import java.io.InputStream
 class BlocklySave(file: File): File(file.absolutePath) {
   private val save = ZipFile(file)
   private val params = SaveManager.params
+  private val json = Json{encodeDefaults = true}
   lateinit var meta: Meta
 
   init {
-    val json = Json{encodeDefaults = true}
     kotlin.runCatching {
       meta = json.decodeFromString(Meta.serializer(), readDataAsString("meta.json")!!)
     }.onFailure {
-      it.printStackTrace()
       Arona.error("存档已损坏")
+      throw it
+    }
+  }
+
+  constructor(file: File, metaData: Meta): this(file) {
+    kotlin.runCatching {
+      meta = metaData
+    }.onFailure {
+      Arona.error("存档已损坏")
+      throw it
     }
   }
 

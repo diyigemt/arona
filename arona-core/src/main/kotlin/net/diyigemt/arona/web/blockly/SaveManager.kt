@@ -2,12 +2,12 @@ package net.diyigemt.arona.web.blockly
 
 import kotlinx.serialization.json.Json
 import net.diyigemt.arona.Arona
-import net.diyigemt.arona.interfaces.Initialize
 import net.diyigemt.arona.util.MoshiUtil
 import net.lingala.zip4j.core.ZipFile
 import net.lingala.zip4j.model.ZipParameters
 import net.lingala.zip4j.util.Zip4jConstants
 import java.io.File
+import java.util.*
 
 /**
  *@Author hjn
@@ -16,6 +16,7 @@ import java.io.File
 object SaveManager {
   private val saveFolder = File(Arona.dataFolder.absolutePath, "blocklySave")
   private val saves: MutableList<BlocklySave> = mutableListOf()
+  private val json = Json{encodeDefaults = true}
   /**
    * 使用者需要复制该变量并设置fileNameInZip，不确定后果时不要修改任何其它成员变量，否则可能导致ZIP损坏*/
   val params = ZipParameters()
@@ -28,7 +29,7 @@ object SaveManager {
     loadLocalSave()
   }
 
-  private fun newSave(): BlocklySave? {
+  private fun newSave(meta: Meta): BlocklySave? {
     val fileName = let {
       var res: String
       val list = kotlin.runCatching { saveFolder.listFiles()!! }.getOrElse {
@@ -37,25 +38,25 @@ object SaveManager {
       }
 
       do {
-        res = generateSecret()
+        res = UUID.randomUUID().toString()
       }while (list.find { it.name == res } != null)
 
       return@let res
     }
 
     val file = File(saveFolder.absolutePath, "$fileName.ara")
+    val tmp = Meta(meta.version, meta.projectName, meta.resPath, UUID.fromString(fileName))
 
     kotlin.runCatching {
       val res = ZipFile(file)
       val listFiles = arrayListOf("resources/", "blocklyProject.json", "expression.json", "meta.json", "user.json")
-      val json = Json{encodeDefaults = true}
 
       for (item in listFiles) {
         params.fileNameInZip = item
         res.addStream(
           when(item){
             // TODO: 需要写初始数据的在这里写
-            "meta.json" -> json.encodeToString(Meta.serializer(), Meta()).byteInputStream()
+            "meta.json" -> json.encodeToString(Meta.serializer(), tmp).byteInputStream()
             else -> "".byteInputStream()
           }, params
         )
@@ -67,14 +68,12 @@ object SaveManager {
       return null
     }
 
-    return BlocklySave(file)
-  }
-
-  private fun generateSecret(): String {
-    val dictChars = mutableListOf<Char>().apply { "123456789zxcvbnmasdfghjklqwertyuiop".forEach { this.add(it) } }
-    val randomStr = StringBuilder().apply { (1..10).onEach { append(dictChars.random().uppercaseChar()) } }
-
-    return randomStr.toString()
+    return kotlin.runCatching {
+      BlocklySave(file, tmp)
+    }.onFailure {
+      it.printStackTrace()
+      file.delete()
+    }.getOrThrow()
   }
 
   private fun loadLocalSave(){
@@ -92,6 +91,7 @@ object SaveManager {
     kotlin.runCatching {
       val localSave = BlocklySave(file)
       BlocklyService.addHook(
+        json.decodeFromString(Meta.serializer(), localSave.readDataAsString("meta.json")!!).uuid,
         MoshiUtil.reflect.adapter(BlocklyExpression::class.java).fromJson(localSave.readDataAsString("expression.json")!!)!!
       )
       saves.add(localSave)
@@ -104,37 +104,54 @@ object SaveManager {
     return true
   }
 
-  fun addSaveFromRemote(data: CommitData): Boolean {
-    val newSave = newSave()?: return false
-    val json = Json { encodeDefaults = true }
+  fun addSaveFromRemote(data: CommitData): UUID? {
+    val newSave = newSave(Meta(projectName = data.projectName))?: return null
     newSave.writeDataToSave(
       "expression.json", MoshiUtil.reflect.adapter(BlocklyExpression::class.java)
       .toJson(data.trigger).byteInputStream()
     ).apply {
       if (!this){
         newSave.delete()
-        return false
+        return null
       }
     }
 
     newSave.writeDataToSave("BlocklyProject.json", data.blocklyProject.byteInputStream()).apply {
       if (!this){
         newSave.delete()
-        return false
-      }
-    }
-
-    newSave.writeDataToSave(
-      "meta.json", json.encodeToString(Meta.serializer(), Meta(projectName = data.projectName))
-        .byteInputStream()
-    ).apply {
-      if (!this){
-        newSave.delete()
-        return false
+        return null
       }
     }
     //TODO: 资源文件处理
     saves.add(newSave)
+
+    return newSave.meta.uuid
+  }
+
+  fun updateSaveFromRemote(data: CommitData): Boolean{
+    val save = let{
+      saves.forEach {
+        if (json.decodeFromString(Meta.serializer(), it.readDataAsString("meta.json")!!).uuid == data.uuid){
+          return@let it
+        }
+      }
+      return@let null
+    } ?: return false
+
+    save.writeDataToSave(
+      "expression.json", MoshiUtil.reflect.adapter(BlocklyExpression::class.java)
+        .toJson(data.trigger).byteInputStream()
+    ).apply {
+      if (!this){
+        return false
+      }
+    }
+
+    save.writeDataToSave("BlocklyProject.json", data.blocklyProject.byteInputStream()).apply {
+      if (!this){
+        return false
+      }
+    }
 
     return true
   }
@@ -143,7 +160,7 @@ object SaveManager {
     val res: MutableList<ListSaves> = mutableListOf()
     saves.forEach{
       kotlin.runCatching {
-        res.add(ListSaves(it.meta.projectName, it.readDataAsString("BlocklyProject.json")!!))
+        res.add(ListSaves(it.meta.projectName,it.meta.uuid , it.readDataAsString("BlocklyProject.json")!!))
       }
     }
 

@@ -1,7 +1,10 @@
 package net.diyigemt.arona.web.blockly
 
+import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
 import net.diyigemt.arona.Arona
 import net.mamoe.mirai.event.events.GroupMessageEvent
+import java.util.*
 
 /**
  *@Author hjn
@@ -89,14 +92,19 @@ data class BlocklyExpression(
   val actions: List<Actions>
 )
 
+@JsonClass(generateAdapter = true)
 data class CommitData(
   val mode: String,
   val trigger: BlocklyExpression,
   val projectName: String,
+  val uuid: UUID?,
   val blocklyProject: String,
 )
 
+@Serializable
 data class ListSaves(
   val name: String,
+  @Serializable(with = UUIDSerializer::class)
+  val uuid: UUID,
   val blocklyProject: String
 )

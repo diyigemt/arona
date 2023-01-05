@@ -1,4 +1,8 @@
-export interface BlocklyBlock {
+export interface BlocklyProject {
   name: string;
-  blocklyProject: string;
+  blocklyProject: string | BlocklyProjectWorkspace;
+}
+
+export interface BlocklyProjectWorkspace {
+  [key: string]: string;
 }

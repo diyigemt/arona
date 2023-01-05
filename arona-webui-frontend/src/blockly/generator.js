@@ -19,8 +19,6 @@ aronaGenerator.actions = [];
 aronaGenerator.master_block = function (block) {
   aronaGenerator.expressions = [];
   aronaGenerator.actions = [];
-  block.setDeletable(false);
-  block.setMovable(false);
   // TODO: 目前只支持群消息，日后对接其它类型消息时需要使用该变量
   const dropdownTriggerType = block.getFieldValue("TriggerType");
   aronaGenerator.valueToCode(block, "Expressions", aronaGenerator.ORDER_ATOMIC);

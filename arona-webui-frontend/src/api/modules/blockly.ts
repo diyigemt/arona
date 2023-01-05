@@ -19,7 +19,7 @@ export function saveBlocklyProject(data: BlocklyProjectSaveData) {
     url: "/blockly/commit",
     method: "POST",
     data: {
-      mod: "CREATE",
+      mode: "CREATE",
       ...data,
     },
   });

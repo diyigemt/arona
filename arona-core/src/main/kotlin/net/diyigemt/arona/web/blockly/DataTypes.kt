@@ -1,9 +1,9 @@
 package net.diyigemt.arona.web.blockly
 
-import com.squareup.moshi.JsonClass
 import kotlinx.serialization.Serializable
 import net.diyigemt.arona.Arona
 import net.mamoe.mirai.event.events.GroupMessageEvent
+import net.mamoe.mirai.event.events.MessageEvent
 import java.util.*
 
 /**
@@ -12,32 +12,32 @@ import java.util.*
  */
 enum class DataTypes: AronaInterceptor{
   AND {
-    override fun run(value: Any, event: GroupMessageEvent?): Boolean {
+    override fun run(value: Any, event: MessageEvent?): Boolean {
       TODO("不要实现，实现了也没用")
     }
   },
   OR {
-    override fun run(value: Any, event: GroupMessageEvent?): Boolean {
+    override fun run(value: Any, event: MessageEvent?): Boolean {
       TODO("不要实现，实现了也没用")
     }
   },
   NOT {
-    override fun run(value: Any, event: GroupMessageEvent?): Boolean {
+    override fun run(value: Any, event: MessageEvent?): Boolean {
       TODO("不要实现，实现了也没用")
     }
   },
   TRUE {
-    override fun run(value: Any, event: GroupMessageEvent?): Boolean {
+    override fun run(value: Any, event: MessageEvent?): Boolean {
       TODO("测试用，会直接返回对应的布尔值，不要实现，实现了也没用")
     }
   },
   FALSE {
-    override fun run(value: Any, event: GroupMessageEvent?): Boolean {
+    override fun run(value: Any, event: MessageEvent?): Boolean {
       TODO("测试用，会直接返回对应的布尔值，不要实现，实现了也没用")
     }
   },
   SENDER {
-    override fun run(value: Any, event: GroupMessageEvent?): Boolean {
+    override fun run(value: Any, event: MessageEvent?): Boolean {
       val tmp = value as? Double ?: kotlin.run {
         Arona.error("ID: Convert $value to Double failed")
         return false
@@ -48,7 +48,7 @@ enum class DataTypes: AronaInterceptor{
     }
   },
   ID {
-    override fun run(value: Any, event: GroupMessageEvent?): Boolean {
+    override fun run(value: Any, event: MessageEvent?): Boolean {
       val tmp = value as? Double ?: kotlin.run {
         Arona.error("ID: Convert $value to Double failed")
         return false
@@ -62,18 +62,23 @@ enum class DataTypes: AronaInterceptor{
 
 enum class ActionTypes: Runner{
   SEND_MSG {
-    override fun run(values: List<Any>, event: GroupMessageEvent?) {
+    override fun run(values: List<Any>, event: MessageEvent?) {
       Arona.info(values[0].toString())
+      // Arona.sendMessage(values[0].toString())
     }
   }
 }
 
+enum class EventType{
+  GroupMessageEvent
+}
+
 interface AronaInterceptor{
-  fun run(value: Any, event: GroupMessageEvent?): Boolean
+  fun run(value: Any, event: MessageEvent?): Boolean
 }
 
 interface Runner{
-  fun run(values: List<Any>, event: GroupMessageEvent?)
+  fun run(values: List<Any>, event: MessageEvent?)
 }
 
 data class IfExpression(
@@ -88,6 +93,7 @@ data class Actions(
 
 data class BlocklyExpression(
   val id: Long,
+  val type: EventType,
   val expressions: List<IfExpression>,
   val actions: List<Actions>
 )

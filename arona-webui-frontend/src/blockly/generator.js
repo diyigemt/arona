@@ -19,7 +19,6 @@ aronaGenerator.actions = [];
 aronaGenerator.master_block = function (block) {
   aronaGenerator.expressions = [];
   aronaGenerator.actions = [];
-  // TODO: 目前只支持群消息，日后对接其它类型消息时需要使用该变量
   const dropdownTriggerType = block.getFieldValue("TriggerType");
   aronaGenerator.valueToCode(block, "Expressions", aronaGenerator.ORDER_ATOMIC);
   // aronaGenerator.statementToCode(block, "Actions");
@@ -33,6 +32,7 @@ aronaGenerator.master_block = function (block) {
   const code = JSON.stringify({
     // TODO: 闲置ID，打算未来做分类用
     id: 0,
+    type: dropdownTriggerType,
     expressions: aronaGenerator.expressions,
     actions: aronaGenerator.actions,
   });

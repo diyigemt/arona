@@ -132,14 +132,21 @@ function onCreateNewProject(skipWarning: boolean) {
 
 function onDeleteProject() {
   if (!isNewProject.value) {
-    deleteBlocklyProject({
-      trigger: JSON.parse('{"id": 0,"expressions": [],"actions": []}'),
-      projectName: (blockList.value || [])[selectBlockIndex.value as number].name,
-      uuid: (blockList.value || [])[selectBlockIndex.value as number].uuid,
-      blocklyProject: "",
+    const projName = (blockList.value || [])[selectBlockIndex.value as number].name;
+    // eslint-disable-next-line no-template-curly-in-string
+    IConfirm("警告", `确定删除${projName}`, {
+      type: "warning",
     }).then(() => {
-      doFetchBlocklyProjectList();
-      successMessage("删除成功");
+      deleteBlocklyProject({
+        trigger: JSON.parse('{"id": 0,"type":"GroupMessageEvent","expressions": [],"actions": []}'),
+        projectName: projName,
+        // TODO:只有UUID是有用的，其余的都可以不给，但不能给NULL，后端能过反序列化就行
+        uuid: (blockList.value || [])[selectBlockIndex.value as number].uuid,
+        blocklyProject: "",
+      }).then(() => {
+        doFetchBlocklyProjectList();
+        successMessage("删除成功");
+      });
     });
   } else {
     errorMessage("不能删除新建的存档");

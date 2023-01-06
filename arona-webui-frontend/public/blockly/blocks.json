@@ -8,11 +8,11 @@
       "options": [
         [
           "群消息",
-          "GroupEvent"
+          "GroupMessageEvent"
         ],
         [
           "好友消息",
-          "FriendEvent"
+          "FriendMessageEvent"
         ]
       ]
     },

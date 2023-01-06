@@ -92,7 +92,6 @@ data class BlocklyExpression(
   val actions: List<Actions>
 )
 
-@JsonClass(generateAdapter = true)
 data class CommitData(
   val mode: String,
   val trigger: BlocklyExpression,

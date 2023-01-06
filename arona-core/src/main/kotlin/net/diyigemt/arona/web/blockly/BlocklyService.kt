@@ -64,4 +64,25 @@ object BlocklyService: Initialize {
 
     return false
   }
+
+  /**
+   * @return
+   * -1 UUID为空
+   * -2 获取存档元数据失败
+   * -3 程序BUG
+   * */
+  fun deleteHook(data: CommitData): Int {
+    if(data.uuid == null) return -1
+    val meta = SaveManager.getMetaByUUID(data.uuid) ?: return -2
+    SaveManager.deleteSaveFormRemote(data).apply {
+      if(this) {
+        hooks.remove(data.uuid)
+        Arona.info("触发器: ${meta.projectName}, 删除成功")
+
+        return 0
+      }
+    }
+
+    return -3
+  }
 }

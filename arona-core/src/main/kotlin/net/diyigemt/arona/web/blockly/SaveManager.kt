@@ -87,11 +87,11 @@ object SaveManager {
     }
   }
 
-  fun loadSaveFromLocal(file: File): Boolean{
+  private fun loadSaveFromLocal(file: File): Boolean{
     kotlin.runCatching {
       val localSave = BlocklySave(file)
       BlocklyService.addHook(
-        json.decodeFromString(Meta.serializer(), localSave.readDataAsString("meta.json")!!).uuid,
+        localSave.meta.uuid,
         MoshiUtil.reflect.adapter(BlocklyExpression::class.java).fromJson(localSave.readDataAsString("expression.json")!!)!!
       )
       saves.add(localSave)
@@ -156,14 +156,40 @@ object SaveManager {
     return true
   }
 
+  fun deleteSaveFormRemote(data: CommitData): Boolean {
+    saves.forEach {
+      if (it.meta.uuid == data.uuid) {
+        kotlin.runCatching { it.delete() }.onFailure { e ->
+          e.printStackTrace()
+          return false
+        }.onSuccess { _ ->
+          saves.remove(it)
+          return true
+        }
+      }
+    }
+
+    return false
+  }
+
   fun listOfSaves(): List<ListSaves>{
     val res: MutableList<ListSaves> = mutableListOf()
     saves.forEach{
       kotlin.runCatching {
-        res.add(ListSaves(it.meta.projectName,it.meta.uuid , it.readDataAsString("BlocklyProject.json")!!))
+        it.readDataAsString("BlocklyProject.json")!!.apply {
+          if (this != "") res.add(ListSaves(it.meta.projectName,it.meta.uuid , this))
+        }
       }
     }
 
     return res
+  }
+
+  fun getMetaByUUID(uuid: UUID): Meta? {
+    saves.forEach {
+      if(it.meta.uuid == uuid) return it.meta
+    }
+
+    return null
   }
 }

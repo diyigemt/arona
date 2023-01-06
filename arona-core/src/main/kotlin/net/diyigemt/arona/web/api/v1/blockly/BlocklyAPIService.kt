@@ -54,6 +54,26 @@ object BlocklyAPIService: Worker {
           }
         }
       }
+      "DELETE" -> {
+        if (data.uuid == null) context.call.respond(HttpStatusCode.BadRequest,
+          ServerResponse(400, HttpStatusCode.BadRequest.description, "UUID can not be null")
+        )
+        BlocklyService.deleteHook(data).apply {
+          when(this){
+            -1 -> context.call.respond(HttpStatusCode.BadRequest,
+              ServerResponse(400, HttpStatusCode.BadRequest.description, "Undefined UUID"))
+
+            -2 -> context.call.respond(HttpStatusCode.InternalServerError,
+              ServerResponse(500, HttpStatusCode.InternalServerError.description, "Get metadata failed"))
+
+            -3 -> context.call.respond(HttpStatusCode.InternalServerError,
+              ServerResponse(500, HttpStatusCode.InternalServerError.description, null as String?))
+            else -> {}
+          }
+
+          if (this < 0) return
+        }
+      }
       else -> context.call.respond(HttpStatusCode.BadRequest,
         ServerResponse(400, HttpStatusCode.BadRequest.description, null as String?)
       )

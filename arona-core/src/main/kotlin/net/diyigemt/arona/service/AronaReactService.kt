@@ -1,10 +1,11 @@
 package net.diyigemt.arona.service
 
 import net.mamoe.mirai.event.events.BotEvent
+import kotlin.reflect.KClass
 
-interface AronaReactService<in T: BotEvent>: AronaService {
+interface AronaReactService<T: BotEvent>: AronaService {
 
-  val eventName: String?
+  val event: KClass<T>
 
   fun checkService(event: T): Boolean
 

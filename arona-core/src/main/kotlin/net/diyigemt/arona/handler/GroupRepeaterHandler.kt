@@ -39,7 +39,7 @@ object GroupRepeaterHandler:
     }
   }
 
-  override val eventName: String? = GroupMessageEvent::class.simpleName
+  override val event = GroupMessageEvent::class
 
   override val id: Int = 8
   override val name: String = "复读"

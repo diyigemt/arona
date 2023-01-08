@@ -105,7 +105,7 @@ object BlocklyService: Initialize, AronaMessageReactService<MessageEvent> {
     return -3
   }
 
-  override val eventName = MessageEvent::class.simpleName
+  override val event = MessageEvent::class
   override val id = 26
   override val name = "blockly项目配置服务"
   override val description = "blockly项目配置服务"

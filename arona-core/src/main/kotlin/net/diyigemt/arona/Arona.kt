@@ -64,7 +64,7 @@ object Arona : KotlinPlugin(
   override fun onEnable() {
     init()
     System.setProperty("java.awt.headless", "true")
-//      val pluginEventChannel = globalEventChannel()
+      val pluginEventChannel = globalEventChannel()
       //TODO
 //      pluginEventChannel.filter {
 //        it is BotOnlineEvent && it.bot.id == AronaConfig.qq
@@ -79,9 +79,9 @@ object Arona : KotlinPlugin(
 //      }.subscribeAlways<BotOfflineEvent> {
 //        arona = null
 //      }
-//      pluginEventChannel.subscribeAlways<BotEvent> {
-//        AronaServiceManager.emit(this)
-//      }
+      pluginEventChannel.subscribeAlways<BotEvent> {
+        AronaServiceManager.emit(this)
+      }
       info { "arona loaded" }
   }
 
@@ -109,7 +109,7 @@ object Arona : KotlinPlugin(
     }
 //    val grantCommandName = mutableListOf<String>()
 //    // 注册service
-//    ReflectionUtil.getInterfacePetObjectInstance<AronaService>().forEach {
+    ReflectionUtil.getInterfacePetObjectInstance<AronaService>().forEach {
 //      // 向控制台注册指令
 //      if (it is AbstractCommand) {
 //        it.register()
@@ -118,8 +118,8 @@ object Arona : KotlinPlugin(
 //          grantCommandName.add(it.primaryName)
 //        }
 //      }
-//      AronaServiceManager.register(it)
-//    }
+      AronaServiceManager.register(it)
+    }
 
     // 自动赋予指令权限
     //TODO

@@ -13,13 +13,15 @@ import net.mamoe.mirai.contact.User
 import net.mamoe.mirai.event.events.BotEvent
 import net.mamoe.mirai.event.events.MessageEvent
 import net.mamoe.mirai.event.globalEventChannel
+import kotlin.reflect.KClass
+import kotlin.reflect.full.isSubclassOf
 
 object AronaServiceManager: Initialize, ConfigReader {
 
   override val priority: Int = 5
   override val configPrefix = "service"
   private val MAP: MutableMap<String, AronaService> = mapOf<String, AronaService>().toMutableMap()
-  private val REACT_MAP: MutableMap<String, MutableList<AronaReactService<BotEvent>>> = mapOf<String, MutableList<AronaReactService<BotEvent>>>().toMutableMap()
+  private val REACT_MAP: MutableMap<KClass<out BotEvent>, MutableList<AronaReactService<BotEvent>>> = mapOf<KClass<out BotEvent>, MutableList<AronaReactService<BotEvent>>>().toMutableMap()
 
   /**
    * 注册一个服务
@@ -38,14 +40,17 @@ object AronaServiceManager: Initialize, ConfigReader {
    * 触发一个事件
    */
   suspend fun emit(event: BotEvent) {
-    val eventName = event::class.simpleName
-    val service = REACT_MAP[eventName] ?: return
-    service.forEach {
+    val service = REACT_MAP.entries.filter { entry ->
+      event::class.isSubclassOf(entry.key)
+    }
+    service.forEach { entry ->
       Arona.runSuspend {
-        if ((event is MessageEvent) && (checkService(it, event.sender, event.subject) == null)) {
-          it.handle(event)
-        } else if (it.checkService(event)) {
-          it.handle(event)
+        entry.value.forEach {
+          if ((event is MessageEvent) && (checkService(it, event.sender, event.subject) == null)) {
+            it.handle(event)
+          } else if (it.checkService(event)) {
+            it.handle(event)
+          }
         }
       }
     }
@@ -170,10 +175,10 @@ object AronaServiceManager: Initialize, ConfigReader {
     MAP[service.name] = service
     MAP[service.id.toString()] = service
     if (service is AronaReactService<*>) {
-      var list = REACT_MAP[service.eventName ?: ""]
+      var list = REACT_MAP[service.event]
       if (list == null) {
         list = mutableListOf<AronaReactService<BotEvent>>().also { it.add(service as AronaReactService<BotEvent>) }
-        REACT_MAP[service.eventName ?: ""] = list
+        REACT_MAP[service.event] = list
       } else {
         list.add(service as AronaReactService<BotEvent>)
       }

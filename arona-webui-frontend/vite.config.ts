@@ -59,6 +59,7 @@ export default defineConfig((env) => {
       chunkSizeWarningLimit: 2000,
       minify: "esbuild",
       assetsDir: "static/assets",
+      target: "esnext",
       // 静态资源打包到dist下的不同目录
       rollupOptions: {
         output: {

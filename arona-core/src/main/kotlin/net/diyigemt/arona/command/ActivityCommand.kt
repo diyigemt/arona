@@ -55,7 +55,7 @@ object ActivityCommand : CompositeCommand(
 
   override val id: Int = 3
   override val name: String = "活动查询"
-  override var enable: Boolean = true
+  override var isGlobal: Boolean = false
   override val configPrefix = "notify"
 
   override val level: Int = 1

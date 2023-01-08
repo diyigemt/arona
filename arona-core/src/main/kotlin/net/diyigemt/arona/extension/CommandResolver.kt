@@ -33,9 +33,10 @@ private object CommandResolverInterceptor: CommandCallInterceptor {
     val unreliableCommandName = extraCommandName(message)
     val matchCommand = CommandManager.matchCommand(unreliableCommandName)
     if (matchCommand is AronaService && caller is UserCommandSender) {
-      if (caller.bot.id != AronaConfig.qq) {
-        return InterceptResult(InterceptedReason("非本插件消息"))
-      }
+      //TODO
+//      if (caller.bot.id != AronaConfig.qq) {
+//        return InterceptResult(InterceptedReason("非本插件消息"))
+//      }
       val s = AronaServiceManager.checkService(matchCommand, caller.user, caller.subject)
       if (s != null) {
         return InterceptResult(InterceptedReason("权限不足或功能未启用"))

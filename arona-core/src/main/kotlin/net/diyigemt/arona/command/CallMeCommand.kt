@@ -52,7 +52,7 @@ object CallMeCommand : SimpleCommand(
 
   override val id: Int = 18
   override val name: String = "自定义昵称"
-  override var enable: Boolean = true
+  override var isGlobal: Boolean = false
 
   override val level: Int = 1
   private val CALL_ME_COMMAND = "${CommandManager.commandPrefix}叫我"

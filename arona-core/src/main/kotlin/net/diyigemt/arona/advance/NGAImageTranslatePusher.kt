@@ -39,7 +39,7 @@ object NGAImageTranslatePusher : AronaQuartzService, ConfigReader {
   override val id: Int = 13
   override val name: String = "nga图楼推送"
   override val description: String = name
-  override var enable: Boolean = true
+  override var isGlobal: Boolean = true
   override val configPrefix = "nga"
 
   class TranslatePusherJob : Job {
@@ -62,7 +62,7 @@ object NGAImageTranslatePusher : AronaQuartzService, ConfigReader {
       if (init && isNew) {
         return
       }
-      val groupList = getGroupServiceList("nga-pusher")
+      val groupList = getGroupServiceList("nga图楼推送")
       pending.map { floor ->
         groupList.forEach { group ->
           Arona.sendGroupMessage(group) {

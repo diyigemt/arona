@@ -17,7 +17,7 @@ object AronaUpdateChecker: AronaQuartzService {
   override val id: Int = 14
   override val name: String = "自动更新检查"
   override val description: String = name
-  override var enable: Boolean = true
+  override var isGlobal: Boolean = true
 
   @kotlinx.serialization.Serializable
   data class VersionInfo(
@@ -55,14 +55,15 @@ object AronaUpdateChecker: AronaQuartzService {
   }
 
   override fun enableService() {
-    jobKey = QuartzProvider.createCronTask(
-      UpdateCheckJob::class.java,
-      "0 0 ${AronaConfig.updateCheckTime} * * ? *",
-      AronaUpdateCheckJobKey,
-      AronaUpdateCheckJobKey
-    ).first
-    QuartzProvider.createSimpleDelayJob(20) {
-      QuartzProvider.triggerTask(jobKey!!)
-    }
+    //TODO
+//    jobKey = QuartzProvider.createCronTask(
+//      UpdateCheckJob::class.java,
+//      "0 0 ${AronaConfig.updateCheckTime} * * ? *",
+//      AronaUpdateCheckJobKey,
+//      AronaUpdateCheckJobKey
+//    ).first
+//    QuartzProvider.createSimpleDelayJob(20) {
+//      QuartzProvider.triggerTask(jobKey!!)
+//    }
   }
 }

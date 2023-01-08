@@ -17,9 +17,10 @@ interface AronaService {
   val description: String
 
   /**
-   * 是否启用  将要弃用
+   * 是否为全集单例(不允许群单独设置开关/忽略单独设置的值)
    */
-  var enable: Boolean
+  val isGlobal: Boolean
+    get() = false
 
   // remind to registerService
   fun registerService() {

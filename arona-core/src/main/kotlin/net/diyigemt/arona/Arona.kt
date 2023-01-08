@@ -64,8 +64,7 @@ object Arona : KotlinPlugin(
   override fun onEnable() {
     init()
     System.setProperty("java.awt.headless", "true")
-    if (DataBaseProvider.isConnected()) {
-      val pluginEventChannel = globalEventChannel()
+//      val pluginEventChannel = globalEventChannel()
       //TODO
 //      pluginEventChannel.filter {
 //        it is BotOnlineEvent && it.bot.id == AronaConfig.qq
@@ -84,7 +83,6 @@ object Arona : KotlinPlugin(
 //        AronaServiceManager.emit(this)
 //      }
       info { "arona loaded" }
-    } else error("arona database init failed, arona will not start")
   }
 
   @OptIn(ExperimentalCommandDescriptors::class, ConsoleExperimentalApi::class)
@@ -93,19 +91,22 @@ object Arona : KotlinPlugin(
   }
 
   private fun init() {
-    WebUIService.init()
-    WebUIService.enableService()
-    BlocklyService.init()
+//    WebUIService.init()
+//    WebUIService.enableService()
+//    BlocklyService.init()
     //TODO
     // 查找所有需要初始化的类, 所有指令, 所有配置文件
-    // 重载配置文件
-//    ReflectionUtil.getInterfacePetObjectInstance<AutoSavePluginConfig>().forEach {
-//      it.reload()
-//    }
+
+    // 需要初始化的类
+    runSuspend {
+      ReflectionUtil.getInterfacePetObjectInstance<Initialize>().sortedBy { it.priority }.forEach {
+        it.init()
+      }
+    }
     // 需要协程的类
-//    ReflectionUtil.getInterfacePetObjectInstance<CoroutineFunctionProvider>().forEach {
-//      it.start()
-//    }
+    ReflectionUtil.getInterfacePetObjectInstance<CoroutineFunctionProvider>().forEach {
+      it.start()
+    }
 //    val grantCommandName = mutableListOf<String>()
 //    // 注册service
 //    ReflectionUtil.getInterfacePetObjectInstance<AronaService>().forEach {
@@ -118,13 +119,6 @@ object Arona : KotlinPlugin(
 //        }
 //      }
 //      AronaServiceManager.register(it)
-//    }
-
-    // 需要初始化的类
-//    runSuspend {
-//      ReflectionUtil.getInterfacePetObjectInstance<Initialize>().sortedBy { it.priority }.forEach {
-//        it.init()
-//      }
 //    }
 
     // 自动赋予指令权限

@@ -4,7 +4,6 @@ import net.diyigemt.arona.Arona
 import net.diyigemt.arona.command.CallMeCommand
 import net.diyigemt.arona.command.TarotCommand
 import net.diyigemt.arona.command.TrainerCommand
-import net.diyigemt.arona.config.AronaConfig
 import net.diyigemt.arona.db.DataBaseProvider.query
 import net.diyigemt.arona.db.image.ImageTable
 import net.diyigemt.arona.db.image.ImageTableModel
@@ -46,7 +45,7 @@ object GeneralUtils : Initialize {
   fun queryTeacherNameFromDB(contact: Contact, user: UserOrBot): String = queryTeacherNameFromDB(contact.id, user)
 
   fun queryTeacherNameFromDB(contactId: Long, user: UserOrBot): String {
-    if (!CallMeCommand.enable) return user.nameCardOrNick
+    if (!CallMeCommand.isGlobal) return user.nameCardOrNick
     val name = query {
       TeacherName.find { (TeacherNameTable.group eq contactId) and (TeacherNameTable.id eq user.id) }.firstOrNull()
     }?.name ?: user.nameCardOrNick

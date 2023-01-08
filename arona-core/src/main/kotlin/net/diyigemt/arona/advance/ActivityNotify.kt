@@ -141,7 +141,7 @@ object ActivityNotify: AronaQuartzService, ConfigReader {
       }
 
       val activeGroup = GlobalConfigProvider.getGroupList()
-      val serviceGroup = activeGroup.filter { getGroupServiceConfig("active-push", it) }
+      val serviceGroup = activeGroup.filter { getGroupServiceConfig("活动推送", it) }
       // 根据防侠类型过滤掉打开通知的群
       val configKey = if (server) "enableJP" else "enableEN"
       val notifyConfigKey = if (server) "notifyStringJP" else "notifyStringEN"
@@ -188,6 +188,6 @@ object ActivityNotify: AronaQuartzService, ConfigReader {
   override val id: Int = 12
   override val name: String = "活动推送"
   override val description: String = name
-  override var enable: Boolean = true
+  override var isGlobal: Boolean = false
   override val configPrefix: String = "notify"
 }

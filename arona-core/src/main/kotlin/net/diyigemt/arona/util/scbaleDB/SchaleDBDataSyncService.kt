@@ -32,7 +32,7 @@ object SchaleDBDataSyncService : AronaQuartzService{
   override val id: Int = 19
   override val name: String = "数据同步服务"
   override val description: String = name
-  override var enable: Boolean = true
+  override var isGlobal: Boolean = true
   private const val SchaleDBDataSyncServiceJobKey = "SchaleDBDataSyncService"
   private const val BirthdayJobKey = "Birthday"
 

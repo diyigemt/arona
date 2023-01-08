@@ -43,7 +43,7 @@ object GroupRepeaterHandler:
 
   override val id: Int = 8
   override val name: String = "复读"
-  override var enable: Boolean = true
+  override var isGlobal: Boolean = false
   override val description: String = name
   override val configPrefix = "repeat"
 }

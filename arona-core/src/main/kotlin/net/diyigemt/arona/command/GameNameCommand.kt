@@ -48,7 +48,7 @@ object GameNameCommand : SimpleCommand(
 
   override val id: Int = 21
   override val name: String = "游戏名记录"
-  override var enable: Boolean = true
+  override var isGlobal: Boolean = false
 
   override val level: Int = 1
   private val CALL_ME_COMMAND = "${CommandManager.commandPrefix}游戏名"

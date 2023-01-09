@@ -36,3 +36,14 @@ export function updateBlocklyProject(data: BlocklyProjectSaveData) {
     },
   });
 }
+
+export function deleteBlocklyProject(data: BlocklyProjectSaveData) {
+  return service.raw<null>({
+    url: "/blockly/commit",
+    method: "POST",
+    data: {
+      mode: "DELETE",
+      ...data,
+    },
+  });
+}

@@ -52,6 +52,6 @@ object GachaMultiCommand : SimpleCommand(
 
   override val id: Int = 5
   override val name: String = "抽卡十连"
-  override var enable: Boolean = true
+  override var isGlobal: Boolean = false
   override val configPrefix: String = "gacha"
 }

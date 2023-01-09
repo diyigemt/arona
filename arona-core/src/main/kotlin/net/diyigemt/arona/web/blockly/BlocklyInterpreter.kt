@@ -1,9 +1,7 @@
 package net.diyigemt.arona.web.blockly
 
-import com.squareup.moshi.Types
-import net.diyigemt.arona.Arona
 import net.diyigemt.arona.util.MoshiUtil
-import net.mamoe.mirai.event.events.GroupMessageEvent
+import net.mamoe.mirai.event.events.MessageEvent
 import org.apache.commons.jexl3.JexlBuilder
 import org.apache.commons.jexl3.MapContext
 
@@ -12,22 +10,25 @@ import org.apache.commons.jexl3.MapContext
  *@Create 2022/12/24
  */
 object BlocklyInterpreter {
-  private val type = Types.newParameterizedType(List::class.java, IfExpression::class.java)
   private val jexlEngine = JexlBuilder().create()
   private val jexlContext = MapContext()
 
-  fun generateBooleanExpression(value: BlocklyExpression, event: GroupMessageEvent?): String {
+  fun generateBooleanExpression(value: BlocklyExpression, event: MessageEvent?): String {
     var res = ""
-    for (item in value.expressions) {
-      res += when(item.id){
-        DataTypes.AND -> "&&"
-        DataTypes.OR -> "||"
-        DataTypes.NOT -> "!"
-        DataTypes.TRUE -> "true"
-        DataTypes.FALSE -> "false"
+    kotlin.runCatching {
+      for (item in value.expressions) {
+        res += when(item.id){
+          DataTypes.AND -> "&&"
+          DataTypes.OR -> "||"
+          DataTypes.NOT -> "!"
+          DataTypes.TRUE -> "true"
+          DataTypes.FALSE -> "false"
 
-        else -> item.id.run(item.value, event).toString()
+          else -> item.id.run(item.value, event).toString()
+        }
       }
+    }.onFailure {
+      it.printStackTrace()
     }
 
     return res

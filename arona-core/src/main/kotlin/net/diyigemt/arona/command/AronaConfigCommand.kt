@@ -43,7 +43,7 @@ object AronaConfigCommand : CompositeCommand(
   suspend fun UserCommandSender.statusService(@Name("功能模块id或名称") idOrName: String) {
     val service = AronaServiceManager.findServiceByName(idOrName)
     if (service != null) {
-      sendMessage("${service.name} ${if (service.enable) "启用中" else "已停用"}")
+      sendMessage("${service.name} ${if (service.isGlobal) "启用中" else "已停用"}")
     } else {
       sendMessage("服务未找到")
     }
@@ -53,14 +53,14 @@ object AronaConfigCommand : CompositeCommand(
   @Description("全部功能模块的状态")
   suspend fun UserCommandSender.statusDefault() {
     val service = AronaServiceManager.getAllService().joinToString("\n") {
-      "${it.name} ${if (it.enable) "启用中" else "已停用"}"
+      "${it.name} ${if (it.isGlobal) "启用中" else "已停用"}"
     }
     sendMessage(service)
   }
 
   private suspend fun sendAllServiceStatus(contact: Contact) {
     val msg = AronaServiceManager.getAllService().map {
-      "${it.name}  ${if (it.enable) "启用" else "关闭"}"
+      "${it.name}  ${if (it.isGlobal) "启用" else "关闭"}"
     }.reduce { prv, cur ->
       "$prv\n$cur"
     }
@@ -69,6 +69,6 @@ object AronaConfigCommand : CompositeCommand(
 
   override val id: Int = 0
   override val name: String = "配置"
-  override var enable: Boolean = true
+  override var isGlobal: Boolean = true
 
 }

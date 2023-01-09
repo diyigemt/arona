@@ -126,7 +126,7 @@ object TrainerCommand : SimpleCommand(
 
   override val id: Int = 20
   override val name: String = "地图与学生攻略"
-  override var enable: Boolean = true
+  override var isGlobal: Boolean = false
   override val priority: Int = 99
   override val configPrefix = "trainer"
 

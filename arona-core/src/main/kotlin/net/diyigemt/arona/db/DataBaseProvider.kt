@@ -49,7 +49,7 @@ object DataBaseProvider: CoroutineFunctionProvider() {
     }.onFailure {
       databaseConnectionList.add(tmp) //失败也插入，否则ID就串行了
       databaseConnectionList.last().connectionStatus = ConnectionStatus.DISCONNECTED
-      Arona.error("Database ($dataBaseName) initialization failed. Any operation that requires database support will not be performed.")
+      error("Database ($dataBaseName) initialization failed. Any operation that requires database support will not be performed.")
     }.onSuccess {
       databaseConnectionList.add(tmp)
       databaseConnectionList.last().connectionStatus = ConnectionStatus.CONNECTED
@@ -62,12 +62,11 @@ object DataBaseProvider: CoroutineFunctionProvider() {
       when(id){
         DB.DEFAULT.ordinal -> BaseDataBase.init()
         DB.DATA.ordinal -> SchaleDataBase.init()
-        else -> Arona.warning("Undefined database id : $id.")
+        else -> warning("Undefined database id : $id.")
       }
-
       it.addLogger(object: SqlLogger {
         override fun log(context: StatementContext, transaction: Transaction) {
-          Arona.verbose { "SQL: ${context.expandArgs(transaction)}" }
+          verbose("SQL: ${context.expandArgs(transaction)}")
         }
       })
     }
@@ -79,14 +78,14 @@ object DataBaseProvider: CoroutineFunctionProvider() {
 
   fun <T> query(db : Int = 0, block: (Transaction) -> T) : T? =
     if(databaseConnectionList[db].connectionStatus == ConnectionStatus.DISCONNECTED) {
-    Arona.error { "Database is disconnected, Any operation that requires database support cannot be performed." }
+    error("Database is disconnected, Any operation that requires database support cannot be performed.")
     null
   } else transaction(databaseConnectionList[db].db) { block(this) }
 
   suspend fun <T> suspendQuery(db : Int = 0, block: suspend (Transaction) -> T) : T? =
     if(databaseConnectionList[db].connectionStatus == ConnectionStatus.DISCONNECTED) {
-    Arona.error { "Database is disconnected, Any operation that requires database support cannot be performed." }
-    null
+      error("Database is disconnected, Any operation that requires database support cannot be performed.")
+      null
   } else newSuspendedTransaction(context = Dispatchers.IO, db = databaseConnectionList[db].db) { block(this) }
 
   fun <T : Any> String.exec(db : Int = 0, transform : (ResultSet) -> T) : List<T> {

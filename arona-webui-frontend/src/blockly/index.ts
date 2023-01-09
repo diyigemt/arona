@@ -9,7 +9,7 @@ const BlocklyConfig: BlocklyOptions = {
     snap: true,
   },
   disable: false,
-  toolbox: await getXML("/public/blockly/toolbox.xml", "toolbox"),
+  toolbox: await getXML("/blockly/toolbox.xml", "toolbox"),
   maxInstances: {
     sender_block: 1,
   },
@@ -26,10 +26,10 @@ async function getXML(url: string, id: string): Promise<HTMLElement> {
     });
 }
 
-export const workspaceBlocks = await getXML("/public/blockly/workspace.xml", "workspaceBlocks");
+export const workspaceBlocks = await getXML("/blockly/workspace.xml", "workspaceBlocks");
 
 export const blocks = JSON.parse(
-  await fetch("/public/blockly/blocks.json").then((response) => {
+  await fetch("/blockly/blocks.json").then((response) => {
     return response.text();
   }),
 );

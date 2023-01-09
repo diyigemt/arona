@@ -6,6 +6,7 @@
     <el-button type="primary" @click="onCreateNewProject">新建项目</el-button>
     <el-button type="primary" @click="onSaveCurrentProject">保存当前项目</el-button>
     <el-button type="danger" @click="onResetWorkspace">重置</el-button>
+    <el-button type="danger" @click="onDeleteProject">删除</el-button>
     <el-button type="danger" @click="onDebug">Debug</el-button>
     <el-switch v-model="debugMode" active-text="format" inactive-text="raw" style="margin-left: 16px" />
   </div>
@@ -27,8 +28,13 @@ import BlocklyConfig, { blocks, workspaceBlocks } from "@/blockly";
 // @ts-ignore
 import aronaGenerator from "@/blockly/generator";
 import { BlocklyProject, BlocklyProjectWorkspace } from "@/interface/modules/blockly";
-import { fetchBlocklyProjectList, saveBlocklyProject, updateBlocklyProject } from "@/api/modules/blockly";
-import { IConfirm, infoMessage, IPrompt, successMessage, warningMessage } from "@/utils/message";
+import {
+  deleteBlocklyProject,
+  fetchBlocklyProjectList,
+  saveBlocklyProject,
+  updateBlocklyProject,
+} from "@/api/modules/blockly";
+import { errorMessage, IConfirm, infoMessage, IPrompt, successMessage, warningMessage } from "@/utils/message";
 
 const blocklyDiv = ref();
 const output = ref<string>();
@@ -54,7 +60,8 @@ function doFetchBlocklyProjectList() {
       // Blockly.Xml.domToWorkspace(workspaceBlocks, workspace.value);
       setBlock(0);
     })
-    .catch(() => {
+    .catch((e) => {
+      console.error(e);
       warningMessage("后端连接失败, 将新建空白项目");
       onCreateNewProject(true);
     });
@@ -122,6 +129,30 @@ function onCreateNewProject(skipWarning: boolean) {
     });
   }
 }
+
+function onDeleteProject() {
+  if (!isNewProject.value) {
+    const projName = (blockList.value || [])[selectBlockIndex.value as number].name;
+    // eslint-disable-next-line no-template-curly-in-string
+    IConfirm("警告", `确定删除${projName}`, {
+      type: "warning",
+    }).then(() => {
+      deleteBlocklyProject({
+        trigger: JSON.parse('{"id": 0,"type":"GroupMessageEvent","expressions": [],"actions": []}'),
+        projectName: projName,
+        // TODO:只有UUID是有用的，其余的都可以不给，但不能给NULL，后端能过反序列化就行
+        uuid: (blockList.value || [])[selectBlockIndex.value as number].uuid,
+        blocklyProject: "",
+      }).then(() => {
+        doFetchBlocklyProjectList();
+        successMessage("删除成功");
+      });
+    });
+  } else {
+    errorMessage("不能删除新建的存档");
+  }
+}
+
 function doCreate() {
   workspace.value.clear();
   Blockly.Xml.domToWorkspace(workspaceBlocks, workspace.value);

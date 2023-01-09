@@ -2,17 +2,26 @@ package net.diyigemt.arona.web.blockly
 
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.interfaces.Initialize
+import net.diyigemt.arona.service.AronaMessageReactService
+import net.mamoe.mirai.event.events.GroupMessageEvent
+import net.mamoe.mirai.event.events.MessageEvent
 import java.util.*
 
 /**
  *@Author hjn
  *@Create 2022/12/26
  */
-object BlocklyService: Initialize {
+object BlocklyService: Initialize, AronaMessageReactService<MessageEvent> {
   private val hooks: MutableMap<UUID, BlocklyExpression> = mutableMapOf()
 
   override fun init() {
     SaveManager.init()
+  }
+
+  override suspend fun handle(event: MessageEvent) = when(event) {
+    is GroupMessageEvent -> optionalTrigger(hooks.filter { it.value.type == EventType.GroupMessageEvent }.values, event)
+
+    else -> Arona.error("Undefined event type: ${event.javaClass.name}")
   }
 
   fun checkAndDeserialize(data: String): CommitData? = kotlin.runCatching {
@@ -22,6 +31,8 @@ object BlocklyService: Initialize {
     return null
   }
 
+  /**
+   * 测试用，会遍历全部的触发器*/
   fun trigger() = Arona.async {
     for(hook in hooks){
       Arona.info("Begin")
@@ -32,6 +43,14 @@ object BlocklyService: Initialize {
         for (action in hook.value.actions){
           action.id.run(action.value, null)
         }
+      }
+    }
+  }
+
+  private fun optionalTrigger(hooks: Collection<BlocklyExpression>, event: MessageEvent) {
+    hooks.forEach {
+      it.actions.forEach { actions ->
+        actions.id.run(actions.value, event)
       }
     }
   }
@@ -64,4 +83,31 @@ object BlocklyService: Initialize {
 
     return false
   }
+
+  /**
+   * @return
+   * -1 UUID为空
+   * -2 获取存档元数据失败
+   * -3 程序BUG
+   * */
+  fun deleteHook(data: CommitData): Int {
+    if(data.uuid == null) return -1
+    val meta = SaveManager.getMetaByUUID(data.uuid) ?: return -2
+    SaveManager.deleteSaveFormRemote(data).apply {
+      if(this) {
+        hooks.remove(data.uuid)
+        Arona.info("触发器: ${meta.projectName}, 删除成功")
+
+        return 0
+      }
+    }
+
+    return -3
+  }
+
+  override val event = MessageEvent::class
+  override val id = 26
+  override val name = "blockly项目配置服务"
+  override val description = "blockly项目配置服务"
+  override var isGlobal = true
 }

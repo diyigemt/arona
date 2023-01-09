@@ -1,12 +1,18 @@
 package net.diyigemt.arona.config
 
 import com.google.gson.Gson
+import net.diyigemt.arona.Arona
 import net.diyigemt.arona.annotations.ConfigKey
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.system.SystemConfigTable
 import net.diyigemt.arona.db.system.SystemConfigTableModel
+import net.diyigemt.arona.event.ConfigInitSuccessEvent
+import net.diyigemt.arona.event.BaseDatabaseInitEvent
 import net.diyigemt.arona.interfaces.Initialize
 import net.mamoe.mirai.console.util.cast
+import net.mamoe.mirai.event.ListeningStatus
+import net.mamoe.mirai.event.broadcast
+import net.mamoe.mirai.event.globalEventChannel
 import kotlin.reflect.full.declaredMemberProperties
 
 
@@ -79,7 +85,7 @@ object GlobalConfigProvider: Initialize {
       val config = SystemConfigTableModel.find { SystemConfigTable.key eq key }.toList().firstOrNull()
       val castValue = when (value) {
         is String -> value
-        is Float, is Double, is Int -> value.cast()
+        is Float, is Double, is Int -> value.toString()
         else -> GsonInstance.toJson(value)
       }
       if (config == null) {
@@ -118,13 +124,33 @@ object GlobalConfigProvider: Initialize {
           (it as ConfigKey).value
         }
       }
-      val value = property.getter.call()
+      val value = property.getter.call(AronaConfig::class.objectInstance)
       CONFIG[key] = value
     }
-    // 从数据库读取
-    DataBaseProvider.query { _ ->
-      SystemConfigTableModel.all().forEach {
-        CONFIG[it.key] = it.value
+    Arona.globalEventChannel().filter { it is BaseDatabaseInitEvent }.subscribeOnce<BaseDatabaseInitEvent> { _ ->
+      // 从数据库读取
+      DataBaseProvider.query { _ ->
+        CONFIG.forEach { entry ->
+          val config = SystemConfigTableModel.find { SystemConfigTable.key eq entry.key }.toList().firstOrNull()
+          if (config != null) return@forEach
+          val v = entry.value
+          val castValue = when (v) {
+            is String -> v
+            is Float, is Double, is Int -> v.toString()
+            else -> GsonInstance.toJson(v)
+          }
+          SystemConfigTableModel.new {
+            this.key = entry.key
+            this.value = castValue
+          }
+        }
+
+        SystemConfigTableModel.all().forEach {
+          CONFIG[it.key] = it.value
+        }
+      }
+      Arona.runSuspend {
+        ConfigInitSuccessEvent().broadcast()
       }
     }
   }

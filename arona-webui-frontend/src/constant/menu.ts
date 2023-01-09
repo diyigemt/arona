@@ -16,10 +16,6 @@ const ConfigMenu: SubMenuItem[] = [
     path: "/config/config-arona-gacha",
   },
   {
-    name: "arona-reply.yml",
-    path: "/config/config-arona-reply",
-  },
-  {
     name: "条件执行",
     path: "/config/config-arona-blockly",
   },

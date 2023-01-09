@@ -19,7 +19,7 @@ object AronaRemoteActionChecker : AronaQuartzService {
   override val id: Int = 23
   override val name: String = "远端服务"
   override val description: String = name
-  override var enable: Boolean = true
+  override var isGlobal: Boolean = true
 
   class RemoteActionCheckJob : Job {
     override fun execute(context: JobExecutionContext?) {
@@ -40,19 +40,20 @@ object AronaRemoteActionChecker : AronaQuartzService {
   }
 
   override fun enableService() {
-    val interval = AronaConfig.remoteCheckInterval
-    if (interval == 0) {
-      return
-    }
-    jobKey = QuartzProvider.createRepeatSingleTask(
-      RemoteActionCheckJob::class.java,
-      interval * 60,
-      AronaRemoteActionCheckJobKey,
-      AronaRemoteActionCheckJobKey
-    ).first
-    QuartzProvider.createSimpleDelayJob(20) {
-      QuartzProvider.triggerTask(jobKey!!)
-    }
+    //TODO
+//    val interval = AronaConfig.remoteCheckInterval
+//    if (interval == 0) {
+//      return
+//    }
+//    jobKey = QuartzProvider.createRepeatSingleTask(
+//      RemoteActionCheckJob::class.java,
+//      interval * 60,
+//      AronaRemoteActionCheckJobKey,
+//      AronaRemoteActionCheckJobKey
+//    ).first
+//    QuartzProvider.createSimpleDelayJob(20) {
+//      QuartzProvider.triggerTask(jobKey!!)
+//    }
   }
 }
 

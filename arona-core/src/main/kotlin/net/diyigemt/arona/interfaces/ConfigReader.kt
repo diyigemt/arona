@@ -15,7 +15,7 @@ interface ConfigReader {
 inline fun <reified T> ConfigReader.getMainConfig(key: String): T = GlobalConfigProvider.get(key)
 
 /**
- * 拿到服务的开关配置, 如果没有则使用全局配置
+ * 拿到群特定服务的服务的开关配置, 如果没有则使用全局配置
  */
 inline fun <reified T> ConfigReader.getGroupServiceConfig(key: String, group: Long): T = GlobalConfigProvider.getGroup("service.$key", group)
 

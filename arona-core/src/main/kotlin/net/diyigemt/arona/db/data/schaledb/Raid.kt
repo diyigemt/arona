@@ -1,6 +1,7 @@
 package net.diyigemt.arona.db.data.schaledb
 
 import net.diyigemt.arona.annotations.DTOService
+import net.diyigemt.arona.annotations.SkipSchaleDbInit
 import net.diyigemt.arona.db.BaseDTO
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ResultRow
@@ -11,6 +12,7 @@ import org.jetbrains.exposed.sql.Table
  *@Create 2022/8/28
  */
 @DTOService
+@SkipSchaleDbInit
 object Raid : Table("Raid") {
   val Id : Column<Int> = integer("Id")
   val IsReleased : Column<Boolean> = bool("IsReleased")

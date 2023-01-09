@@ -64,7 +64,6 @@ object Arona : KotlinPlugin(
   override fun onEnable() {
     init()
     System.setProperty("java.awt.headless", "true")
-    if (DataBaseProvider.isConnected()) {
       val pluginEventChannel = globalEventChannel()
       //TODO
 //      pluginEventChannel.filter {
@@ -80,11 +79,10 @@ object Arona : KotlinPlugin(
 //      }.subscribeAlways<BotOfflineEvent> {
 //        arona = null
 //      }
-//      pluginEventChannel.subscribeAlways<BotEvent> {
-//        AronaServiceManager.emit(this)
-//      }
+      pluginEventChannel.subscribeAlways<BotEvent> {
+        AronaServiceManager.emit(this)
+      }
       info { "arona loaded" }
-    } else error("arona database init failed, arona will not start")
   }
 
   @OptIn(ExperimentalCommandDescriptors::class, ConsoleExperimentalApi::class)
@@ -93,22 +91,25 @@ object Arona : KotlinPlugin(
   }
 
   private fun init() {
-    WebUIService.init()
-    WebUIService.enableService()
-    BlocklyService.init()
+//    WebUIService.init()
+//    WebUIService.enableService()
+//    BlocklyService.init()
     //TODO
     // 查找所有需要初始化的类, 所有指令, 所有配置文件
-    // 重载配置文件
-//    ReflectionUtil.getInterfacePetObjectInstance<AutoSavePluginConfig>().forEach {
-//      it.reload()
-//    }
+
+    // 需要初始化的类
+    runSuspend {
+      ReflectionUtil.getInterfacePetObjectInstance<Initialize>().sortedBy { it.priority }.forEach {
+        it.init()
+      }
+    }
     // 需要协程的类
-//    ReflectionUtil.getInterfacePetObjectInstance<CoroutineFunctionProvider>().forEach {
-//      it.start()
-//    }
+    ReflectionUtil.getInterfacePetObjectInstance<CoroutineFunctionProvider>().forEach {
+      it.start()
+    }
 //    val grantCommandName = mutableListOf<String>()
 //    // 注册service
-//    ReflectionUtil.getInterfacePetObjectInstance<AronaService>().forEach {
+    ReflectionUtil.getInterfacePetObjectInstance<AronaService>().forEach {
 //      // 向控制台注册指令
 //      if (it is AbstractCommand) {
 //        it.register()
@@ -117,15 +118,8 @@ object Arona : KotlinPlugin(
 //          grantCommandName.add(it.primaryName)
 //        }
 //      }
-//      AronaServiceManager.register(it)
-//    }
-
-    // 需要初始化的类
-//    runSuspend {
-//      ReflectionUtil.getInterfacePetObjectInstance<Initialize>().sortedBy { it.priority }.forEach {
-//        it.init()
-//      }
-//    }
+      AronaServiceManager.register(it)
+    }
 
     // 自动赋予指令权限
     //TODO

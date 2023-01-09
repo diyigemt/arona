@@ -2,12 +2,15 @@
 
 package net.diyigemt.arona.util
 
+import net.diyigemt.arona.Arona
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.gacha.*
+import net.diyigemt.arona.event.BaseDatabaseInitEvent
 import net.diyigemt.arona.interfaces.ConfigReader
 import net.diyigemt.arona.interfaces.Initialize
 import net.diyigemt.arona.interfaces.getGroupConfig
 import net.diyigemt.arona.interfaces.setGroupConfig
+import net.mamoe.mirai.event.globalEventChannel
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.update
@@ -180,9 +183,7 @@ object GachaUtil: Initialize, ConfigReader {
   fun mapStudentInfo(name: String, star: Int) = "${name}(${star}${this.star})"
 
   private fun updateGachaList() {
-    val all = DataBaseProvider.query {
-      GachaCharacters.find { GachaCharactersTable.limit eq false }
-    }!!
+    val all = GachaCharacters.find { GachaCharactersTable.limit eq false }
     star1List.clear()
     star1List.addAll(all.filter { it.star == 1 })
     star2List.clear()
@@ -229,7 +230,10 @@ object GachaUtil: Initialize, ConfigReader {
   override val configPrefix: String = "gacha"
   override val priority: Int = 11
   override fun init() {
-    updateGachaList()
+    Arona.globalEventChannel().filter { it is BaseDatabaseInitEvent }.subscribeOnce<BaseDatabaseInitEvent> { _ ->
+      DataBaseProvider.query {
+        updateGachaList()
+      }
+    }
   }
-
 }

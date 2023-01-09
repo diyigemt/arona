@@ -35,7 +35,7 @@ object WebUIService: SimpleCommand(
         Netty,
         //TODO
 //        port = getMainConfig("webui.port"),
-        port = 8080,
+        port = 57920,
         host = "127.0.0.1",
         module = Application::webUIModule
       ).start(wait = false)
@@ -63,7 +63,7 @@ object WebUIService: SimpleCommand(
   override val id: Int = 24
   override val name: String = "WebUI"
   override val description: String = "WebUI服务"
-  override var enable: Boolean = true
+  override var isGlobal: Boolean = true
   override val priority: Int = 10
   override val configPrefix = ""
 

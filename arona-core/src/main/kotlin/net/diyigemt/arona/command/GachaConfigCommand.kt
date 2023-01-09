@@ -213,7 +213,7 @@ object GachaConfigCommand : CompositeCommand(
 
   override val id: Int = 1
   override val name: String = "抽卡配置"
-  override var enable: Boolean = true
+  override var isGlobal: Boolean = false
   override val configPrefix: String = "gacha"
 
 }

@@ -8,6 +8,7 @@ import io.ktor.server.netty.*
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.interfaces.ConfigReader
 import net.diyigemt.arona.interfaces.Initialize
+import net.diyigemt.arona.interfaces.getConfig
 import net.diyigemt.arona.interfaces.getMainConfig
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.web.database.DBOptionService
@@ -34,7 +35,7 @@ object WebUIService: SimpleCommand(
       server = embeddedServer(
         Netty,
         //TODO
-//        port = getMainConfig("webui.port"),
+//        port = getConfig("webui.port"),
         port = 57920,
         host = "127.0.0.1",
         module = Application::webUIModule
@@ -65,7 +66,7 @@ object WebUIService: SimpleCommand(
   override val description: String = "WebUI服务"
   override var isGlobal: Boolean = true
   override val priority: Int = 10
-  override val configPrefix = ""
+  override val configPrefix = "webui"
 
   override fun init() {
     DBOptionService.init()

@@ -4,6 +4,8 @@ import net.diyigemt.arona.config.AronaConfig
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.announcement.RemoteActionModel
 import net.diyigemt.arona.db.announcement.RemoteActionTable
+import net.diyigemt.arona.interfaces.ConfigReader
+import net.diyigemt.arona.interfaces.getConfig
 import net.diyigemt.arona.quartz.QuartzProvider
 import net.diyigemt.arona.remote.RemoteServiceManager
 import net.diyigemt.arona.service.AronaQuartzService
@@ -13,13 +15,14 @@ import org.quartz.Job
 import org.quartz.JobExecutionContext
 import org.quartz.JobKey
 
-object AronaRemoteActionChecker : AronaQuartzService {
+object AronaRemoteActionChecker : AronaQuartzService, ConfigReader {
   private const val AronaRemoteActionCheckJobKey = "AronaAnnouncementCheck"
   override var jobKey: JobKey? = null
   override val id: Int = 23
   override val name: String = "远端服务"
   override val description: String = name
   override var isGlobal: Boolean = true
+  override val configPrefix: String = "remote"
 
   class RemoteActionCheckJob : Job {
     override fun execute(context: JobExecutionContext?) {
@@ -41,7 +44,7 @@ object AronaRemoteActionChecker : AronaQuartzService {
 
   override fun enableService() {
     //TODO
-//    val interval = AronaConfig.remoteCheckInterval
+//    val interval = getConfig<Int>("checkInterval")
 //    if (interval == 0) {
 //      return
 //    }
@@ -55,6 +58,7 @@ object AronaRemoteActionChecker : AronaQuartzService {
 //      QuartzProvider.triggerTask(jobKey!!)
 //    }
   }
+
 }
 
 @kotlinx.serialization.Serializable

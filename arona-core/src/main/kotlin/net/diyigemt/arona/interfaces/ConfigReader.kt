@@ -23,7 +23,7 @@ inline fun <reified T> ConfigReader.getGroupServiceConfig(key: String, group: Lo
  * 拿到所有开启了该服务的群列表, 如果没有则使用全局配置
  */
 fun ConfigReader.getGroupServiceList(key: String): List<Long> = GlobalConfigProvider.getGroupList().filter { getGroupServiceConfig(key, it) }
-inline fun <reified T> ConfigReader.getConfig(key: String): T = GlobalConfigProvider.get("$configPrefix.$key")
+inline fun <reified T> ConfigReader.getConfig(key: String): T = if (configPrefix.isEmpty()) getMainConfig(key) else GlobalConfigProvider.get("$configPrefix.$key")
 inline fun <reified T> ConfigReader.getGroupConfig(key: String, group: Long): T = GlobalConfigProvider.getGroup("$configPrefix.$key", group)
 inline fun <reified T> ConfigReader.getConfigOrDefault(key: String, default: T): T = GlobalConfigProvider.getOrDefault("$configPrefix.$key", default)
 inline fun <reified T> ConfigReader.getConfigOrDefault(key: String, group: Long, default: T): T = GlobalConfigProvider.getGroupOrDefault("$configPrefix.$key", group, default)

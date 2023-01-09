@@ -27,7 +27,7 @@ async function getXML(url: string, id: string): Promise<HTMLElement> {
 export const workspaceBlocks = await getXML("/public/blockly/workspace.xml", "workspaceBlocks");
 
 export const blocks = JSON.parse(
-  await fetch("/public/blockly/blocks.json").then((response) => {
+  await fetch("/blockly/blocks.json").then((response) => {
     return response.text();
   }),
 );

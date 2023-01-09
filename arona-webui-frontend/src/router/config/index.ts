@@ -29,14 +29,6 @@ const ConfigRouter: Array<RouteRecordRaw> = [
         component: () => import("@/views/config/ConfigAronaGacha.vue"),
       },
       {
-        path: "config-arona-reply",
-        name: "config-arona-reply",
-        meta: {
-          title: "关键词回复配置文件",
-        },
-        component: () => import("@/views/config/ConfigAronaReply.vue"),
-      },
-      {
         path: "config-arona-blockly",
         name: "config-arona-blockly",
         meta: {

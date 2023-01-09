@@ -3,6 +3,7 @@ package net.diyigemt.arona.web.blockly
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.interfaces.Initialize
 import net.diyigemt.arona.service.AronaMessageReactService
+import net.mamoe.mirai.event.events.FriendMessageEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
 import net.mamoe.mirai.event.events.MessageEvent
 import java.util.*
@@ -20,6 +21,7 @@ object BlocklyService: Initialize, AronaMessageReactService<MessageEvent> {
 
   override suspend fun handle(event: MessageEvent) = when(event) {
     is GroupMessageEvent -> optionalTrigger(hooks.filter { it.value.type == EventType.GroupMessageEvent }.values, event)
+    is FriendMessageEvent -> optionalTrigger(hooks.filter { it.value.type == EventType.FriendMessageEvent }.values, event)
 
     else -> Arona.error("Undefined event type: ${event.javaClass.name}")
   }
@@ -48,9 +50,14 @@ object BlocklyService: Initialize, AronaMessageReactService<MessageEvent> {
   }
 
   private fun optionalTrigger(hooks: Collection<BlocklyExpression>, event: MessageEvent) {
+    Arona.info(hooks.size.toString())
     hooks.forEach {
-      it.actions.forEach { actions ->
-        actions.id.run(actions.value, event)
+      val expression = BlocklyInterpreter.generateBooleanExpression(it, event)
+      Arona.info(expression)
+      if (BlocklyInterpreter.evaluateAsBoolean(expression) == true){
+        it.actions.forEach { actions ->
+          actions.id.run(actions.value, event)
+        }
       }
     }
   }

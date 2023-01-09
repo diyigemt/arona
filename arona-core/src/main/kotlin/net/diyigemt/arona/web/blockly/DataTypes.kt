@@ -2,6 +2,7 @@ package net.diyigemt.arona.web.blockly
 
 import kotlinx.serialization.Serializable
 import net.diyigemt.arona.Arona
+import net.mamoe.mirai.console.util.safeCast
 import net.mamoe.mirai.event.events.GroupMessageEvent
 import net.mamoe.mirai.event.events.MessageEvent
 import java.util.*
@@ -42,18 +43,23 @@ enum class DataTypes: AronaInterceptor{
         Arona.error("ID: Convert $value to Double failed")
         return false
       }
-      if(tmp.toLong() == 123456L) return true
+      if(tmp.toLong() == 123456L || tmp.toLong() == event?.sender?.id) return true
 
       return false
     }
   },
   ID {
     override fun run(value: Any, event: MessageEvent?): Boolean {
+
       val tmp = value as? Double ?: kotlin.run {
         Arona.error("ID: Convert $value to Double failed")
         return false
       }
-      if(tmp.toLong() == 123456L) return true
+      val resEvent = event.safeCast<GroupMessageEvent>() ?: kotlin.run {
+        Arona.error("ID: Convert ${event?.javaClass?.name} to GroupMessageEvent failed")
+        return false
+      }
+      if(tmp.toLong() == 123456L || tmp.toLong() == resEvent.group.id) return true
 
       return false
     }
@@ -64,13 +70,18 @@ enum class ActionTypes: Runner{
   SEND_MSG {
     override fun run(values: List<Any>, event: MessageEvent?) {
       Arona.info(values[0].toString())
-      // Arona.sendMessage(values[0].toString())
+      Arona.sendMessage(values[0].toString())
+      // TODO: sendMessage好使了记得把下面删了
+      Arona.runSuspend {
+        event?.subject?.sendMessage(values[0].toString())
+      }
     }
   }
 }
 
 enum class EventType{
-  GroupMessageEvent
+  GroupMessageEvent,
+  FriendMessageEvent
 }
 
 interface AronaInterceptor{

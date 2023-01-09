@@ -9,7 +9,6 @@ import net.diyigemt.arona.Arona
 import net.diyigemt.arona.interfaces.ConfigReader
 import net.diyigemt.arona.interfaces.Initialize
 import net.diyigemt.arona.interfaces.getConfig
-import net.diyigemt.arona.interfaces.getMainConfig
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.web.database.DBOptionService
 import net.diyigemt.arona.web.plugins.configureCROS
@@ -17,6 +16,8 @@ import net.diyigemt.arona.web.plugins.configureRouting
 import net.diyigemt.arona.web.plugins.configureSecurity
 import net.diyigemt.arona.web.plugins.configureSerialization
 import net.mamoe.mirai.console.command.SimpleCommand
+import java.net.ServerSocket
+import java.net.Socket
 import java.util.*
 
 object WebUIService: SimpleCommand(
@@ -31,15 +32,43 @@ object WebUIService: SimpleCommand(
   var secret = generateSecret()
 
   override fun enableService() {
+    val savePort = kotlin.runCatching { getConfig<String>("port").toInt() }.getOrElse {
+      it.printStackTrace()
+      Arona.error("从数据库获取端口号失败, 使用系统分配的端口")
+      return@getOrElse kotlin.runCatching {
+        val sp = ServerSocket(0)
+        val port = sp.localPort
+        sp.close()
+
+        return@runCatching port
+      }.getOrElse {
+        Arona.error("系统未能提供空闲端口号，WebUI服务启动失败")
+        return
+      }
+    }
+    val port = kotlin.runCatching { ServerSocket(savePort).localPort }.getOrElse {
+      it.printStackTrace()
+      Arona.error("端口: ${savePort}已被占用, 使用系统分配的端口")
+      return@getOrElse kotlin.runCatching {
+        val sp = ServerSocket(0)
+        val port = sp.localPort
+        sp.close()
+
+        return@runCatching port
+      }.getOrNull()
+    } ?: kotlin.run {
+      Arona.error("系统未能提供空闲端口号，WebUI启动失败")
+      return
+    }
     Arona.runSuspend {
       server = embeddedServer(
         Netty,
         //TODO
-//        port = getConfig("webui.port"),
-        port = 57920,
+        port = port,
         host = "127.0.0.1",
         module = Application::webUIModule
       ).start(wait = false)
+      Arona.info("WebUI服务在端口${port}上启动")
     }
   }
 

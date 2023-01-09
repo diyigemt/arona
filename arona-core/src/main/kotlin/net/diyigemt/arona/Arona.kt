@@ -188,22 +188,6 @@ object Arona : KotlinPlugin(
     }
   }
 
-  fun sendMessage(message: String) {
-    val builder = MessageChainBuilder()
-    builder.add(message)
-    sendMessage(builder.build())
-  }
-
-  fun sendMessage(message: MessageChain) {
-    //TODO
-//    runSuspend {
-//      AronaConfig.groups.forEach {
-//        val group = arona?.groups?.get(it) ?: return@forEach
-//        group.sendMessage(message)
-//      }
-//    }
-  }
-
   fun sendMessageToAdmin(message: String) {
     //TODO
 //    fun getAdmin(id: Long): NormalMember? {

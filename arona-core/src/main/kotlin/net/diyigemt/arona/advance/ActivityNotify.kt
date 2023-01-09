@@ -114,20 +114,8 @@ object ActivityNotify: AronaQuartzService, ConfigReader {
       ac as List<Activity>
       if (ac.isEmpty()) return
       val server = isJPServer(ac)
-      val activity = ac.toMutableList()
-      val maintenance: Activity? = activity
-        .filter { isMaintenanceActivity(it) }
-        .let {
-          if (it.isNotEmpty()) {
-            activity.removeAll(it)
-            return@let it[0]
-          } else {
-            return@let null
-          }
-        }
-      val serverName = ac[0].serverLocale.serverName
-      if (maintenance != null) {
-        Arona.sendMessage("距离${serverName}维护还有1小时")
+      val activity = ac.filter {
+        it.type != ActivityType.MAINTENANCE
       }
       // 只有维护信息时
       if (activity.isEmpty()) return

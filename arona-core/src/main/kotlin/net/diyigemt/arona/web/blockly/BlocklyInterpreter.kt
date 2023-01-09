@@ -16,7 +16,8 @@ object BlocklyInterpreter {
   fun generateBooleanExpression(value: BlocklyExpression, event: MessageEvent?): String {
     var res = ""
     kotlin.runCatching {
-      for (item in value.expressions) {
+      if(value.expressions.isEmpty()) res = "true"
+      else for (item in value.expressions) {
         res += when(item.id){
           DataTypes.AND -> "&&"
           DataTypes.OR -> "||"

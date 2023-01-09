@@ -19,7 +19,10 @@
     {
       "type": "input_value",
       "name": "Expressions",
-      "check": "ExpressionType"
+      "check": [
+        "ExpressionType",
+        "LogicType"
+      ]
     },
     {
       "type": "input_statement",
@@ -96,7 +99,10 @@
     {
       "type": "input_value",
       "name": "NAME",
-      "check": "ExpressionType"
+      "check": [
+        "ExpressionType",
+        "LogicType"
+      ]
     }
   ],
   "output": "LogicType",

@@ -93,10 +93,14 @@ function onSaveCurrentProject() {
         projectName: value,
         uuid: null,
         blocklyProject: JSON.stringify(Blockly.serialization.workspaces.save(workspace.value)),
-      }).then(() => {
-        doFetchBlocklyProjectList();
-        successMessage("保存成功");
-      });
+      })
+        .then(() => {
+          doFetchBlocklyProjectList();
+          successMessage("保存成功");
+        })
+        .catch((reason) => {
+          errorMessage(reason);
+        });
     });
   } else {
     updateBlocklyProject({

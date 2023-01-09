@@ -113,20 +113,6 @@ object GlobalConfigProvider: Initialize {
     get() = 5
 
   override fun init() {
-    // 从主配置文件读取
-    AronaConfig::class.declaredMemberProperties.forEach { property ->
-      val key = property.annotations.firstOrNull {
-        it is ConfigKey
-      }.let {
-        if (it == null) {
-          property.name
-        } else {
-          (it as ConfigKey).value
-        }
-      }
-      val value = property.getter.call(AronaConfig::class.objectInstance)
-      CONFIG[key] = value
-    }
     Arona.globalEventChannel().filter { it is BaseDatabaseInitEvent }.subscribeOnce<BaseDatabaseInitEvent> { _ ->
       // 从数据库读取
       DataBaseProvider.query { _ ->

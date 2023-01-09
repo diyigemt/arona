@@ -43,20 +43,19 @@ object AronaRemoteActionChecker : AronaQuartzService, ConfigReader {
   }
 
   override fun enableService() {
-    //TODO
-//    val interval = getConfig<Int>("checkInterval")
-//    if (interval == 0) {
-//      return
-//    }
-//    jobKey = QuartzProvider.createRepeatSingleTask(
-//      RemoteActionCheckJob::class.java,
-//      interval * 60,
-//      AronaRemoteActionCheckJobKey,
-//      AronaRemoteActionCheckJobKey
-//    ).first
-//    QuartzProvider.createSimpleDelayJob(20) {
-//      QuartzProvider.triggerTask(jobKey!!)
-//    }
+    val interval = getConfig<Int>("checkInterval")
+    if (interval == 0) {
+      return
+    }
+    jobKey = QuartzProvider.createRepeatSingleTask(
+      RemoteActionCheckJob::class.java,
+      interval * 60,
+      AronaRemoteActionCheckJobKey,
+      AronaRemoteActionCheckJobKey
+    ).first
+    QuartzProvider.createSimpleDelayJob(20) {
+      QuartzProvider.triggerTask(jobKey!!)
+    }
   }
 
 }

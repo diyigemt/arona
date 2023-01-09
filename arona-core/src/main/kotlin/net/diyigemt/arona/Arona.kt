@@ -11,18 +11,14 @@ package net.diyigemt.arona
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import net.diyigemt.arona.annotations.HideService
-import net.diyigemt.arona.config.AronaConfig
+import net.diyigemt.arona.config.GlobalConfigProvider
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.entity.BotGroupConfig
 import net.diyigemt.arona.extension.CommandResolver
-import net.diyigemt.arona.interfaces.ConfigReader
-import net.diyigemt.arona.interfaces.CoroutineFunctionProvider
-import net.diyigemt.arona.interfaces.Initialize
-import net.diyigemt.arona.interfaces.getMainConfig
+import net.diyigemt.arona.interfaces.*
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.service.AronaServiceManager
 import net.diyigemt.arona.util.GeneralUtils
-import net.diyigemt.arona.util.NetworkUtil
 import net.diyigemt.arona.util.ReflectionUtil
 import net.diyigemt.arona.web.WebUIService
 import net.diyigemt.arona.web.blockly.BlocklyService
@@ -64,25 +60,30 @@ object Arona : KotlinPlugin(
   override fun onEnable() {
     init()
     System.setProperty("java.awt.headless", "true")
-      val pluginEventChannel = globalEventChannel()
-      //TODO
-//      pluginEventChannel.filter {
-//        it is BotOnlineEvent && it.bot.id == AronaConfig.qq
-//      }.subscribeAlways<BotOnlineEvent> {
-//        arona = it.bot
-//        if (AronaConfig.sendOnlineMessage) {
-//          sendMessage(deserializeMiraiCode(AronaConfig.onlineMessage))
-//        }
-//      }
-//      pluginEventChannel.filter {
-//        it is BotOnlineEvent && it.bot.id == AronaConfig.qq
-//      }.subscribeAlways<BotOfflineEvent> {
-//        arona = null
-//      }
-      pluginEventChannel.subscribeAlways<BotEvent> {
-        AronaServiceManager.emit(this)
+    val pluginEventChannel = globalEventChannel()
+    val botConfig = getMainConfig<List<BotGroupConfig>>("bots")
+    val botList = botConfig.map { it.bot }
+    pluginEventChannel.filter {
+      it is BotOnlineEvent && botList.contains(it.bot.id)
+    }.subscribeAlways<BotOnlineEvent> {
+      val botId = it.bot.id
+      val groups = botConfig
+        .filter { config -> config.bot == botId }
+        .map { config -> config.groups }
+        .flatMap { config -> config.toList() }
+      groups.forEach { group ->
+        val message = getGroupConfig<String>("onlineMessage", group)
+          .also { message -> if(message.isBlank()) return@forEach }
+        sendGroupMessage(group) {
+          this.add(message)
+          this.build()
+        }
       }
-      info { "arona loaded" }
+    }
+    pluginEventChannel.subscribeAlways<BotEvent> {
+      AronaServiceManager.emit(this)
+    }
+    info { "arona loaded" }
   }
 
   @OptIn(ExperimentalCommandDescriptors::class, ConsoleExperimentalApi::class)
@@ -133,19 +134,10 @@ object Arona : KotlinPlugin(
 //      })
 //    }
 
-//    runSuspend {
-//      NetworkUtil.registerInstance()
-//    }
   }
 
   override fun onDisable() {
     WebUIService.disableService()
-    //TODO
-//    ReflectionUtil.getInterfacePetObjectInstance<AutoSavePluginConfig>().forEach {
-//      it.save()
-//    }
-//    AronaServiceManager.saveServiceStatus()
-//    AronaServiceConfig.save()
   }
 
   @OptIn(ExperimentalCommandDescriptors::class, ConsoleExperimentalApi::class)
@@ -166,10 +158,20 @@ object Arona : KotlinPlugin(
   }
 
   fun sendExitMessage() {
-    //TODO
-//    if (AronaConfig.sendOfflineMessage) {
-//      sendMessage(deserializeMiraiCode(AronaConfig.offlineMessage))
-//    }
+    val botConfig = getMainConfig<List<BotGroupConfig>>("bots")
+    val groups = botConfig
+      .map { it.groups }
+      .flatMap { it.toList() }
+      .filter { group ->
+        getGroupConfig<String>("offlineMessage", group).isNotBlank()
+      }
+    groups.forEach { group ->
+      val message = getGroupConfig<String>("offlineMessage", group)
+      sendGroupMessage(group) {
+        this.add(message)
+        this.build()
+      }
+    }
   }
 
   fun sendGroupMessage(group0: Long, block: suspend (MessageChainBuilder.(group: Contact) -> MessageChain)) {
@@ -183,24 +185,28 @@ object Arona : KotlinPlugin(
   }
 
   fun sendMessageToAdmin(message: String) {
-    //TODO
-//    fun getAdmin(id: Long): NormalMember? {
-//      AronaConfig.groups.forEach {
-//        val admin = arona?.groups?.get(it)?.get(id)
-//        if (admin != null) return admin
-//      }
-//      return null
-//    }
-//    runSuspend {
-//      if (AronaConfig.groups.isEmpty() || AronaConfig.managerGroup.isEmpty()) return@runSuspend
-//      AronaConfig.managerGroup
-//        .mapNotNull {
-//          getAdmin(it)
-//        }
-//        .forEach {
-//          it.sendMessage(message)
-//        }
-//    }
+    val botConfig = getMainConfig<List<BotGroupConfig>>("bots")
+    val managerGroup = getMainConfig<List<Long>>("managerGroup")
+    if (botConfig.isEmpty() || managerGroup.isEmpty()) {
+      return
+    }
+    val botList = botConfig.map { it.bot }
+    val bots = botList.mapNotNull { Bot.getInstanceOrNull(it) }
+    runSuspend {
+      managerGroup
+        .mapNotNull {
+          bots.firstOrNull { bot ->
+            bot.friends.firstOrNull { friend ->
+              friend.id == it
+            } != null
+          }?.friends?.first { friend ->
+            friend.id == it
+          }
+        }
+        .forEach {
+          it.sendMessage(message)
+        }
+    }
   }
 
   fun dataFolderPath(subPath: String = ""): String = Arona.dataFolderPath.absolutePathString() + subPath

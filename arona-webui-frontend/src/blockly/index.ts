@@ -10,9 +10,7 @@ const BlocklyConfig: BlocklyOptions = {
   },
   disable: false,
   toolbox: await getXML("/public/blockly/toolbox.xml", "toolbox"),
-  maxInstances: {
-    sender_block: 1,
-  },
+  maxInstances: {},
   theme: "Zelos",
 };
 

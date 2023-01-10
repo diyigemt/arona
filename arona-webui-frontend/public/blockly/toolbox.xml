@@ -3,7 +3,7 @@
         <block type="id_block">
             <field name="ID">123456</field>
         </block>
-        <block type="sender_block">
+        <block type="senderBlock">
             <field name="ID">123456</field>
         </block>
         <block type="logic_block">

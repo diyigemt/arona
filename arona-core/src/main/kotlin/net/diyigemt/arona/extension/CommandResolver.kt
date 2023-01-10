@@ -1,7 +1,5 @@
 package net.diyigemt.arona.extension
 
-import net.diyigemt.arona.Arona
-import net.diyigemt.arona.config.AronaConfig
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.service.AronaServiceManager
 import net.mamoe.mirai.console.command.CommandManager

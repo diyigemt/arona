@@ -92,9 +92,6 @@ object Arona : KotlinPlugin(
   }
 
   private fun init() {
-//    WebUIService.init()
-//    WebUIService.enableService()
-//    BlocklyService.init()
     //TODO
     // 查找所有需要初始化的类, 所有指令, 所有配置文件
 

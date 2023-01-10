@@ -9,7 +9,6 @@ import net.diyigemt.arona.util.GachaUtil
 import net.diyigemt.arona.util.GachaUtil.hitPickup
 import net.diyigemt.arona.util.GachaUtil.pickup
 import net.diyigemt.arona.util.GachaUtil.resultData2String
-import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.GeneralUtils.queryTeacherNameFromDB
 import net.diyigemt.arona.util.MessageUtil
 import net.diyigemt.arona.util.MessageUtil.atMessageAndCTRL
@@ -23,7 +22,6 @@ object GachaMultiCommand : SimpleCommand(
 
   @Handler
   suspend fun MemberCommandSenderOnMessage.gachaMulti() {
-    if (!GeneralUtils.checkService(subject)) return
     val userId = user.id
     val checkTime = GachaUtil.checkTime(userId, subject.id)
     val teacherName = queryTeacherNameFromDB(subject, user)

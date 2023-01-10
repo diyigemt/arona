@@ -63,7 +63,6 @@ object WebUIService: SimpleCommand(
     Arona.runSuspend {
       server = embeddedServer(
         Netty,
-        //TODO
         port = port,
         host = "127.0.0.1",
         module = Application::webUIModule

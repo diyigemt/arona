@@ -36,36 +36,11 @@
 },
 {
   "type": "id_block",
-  "message0": "群号/QQ号为 %1 %2",
+  "message0": "群号 %1",
   "args0": [
-    {
-      "type": "field_input",
-      "name": "ID",
-      "text": "123456"
-    },
     {
       "type": "input_value",
       "name": "IDInput",
-      "check": "LogicType"
-    }
-  ],
-  "output": "ExpressionType",
-  "colour": 230,
-  "tooltip": "",
-  "helpUrl": ""
-},
-{
-  "type": "sender_block",
-  "message0": "发送者为 %1 %2",
-  "args0": [
-    {
-      "type": "field_input",
-      "name": "ID",
-      "text": "123456"
-    },
-    {
-      "type": "input_value",
-      "name": "NAME",
       "check": "LogicType"
     }
   ],

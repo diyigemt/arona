@@ -35,6 +35,8 @@ import {
   updateBlocklyProject,
 } from "@/api/modules/blockly";
 import { errorMessage, IConfirm, infoMessage, IPrompt, successMessage, warningMessage } from "@/utils/message";
+import injectExtensions from "@/blockly/extensions";
+import addBlocks from "@/blockly/blocks";
 
 const blocklyDiv = ref();
 const output = ref<string>();
@@ -45,7 +47,9 @@ const debugMode = ref(true); // false 原生 true format好看
 const isNewProject = ref(false);
 onMounted(() => {
   Blockly.defineBlocksWithJsonArray(blocks);
+  addBlocks()
   workspace.value = Blockly.inject(blocklyDiv.value, BlocklyConfig);
+  injectExtensions();
   doFetchBlocklyProjectList();
 });
 function doFetchBlocklyProjectList() {
@@ -88,6 +92,7 @@ function onSaveCurrentProject() {
       inputPattern: /.+/,
       inputErrorMessage: "不能为空",
     }).then(({ value }) => {
+      // TODO: userData List<String>
       saveBlocklyProject({
         trigger: JSON.parse(code),
         projectName: value,

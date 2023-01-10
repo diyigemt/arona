@@ -52,7 +52,7 @@ aronaGenerator.id_block = function (block) {
   return ["", aronaGenerator.ORDER_NONE];
 };
 
-aronaGenerator.sender_block = function (block) {
+aronaGenerator.senderBlock = function (block) {
   const textId = block.getFieldValue("ID");
   aronaGenerator.valueToCode(block, "NAME", aronaGenerator.ORDER_ATOMIC);
   aronaGenerator.expressions.unshift({

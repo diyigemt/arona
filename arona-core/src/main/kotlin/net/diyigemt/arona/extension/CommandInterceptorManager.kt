@@ -1,6 +1,7 @@
 package net.diyigemt.arona.extension
 
 import net.diyigemt.arona.interfaces.Initialize
+import net.diyigemt.arona.util.ReflectionUtil
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.descriptor.ExperimentalCommandDescriptors
 import net.mamoe.mirai.console.command.parse.CommandCall
@@ -16,8 +17,10 @@ object CommandInterceptorManager: Initialize {
   }
 
   fun emitInterceptCall(call: CommandCall) {
-    ITEMS.forEach {
-      if (!it.interceptCall(call)) return@forEach
+    run loop@ {
+      ITEMS.forEach {
+        if (!it.interceptCall(call)) return@loop
+      }
     }
   }
 
@@ -30,6 +33,8 @@ object CommandInterceptorManager: Initialize {
   }
 
   override fun init() {
-    ExitCommandInterceptor.registerInterceptor()
+    ReflectionUtil.getInterfacePetObjectInstance<CommandInterceptor>().forEach {
+      registerItem(it)
+    }
   }
 }

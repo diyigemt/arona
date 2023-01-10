@@ -10,7 +10,5 @@ interface CommandInterceptor {
   val level: Int
   fun interceptCall(call: CommandCall): Boolean = true
   fun interceptBeforeCall(message: Message, caller: CommandSender): String? = null
-  fun registerInterceptor() {
-    CommandInterceptorManager.registerItem(this)
-  }
+
 }

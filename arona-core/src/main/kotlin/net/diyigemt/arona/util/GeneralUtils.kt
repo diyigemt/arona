@@ -29,12 +29,6 @@ object GeneralUtils : Initialize {
   private val Punctuation2: Regex = Regex("\\s{2,}")
   private const val ConfigFolder: String = "/config"
 
-  fun checkService(group: Contact?): Boolean = when (group) {
-    //TODO
-    is Group -> true
-    else -> false
-  }
-
   fun clearExtraQute(s: String): String {
     if (s.replace("\"", "").length + 2 == s.length) {
       return s.replaceFirst("\"", "").substring(0, s.length - 2)

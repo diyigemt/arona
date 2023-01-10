@@ -5,10 +5,8 @@ import net.diyigemt.arona.event.ConfigInitSuccessEvent
 import net.diyigemt.arona.interfaces.ConfigReader
 import net.diyigemt.arona.interfaces.Initialize
 import net.diyigemt.arona.interfaces.getGroupServiceList
-import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.ReflectionUtil
 import net.mamoe.mirai.contact.Contact
-import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.User
 import net.mamoe.mirai.event.events.BotEvent
 import net.mamoe.mirai.event.events.MessageEvent
@@ -93,24 +91,25 @@ object AronaServiceManager: Initialize, ConfigReader {
   }
 
   fun checkService(service: AronaService, user: User, subject: Contact): String? = when {
-    !service.isGlobal -> {
-      "功能未启用"
-    }
-    service is AronaGroupService -> when {
-      subject !is Group -> {
-        Arona.runSuspend {
-          subject.sendMessage("该功能仅限群聊使用")
-        }
-        "该功能仅限群聊使用"
-      }
-      !GeneralUtils.checkService(subject) -> "非服务群聊"
-      else -> null
-    }
-    // 防止在非服务群聊中也执行非群服务指令
-    subject is Group && !GeneralUtils.checkService(subject) -> "非服务群聊"
-    (service is AronaManageService) && (!service.checkAdmin(user, subject)) -> {
-      "权限不足"
-    }
+    //TODO
+//    !service.isGlobal -> {
+//      "功能未启用"
+//    }
+//    service is AronaGroupService -> when {
+//      subject !is Group -> {
+//        Arona.runSuspend {
+//          subject.sendMessage("该功能仅限群聊使用")
+//        }
+//        "该功能仅限群聊使用"
+//      }
+//      !GeneralUtils.checkService(subject) -> "非服务群聊"
+//      else -> null
+//    }
+//    // 防止在非服务群聊中也执行非群服务指令
+//    subject is Group && !GeneralUtils.checkService(subject) -> "非服务群聊"
+//    (service is AronaManageService) && (!service.checkAdmin(user, subject)) -> {
+//      "权限不足"
+//    }
     else -> null
   }
 
@@ -151,21 +150,6 @@ object AronaServiceManager: Initialize, ConfigReader {
     // 拿到服务单独的开关设置? 没有必要 直接获取所有群的开关设置, 因为群没有特定的开关设置必定为默认设置
     val openServiceIndex = serviceKeyList.map { getGroupServiceList(it).isNotEmpty() }.mapIndexed { index, boolean -> if (boolean) index else -1 }.filter { it != -1 }
     return serviceList.filterIndexed { index, service -> openServiceIndex.contains(index) || service.isGlobal }
-  }
-
-  fun saveServiceStatus() {
-    //TODO
-//    val map = AronaServiceConfig.config
-//    MAP.forEach {
-//      map[it.value.name] = it.value.enable
-//    }
-  }
-
-  fun disableAll() {
-    //TODO
-//    AronaServiceConfig.config.forEach {
-//      disable(it.key)
-//    }
   }
 
   private fun findServiceById(id: Int): AronaService? = MAP[id.toString()]

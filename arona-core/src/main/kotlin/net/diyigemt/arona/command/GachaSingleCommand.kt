@@ -9,7 +9,6 @@ import net.diyigemt.arona.util.GachaUtil
 import net.diyigemt.arona.util.GachaUtil.hitPickup
 import net.diyigemt.arona.util.GachaUtil.pickup
 import net.diyigemt.arona.util.GachaUtil.resultData2String
-import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.GeneralUtils.queryTeacherNameFromDB
 import net.diyigemt.arona.util.MessageUtil
 import net.mamoe.mirai.console.command.MemberCommandSenderOnMessage
@@ -22,7 +21,6 @@ object GachaSingleCommand : SimpleCommand(
 
   @Handler
   suspend fun MemberCommandSenderOnMessage.gachaOne() {
-    if (!GeneralUtils.checkService(subject)) return
     val userId = user.id
     val groupId = subject.id
     val checkTime = GachaUtil.checkTime(userId, groupId)

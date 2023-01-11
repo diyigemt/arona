@@ -15,8 +15,8 @@ import java.util.*
  */
 object SaveManager {
   private val saveFolder = File(Arona.dataFolder.absolutePath, "blocklySave")
-  private val saves: MutableList<BlocklySave> = mutableListOf()
   private val json = Json{encodeDefaults = true}
+  val saves: MutableList<BlocklySave> = mutableListOf()
   /**
    * 使用者需要复制该变量并设置fileNameInZip，不确定后果时不要修改任何其它成员变量，否则可能导致ZIP损坏*/
   val params = ZipParameters()
@@ -122,7 +122,14 @@ object SaveManager {
         return null
       }
     }
-    //TODO: 资源文件处理
+
+    newSave.writeDataToSave("user.json", data.userData.byteInputStream()).apply {
+      if (!this){
+        newSave.delete()
+        return null
+      }
+    }
+    // TODO: 资源文件处理
     saves.add(newSave)
 
     return newSave.meta.uuid
@@ -148,6 +155,12 @@ object SaveManager {
     }
 
     save.writeDataToSave("BlocklyProject.json", data.blocklyProject.byteInputStream()).apply {
+      if (!this){
+        return false
+      }
+    }
+
+    save.writeDataToSave("user.json", data.userData.byteInputStream()).apply {
       if (!this){
         return false
       }
@@ -185,9 +198,18 @@ object SaveManager {
     return res
   }
 
-  fun getMetaByUUID(uuid: UUID): Meta? {
+  /**
+   * @return 模板类型有: Meta UserData*/
+  inline fun <reified T: SaveDataElement> getSaveElementByUUID(uuid: UUID): T? {
     saves.forEach {
-      if(it.meta.uuid == uuid) return it.meta
+      if(it.meta.uuid == uuid) return when(T::class.java) {
+        Meta::class.java -> it.meta as? T
+        UserData::class.java -> it.userData as? T
+        else -> {
+          Arona.error("Undefined element type: ${T::class.java.name}")
+          null
+        }
+      }
     }
 
     return null

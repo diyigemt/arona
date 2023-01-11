@@ -76,10 +76,7 @@ object GlobalConfigProvider: Initialize {
       val castValue = when (value) {
         is String -> value
         is Float, is Double, is Int -> value.toString()
-        else -> {
-          // GsonInstance.toJson(value)
-          MoshiUtil.reflect.adapter(Any::class.java).toJson(value)
-        }
+        else -> MoshiUtil.reflect.adapter(Any::class.java).toJson(value)
       }
       if (config == null) {
         SystemConfigTableModel.new {

@@ -19,6 +19,7 @@ import java.util.*
  *@Create 2023/1/3
  * 当2.0.0之后新加变量必须使用可空类型，为了版本兼容
  */
+interface SaveDataElement
 
 @Serializable
 data class Meta(
@@ -27,7 +28,13 @@ data class Meta(
   val resPath: String = "",
   @Serializable(with = UUIDSerializer::class)
   val uuid: UUID = UUID.randomUUID()
-)
+): SaveDataElement
+
+
+@Serializable
+data class UserData(
+  val ids: MutableList<String>
+): SaveDataElement
 
 object UUIDSerializer: KSerializer<UUID>{
   override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("UUID", PrimitiveKind.STRING)
@@ -41,4 +48,25 @@ class UUIDAdapter {
 
   @FromJson
   fun fromJson(uuid: String): UUID = UUID.fromString(uuid)
+}
+
+/**
+ * Format: $UUID|index*/
+object UserDataSerializer: KSerializer<String>{
+  private val regex = Regex("\\|")
+  override val descriptor = PrimitiveSerialDescriptor("String", PrimitiveKind.STRING)
+
+  override fun deserialize(decoder: Decoder): String {
+    val str = decoder.decodeString()
+    if(str[0] == '$') {
+      val params = regex.split(str.substring(1))
+      val userData = SaveManager.getSaveElementByUUID<UserData>(UUID.fromString(params[0]))!!.ids
+
+      return userData[params[1].toInt()]
+    }
+
+    return str
+  }
+
+  override fun serialize(encoder: Encoder, value: String) = encoder.encodeString(value)
 }

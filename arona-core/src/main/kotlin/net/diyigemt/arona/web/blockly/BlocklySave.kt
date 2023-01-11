@@ -16,10 +16,12 @@ class BlocklySave(file: File): File(file.absolutePath) {
   private val params = SaveManager.params
   private val json = Json{encodeDefaults = true}
   lateinit var meta: Meta
+  lateinit var userData: UserData
 
   init {
     kotlin.runCatching {
       meta = json.decodeFromString(Meta.serializer(), readDataAsString("meta.json")!!)
+      userData = json.decodeFromString(UserData.serializer(), readDataAsString("user.json")!!)
     }.onFailure {
       Arona.error("存档已损坏")
       throw it
@@ -29,6 +31,7 @@ class BlocklySave(file: File): File(file.absolutePath) {
   constructor(file: File, metaData: Meta): this(file) {
     kotlin.runCatching {
       meta = metaData
+      userData = UserData(mutableListOf())
     }.onFailure {
       Arona.error("存档已损坏")
       throw it
@@ -79,5 +82,28 @@ class BlocklySave(file: File): File(file.absolutePath) {
     }
 
     return true
+  }
+
+  fun wipeUserData(): Boolean = kotlin.runCatching {
+    json.decodeFromString(UserData.serializer(), readDataAsString("user.json")!!).ids.replaceAll { "" }
+    return@runCatching true
+  }.getOrElse {
+    return@getOrElse false
+  }
+
+  fun updateUserData(changes: Map<Int, String>): Boolean {
+    kotlin.runCatching {
+      val data = json.decodeFromString(UserData.serializer(), readDataAsString("user.json")!!)
+      changes.forEach {
+        data.ids[it.key] = it.value
+      }
+      writeDataToSave("user.json", json.encodeToString(UserData.serializer(), data).byteInputStream())
+
+      return true
+    }.onFailure {
+      it.printStackTrace()
+    }
+
+    return false
   }
 }

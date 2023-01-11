@@ -37,6 +37,7 @@ enum class DataTypes: AronaInterceptor{
       TODO("测试用，会直接返回对应的布尔值，不要实现，实现了也没用")
     }
   },
+  // TODO: 日后支持其它种类消息需要调整参数, 对123456L仅支持DEV，在正式发布之前需要删掉
   SENDER {
     override fun run(value: Any, event: MessageEvent?): Boolean {
       val tmp = value as? Double ?: kotlin.run {
@@ -50,7 +51,6 @@ enum class DataTypes: AronaInterceptor{
   },
   ID {
     override fun run(value: Any, event: MessageEvent?): Boolean {
-
       val tmp = value as? Double ?: kotlin.run {
         Arona.error("ID: Convert $value to Double failed")
         return false
@@ -70,8 +70,8 @@ enum class ActionTypes: Runner{
   SEND_MSG {
     override fun run(values: List<Any>, event: MessageEvent?) {
       Arona.info(values[0].toString())
-      Arona.sendMessage(values[0].toString())
-      // TODO: sendMessage好使了记得把下面删了
+      // Arona.sendMessage(values[0].toString())
+      // TODO: sendMessage好使了记得加上然后把下面删了
       Arona.runSuspend {
         event?.subject?.sendMessage(values[0].toString())
       }
@@ -115,6 +115,7 @@ data class CommitData(
   val projectName: String,
   val uuid: UUID?,
   val blocklyProject: String,
+  val userData: String
 )
 
 @Serializable

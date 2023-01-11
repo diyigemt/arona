@@ -50,7 +50,6 @@ object BlocklyService: Initialize, AronaMessageReactService<MessageEvent> {
   }
 
   private fun optionalTrigger(hooks: Collection<BlocklyExpression>, event: MessageEvent) {
-    Arona.info(hooks.size.toString())
     hooks.forEach {
       val expression = BlocklyInterpreter.generateBooleanExpression(it, event)
       Arona.info(expression)
@@ -99,7 +98,7 @@ object BlocklyService: Initialize, AronaMessageReactService<MessageEvent> {
    * */
   fun deleteHook(data: CommitData): Int {
     if(data.uuid == null) return -1
-    val meta = SaveManager.getMetaByUUID(data.uuid) ?: return -2
+    val meta = SaveManager.getSaveElementByUUID<Meta>(data.uuid) ?: return -2
     SaveManager.deleteSaveFormRemote(data).apply {
       if(this) {
         hooks.remove(data.uuid)

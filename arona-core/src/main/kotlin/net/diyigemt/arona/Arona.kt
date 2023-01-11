@@ -63,7 +63,7 @@ object Arona : KotlinPlugin(
     System.setProperty("java.awt.headless", "true")
     val pluginEventChannel = globalEventChannel()
     pluginEventChannel.filter { it is ConfigInitSuccessEvent }.subscribeOnce<ConfigInitSuccessEvent> { _ ->
-      val botConfig = getMainConfig<List<BotGroupConfig>>("bots")
+      val botConfig = GlobalConfigProvider.getBotConfig()
       val botList = botConfig.map { it.bot }
       pluginEventChannel.filter {
         it is BotOnlineEvent && botList.contains(it.bot.id)
@@ -158,7 +158,7 @@ object Arona : KotlinPlugin(
   }
 
   fun sendExitMessage() {
-    val botConfig = getMainConfig<List<BotGroupConfig>>("bots")
+    val botConfig = GlobalConfigProvider.getBotConfig()
     val groups = botConfig
       .map { it.groups }
       .flatMap { it.toList() }
@@ -176,7 +176,7 @@ object Arona : KotlinPlugin(
 
   fun sendGroupMessage(group0: Long, block: suspend (MessageChainBuilder.(group: Contact) -> MessageChain)) {
     runSuspend {
-      val botConfig = getMainConfig<List<BotGroupConfig>>("bots")
+      val botConfig = GlobalConfigProvider.getBotConfig()
       val bot0 = botConfig.firstOrNull { it.groups.contains(group0) }?.bot ?: return@runSuspend
       val bot = Bot.getInstanceOrNull(bot0) ?: return@runSuspend
       val group = bot.getGroup(group0) ?: return@runSuspend
@@ -185,7 +185,7 @@ object Arona : KotlinPlugin(
   }
 
   fun sendMessageToAdmin(message: String) {
-    val botConfig = getMainConfig<List<BotGroupConfig>>("bots")
+    val botConfig = GlobalConfigProvider.getBotConfig()
     val managerGroup = getMainConfig<List<Long>>("managerGroup")
     if (botConfig.isEmpty() || managerGroup.isEmpty()) {
       return

@@ -1,6 +1,5 @@
 package net.diyigemt.arona.config
 
-import com.squareup.moshi.Types
 import com.squareup.moshi.adapter
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.db.DataBaseProvider
@@ -14,27 +13,20 @@ import net.diyigemt.arona.util.MoshiUtil
 import net.mamoe.mirai.console.util.cast
 import net.mamoe.mirai.event.broadcast
 import net.mamoe.mirai.event.globalEventChannel
+import kotlin.reflect.KType
+import kotlin.reflect.KTypeProjection
+import kotlin.reflect.full.createType
+import kotlin.reflect.full.starProjectedType
 
 
 object GlobalConfigProvider: Initialize {
   val CONFIG: MutableMap<String, Any?> = mutableMapOf()
+
   inline fun <reified T> get(key: String): T = parseValue(CONFIG[key], key)
 
-  /**
-   * 123456.service.notify false
-   * 789456.service.notify false
-   * service.notify true
-   */
-  inline fun <reified T> getPrefix(prefix: String): List<T> =
-    CONFIG
-      .filter { pair -> pair.key.startsWith(prefix) }
-      .map { pair -> parseValue(pair.value, pair.key) }
+  inline fun <reified T> get(key: String, kType: KType): T = getInffer<T>(key, kType)
 
-  /**
-   * 获取所有以prefix开头的配置项的key
-   */
-  fun getPrefixKey(prefix: String) = CONFIG.map { pair -> pair.key }.filter { key -> key.startsWith(prefix) }
-
+  @OptIn(ExperimentalStdlibApi::class)
   inline fun <reified T> parseValue(value: Any?, key: String): T =
     when (value) {
       is T -> value
@@ -43,40 +35,19 @@ object GlobalConfigProvider: Initialize {
         Int::class,
         Double::class,
         Float::class -> value.cast()
-        List::class -> {
-          // 尽量别在T里写List，Map这种东西，这种东西只知道自己有个形参叫啥都不知道，信息都不够支持反射的
-          Arona.info(value)
-          val type = Types.newParameterizedType(List::class.java, BotGroupConfig::class.java)
-
-          MoshiUtil.reflect.adapter<T>(type).fromJson(value)!!
-        }
-        else -> {
-          MoshiUtil.reflect.adapter(T::class.java).fromJson(value)!!
-          // GsonInstance.fromJson(value, T::class.java)
-        }
+        else -> MoshiUtil.reflect.adapter<T>(T::class.createType()).fromJson(value)!!
       }
       else -> throw RuntimeException("get config: $key error")
     }
 
-  @Suppress("UNCHECKED_CAST")
-  fun <T> get(key: String, clazz: Class<T>): T {
+  @OptIn(ExperimentalStdlibApi::class)
+  inline fun <reified T> getInffer(key: String, kType: KType): T {
     val value = CONFIG[key] ?: throw RuntimeException("get config: $key error")
-    return when {
-      value::class.java == clazz -> value as T
-      value is String -> {
-        MoshiUtil.reflect.adapter(clazz).fromJson(value)!!.also {
-          if(it::class.java == Any::class.java) throw RuntimeException("get config: serialization error")
-          CONFIG[key] = it
-        }
-//        GsonInstance.fromJson(value, clazz).also {
-//          CONFIG[key] = it
-//        }
-      }
-      else -> throw RuntimeException("get config: $key error")
+    return when(value) {
+      is String -> MoshiUtil.reflect.adapter<T>(kType).fromJson(value) ?: throw RuntimeException("get config: $key parse error")
+      else -> throw RuntimeException("get config: $key type error")
     }
   }
-
-  fun <T> getOrDefault(key: String, clazz: Class<T>, default: T): T = get(key, clazz) ?: default
 
   inline fun <reified T> getOrDefault(key: String, default: T): T = get(key) ?: default
 
@@ -125,7 +96,14 @@ object GlobalConfigProvider: Initialize {
   /**
    * 拿到服务的群id列表
    */
-  fun getGroupList(): List<Long> = get("groups")
+  fun getGroupList(): List<Long> = getBotConfig().map { it.groups }.flatMap { it.toList() }
+
+  /**
+   * 拿到botConfig
+   */
+  fun getBotConfig(): List<BotGroupConfig> = get("bots", List::class.createType(listOf(
+    KTypeProjection.invariant(BotGroupConfig::class.starProjectedType)
+  )))
 
   override val priority: Int
     get() = 5

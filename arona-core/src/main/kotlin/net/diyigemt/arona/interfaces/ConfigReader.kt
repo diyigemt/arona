@@ -2,6 +2,7 @@ package net.diyigemt.arona.interfaces
 
 import net.diyigemt.arona.config.GlobalConfigProvider
 import net.mamoe.mirai.console.command.CommandSender
+import kotlin.reflect.KType
 
 interface ConfigReader {
 
@@ -27,6 +28,12 @@ inline fun <reified T> ConfigReader.getConfig(key: String): T = if (configPrefix
 inline fun <reified T> ConfigReader.getGroupConfig(key: String, group: Long): T = GlobalConfigProvider.getGroup("$configPrefix.$key", group)
 inline fun <reified T> ConfigReader.getConfigOrDefault(key: String, default: T): T = GlobalConfigProvider.getOrDefault("$configPrefix.$key", default)
 inline fun <reified T> ConfigReader.getConfigOrDefault(key: String, group: Long, default: T): T = GlobalConfigProvider.getGroupOrDefault("$configPrefix.$key", group, default)
+
+/**
+ * 复杂类型使用
+ */
+inline fun <reified T> ConfigReader.getConfig(key: String, kType: KType): T = if (configPrefix.isEmpty()) getMainConfig(key) else GlobalConfigProvider.get("$configPrefix.$key", kType)
+
 fun ConfigReader.setConfig(key: String, value: Any) = GlobalConfigProvider.set("$configPrefix.$key", value)
 fun ConfigReader.setGroupConfig(key: String, group: Long, value: Any) = GlobalConfigProvider.setGroup("$configPrefix.$key", group, value)
 fun CommandSender.getContactId() = subject?.id ?: 0L

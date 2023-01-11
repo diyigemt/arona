@@ -6,6 +6,7 @@ import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.util.pipeline.*
 import kotlinx.serialization.Serializable
+import net.diyigemt.arona.config.GlobalConfigProvider
 import net.diyigemt.arona.entity.BotGroupConfig
 import net.diyigemt.arona.interfaces.ConfigReader
 import net.diyigemt.arona.interfaces.getMainConfig
@@ -23,7 +24,7 @@ object Contacts : Worker, ConfigReader{
 
     kotlin.runCatching {
       // TODO 将数据结构与bot绑定
-      val bots = getMainConfig<List<BotGroupConfig>>("bots").map { it.bot }
+      val bots = GlobalConfigProvider.getBotConfig().map { it.bot }
       val bot = Bot.getInstanceOrNull(bots[0]) ?: throw RuntimeException("bot: ${bots[0]} not found")
       bot.groups.forEach{
         res.groups.add(GroupContact(it.id, it.name))

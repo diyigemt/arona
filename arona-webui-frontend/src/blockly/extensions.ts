@@ -3,15 +3,18 @@ import { fetchBotContacts } from "@/api/modules/contact";
 import { warningMessage } from "@/utils/message";
 
 export default async function injectExtensions() {
-  await doFetchContacts();
-  Extensions.register("groups_extension", groupsExtension);
-  Extensions.register("friends_extension", friendsExtension);
+  // Extensions.register("groups_extension", groupsExtension);
+  // Extensions.register("friends_extension", friendsExtension);
 }
 
-export const groups: [string, string][] = [];
-export const friends: [string, string][] = [];
+// eslint-disable-next-line import/no-mutable-exports
+export let groups: [string, string][] = [];
+// eslint-disable-next-line import/no-mutable-exports
+export let friends: [string, string][] = [];
 
-async function doFetchContacts() {
+export async function doFetchContacts() {
+  groups = [];
+  friends = [];
   fetchBotContacts()
     .then((res) => {
       res.data.groups.forEach((item) => {

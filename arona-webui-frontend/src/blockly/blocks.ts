@@ -3,41 +3,46 @@ import { friends, groups } from "@/blockly/extensions";
 
 export default function addBlocks() {
   Blockly.Blocks.senderBlock = {
-    // eslint-disable-next-line no-unused-vars
     init(this: Block) {
       const input = this.appendValueInput("IDValueInput")
         .setCheck("LogicType")
         .appendField("发送者为 ")
         .appendField(
-          new FieldDropdown(() => {
-            return [["QQ号", ""]];
-          }),
+          new FieldDropdown(
+            () => {
+              const parentBlock = this.getParent();
+              if (parentBlock != null) {
+                switch (parentBlock?.getFieldValue("TriggerType")) {
+                  case "GroupMessageEvent":
+                    return groups;
+                  case "FriendMessageEvent":
+                    return friends;
+                  default:
+                    break;
+                }
+              }
+              return [["QQ号", ""]];
+            },
+            // TODO: Under Construction
+            // (newValue: string) => {
+            //   // console.log(groups[0][0]);
+            //   switch (this.getParent()?.getFieldValue("TriggerType")) {
+            //     case "GroupMessageEvent":
+            //       console.log(groups[0][0] === newValue);
+            //       return newValue;
+            //     case "FriendMessageEvent":
+            //       console.log(friends[0][0]);
+            //       return friends[0][0];
+            //     default:
+            //       break;
+            //   }
+            //   return newValue;
+            // },
+          ),
           "IDInput",
         );
-      this.setOnChange(() => {
-        const parentBlock = this.getParent();
-        switch (parentBlock?.getFieldValue("TriggerType")) {
-          case "GroupMessageEvent":
-            input.removeField("IDInput");
-            input.appendField(
-              new FieldDropdown(() => {
-                return groups;
-              }),
-              "IDInput",
-            );
-            break;
-          case "FriendMessageEvent":
-            input.removeField("IDInput");
-            input.appendField(
-              new FieldDropdown(() => {
-                return friends;
-              }),
-              "IDInput",
-            );
-          // eslint-disable-next-line no-fallthrough
-          default:
-            break;
-        }
+      this.setOnChange((event) => {
+        console.log(event.type);
       });
       this.setOutput(true, "ExpressionType");
       this.setColour(230);

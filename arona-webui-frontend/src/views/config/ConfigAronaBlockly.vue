@@ -12,7 +12,7 @@
   </div>
   <el-row :gutter="16" style="margin-top: 16px">
     <el-col :span="16">
-      <div class="container">
+      <div id="blockDiv" class="container">
         <div ref="blocklyDiv" class="blocklyDiv"></div>
       </div>
     </el-col>
@@ -35,7 +35,7 @@ import {
   updateBlocklyProject,
 } from "@/api/modules/blockly";
 import { errorMessage, IConfirm, infoMessage, IPrompt, successMessage, warningMessage } from "@/utils/message";
-import injectExtensions from "@/blockly/extensions";
+import injectExtensions, { doFetchContacts } from "@/blockly/extensions";
 import addBlocks from "@/blockly/blocks";
 
 const blocklyDiv = ref();
@@ -47,7 +47,8 @@ const debugMode = ref(true); // false 原生 true format好看
 const isNewProject = ref(false);
 onMounted(() => {
   Blockly.defineBlocksWithJsonArray(blocks);
-  addBlocks()
+  doFetchContacts();
+  addBlocks();
   workspace.value = Blockly.inject(blocklyDiv.value, BlocklyConfig);
   injectExtensions();
   doFetchBlocklyProjectList();

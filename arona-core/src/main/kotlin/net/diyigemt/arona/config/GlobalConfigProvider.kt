@@ -1,15 +1,17 @@
 package net.diyigemt.arona.config
 
-import com.google.gson.Gson
+import com.squareup.moshi.Types
+import com.squareup.moshi.adapter
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.annotations.ConfigKey
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.system.SystemConfigTable
 import net.diyigemt.arona.db.system.SystemConfigTableModel
+import net.diyigemt.arona.entity.BotGroupConfig
 import net.diyigemt.arona.event.ConfigInitSuccessEvent
 import net.diyigemt.arona.event.BaseDatabaseInitEvent
 import net.diyigemt.arona.interfaces.Initialize
-import net.diyigemt.arona.entity.BotGroupConfig
+import net.diyigemt.arona.util.MoshiUtil
 import net.mamoe.mirai.console.util.cast
 import net.mamoe.mirai.event.ListeningStatus
 import net.mamoe.mirai.event.broadcast
@@ -19,7 +21,6 @@ import kotlin.reflect.full.declaredMemberProperties
 
 object GlobalConfigProvider: Initialize {
   val CONFIG: MutableMap<String, Any?> = mutableMapOf()
-  val GsonInstance: Gson = Gson()
   inline fun <reified T> get(key: String): T = parseValue(CONFIG[key], key)
 
   /**
@@ -45,7 +46,17 @@ object GlobalConfigProvider: Initialize {
         Int::class,
         Double::class,
         Float::class -> value.cast()
-        else -> GsonInstance.fromJson(value, T::class.java)
+        List::class -> {
+          // 尽量别在T里写List，Map这种东西，这种东西只知道自己有个形参叫啥都不知道，信息都不够支持反射的
+          Arona.info(value)
+          val type = Types.newParameterizedType(List::class.java, BotGroupConfig::class.java)
+
+          MoshiUtil.reflect.adapter<T>(type).fromJson(value)!!
+        }
+        else -> {
+          MoshiUtil.reflect.adapter(T::class.java).fromJson(value)!!
+          // GsonInstance.fromJson(value, T::class.java)
+        }
       }
       else -> throw RuntimeException("get config: $key error")
     }
@@ -55,8 +66,14 @@ object GlobalConfigProvider: Initialize {
     val value = CONFIG[key] ?: throw RuntimeException("get config: $key error")
     return when {
       value::class.java == clazz -> value as T
-      value is String -> GsonInstance.fromJson(value, clazz).also {
-        CONFIG[key] = it
+      value is String -> {
+        MoshiUtil.reflect.adapter(clazz).fromJson(value)!!.also {
+          if(it::class.java == Any::class.java) throw RuntimeException("get config: serialization error")
+          CONFIG[key] = it
+        }
+//        GsonInstance.fromJson(value, clazz).also {
+//          CONFIG[key] = it
+//        }
       }
       else -> throw RuntimeException("get config: $key error")
     }
@@ -87,7 +104,10 @@ object GlobalConfigProvider: Initialize {
       val castValue = when (value) {
         is String -> value
         is Float, is Double, is Int -> value.toString()
-        else -> GsonInstance.toJson(value)
+        else -> {
+          // GsonInstance.toJson(value)
+          MoshiUtil.reflect.adapter(Any::class.java).toJson(value)
+        }
       }
       if (config == null) {
         SystemConfigTableModel.new {
@@ -108,9 +128,7 @@ object GlobalConfigProvider: Initialize {
   /**
    * 拿到服务的群id列表
    */
-  fun getGroupList(): List<Long> = get<List<BotGroupConfig>>("bots")
-    .map { config -> config.groups }
-    .flatMap { groups -> groups.toList() }
+  fun getGroupList(): List<Long> = get("groups")
 
   override val priority: Int
     get() = 5
@@ -126,7 +144,10 @@ object GlobalConfigProvider: Initialize {
           val castValue = when (v) {
             is String -> v
             is Float, is Double, is Int -> v.toString()
-            else -> GsonInstance.toJson(v)
+            else -> {
+              // GsonInstance.toJson(v)
+              MoshiUtil.reflect.adapter(Any::class.java).toJson(v)
+            }
           }
           SystemConfigTableModel.new {
             this.key = entry.key

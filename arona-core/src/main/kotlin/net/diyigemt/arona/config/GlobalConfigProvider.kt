@@ -9,6 +9,7 @@ import net.diyigemt.arona.db.system.SystemConfigTableModel
 import net.diyigemt.arona.event.ConfigInitSuccessEvent
 import net.diyigemt.arona.event.BaseDatabaseInitEvent
 import net.diyigemt.arona.interfaces.Initialize
+import net.diyigemt.arona.entity.BotGroupConfig
 import net.mamoe.mirai.console.util.cast
 import net.mamoe.mirai.event.ListeningStatus
 import net.mamoe.mirai.event.broadcast
@@ -107,7 +108,9 @@ object GlobalConfigProvider: Initialize {
   /**
    * 拿到服务的群id列表
    */
-  fun getGroupList(): List<Long> = get("groups")
+  fun getGroupList(): List<Long> = get<List<BotGroupConfig>>("bots")
+    .map { config -> config.groups }
+    .flatMap { groups -> groups.toList() }
 
   override val priority: Int
     get() = 5

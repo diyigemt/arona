@@ -149,7 +149,7 @@ object AronaServiceManager: Initialize, ConfigReader {
     val serviceKeyList = serviceList.map { it.name }
     // 拿到服务单独的开关设置? 没有必要 直接获取所有群的开关设置, 因为群没有特定的开关设置必定为默认设置
     val openServiceIndex = serviceKeyList.map { getGroupServiceList(it).isNotEmpty() }.mapIndexed { index, boolean -> if (boolean) index else -1 }.filter { it != -1 }
-    return serviceList.filterIndexed { index, service -> openServiceIndex.contains(index) || service.isGlobal }
+    return serviceList.filterIndexed { index, _ -> openServiceIndex.contains(index) }
   }
 
   private fun findServiceById(id: Int): AronaService? = MAP[id.toString()]

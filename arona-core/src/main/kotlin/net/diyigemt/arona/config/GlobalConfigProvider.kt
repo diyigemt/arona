@@ -2,7 +2,6 @@ package net.diyigemt.arona.config
 
 import com.google.gson.Gson
 import net.diyigemt.arona.Arona
-import net.diyigemt.arona.annotations.ConfigKey
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.system.SystemConfigTable
 import net.diyigemt.arona.db.system.SystemConfigTableModel
@@ -11,10 +10,8 @@ import net.diyigemt.arona.event.BaseDatabaseInitEvent
 import net.diyigemt.arona.interfaces.Initialize
 import net.diyigemt.arona.entity.BotGroupConfig
 import net.mamoe.mirai.console.util.cast
-import net.mamoe.mirai.event.ListeningStatus
 import net.mamoe.mirai.event.broadcast
 import net.mamoe.mirai.event.globalEventChannel
-import kotlin.reflect.full.declaredMemberProperties
 
 
 object GlobalConfigProvider: Initialize {

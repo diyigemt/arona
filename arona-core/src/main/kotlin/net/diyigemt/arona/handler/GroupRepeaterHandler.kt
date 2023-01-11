@@ -6,7 +6,7 @@ import net.diyigemt.arona.service.AronaGroupService
 import net.diyigemt.arona.service.AronaMessageReactService
 import net.mamoe.mirai.event.events.GroupMessageEvent
 
-// 复读
+// 将映射的指令转发将指令消息转发复读
 object GroupRepeaterHandler:
   AronaMessageReactService<GroupMessageEvent>,
   AronaGroupService,

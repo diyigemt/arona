@@ -23,6 +23,7 @@ import net.diyigemt.arona.util.ReflectionUtil
 import net.diyigemt.arona.web.WebUIService
 import net.diyigemt.arona.web.blockly.BlocklyService
 import net.diyigemt.arona.web.blockly.SaveManager
+import net.diyigemt.arona.event.ConfigInitSuccessEvent
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.AbstractCommand
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
@@ -61,29 +62,31 @@ object Arona : KotlinPlugin(
     init()
     System.setProperty("java.awt.headless", "true")
     val pluginEventChannel = globalEventChannel()
-    val botConfig = getMainConfig<List<BotGroupConfig>>("bots")
-    val botList = botConfig.map { it.bot }
-    pluginEventChannel.filter {
-      it is BotOnlineEvent && botList.contains(it.bot.id)
-    }.subscribeAlways<BotOnlineEvent> {
-      val botId = it.bot.id
-      val groups = botConfig
-        .filter { config -> config.bot == botId }
-        .map { config -> config.groups }
-        .flatMap { config -> config.toList() }
-      groups.forEach { group ->
-        val message = getGroupConfig<String>("onlineMessage", group)
-          .also { message -> if(message.isBlank()) return@forEach }
-        sendGroupMessage(group) {
-          this.add(message)
-          this.build()
+    pluginEventChannel.filter { it is ConfigInitSuccessEvent }.subscribeOnce<ConfigInitSuccessEvent> { _ ->
+      val botConfig = getMainConfig<List<BotGroupConfig>>("bots")
+      val botList = botConfig.map { it.bot }
+      pluginEventChannel.filter {
+        it is BotOnlineEvent && botList.contains(it.bot.id)
+      }.subscribeAlways<BotOnlineEvent> {
+        val botId = it.bot.id
+        val groups = botConfig
+          .filter { config -> config.bot == botId }
+          .map { config -> config.groups }
+          .flatMap { config -> config.toList() }
+        groups.forEach { group ->
+          val message = getGroupConfig<String>("onlineMessage", group)
+            .also { message -> if(message.isBlank()) return@forEach }
+          sendGroupMessage(group) {
+            this.add(message)
+            this.build()
+          }
         }
       }
+      pluginEventChannel.subscribeAlways<BotEvent> {
+        AronaServiceManager.emit(this)
+      }
+      info { "arona loaded" }
     }
-    pluginEventChannel.subscribeAlways<BotEvent> {
-      AronaServiceManager.emit(this)
-    }
-    info { "arona loaded" }
   }
 
   @OptIn(ExperimentalCommandDescriptors::class, ConsoleExperimentalApi::class)

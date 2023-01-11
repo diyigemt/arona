@@ -1,6 +1,5 @@
 package net.diyigemt.arona.advance
 
-import net.diyigemt.arona.config.AronaConfig
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.announcement.RemoteActionModel
 import net.diyigemt.arona.db.announcement.RemoteActionTable

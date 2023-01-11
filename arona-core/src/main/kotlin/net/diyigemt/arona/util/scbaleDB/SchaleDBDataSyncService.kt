@@ -1,6 +1,5 @@
 package net.diyigemt.arona.util.scbaleDB
 
-import com.google.gson.Gson
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.db.DB
 import net.diyigemt.arona.db.DataBaseProvider
@@ -8,7 +7,7 @@ import net.diyigemt.arona.db.data.schaledb.MD5
 import net.diyigemt.arona.entity.schaleDB.*
 import net.diyigemt.arona.quartz.QuartzProvider
 import net.diyigemt.arona.service.AronaQuartzService
-import okhttp3.internal.wait
+import net.diyigemt.arona.util.MoshiUtil
 import okio.ByteString.Companion.toByteString
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.insert
@@ -123,12 +122,9 @@ object SchaleDBDataSyncService : AronaQuartzService{
     val query = runCatching {
       DataBaseProvider.query(DB.DATA.ordinal) { MD5.select(MD5.name eq dataType).first() }
     }.getOrNull()
-    val dao = Gson().fromJson(res.getOrDefault(""), T::class.java)
+
+    val dao = MoshiUtil.reflect.adapter(T::class.java).fromJson(res.getOrDefault(""))!!
     //GET失败时dao为null，返回模板对象的默认值
-    if (dao == null){
-      val new = T::class.java.getDeclaredConstructor().newInstance()
-      return new.toModel(new)
-    }
     resString += "Source: $dataType"
     if (query?.getOrNull(MD5.name) != null){
       when(query.getOrNull(MD5.remote)){

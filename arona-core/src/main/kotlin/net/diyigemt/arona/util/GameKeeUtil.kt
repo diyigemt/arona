@@ -1,6 +1,5 @@
 package net.diyigemt.arona.util
 
-import com.google.gson.Gson
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.entity.ActivityType
 import net.diyigemt.arona.entity.GameKeeDAO
@@ -23,7 +22,8 @@ object GameKeeUtil {
       .get()
       .text()
 
-    return analyze(Gson().fromJson(res, GameKeeDAO::class.java), server)
+
+    return analyze(MoshiUtil.reflect.adapter(GameKeeDAO::class.java).fromJson(res)!!, server)
   }
 
   private fun analyze(json : GameKeeDAO, server: ServerLocale) : Pair<MutableList<Activity>, MutableList<Activity>>{

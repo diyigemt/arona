@@ -37,7 +37,11 @@ object GlobalConfigProvider: Initialize {
         Float::class -> value.cast()
         else -> MoshiUtil.reflect.adapter<T>(T::class.createType()).fromJson(value)!!
       }
-      else -> throw RuntimeException("get config: $key error")
+      else -> if (value == null && T::class == String::class) {
+        "" as T
+      } else {
+        throw RuntimeException("get config: $key error")
+      }
     }
 
   @OptIn(ExperimentalStdlibApi::class)
@@ -112,24 +116,6 @@ object GlobalConfigProvider: Initialize {
     Arona.globalEventChannel().filter { it is BaseDatabaseInitEvent }.subscribeOnce<BaseDatabaseInitEvent> { _ ->
       // 从数据库读取
       DataBaseProvider.query { _ ->
-        CONFIG.forEach { entry ->
-          val config = SystemConfigTableModel.find { SystemConfigTable.key eq entry.key }.toList().firstOrNull()
-          if (config != null) return@forEach
-          val v = entry.value
-          val castValue = when (v) {
-            is String -> v
-            is Float, is Double, is Int -> v.toString()
-            else -> {
-              // GsonInstance.toJson(v)
-              MoshiUtil.reflect.adapter(Any::class.java).toJson(v)
-            }
-          }
-          SystemConfigTableModel.new {
-            this.key = entry.key
-            this.value = castValue
-          }
-        }
-
         SystemConfigTableModel.all().forEach {
           CONFIG[it.key] = it.value
         }

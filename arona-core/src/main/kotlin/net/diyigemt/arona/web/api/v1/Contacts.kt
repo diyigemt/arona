@@ -7,9 +7,7 @@ import io.ktor.server.response.*
 import io.ktor.util.pipeline.*
 import kotlinx.serialization.Serializable
 import net.diyigemt.arona.config.GlobalConfigProvider
-import net.diyigemt.arona.entity.BotGroupConfig
 import net.diyigemt.arona.interfaces.ConfigReader
-import net.diyigemt.arona.interfaces.getMainConfig
 import net.diyigemt.arona.web.api.v1.message.FriendContact
 import net.diyigemt.arona.web.api.v1.message.GroupContact
 

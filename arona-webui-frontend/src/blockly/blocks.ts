@@ -28,7 +28,7 @@ export default function addBlocks() {
         const root = this.getRootBlock();
         const res = this.getField("IDInput") as FieldDropdown;
         let flag = false;
-        if ((event.type === "change" || event.type === "move") && root != null) {
+        if ((event.type === "change" || event.type === "move") && root.getField("TriggerType") != null) {
           switch (root?.getFieldValue("TriggerType")) {
             case "GroupMessageEvent":
               flag = false;
@@ -88,21 +88,18 @@ export default function addBlocks() {
           "groupIDInput",
         );
       this.setOnChange((event) => {
-        console.log(event.type);
         const root = this.getRootBlock();
         const res = this.getField("groupIDInput") as FieldDropdown;
-        if ((event.type === "change" || event.type === "move") && root != null) {
+        if ((event.type === "change" || event.type === "move") && root.getField("TriggerType") != null) {
           switch (root.getFieldValue("TriggerType")) {
-            case "FriendMessageEvent":
-              BlocklyUtil.disableBlock(this, "该积木块只能在群消息事件中使用");
-              break;
             case "GroupMessageEvent":
               BlocklyUtil.enableBlock(this);
               break;
             default:
+              BlocklyUtil.disableBlock(this, "该积木块只能在群消息事件中使用");
               break;
           }
-          if (res.getValue() === "" && root.getField("TriggerType") != null) {
+          if (res.getValue() === "") {
             BlocklyUtil.disableBlock(this, "请选择目标群");
           }
         }

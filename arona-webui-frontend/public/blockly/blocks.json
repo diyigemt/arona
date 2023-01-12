@@ -40,7 +40,7 @@
   "args0": [
     {
       "type": "field_dropdown",
-      "name": "Logic",
+      "name": "logicInput",
       "options": [
         [
           "且",
@@ -68,7 +68,8 @@
   "output": "LogicType",
   "colour": 230,
   "tooltip": "",
-  "helpUrl": ""
+  "helpUrl": "",
+  "extensions": ["logic_block_extension"]
 },
 {
   "type": "send_msg_block",

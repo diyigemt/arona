@@ -35,8 +35,9 @@ import {
   updateBlocklyProject,
 } from "@/api/modules/blockly";
 import { errorMessage, IConfirm, infoMessage, IPrompt, successMessage, warningMessage } from "@/utils/message";
-import injectExtensions, { doFetchContacts } from "@/blockly/extensions";
 import addBlocks from "@/blockly/blocks";
+import injectExtensions from "@/blockly/extensions";
+import { doFetchContacts } from "@/blockly/BlocklyUtil";
 
 const blocklyDiv = ref();
 const output = ref<string>();

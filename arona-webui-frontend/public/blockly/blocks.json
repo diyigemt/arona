@@ -35,21 +35,6 @@
   "helpUrl": ""
 },
 {
-  "type": "id_block",
-  "message0": "群号 %1",
-  "args0": [
-    {
-      "type": "input_value",
-      "name": "IDInput",
-      "check": "LogicType"
-    }
-  ],
-  "output": "ExpressionType",
-  "colour": 230,
-  "tooltip": "",
-  "helpUrl": ""
-},
-{
   "type": "logic_block",
   "message0": "%1 %2",
   "args0": [

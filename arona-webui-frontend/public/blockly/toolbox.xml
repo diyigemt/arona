@@ -1,14 +1,8 @@
 <xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
     <category name="条件">
-        <block type="id_block">
-            <field name="ID">123456</field>
-        </block>
-        <block type="senderBlock">
-            <field name="ID">123456</field>
-        </block>
-        <block type="logic_block">
-            <field name="Logic">And</field>
-        </block>
+        <block type="groupIDBlock"></block>
+        <block type="senderBlock"></block>
+        <block type="logic_block"></block>
     </category>
     <category name="行为">
         <block type="send_msg_block">

@@ -41,7 +41,7 @@ aronaGenerator.master_block = function (block) {
   return code;
 };
 
-aronaGenerator.id_block = function (block) {
+aronaGenerator.groupIDBlock = function (block) {
   const textId = block.getFieldValue("ID");
   aronaGenerator.valueToCode(block, "IDInput", aronaGenerator.ORDER_ATOMIC);
   aronaGenerator.expressions.unshift({

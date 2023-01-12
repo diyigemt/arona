@@ -1,5 +1,5 @@
 import Blockly, { Block, FieldDropdown } from "blockly";
-import BlocklyUtil, { friends, groups } from "@/blockly/BlocklyUtil";
+import BlocklyUtil, { doFetchGroupMember, friends, groups } from "@/blockly/BlocklyUtil";
 
 export default function addBlocks() {
   Blockly.Blocks.senderBlock = {
@@ -10,10 +10,15 @@ export default function addBlocks() {
         .appendField(
           new FieldDropdown(() => {
             const root = this.getRootBlock();
+            const parent = this.getParent();
             if (root != null) {
               switch (root?.getFieldValue("TriggerType")) {
                 case "GroupMessageEvent":
-                  return groups;
+                  // TODO: 寻找上下文
+                  if (parent?.getParent()?.type === "groupIDBlock") {
+                    return BlocklyUtil.groupMemberPool.get(parent?.getParent()?.getFieldValue("groupIDInput"));
+                  }
+                  break;
                 case "FriendMessageEvent":
                   return friends;
                 default:
@@ -29,6 +34,9 @@ export default function addBlocks() {
         const res = this.getField("IDInput") as FieldDropdown;
         let flag = false;
         if ((event.type === "change" || event.type === "move") && root.getField("TriggerType") != null) {
+          const groupNumber = BlocklyUtil.findContext(this, "groupIDBlock")!.getFieldValue("groupIDInput") as string;
+          const groupList = BlocklyUtil.groupMemberPool.get(groupNumber)!;
+          console.log(groupList);
           switch (root?.getFieldValue("TriggerType")) {
             case "GroupMessageEvent":
               flag = false;
@@ -40,9 +48,19 @@ export default function addBlocks() {
               for (const item of friends) {
                 if (item[1] === res.getValue()) {
                   flag = true;
+                  console.log(BlocklyUtil.findGroupMember(res.getValue()));
+                  if (BlocklyUtil.findGroupMember(res.getValue())) {
+                    flag = false;
+                  }
                   break;
                 }
               }
+              console.log("ding");
+
+              // eslint-disable-next-line no-loop-func
+              groupList.forEach((groupMember) => {
+                if (groupMember[1] === res.getValue()) flag = false;
+              });
               break;
             case "FriendMessageEvent":
               flag = false;
@@ -62,7 +80,7 @@ export default function addBlocks() {
               break;
           }
           if (flag) {
-            BlocklyUtil.disableBlock(this, "目标不属于当前事件范围内");
+            BlocklyUtil.disableBlock(this, "选择的目标不属于当前事件范围内");
           } else {
             BlocklyUtil.enableBlock(this);
           }
@@ -94,6 +112,9 @@ export default function addBlocks() {
           switch (root.getFieldValue("TriggerType")) {
             case "GroupMessageEvent":
               BlocklyUtil.enableBlock(this);
+              if (res.getValue() !== "") {
+                doFetchGroupMember(res.getValue());
+              }
               break;
             default:
               BlocklyUtil.disableBlock(this, "该积木块只能在群消息事件中使用");

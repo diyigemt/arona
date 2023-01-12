@@ -13,7 +13,6 @@ function logicBlockExtension(this: Block) {
       const dropDown = this.getField("logicInput") as FieldDropdown;
       switch (dropDown.getValue()) {
         case "Not":
-          // console.log(parent?.type !== root.type || (parent?.type !== this.type && parent?.type !== root.type));
           if (parent?.type === root.type || parent?.type === this.type) {
             BlocklyUtil.enableBlock(this);
           } else {
@@ -31,12 +30,6 @@ function logicBlockExtension(this: Block) {
           }
           break;
       }
-      console.log(this.getNextBlock());
-      if (this.getNextBlock() == null) {
-        // BlocklyUtil.disableBlock(this, "缺少条件");
-      } else {
-        BlocklyUtil.enableBlock(this);
-      }
       if (parent?.type === root.type) {
         dropDown.setValue("Not");
       }
@@ -46,7 +39,6 @@ function logicBlockExtension(this: Block) {
       if (parent?.getFieldValue("logicInput") === "Not" && dropDown.getValue() === "Not") {
         BlocklyUtil.disableBlock(this, "无效的逻辑非");
       }
-      console.log(event.type);
     }
   });
 }

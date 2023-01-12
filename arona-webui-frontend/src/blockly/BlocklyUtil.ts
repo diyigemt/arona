@@ -1,8 +1,12 @@
 import { Block } from "blockly";
 import { fetchBotContacts } from "@/api/modules/contact";
 import { warningMessage } from "@/utils/message";
+import service from "@/api/http";
+import { Friend } from "@/types/contact";
 
 export default class BlocklyUtil {
+  static groupMemberPool = new Map<string, [string, string][]>();
+
   static disableBlock(block: Block, warnMessage: string) {
     block.setEnabled(false);
     block.setColour(0);
@@ -14,6 +18,28 @@ export default class BlocklyUtil {
     block.setColour(230);
     block.setWarningText(null);
   }
+
+  static findContext(block: Block, type: string) {
+    let parent = block.getParent();
+    while (parent != null) {
+      if (parent.type === type) {
+        return parent;
+      }
+      parent = parent.getParent();
+    }
+    return null;
+  }
+
+  static findGroupMember(id: number) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const group of this.groupMemberPool) {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const member of group) {
+        if (member === id.toString()) return true;
+      }
+    }
+    return false;
+  }
 }
 
 // eslint-disable-next-line import/no-mutable-exports
@@ -21,7 +47,7 @@ export let groups: [string, string][] = [];
 // eslint-disable-next-line import/no-mutable-exports
 export let friends: [string, string][] = [];
 
-export async function doFetchContacts() {
+export function doFetchContacts() {
   groups = [];
   friends = [];
   fetchBotContacts()
@@ -37,4 +63,20 @@ export async function doFetchContacts() {
       warningMessage("获取bot联系人列表失败");
       console.log(err);
     });
+}
+
+export function doFetchGroupMember(id: number) {
+  // eslint-disable-next-line no-return-await
+  const groupList: [string, string][] = [];
+  service
+    .raw<Friend[]>({
+      url: `/contacts/${id}`,
+      method: "POST",
+    })
+    .then((r) => {
+      r.data.forEach((item) => {
+        groupList.push([`${item.remark} (${item.id})`, item.id.toString()]);
+      });
+    });
+  BlocklyUtil.groupMemberPool.set(id.toString(), groupList);
 }

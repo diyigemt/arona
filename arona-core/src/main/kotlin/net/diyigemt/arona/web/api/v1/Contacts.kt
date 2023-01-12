@@ -12,6 +12,7 @@ import net.diyigemt.arona.config.GlobalConfigProvider
 import net.diyigemt.arona.interfaces.ConfigReader
 import net.diyigemt.arona.web.api.v1.message.Contact
 import net.diyigemt.arona.web.api.v1.message.GroupContact
+import net.mamoe.mirai.contact.nameCardOrNick
 import net.mamoe.mirai.contact.remarkOrNick
 
 /**
@@ -50,7 +51,7 @@ object Contacts : Worker, ConfigReader{
           val bots = GlobalConfigProvider.getBotConfig().map { it.bot }
           val bot = Bot.getInstanceOrNull(bots[0]) ?: throw RuntimeException("bot: ${bots[0]} not found")
           bot.getGroup(groupID.toLong())!!.members.forEach {
-            res.add(Contact(it.id, it.nick, it.remarkOrNick))
+            res.add(Contact(it.id, it.nick, it.nameCardOrNick))
           }
         }.onSuccess {
           context.call.respond(responseMessage(res))

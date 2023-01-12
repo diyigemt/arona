@@ -9,9 +9,9 @@ export default function addBlocks() {
         .appendField("发送者为 ")
         .appendField(
           new FieldDropdown(() => {
-            const parentBlock = this.getParent();
-            if (parentBlock != null) {
-              switch (parentBlock?.getFieldValue("TriggerType")) {
+            const root = this.getRootBlock();
+            if (root != null) {
+              switch (root?.getFieldValue("TriggerType")) {
                 case "GroupMessageEvent":
                   return groups;
                 case "FriendMessageEvent":
@@ -25,11 +25,11 @@ export default function addBlocks() {
           "IDInput",
         );
       this.setOnChange((event) => {
-        const parent = this.getParent();
+        const root = this.getRootBlock();
         const res = this.getField("IDInput") as FieldDropdown;
         let flag = false;
-        if (event.type === "change" && parent != null) {
-          switch (this.getParent()?.getFieldValue("TriggerType")) {
+        if (event.type === "change" && root != null) {
+          switch (root?.getFieldValue("TriggerType")) {
             case "GroupMessageEvent":
               flag = false;
               if (res.getValue() === "") {
@@ -64,7 +64,7 @@ export default function addBlocks() {
           if (flag) {
             this.setEnabled(false);
             this.setColour(0);
-            this.setWarningText("");
+            this.setWarningText("目标不属于当前事件范围内");
           } else {
             this.setEnabled(true);
             this.setColour(230);

@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
  *@Create 2022/10/22
  */
 @Serializable
-data class FriendContact(
+data class Contact(
   val id : Long,
   val name : String,
   val remark : String

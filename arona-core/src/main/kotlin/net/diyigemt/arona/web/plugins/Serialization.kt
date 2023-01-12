@@ -32,8 +32,13 @@ fun Application.configureSerialization() {
           }
         }
 
-        get("/contacts") {
-          Contacts.worker(this)
+        route("/contacts") {
+          get {
+            Contacts.worker(this)
+          }
+          post("/{group}") {
+            Contacts.worker(this)
+          }
         }
 
         route("/db") {

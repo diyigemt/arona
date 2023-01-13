@@ -1,4 +1,4 @@
-import Blockly, { Block, FieldDropdown } from "blockly";
+import Blockly, { Block, FieldDropdown, Mutator } from "blockly";
 import BlocklyUtil, { doFetchGroupMember, friends, groups } from "@/blockly/BlocklyUtil";
 
 export default function addBlocks() {
@@ -71,6 +71,7 @@ export default function addBlocks() {
           }
         }
       });
+      this.setMutator(new Mutator([""]));
       this.setOutput(true, "ExpressionType");
       this.setColour(230);
     },

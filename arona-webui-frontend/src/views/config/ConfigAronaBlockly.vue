@@ -38,6 +38,7 @@ import { errorMessage, IConfirm, infoMessage, IPrompt, successMessage, warningMe
 import addBlocks from "@/blockly/blocks";
 import injectExtensions from "@/blockly/extensions";
 import { doFetchContacts } from "@/blockly/BlocklyUtil";
+import addMutators from "@/blockly/mutators";
 
 const blocklyDiv = ref();
 const output = ref<string>();
@@ -50,6 +51,7 @@ onMounted(() => {
   Blockly.defineBlocksWithJsonArray(blocks);
   doFetchContacts();
   addBlocks();
+  addMutators();
   workspace.value = Blockly.inject(blocklyDiv.value, BlocklyConfig);
   injectExtensions();
   doFetchBlocklyProjectList();

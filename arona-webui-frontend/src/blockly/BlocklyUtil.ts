@@ -1,4 +1,4 @@
-import { Block } from "blockly";
+import Blockly, { Block } from "blockly";
 import { fetchBotContacts } from "@/api/modules/contact";
 import { warningMessage } from "@/utils/message";
 import service from "@/api/http";
@@ -17,6 +17,26 @@ export default class BlocklyUtil {
     block.setEnabled(true);
     block.setColour(230);
     block.setWarningText(null);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  static registerExtensions(name: string, extension: Function) {
+    if (Blockly.Extensions.isRegistered(name)) {
+      Blockly.Extensions.unregister(name);
+    }
+    Blockly.Extensions.register(name, extension);
+  }
+
+  static registerMixin(
+    name: string,
+    mixin: unknown,
+    helperFn?: () => unknown | undefined,
+    blockList?: string[] | undefined,
+  ) {
+    if (Blockly.Extensions.isRegistered(name)) {
+      Blockly.Extensions.unregister(name);
+    }
+    Blockly.Extensions.registerMutator(name, mixin, helperFn, blockList);
   }
 
   static findContext(block: Block, type: string) {
@@ -42,7 +62,7 @@ export default class BlocklyUtil {
   }
 
   static wipeDuplicateData<T>(list: T[]): T[] {
-    // list.sort();
+    list.sort();
     const res = [list[0]];
     list.forEach((item) => {
       if (item !== res[res.length - 1]) {

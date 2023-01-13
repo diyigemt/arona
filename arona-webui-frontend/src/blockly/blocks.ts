@@ -14,8 +14,7 @@ export default function addBlocks() {
             if (root != null) {
               switch (root?.getFieldValue("TriggerType")) {
                 case "GroupMessageEvent":
-                  // TODO: 寻找上下文
-                  if (parent?.getParent()?.type === "groupIDBlock") {
+                  if (BlocklyUtil.findContext(this, "groupIDBlock")!) {
                     return BlocklyUtil.groupMemberPool.get(parent?.getParent()?.getFieldValue("groupIDInput"));
                   }
                   break;
@@ -34,33 +33,19 @@ export default function addBlocks() {
         const res = this.getField("IDInput") as FieldDropdown;
         let flag = false;
         if ((event.type === "change" || event.type === "move") && root.getField("TriggerType") != null) {
-          const groupNumber = BlocklyUtil.findContext(this, "groupIDBlock")!.getFieldValue("groupIDInput") as string;
-          const groupList = BlocklyUtil.groupMemberPool.get(groupNumber)!;
-          console.log(groupList);
           switch (root?.getFieldValue("TriggerType")) {
             case "GroupMessageEvent":
               flag = false;
               if (res.getValue() === "") {
                 flag = true;
-                break;
-              }
-              // eslint-disable-next-line no-restricted-syntax
-              for (const item of friends) {
-                if (item[1] === res.getValue()) {
-                  flag = true;
-                  console.log(BlocklyUtil.findGroupMember(res.getValue()));
-                  if (BlocklyUtil.findGroupMember(res.getValue())) {
-                    flag = false;
+                // eslint-disable-next-line no-restricted-syntax
+                for (const item of friends) {
+                  if (item[1] === res.getValue()) {
+                    flag = !BlocklyUtil.findGroupMember(res.getValue());
+                    break;
                   }
-                  break;
                 }
               }
-              console.log("ding");
-
-              // eslint-disable-next-line no-loop-func
-              groupList.forEach((groupMember) => {
-                if (groupMember[1] === res.getValue()) flag = false;
-              });
               break;
             case "FriendMessageEvent":
               flag = false;

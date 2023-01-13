@@ -40,12 +40,26 @@ export default class BlocklyUtil {
     }
     return false;
   }
+
+  static wipeDuplicateData<T>(list: T[]): T[] {
+    // list.sort();
+    const res = [list[0]];
+    list.forEach((item) => {
+      if (item !== res[res.length - 1]) {
+        res.push(item);
+      }
+    });
+
+    return res;
+  }
 }
 
 // eslint-disable-next-line import/no-mutable-exports
 export let groups: [string, string][] = [];
 // eslint-disable-next-line import/no-mutable-exports
 export let friends: [string, string][] = [];
+
+let groupList: [string, string][] = [];
 
 export function doFetchContacts() {
   groups = [];
@@ -66,8 +80,7 @@ export function doFetchContacts() {
 }
 
 export function doFetchGroupMember(id: number) {
-  // eslint-disable-next-line no-return-await
-  const groupList: [string, string][] = [];
+  groupList = [];
   service
     .raw<Friend[]>({
       url: `/contacts/${id}`,
@@ -75,7 +88,13 @@ export function doFetchGroupMember(id: number) {
     })
     .then((r) => {
       r.data.forEach((item) => {
-        groupList.push([`${item.remark} (${item.id})`, item.id.toString()]);
+        let flag = true;
+        groupList.forEach((member) => {
+          if (member[1] === item.id.toString()) {
+            flag = false;
+          }
+        });
+        if (flag) groupList.push([`${item.remark} (${item.id})`, item.id.toString()]);
       });
     });
   BlocklyUtil.groupMemberPool.set(id.toString(), groupList);

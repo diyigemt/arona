@@ -1,5 +1,5 @@
 [{
-  "type": "master_block",
+  "type": "masterBlock",
   "message0": "收到 %1 时，当 %2 执行 %3",
   "args0": [
     {
@@ -35,7 +35,7 @@
   "helpUrl": ""
 },
 {
-  "type": "logic_block",
+  "type": "logicBlock",
   "message0": "%1 %2",
   "args0": [
     {
@@ -72,7 +72,7 @@
   "extensions": ["logic_block_extension"]
 },
 {
-  "type": "send_msg_block",
+  "type": "sendMsgBlock",
   "message0": "发送消息： %1",
   "args0": [
     {

@@ -25,7 +25,6 @@
 <script setup lang="ts">
 import Blockly from "blockly";
 import BlocklyConfig, { blocks, workspaceBlocks } from "@/blockly";
-// @ts-ignore
 import aronaGenerator from "@/blockly/generator";
 import { BlocklyProject, BlocklyProjectWorkspace } from "@/interface/modules/blockly";
 import {
@@ -102,6 +101,7 @@ function onSaveCurrentProject() {
         projectName: value,
         uuid: null,
         blocklyProject: JSON.stringify(Blockly.serialization.workspaces.save(workspace.value)),
+        userData: "",
       })
         .then(() => {
           doFetchBlocklyProjectList();
@@ -117,6 +117,7 @@ function onSaveCurrentProject() {
       projectName: (blockList.value || [])[selectBlockIndex.value as number].name,
       uuid: (blockList.value || [])[selectBlockIndex.value as number].uuid,
       blocklyProject: JSON.stringify(Blockly.serialization.workspaces.save(workspace.value)),
+      userData: "",
     }).then(() => {
       doFetchBlocklyProjectList();
       successMessage("保存成功");
@@ -156,6 +157,7 @@ function onDeleteProject() {
         // TODO:只有UUID是有用的，其余的都可以不给，但不能给NULL，后端能过反序列化就行
         uuid: (blockList.value || [])[selectBlockIndex.value as number].uuid,
         blocklyProject: "",
+        userData: "",
       }).then(() => {
         doFetchBlocklyProjectList();
         successMessage("删除成功");

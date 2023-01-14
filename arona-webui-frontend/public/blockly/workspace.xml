@@ -1,5 +1,5 @@
 <xml xmlns="https://developers.google.com/blockly/xml" id="workspaceBlocks" style="display: none">
-  <block type="master_block" id="4%|@+]Ubn$bnzPePvDN%" x="13" y="13" deletable="false" movable="false">
+  <block type="masterBlock" id="4%|@+]Ubn$bnzPePvDN%" x="13" y="13" deletable="false" movable="false">
     <field name="TriggerType">GroupMessageEvent</field>
   </block>
 </xml>

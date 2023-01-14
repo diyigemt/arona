@@ -1,4 +1,4 @@
-import Blockly, { Block } from "blockly";
+import Blockly, { Block, FieldImage } from "blockly";
 import { fetchBotContacts } from "@/api/modules/contact";
 import { warningMessage } from "@/utils/message";
 import service from "@/api/http";
@@ -37,6 +37,10 @@ export default class BlocklyUtil {
       Blockly.Extensions.unregister(name);
     }
     Blockly.Extensions.registerMutator(name, mixin, helperFn, blockList);
+  }
+
+  static createCustomField(src: string, fn?: (p1: FieldImage) => unknown) {
+    return new FieldImage(src, 15, 15, undefined, fn);
   }
 
   static findContext(block: Block, type: string) {

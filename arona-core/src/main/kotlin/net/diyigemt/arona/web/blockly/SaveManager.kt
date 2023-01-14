@@ -49,7 +49,7 @@ object SaveManager {
 
     kotlin.runCatching {
       val res = ZipFile(file)
-      val listFiles = arrayListOf("resources/", "blocklyProject.json", "expression.json", "meta.json", "user.json")
+      val listFiles = arrayListOf("resources/", "blocklyProject.json", "expression.json", "meta.json", "userData.json")
 
       for (item in listFiles) {
         params.fileNameInZip = item
@@ -57,6 +57,7 @@ object SaveManager {
           when(item){
             // TODO: 需要写初始数据的在这里写
             "meta.json" -> json.encodeToString(Meta.serializer(), tmp).byteInputStream()
+            "userData.json" -> json.encodeToString(UserData.serializer(), UserData(mutableListOf())).byteInputStream()
             else -> "".byteInputStream()
           }, params
         )
@@ -123,7 +124,7 @@ object SaveManager {
       }
     }
 
-    newSave.writeDataToSave("user.json", data.userData.byteInputStream()).apply {
+    newSave.writeDataToSave("userData.json", data.userData.byteInputStream()).apply {
       if (!this){
         newSave.delete()
         return null
@@ -160,7 +161,7 @@ object SaveManager {
       }
     }
 
-    save.writeDataToSave("user.json", data.userData.byteInputStream()).apply {
+    save.writeDataToSave("userData.json", data.userData.byteInputStream()).apply {
       if (!this){
         return false
       }

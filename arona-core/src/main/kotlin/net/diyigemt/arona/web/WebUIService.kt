@@ -52,7 +52,6 @@ object WebUIService: SimpleCommand(
       res.close()
       return@runCatching resPort
     }.getOrElse {
-      it.printStackTrace()
       Arona.error("端口: ${savePort}已被占用, 使用系统分配的端口")
       return@getOrElse kotlin.runCatching {
         val sp = ServerSocket(0)

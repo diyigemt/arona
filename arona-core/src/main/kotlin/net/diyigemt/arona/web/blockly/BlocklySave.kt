@@ -21,7 +21,7 @@ class BlocklySave(file: File): File(file.absolutePath) {
   init {
     kotlin.runCatching {
       meta = json.decodeFromString(Meta.serializer(), readDataAsString("meta.json")!!)
-      userData = json.decodeFromString(UserData.serializer(), readDataAsString("user.json")!!)
+      userData = json.decodeFromString(UserData.serializer(), readDataAsString("userData.json")!!)
     }.onFailure {
       Arona.error("存档已损坏")
       throw it
@@ -85,7 +85,7 @@ class BlocklySave(file: File): File(file.absolutePath) {
   }
 
   fun wipeUserData(): Boolean = kotlin.runCatching {
-    json.decodeFromString(UserData.serializer(), readDataAsString("user.json")!!).ids.replaceAll { "" }
+    json.decodeFromString(UserData.serializer(), readDataAsString("userData.json")!!).ids.replaceAll { "" }
     return@runCatching true
   }.getOrElse {
     return@getOrElse false
@@ -93,11 +93,11 @@ class BlocklySave(file: File): File(file.absolutePath) {
 
   fun updateUserData(changes: Map<Int, String>): Boolean {
     kotlin.runCatching {
-      val data = json.decodeFromString(UserData.serializer(), readDataAsString("user.json")!!)
+      val data = json.decodeFromString(UserData.serializer(), readDataAsString("userData.json")!!)
       changes.forEach {
         data.ids[it.key] = it.value
       }
-      writeDataToSave("user.json", json.encodeToString(UserData.serializer(), data).byteInputStream())
+      writeDataToSave("userData.json", json.encodeToString(UserData.serializer(), data).byteInputStream())
 
       return true
     }.onFailure {

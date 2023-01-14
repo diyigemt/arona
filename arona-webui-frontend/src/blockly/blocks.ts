@@ -5,6 +5,8 @@ import { exchange } from "@/blockly/images";
 export default function addBlocks() {
   Blockly.Blocks.senderBlock = {
     init(this: Block) {
+      // @ts-ignore
+      // @ts-ignore
       this.appendValueInput("IDValueInput")
         .setCheck("LogicType")
         .appendField(
@@ -25,6 +27,7 @@ export default function addBlocks() {
         )
         .appendField("发送者为 ")
         .appendField(
+          // @ts-ignore
           new FieldTextInput("123456", (value: string) => {
             const reg = /[A-z`~!@#$^\-&*()=|{}':;,\\[\].<>/?！￥…（）—【】；："。，、？\s]+/g;
             const qqReg = /[1-9][0-9]{4,10}/g;

@@ -1,4 +1,4 @@
-import Blockly, { Block, FieldDropdown } from "blockly";
+import { Block, FieldDropdown } from "blockly";
 import BlocklyUtil from "@/blockly/BlocklyUtil";
 
 export default async function injectExtensions() {
@@ -39,6 +39,9 @@ function logicBlockExtension(this: Block) {
       }
       if (parent?.getFieldValue("logicInput") === "Not" && dropDown.getValue() === "Not") {
         BlocklyUtil.disableBlock(this, "无效的逻辑非");
+      }
+      if (this.getInputTargetBlock("logicValueInput") == null) {
+        BlocklyUtil.disableBlock(this, "右侧缺少条件");
       }
     }
   });

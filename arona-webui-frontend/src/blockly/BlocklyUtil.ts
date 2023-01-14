@@ -19,8 +19,7 @@ export default class BlocklyUtil {
     block.setWarningText(null);
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  static registerExtensions(name: string, extension: Function) {
+  static registerExtensions(name: string, extension: () => void) {
     if (Blockly.Extensions.isRegistered(name)) {
       Blockly.Extensions.unregister(name);
     }
@@ -64,30 +63,12 @@ export default class BlocklyUtil {
     }
     return false;
   }
-
-  static wipeDuplicateData<T>(list: T[]): T[] {
-    list.sort();
-    const res = [list[0]];
-    list.forEach((item) => {
-      if (item !== res[res.length - 1]) {
-        res.push(item);
-      }
-    });
-
-    return res;
-  }
 }
 
-// eslint-disable-next-line import/no-mutable-exports
-export let groups: [string, string][] = [];
-// eslint-disable-next-line import/no-mutable-exports
-export let friends: [string, string][] = [];
-
-let groupList: [string, string][] = [];
+export const groups: [string, string][] = [];
+export const friends: [string, string][] = [];
 
 export function doFetchContacts() {
-  groups = [];
-  friends = [];
   fetchBotContacts()
     .then((res) => {
       res.data.groups.forEach((item) => {
@@ -105,8 +86,7 @@ export function doFetchContacts() {
 }
 
 function doFetchGroupMember(id: number) {
-  groupList = [];
-  let flag = true;
+  const groupList: [string, string][] = [];
   service
     .raw<Friend[]>({
       url: `/contacts/${id}`,
@@ -114,13 +94,7 @@ function doFetchGroupMember(id: number) {
     })
     .then((r) => {
       r.data.forEach((item) => {
-        flag = true;
-        groupList.forEach((member) => {
-          if (member[1] === item.id.toString()) {
-            flag = false;
-          }
-        });
-        if (flag) groupList.push([`${item.remark} (${item.id})`, item.id.toString()]);
+        groupList.push([`${item.remark} (${item.id})`, item.id.toString()]);
       });
     });
   BlocklyUtil.groupMemberPool.set(id.toString(), groupList);

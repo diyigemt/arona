@@ -58,7 +58,7 @@
     },
     {
       "type": "input_value",
-      "name": "NAME",
+      "name": "logicValueInput",
       "check": [
         "ExpressionType",
         "LogicType"

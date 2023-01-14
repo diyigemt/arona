@@ -13,6 +13,7 @@ interface BlocklyProjectSaveData {
   uuid: string | null;
   projectName: string;
   blocklyProject: string;
+  userData: string;
 }
 
 export function saveBlocklyProject(data: BlocklyProjectSaveData) {

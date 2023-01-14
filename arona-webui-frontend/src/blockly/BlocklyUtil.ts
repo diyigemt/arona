@@ -92,6 +92,7 @@ export function doFetchContacts() {
     .then((res) => {
       res.data.groups.forEach((item) => {
         groups.push([`${item.name} (${item.id.toString()})`, item.id.toString()]);
+        doFetchGroupMember(item.id);
       });
       res.data.friends.forEach((item) => {
         friends.push([`${item.name} (${item.id.toString()})`, item.id.toString()]);
@@ -103,8 +104,9 @@ export function doFetchContacts() {
     });
 }
 
-export function doFetchGroupMember(id: number) {
+function doFetchGroupMember(id: number) {
   groupList = [];
+  let flag = true;
   service
     .raw<Friend[]>({
       url: `/contacts/${id}`,
@@ -112,7 +114,7 @@ export function doFetchGroupMember(id: number) {
     })
     .then((r) => {
       r.data.forEach((item) => {
-        let flag = true;
+        flag = true;
         groupList.forEach((member) => {
           if (member[1] === item.id.toString()) {
             flag = false;

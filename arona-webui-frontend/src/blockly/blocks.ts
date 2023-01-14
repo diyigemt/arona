@@ -1,5 +1,5 @@
 import Blockly, { Block, BlockSvg, FieldDropdown, FieldTextInput } from "blockly";
-import BlocklyUtil, { doFetchGroupMember, friends, groups } from "@/blockly/BlocklyUtil";
+import BlocklyUtil, { friends, groups } from "@/blockly/BlocklyUtil";
 import { exchange } from "@/blockly/images";
 
 export default function addBlocks() {
@@ -15,6 +15,7 @@ export default function addBlocks() {
             if (dropDown.isVisible()) {
               dropDown.setVisible(false);
               manualInput.setVisible(true);
+              manualInput.setValue(dropDown.getValue());
             } else {
               dropDown.setVisible(true);
               manualInput.setVisible(false);
@@ -125,9 +126,6 @@ export default function addBlocks() {
           switch (root.getFieldValue("TriggerType")) {
             case "GroupMessageEvent":
               BlocklyUtil.enableBlock(this);
-              if (res.getValue() !== "") {
-                doFetchGroupMember(res.getValue());
-              }
               break;
             default:
               BlocklyUtil.disableBlock(this, "该积木块只能在群消息事件中使用");

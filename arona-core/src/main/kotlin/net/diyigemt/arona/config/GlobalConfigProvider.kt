@@ -24,7 +24,7 @@ object GlobalConfigProvider: Initialize {
 
   inline fun <reified T> get(key: String): T = parseValue(CONFIG[key], key)
 
-  inline fun <reified T> get(key: String, kType: KType): T = getInffer<T>(key, kType)
+  inline fun <reified T> get(key: String, kType: KType): T = getInfer(key, kType)
 
   @OptIn(ExperimentalStdlibApi::class)
   inline fun <reified T> parseValue(value: Any?, key: String): T =
@@ -45,7 +45,7 @@ object GlobalConfigProvider: Initialize {
     }
 
   @OptIn(ExperimentalStdlibApi::class)
-  inline fun <reified T> getInffer(key: String, kType: KType): T {
+  inline fun <reified T> getInfer(key: String, kType: KType): T {
     val value = CONFIG[key] ?: throw RuntimeException("get config: $key error")
     return when(value) {
       is String -> MoshiUtil.reflect.adapter<T>(kType).fromJson(value) ?: throw RuntimeException("get config: $key parse error")

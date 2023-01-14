@@ -31,6 +31,7 @@ const useSettingStore = defineStore({
     },
   },
   persist: {
+    key: "setting",
     afterRestore: (ctx) => {
       if (ctx.store.isRestoreBackend) {
         updateAPIService(ctx.store.api.host, ctx.store.api.port);

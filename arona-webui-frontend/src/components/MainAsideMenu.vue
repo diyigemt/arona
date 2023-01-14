@@ -1,5 +1,5 @@
 <template>
-  <el-menu :default-openeds="mapExpand" class="main-menu custom-menu">
+  <el-menu :default-active="currentActiveMenu" :default-openeds="mapExpand" router class="main-menu custom-menu">
     <el-sub-menu v-for="(menu, index) in MenuConfig" :key="index" :index="String(index)">
       <template #title>
         <span>{{ t(menu.name) }}</span>
@@ -7,9 +7,8 @@
       <el-menu-item
         v-for="(item, jIndex) in menu.children"
         v-show="item.path"
-        :key="'1-' + jIndex + 'sub'"
-        :index="index + '-' + jIndex"
-        @click="jump(item.path)"
+        :key="index + '-' + jIndex + '-sub'"
+        :index="item.path"
         >{{ item.name }}</el-menu-item
       >
     </el-sub-menu>
@@ -20,11 +19,9 @@
 import { MenuConfig } from "@/constant";
 
 const { t } = useI18n();
-const router = useRouter();
+const route = useRoute();
 const mapExpand = MenuConfig.map((_, index) => String(index));
-function jump(path: string) {
-  router.push(path);
-}
+const currentActiveMenu = computed(() => route.path);
 </script>
 
 <style lang="scss" scoped>

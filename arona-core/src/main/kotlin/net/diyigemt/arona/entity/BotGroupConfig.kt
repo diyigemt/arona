@@ -1,5 +1,7 @@
 package net.diyigemt.arona.entity
 
+import kotlinx.serialization.Serializable
+
 /**
  * 存储Bot与Group的对应关系
  *
@@ -7,6 +9,7 @@ package net.diyigemt.arona.entity
  *
  * 可能以后会支持细化到bot和群的配置文件吧, 现在只细化到群
  */
+@Serializable
 data class BotGroupConfig (
   val bot: Long,
   val groups: List<Long>

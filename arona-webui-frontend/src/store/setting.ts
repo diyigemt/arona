@@ -4,18 +4,16 @@ import { SettingStoreState } from "./type";
 
 const useSettingStore = defineStore({
   id: "setting",
-  state: (): SettingStoreState => {
-    return {
-      theme: {
-        themeType: "亮蓝色",
-        themeColor: "#2080F0FF",
-      },
-      api: {
-        host: undefined,
-        port: undefined,
-      },
-    };
-  },
+  state: (): SettingStoreState => ({
+    theme: {
+      themeType: "亮蓝色",
+      themeColor: "#2080F0FF",
+    },
+    api: {
+      host: undefined,
+      port: undefined,
+    },
+  }),
   getters: {
     getThemeType: (state: SettingStoreState) => state.theme.themeType,
     getThemeColor: (state: SettingStoreState) => state.theme.themeColor,

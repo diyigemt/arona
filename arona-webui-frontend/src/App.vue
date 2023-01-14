@@ -26,7 +26,6 @@ import { heartbeat } from "./api";
 const locale = zhCn;
 const settingStore = useSettingStore();
 const router = useRouter();
-// TODO
 if (!settingStore.isRestoreBackend) {
   warningMessage("未配置后端地址,将会跳转到配置界面");
   router.push("/setting/setting-api");

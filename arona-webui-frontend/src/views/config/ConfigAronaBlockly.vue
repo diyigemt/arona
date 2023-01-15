@@ -101,7 +101,7 @@ function onSaveCurrentProject() {
         uuid: null,
         blocklyProject: JSON.stringify(Blockly.serialization.workspaces.save(workspace.value)),
         // TODO: userData List<String>
-        userData: "{ids: []}",
+        userData: '{"ids": []}',
       })
         .then(() => {
           doFetchBlocklyProjectList();
@@ -117,7 +117,7 @@ function onSaveCurrentProject() {
       projectName: (blockList.value || [])[selectBlockIndex.value as number].name,
       uuid: (blockList.value || [])[selectBlockIndex.value as number].uuid,
       blocklyProject: JSON.stringify(Blockly.serialization.workspaces.save(workspace.value)),
-      userData: "{ids: []}",
+      userData: '{"ids": []}',
     }).then(() => {
       doFetchBlocklyProjectList();
       successMessage("保存成功");
@@ -157,7 +157,7 @@ function onDeleteProject() {
         // TODO:只有UUID是有用的，其余的都可以不给，但不能给NULL，后端能过反序列化就行
         uuid: (blockList.value || [])[selectBlockIndex.value as number].uuid,
         blocklyProject: "",
-        userData: "{ids: []}",
+        userData: '{"ids": []}',
       }).then(() => {
         doFetchBlocklyProjectList();
         successMessage("删除成功");

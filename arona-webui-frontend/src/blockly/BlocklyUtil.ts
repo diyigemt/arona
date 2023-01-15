@@ -69,33 +69,37 @@ export const groups: [string, string][] = [];
 export const friends: [string, string][] = [];
 
 export function doFetchContacts() {
-  fetchBotContacts()
+  return fetchBotContacts()
     .then((res) => {
       res.data.groups.forEach((item) => {
         groups.push([`${item.name} (${item.id.toString()})`, item.id.toString()]);
-        doFetchGroupMember(item.id);
+        doFetchGroupMember(item.id).then((r) => {
+          BlocklyUtil.groupMemberPool.set(item.id.toString(), r);
+        });
       });
       res.data.friends.forEach((item) => {
         friends.push([`${item.name} (${item.id.toString()})`, item.id.toString()]);
       });
+      return true;
     })
     .catch((err) => {
       warningMessage("获取bot联系人列表失败");
       console.log(err);
+      return false;
     });
 }
 
 function doFetchGroupMember(id: number) {
-  const groupList: [string, string][] = [];
-  service
+  return service
     .raw<Friend[]>({
       url: `/contacts/${id}`,
       method: "POST",
     })
     .then((r) => {
+      const groupList: [string, string][] = [];
       r.data.forEach((item) => {
         groupList.push([`${item.remark} (${item.id})`, item.id.toString()]);
       });
+      return groupList;
     });
-  BlocklyUtil.groupMemberPool.set(id.toString(), groupList);
 }

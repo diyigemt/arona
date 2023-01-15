@@ -48,12 +48,13 @@ const debugMode = ref(true); // false 原生 true format好看
 const isNewProject = ref(false);
 onMounted(() => {
   Blockly.defineBlocksWithJsonArray(blocks);
-  doFetchContacts();
   addBlocks();
   addMutators();
   workspace.value = Blockly.inject(blocklyDiv.value, BlocklyConfig);
   injectExtensions();
-  doFetchBlocklyProjectList();
+  doFetchContacts().then(() => {
+    doFetchBlocklyProjectList();
+  });
 });
 function doFetchBlocklyProjectList() {
   fetchBlocklyProjectList()
@@ -64,7 +65,6 @@ function doFetchBlocklyProjectList() {
       });
     })
     .then(() => {
-      // Blockly.Xml.domToWorkspace(workspaceBlocks, workspace.value);
       setBlock(0);
     })
     .catch((e) => {

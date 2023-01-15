@@ -290,7 +290,7 @@
         "gamekee": "https://ba.gamekee.com/66275.html"
     },
     "セリナ(クリスマス)": {
-        "cnName": "圣诞节芹娜",
+        "cnName": "圣诞芹娜",
         "loma": "Serina_Christmas",
         "gamekee": "https://ba.gamekee.com/578734.html"
     },
@@ -410,7 +410,7 @@
         "gamekee": "https://ba.gamekee.com/68915.html"
     },
     "ハナエ(クリスマス)": {
-        "cnName": "圣诞节花绘",
+        "cnName": "圣诞花绘",
         "loma": "Hanae_Christmas",
         "gamekee": "https://ba.gamekee.com/578738.html"
     },
@@ -512,7 +512,7 @@
     "ホシノ(水着)": {
         "cnName": "泳装星野",
         "loma": "Hoshino_Swimsuit",
-        "gamekee": "https://ba.gamekee.com/162560.html"
+        "gamekee": "https://ba.gamekee.com/159935.html"
     },
     "マキ": {
         "cnName": "真纪",
@@ -558,6 +558,11 @@
         "cnName": "绿",
         "loma": "Midori",
         "gamekee": "https://ba.gamekee.com/68802.html"
+    },
+    "ミネ": {
+        "cnName": "美祢",
+        "loma": "Mine",
+        "gamekee": "https://ba.gamekee.com/580732.html"
     },
     "ミモリ": {
         "cnName": "三森",

@@ -53,7 +53,7 @@ class AronaGenerator extends CodeGenerator {
 
   logicBlock = (block: Block) => {
     let dropdownLogic = block.getFieldValue("logicInput");
-    this.valueToCode(block, "NAME", this.ORDER_ATOMIC);
+    this.valueToCode(block, "logicValueInput", this.ORDER_ATOMIC);
     if (dropdownLogic === "And" || dropdownLogic === "Or" || dropdownLogic === "Not") {
       dropdownLogic = dropdownLogic.toUpperCase();
     } else throw new Error(`Undefined logic type: ${dropdownLogic}`);

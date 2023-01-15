@@ -40,7 +40,6 @@ enum class DataTypes: AronaInterceptor{
   // TODO: 日后支持其它种类消息需要调整参数, 对123456L仅支持DEV，在正式发布之前需要删掉
   SENDER {
     override fun run(value: Any, event: MessageEvent?): Boolean {
-      Arona.info(value.toString() + value.javaClass.name)
       val tmp = value as? String ?: kotlin.run {
         Arona.error("senderID: Convert $value to Long failed")
         return false

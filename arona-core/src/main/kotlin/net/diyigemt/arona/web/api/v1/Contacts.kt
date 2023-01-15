@@ -11,6 +11,7 @@ import net.diyigemt.arona.interfaces.ConfigReader
 import net.diyigemt.arona.web.entity.BotContact
 import net.diyigemt.arona.web.entity.toFriend
 import net.diyigemt.arona.web.entity.toGroup
+import net.diyigemt.arona.web.entity.toMember
 
 /**
  *@Author hjn
@@ -47,7 +48,7 @@ object Contacts : Worker, ConfigReader{
           bot.getGroup(groupId.toLong())!!
         }.onSuccess {
           context.call.respond(responseMessage(
-            it.members.map { normalMember -> normalMember.toFriend() }
+            it.members.map { normalMember -> normalMember.toMember() }
           ))
         }.onFailure {
           it.printStackTrace()

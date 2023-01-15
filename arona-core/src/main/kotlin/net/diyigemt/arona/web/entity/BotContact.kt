@@ -27,6 +27,13 @@ data class BotFriend (
   val remark: String
 )
 
+@Serializable
+data class BotGroupMember (
+  val id : Long,
+  val memberName : String,
+  val remark: String
+)
+
 fun Group.toGroup(): BotGroup = BotGroup(this.id, this.name, this.botPermission)
 fun Friend.toFriend(): BotFriend = BotFriend(this.id, this.nameCardOrNick, this.remarkOrNick)
-fun NormalMember.toFriend(): BotFriend = BotFriend(this.id, this.nameCardOrNick, this.remarkOrNick)
+fun NormalMember.toMember(): BotGroupMember = BotGroupMember(this.id, this.nameCardOrNick, this.remarkOrNick)

@@ -1,4 +1,4 @@
-import { Block } from "blockly";
+import Blockly, { Block, FieldImage } from "blockly";
 import { fetchBotContacts } from "@/api/modules/contact";
 import { warningMessage } from "@/utils/message";
 import service from "@/api/http";
@@ -17,6 +17,29 @@ export default class BlocklyUtil {
     block.setEnabled(true);
     block.setColour(230);
     block.setWarningText(null);
+  }
+
+  static registerExtensions(name: string, extension: () => void) {
+    if (Blockly.Extensions.isRegistered(name)) {
+      Blockly.Extensions.unregister(name);
+    }
+    Blockly.Extensions.register(name, extension);
+  }
+
+  static registerMixin(
+    name: string,
+    mixin: unknown,
+    helperFn?: () => unknown | undefined,
+    blockList?: string[] | undefined,
+  ) {
+    if (Blockly.Extensions.isRegistered(name)) {
+      Blockly.Extensions.unregister(name);
+    }
+    Blockly.Extensions.registerMutator(name, mixin, helperFn, blockList);
+  }
+
+  static createCustomField(src: string, fn?: (p1: FieldImage) => unknown) {
+    return new FieldImage(src, 15, 15, undefined, fn);
   }
 
   static findContext(block: Block, type: string) {
@@ -40,34 +63,17 @@ export default class BlocklyUtil {
     }
     return false;
   }
-
-  static wipeDuplicateData<T>(list: T[]): T[] {
-    // list.sort();
-    const res = [list[0]];
-    list.forEach((item) => {
-      if (item !== res[res.length - 1]) {
-        res.push(item);
-      }
-    });
-
-    return res;
-  }
 }
 
-// eslint-disable-next-line import/no-mutable-exports
-export let groups: [string, string][] = [];
-// eslint-disable-next-line import/no-mutable-exports
-export let friends: [string, string][] = [];
-
-let groupList: [string, string][] = [];
+export const groups: [string, string][] = [];
+export const friends: [string, string][] = [];
 
 export function doFetchContacts() {
-  groups = [];
-  friends = [];
   fetchBotContacts()
     .then((res) => {
       res.data.groups.forEach((item) => {
         groups.push([`${item.name} (${item.id.toString()})`, item.id.toString()]);
+        doFetchGroupMember(item.id);
       });
       res.data.friends.forEach((item) => {
         friends.push([`${item.name} (${item.id.toString()})`, item.id.toString()]);
@@ -79,8 +85,8 @@ export function doFetchContacts() {
     });
 }
 
-export function doFetchGroupMember(id: number) {
-  groupList = [];
+function doFetchGroupMember(id: number) {
+  const groupList: [string, string][] = [];
   service
     .raw<Friend[]>({
       url: `/contacts/${id}`,
@@ -88,13 +94,7 @@ export function doFetchGroupMember(id: number) {
     })
     .then((r) => {
       r.data.forEach((item) => {
-        let flag = true;
-        groupList.forEach((member) => {
-          if (member[1] === item.id.toString()) {
-            flag = false;
-          }
-        });
-        if (flag) groupList.push([`${item.remark} (${item.id})`, item.id.toString()]);
+        groupList.push([`${item.remark} (${item.id})`, item.id.toString()]);
       });
     });
   BlocklyUtil.groupMemberPool.set(id.toString(), groupList);

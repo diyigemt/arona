@@ -34,6 +34,6 @@ inline fun <reified T> ConfigReader.getConfigOrDefault(key: String, group: Long,
  */
 inline fun <reified T> ConfigReader.getConfig(key: String, kType: KType): T = if (configPrefix.isEmpty()) getMainConfig(key) else GlobalConfigProvider.get("$configPrefix.$key", kType)
 
-fun ConfigReader.setConfig(key: String, value: Any) = GlobalConfigProvider.set("$configPrefix.$key", value)
+fun ConfigReader.setConfig(key: String, value: Any) = if (configPrefix.isEmpty()) GlobalConfigProvider.set(key, value) else GlobalConfigProvider.set("$configPrefix.$key", value)
 fun ConfigReader.setGroupConfig(key: String, group: Long, value: Any) = GlobalConfigProvider.setGroup("$configPrefix.$key", group, value)
 fun CommandSender.getContactId() = subject?.id ?: 0L

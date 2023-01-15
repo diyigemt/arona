@@ -20,6 +20,7 @@
     "gantt-schedule-timeline-calendar": "^3.33.13",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
+    "mitt": "^3.0.0",
     "nprogress": "^0.2.0",
     "pinia": "^2.0.16",
     "pinia-plugin-persistedstate": "^3.0.1",

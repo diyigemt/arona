@@ -25,7 +25,6 @@
 <script setup lang="ts">
 import Blockly from "blockly";
 import BlocklyConfig, { blocks, workspaceBlocks } from "@/blockly";
-// @ts-ignore
 import aronaGenerator from "@/blockly/generator";
 import { BlocklyProject, BlocklyProjectWorkspace } from "@/interface/modules/blockly";
 import {
@@ -38,6 +37,7 @@ import { errorMessage, IConfirm, infoMessage, IPrompt, successMessage, warningMe
 import addBlocks from "@/blockly/blocks";
 import injectExtensions from "@/blockly/extensions";
 import { doFetchContacts } from "@/blockly/BlocklyUtil";
+import addMutators from "@/blockly/mutators";
 
 const blocklyDiv = ref();
 const output = ref<string>();
@@ -50,6 +50,7 @@ onMounted(() => {
   Blockly.defineBlocksWithJsonArray(blocks);
   doFetchContacts();
   addBlocks();
+  addMutators();
   workspace.value = Blockly.inject(blocklyDiv.value, BlocklyConfig);
   injectExtensions();
   doFetchBlocklyProjectList();
@@ -94,12 +95,13 @@ function onSaveCurrentProject() {
       inputPattern: /.+/,
       inputErrorMessage: "不能为空",
     }).then(({ value }) => {
-      // TODO: userData List<String>
       saveBlocklyProject({
         trigger: JSON.parse(code),
         projectName: value,
         uuid: null,
         blocklyProject: JSON.stringify(Blockly.serialization.workspaces.save(workspace.value)),
+        // TODO: userData List<String>
+        userData: '{"ids": []}',
       })
         .then(() => {
           doFetchBlocklyProjectList();
@@ -115,6 +117,7 @@ function onSaveCurrentProject() {
       projectName: (blockList.value || [])[selectBlockIndex.value as number].name,
       uuid: (blockList.value || [])[selectBlockIndex.value as number].uuid,
       blocklyProject: JSON.stringify(Blockly.serialization.workspaces.save(workspace.value)),
+      userData: '{"ids": []}',
     }).then(() => {
       doFetchBlocklyProjectList();
       successMessage("保存成功");
@@ -154,6 +157,7 @@ function onDeleteProject() {
         // TODO:只有UUID是有用的，其余的都可以不给，但不能给NULL，后端能过反序列化就行
         uuid: (blockList.value || [])[selectBlockIndex.value as number].uuid,
         blocklyProject: "",
+        userData: '{"ids": []}',
       }).then(() => {
         doFetchBlocklyProjectList();
         successMessage("删除成功");
@@ -171,10 +175,14 @@ function doCreate() {
 function onDebug() {
   const code = aronaGenerator.workspaceToCode(workspace.value);
   const row = Blockly.serialization.workspaces.save(workspace.value);
+  const proj: BlocklyProject | null = (blockList.value || [])[selectBlockIndex.value as number];
   output.value = JSON.stringify(
     {
       trigger: JSON.parse(code),
+      projectName: proj?.name,
+      uuid: proj?.uuid,
       blocklyProject: debugMode.value ? row : JSON.stringify(row),
+      userData: "[]",
     },
     null,
     2,

@@ -1,8 +1,8 @@
-import Blockly, { Block, FieldDropdown } from "blockly";
+import { Block, FieldDropdown } from "blockly";
 import BlocklyUtil from "@/blockly/BlocklyUtil";
 
 export default async function injectExtensions() {
-  Blockly.Extensions.register("logic_block_extension", logicBlockExtension);
+  BlocklyUtil.registerExtensions("logic_block_extension", logicBlockExtension);
 }
 
 function logicBlockExtension(this: Block) {
@@ -32,12 +32,16 @@ function logicBlockExtension(this: Block) {
       }
       if (parent?.type === root.type) {
         dropDown.setValue("Not");
+        this.setWarningText("逻辑模块在此处只能使用非");
       }
       if (parent?.getParent()?.type === "logic_block" && parent?.type === "logic_block") {
         BlocklyUtil.disableBlock(this, "相邻的逻辑积木块总数不能超过2个");
       }
       if (parent?.getFieldValue("logicInput") === "Not" && dropDown.getValue() === "Not") {
         BlocklyUtil.disableBlock(this, "无效的逻辑非");
+      }
+      if (this.getInputTargetBlock("logicValueInput") == null) {
+        BlocklyUtil.disableBlock(this, "右侧缺少条件");
       }
     }
   });

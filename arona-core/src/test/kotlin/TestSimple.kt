@@ -2,10 +2,10 @@ package org.example.mirai.plugin
 
 import io.kotest.common.runBlocking
 import kotlinx.coroutines.channels.consumeEach
-import net.diyigemt.arona.advance.AronaUpdateChecker
 import net.diyigemt.arona.command.TrainerCommand
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.entity.ActivityType
+import net.diyigemt.arona.remote.action.VersionInfo
 import net.diyigemt.arona.util.ActivityUtil
 import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.NetworkUtil
@@ -145,7 +145,7 @@ class TestSimple {
   @Test
   fun testVersionCheck() {
     val cur = SemVersion("1.0.6")
-    NetworkUtil.fetchDataFromServerV1<AronaUpdateChecker.VersionInfo>("/version")
+    NetworkUtil.fetchDataFromServerV1<VersionInfo>("/version")
       .onSuccess { response ->
         val version = response.data.version
         val nowVersion = SemVersion(version.replace("v", ""))

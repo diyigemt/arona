@@ -44,7 +44,6 @@ const loading = reactive<ILoading>({
   testLoading: false,
 });
 function testConnection() {
-  loading.testLoading = true;
   updateAPIService(form.host!, form.port!);
   heartbeat()
     .then((res) => {

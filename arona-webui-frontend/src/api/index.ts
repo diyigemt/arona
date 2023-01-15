@@ -1,5 +1,6 @@
 import { successMessage } from "@/utils/message";
 import service from "./http";
+import emitter from "@/utils/emitter";
 
 // eslint-disable-next-line import/prefer-default-export
 export function heartbeat() {
@@ -13,6 +14,7 @@ export function heartbeat() {
       .then((res) => {
         if (res.data === "pong") {
           successMessage("连接成功");
+          emitter.emit("api-update");
           resolve(true);
         }
         resolve(false);

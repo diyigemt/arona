@@ -1,11 +1,11 @@
 <xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
     <category name="条件">
-        <block type="groupIDBlock"></block>
-        <block type="senderBlock"></block>
-        <block type="logic_block"></block>
+        <block type="groupIDBlock"/>
+        <block type="senderBlock"/>
+        <block type="logicBlock"/>
     </category>
     <category name="行为">
-        <block type="send_msg_block">
+        <block type="sendMsgBlock">
             <field name="Msg">Hallo</field>
         </block>
     </category>

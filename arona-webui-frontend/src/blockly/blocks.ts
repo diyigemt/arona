@@ -1,12 +1,43 @@
-import Blockly, { Block, FieldDropdown } from "blockly";
-import BlocklyUtil, { doFetchGroupMember, friends, groups } from "@/blockly/BlocklyUtil";
+import Blockly, { Block, BlockSvg, FieldDropdown, FieldTextInput } from "blockly";
+import BlocklyUtil, { friends, groups } from "@/blockly/BlocklyUtil";
+import { exchange } from "@/blockly/images";
 
 export default function addBlocks() {
   Blockly.Blocks.senderBlock = {
     init(this: Block) {
+      // @ts-ignore
+      // @ts-ignore
       this.appendValueInput("IDValueInput")
         .setCheck("LogicType")
+        .appendField(
+          BlocklyUtil.createCustomField(exchange, (image) => {
+            const block = image.getSourceBlock()! as BlockSvg;
+            const dropDown = block.getField("IDInput") as FieldDropdown;
+            const manualInput = block.getField("manualIDInput") as FieldTextInput;
+            if (dropDown.isVisible()) {
+              dropDown.setVisible(false);
+              manualInput.setVisible(true);
+              manualInput.setValue(dropDown.getValue());
+            } else {
+              dropDown.setVisible(true);
+              manualInput.setVisible(false);
+            }
+            block.render(true);
+          }),
+        )
         .appendField("发送者为 ")
+        .appendField(
+          // @ts-ignore
+          new FieldTextInput("123456", (value: string) => {
+            const reg = /[A-z`~!@#$^\-&*()=|{}':;,\\[\].<>/?！￥…（）—【】；："。，、？\s]+/g;
+            const qqReg = /[1-9][0-9]{4,10}/g;
+            if (value.match(reg) != null || value.match(qqReg) == null || value === "") {
+              return null;
+            }
+            return value.replace(reg, "");
+          }),
+          "manualIDInput",
+        )
         .appendField(
           new FieldDropdown(() => {
             const root = this.getRootBlock();
@@ -28,6 +59,9 @@ export default function addBlocks() {
           }),
           "IDInput",
         );
+      (this.getField("manualIDInput")! as FieldTextInput).setVisible(false);
+      this.setOutput(true, "ExpressionType");
+      this.setColour(230);
       this.setOnChange((event) => {
         const root = this.getRootBlock();
         const res = this.getField("IDInput") as FieldDropdown;
@@ -71,8 +105,6 @@ export default function addBlocks() {
           }
         }
       });
-      this.setOutput(true, "ExpressionType");
-      this.setColour(230);
     },
   };
   Blockly.Blocks.groupIDBlock = {
@@ -97,9 +129,6 @@ export default function addBlocks() {
           switch (root.getFieldValue("TriggerType")) {
             case "GroupMessageEvent":
               BlocklyUtil.enableBlock(this);
-              if (res.getValue() !== "") {
-                doFetchGroupMember(res.getValue());
-              }
               break;
             default:
               BlocklyUtil.disableBlock(this, "该积木块只能在群消息事件中使用");

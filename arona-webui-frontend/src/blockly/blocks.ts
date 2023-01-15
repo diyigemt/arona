@@ -2,8 +2,10 @@ import Blockly, { Block, BlockSvg, FieldDropdown, FieldTextInput } from "blockly
 import BlocklyUtil from "@/blockly/BlocklyUtil";
 import { exchange } from "@/blockly/images";
 import useBaseStore from "@/store/base";
+import { blocks } from "@/blockly/index";
 
 export default function addBlocks() {
+  Blockly.defineBlocksWithJsonArray(blocks);
   Blockly.Blocks.senderBlock = {
     init(this: Block) {
       // @ts-ignore
@@ -41,13 +43,15 @@ export default function addBlocks() {
         .appendField(
           new FieldDropdown(() => {
             const root = this.getRootBlock();
-            const parent = this.getParent();
             const baseStore = useBaseStore();
+            const groupBlock = BlocklyUtil.findContext(this, "groupIDBlock");
             if (root != null) {
               switch (root?.getFieldValue("TriggerType")) {
                 case "GroupMessageEvent":
-                  if (BlocklyUtil.findContext(this, "groupIDBlock")!) {
-                    return baseStore.memberSync(parent?.getParent()?.getFieldValue("groupIDInput") || 0);
+                  if (groupBlock) {
+                    return baseStore
+                      .memberSync(Number(groupBlock.getFieldValue("groupIDInput")) || 0)
+                      .map((item) => [`${item.memberName} (${item.id})`, item.id.toString()]);
                   }
                   break;
                 case "FriendMessageEvent":
@@ -119,7 +123,7 @@ export default function addBlocks() {
             const root = this.getRootBlock();
             const baseStore = useBaseStore();
             if (root?.getFieldValue("TriggerType")) {
-              return baseStore.groups().map((group) => [group.name, group.id]);
+              return baseStore.groups().map((group) => [`${group.name} (${group.id})`, group.id.toString()]);
             }
             return [["群号", ""]];
           }),
@@ -137,13 +141,13 @@ export default function addBlocks() {
               BlocklyUtil.disableBlock(this, "该积木块只能在群消息事件中使用");
               break;
           }
-          const group = res.getValue();
-          // 提前预载群成员列表
-          const { members } = useBaseStore();
-          members(group).then();
-
+          const group = res.getValue() as string;
           if (group === "") {
             BlocklyUtil.disableBlock(this, "请选择目标群");
+          } else {
+            // 提前预载群成员列表
+            const { members } = useBaseStore();
+            members(Number(group)).then();
           }
         }
       });

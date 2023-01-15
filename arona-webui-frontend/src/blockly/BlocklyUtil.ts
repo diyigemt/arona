@@ -1,4 +1,5 @@
 import Blockly, { Block, FieldImage } from "blockly";
+import { FieldProto } from "blockly/core/field";
 import useBaseStore from "@/store/base";
 
 export default class BlocklyUtil {
@@ -19,6 +20,11 @@ export default class BlocklyUtil {
       Blockly.Extensions.unregister(name);
     }
     Blockly.Extensions.register(name, extension);
+  }
+
+  static registerField(name: string, fieldClass: FieldProto) {
+    Blockly.fieldRegistry.unregister(name);
+    Blockly.fieldRegistry.register(name, fieldClass);
   }
 
   static registerMixin(
@@ -51,5 +57,14 @@ export default class BlocklyUtil {
   static findGroupMember(id: number) {
     const baseStore = useBaseStore();
     return baseStore.groups().some((group) => group.member.some((member) => Number(member.id) === Number(id)));
+  }
+
+  /**
+   * 测试用，拉取全部群成员 */
+  static async fetchAllGroupMember() {
+    const { groups, members } = useBaseStore();
+    await groups().forEach((item) => {
+      members(item.id).then();
+    });
   }
 }

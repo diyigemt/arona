@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import Blockly from "blockly";
-import BlocklyConfig, {blocks, initBlockly, workspaceBlocks} from "@/blockly";
+import BlocklyConfig, { initBlockly, workspaceBlocks } from "@/blockly";
 import aronaGenerator from "@/blockly/generator";
 import { BlocklyProject, BlocklyProjectWorkspace } from "@/interface/modules/blockly";
 import {
@@ -34,6 +34,7 @@ import {
   updateBlocklyProject,
 } from "@/api/modules/blockly";
 import { errorMessage, IConfirm, infoMessage, IPrompt, successMessage, warningMessage } from "@/utils/message";
+import BlocklyUtil from "@/blockly/BlocklyUtil";
 
 const blocklyDiv = ref();
 const output = ref<string>();
@@ -43,6 +44,8 @@ const selectBlockIndex = ref<number>();
 const debugMode = ref(true); // false 原生 true format好看
 const isNewProject = ref(false);
 onMounted(() => {
+  // 临时手段，选择群功能补上后记得删
+  BlocklyUtil.fetchAllGroupMember();
   initBlockly();
   workspace.value = Blockly.inject(blocklyDiv.value, BlocklyConfig);
   doFetchBlocklyProjectList();

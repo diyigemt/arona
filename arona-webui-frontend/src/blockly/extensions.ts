@@ -1,7 +1,7 @@
 import { Block, FieldDropdown } from "blockly";
 import BlocklyUtil from "@/blockly/BlocklyUtil";
 
-export default async function injectExtensions() {
+export default function injectExtensions() {
   BlocklyUtil.registerExtensions("logic_block_extension", logicBlockExtension);
 }
 

@@ -1,12 +1,7 @@
 import Blockly, { Block, FieldImage } from "blockly";
-import { fetchBotContacts } from "@/api/modules/contact";
-import { warningMessage } from "@/utils/message";
-import service from "@/api/http";
-import { Friend } from "@/types/contact";
+import useBaseStore from "@/store/base";
 
 export default class BlocklyUtil {
-  static groupMemberPool = new Map<string, [string, string][]>();
-
   static disableBlock(block: Block, warnMessage: string) {
     block.setEnabled(false);
     block.setColour(0);
@@ -54,52 +49,7 @@ export default class BlocklyUtil {
   }
 
   static findGroupMember(id: number) {
-    // eslint-disable-next-line no-restricted-syntax
-    for (const group of this.groupMemberPool) {
-      // eslint-disable-next-line no-restricted-syntax
-      for (const member of group) {
-        if (member === id.toString()) return true;
-      }
-    }
-    return false;
+    const baseStore = useBaseStore();
+    return baseStore.groups().some((group) => group.member.some((member) => Number(member.id) === Number(id)));
   }
-}
-
-export const groups: [string, string][] = [];
-export const friends: [string, string][] = [];
-
-export function doFetchContacts() {
-  return fetchBotContacts()
-    .then((res) => {
-      res.data.groups.forEach((item) => {
-        groups.push([`${item.name} (${item.id.toString()})`, item.id.toString()]);
-        doFetchGroupMember(item.id).then((r) => {
-          BlocklyUtil.groupMemberPool.set(item.id.toString(), r);
-        });
-      });
-      res.data.friends.forEach((item) => {
-        friends.push([`${item.name} (${item.id.toString()})`, item.id.toString()]);
-      });
-      return true;
-    })
-    .catch((err) => {
-      warningMessage("获取bot联系人列表失败");
-      console.log(err);
-      return false;
-    });
-}
-
-function doFetchGroupMember(id: number) {
-  return service
-    .raw<Friend[]>({
-      url: `/contacts/${id}`,
-      method: "POST",
-    })
-    .then((r) => {
-      const groupList: [string, string][] = [];
-      r.data.forEach((item) => {
-        groupList.push([`${item.remark} (${item.id})`, item.id.toString()]);
-      });
-      return groupList;
-    });
 }

@@ -1,11 +1,11 @@
 import Blockly, { Block, BlockSvg, FieldDropdown, FieldTextInput } from "blockly";
-import BlocklyUtil, { friends, groups } from "@/blockly/BlocklyUtil";
+import BlocklyUtil from "@/blockly/BlocklyUtil";
 import { exchange } from "@/blockly/images";
+import useBaseStore from "@/store/base";
 
 export default function addBlocks() {
   Blockly.Blocks.senderBlock = {
     init(this: Block) {
-      // @ts-ignore
       // @ts-ignore
       this.appendValueInput("IDValueInput")
         .setCheck("LogicType")
@@ -42,15 +42,16 @@ export default function addBlocks() {
           new FieldDropdown(() => {
             const root = this.getRootBlock();
             const parent = this.getParent();
+            const baseStore = useBaseStore();
             if (root != null) {
               switch (root?.getFieldValue("TriggerType")) {
                 case "GroupMessageEvent":
                   if (BlocklyUtil.findContext(this, "groupIDBlock")!) {
-                    return BlocklyUtil.groupMemberPool.get(parent?.getParent()?.getFieldValue("groupIDInput"));
+                    return baseStore.memberSync(parent?.getParent()?.getFieldValue("groupIDInput") || 0);
                   }
                   break;
                 case "FriendMessageEvent":
-                  return friends;
+                  return baseStore.friends();
                 default:
                   break;
               }
@@ -67,14 +68,15 @@ export default function addBlocks() {
         const res = this.getField("IDInput") as FieldDropdown;
         let flag = false;
         if ((event.type === "change" || event.type === "move") && root.getField("TriggerType") != null) {
+          const baseStore = useBaseStore();
           switch (root?.getFieldValue("TriggerType")) {
             case "GroupMessageEvent":
               flag = false;
               if (res.getValue() === "") {
                 flag = true;
                 // eslint-disable-next-line no-restricted-syntax
-                for (const item of friends) {
-                  if (item[1] === res.getValue()) {
+                for (const item of baseStore.friends()) {
+                  if (item.id === res.getValue()) {
                     flag = !BlocklyUtil.findGroupMember(res.getValue());
                     break;
                   }
@@ -88,8 +90,8 @@ export default function addBlocks() {
                 break;
               }
               // eslint-disable-next-line no-restricted-syntax
-              for (const item of groups) {
-                if (item[1] === res.getValue()) {
+              for (const item of baseStore.groups()) {
+                if (item.id === res.getValue()) {
                   flag = true;
                   break;
                 }
@@ -115,8 +117,9 @@ export default function addBlocks() {
         .appendField(
           new FieldDropdown(() => {
             const root = this.getRootBlock();
+            const baseStore = useBaseStore();
             if (root?.getFieldValue("TriggerType")) {
-              return groups;
+              return baseStore.groups().map((group) => [group.name, group.id]);
             }
             return [["群号", ""]];
           }),
@@ -134,7 +137,12 @@ export default function addBlocks() {
               BlocklyUtil.disableBlock(this, "该积木块只能在群消息事件中使用");
               break;
           }
-          if (res.getValue() === "") {
+          const group = res.getValue();
+          // 提前预载群成员列表
+          const { members } = useBaseStore();
+          members(group).then();
+
+          if (group === "") {
             BlocklyUtil.disableBlock(this, "请选择目标群");
           }
         }

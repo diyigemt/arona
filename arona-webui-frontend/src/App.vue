@@ -22,10 +22,12 @@ import MainBanner from "@/components/MainBanner.vue";
 import useSettingStore from "./store/setting";
 import { warningMessage } from "./utils/message";
 import { heartbeat } from "./api";
+import { initEventBus } from "@/utils/emitter";
 
 const locale = zhCn;
 const settingStore = useSettingStore();
 const router = useRouter();
+initEventBus();
 if (!settingStore.isRestoreBackend) {
   warningMessage("未配置后端地址,将会跳转到配置界面");
   router.push("/setting/setting-api");

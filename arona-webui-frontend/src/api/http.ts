@@ -3,6 +3,7 @@ import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } f
 import showCodeMessage from "@/api/code";
 import { formatJsonToUrlParams, instanceObject } from "@/utils/format";
 import { errorMessage, infoMessage, warningMessage } from "@/utils/message";
+import {HTTP_OK} from "@/constant/http";
 
 const BASE_PREFIX = import.meta.env.VITE_API_BASEURL;
 
@@ -24,7 +25,9 @@ interface RequestConfig<D = any> extends AxiosRequestConfig<D> {
   // 当网络请求错误时是否显示错误
   showResponseError?: boolean;
   // 当http 200但是 serverResponse.code !== 200 时是否显示 serverResponse.message
+  // 默认开启
   showServerResponseError?: boolean;
+  version?: "v1" | "v2";
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -39,9 +42,12 @@ interface Response<T = any, D = any> extends AxiosResponse<T, D> {
 
 // 请求拦截器
 axiosInstance.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
-    // TODO 在这里可以加上想要在请求发送前处理的逻辑
-    // TODO 比如 loading 等
+  (config: RequestConfig) => {
+    if (!config.version) {
+      config.version = "v1";
+      config.baseURL = `${config.baseURL}/api/${config.version}/`
+    }
+    config.showServerResponseError = config.showServerResponseError || true;
     return config;
   },
   (error: AxiosError) => {
@@ -52,9 +58,9 @@ axiosInstance.interceptors.request.use(
 // 响应拦截器
 axiosInstance.interceptors.response.use(
   (response: Response) => {
-    if (response.status === 200) {
+    if (response.status === HTTP_OK) {
       const resp = response.data as ServerResponse<unknown>;
-      if (resp && resp.code !== 200 && resp.message && response.config.showServerResponseError) {
+      if (resp && resp.code !== HTTP_OK && resp.message && response.config.showServerResponseError) {
         warningMessage(resp.message);
       }
       return response.data;
@@ -112,7 +118,7 @@ export function updateAPIService(host: string, port: number) {
 }
 
 export function currentAPI(host: string, port: number) {
-  return `${host}:${port}/api/v1`;
+  return `${host}:${port}`;
 }
 
 interface ServerResponse<T> {

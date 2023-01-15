@@ -39,7 +39,7 @@ export default defineConfig((env) => {
     // 服务设置
     server: {
       host: true, // host设置为true才可以使用network的形式，以ip访问项目
-      port: 8088, // 端口号
+      port: 12590, // 端口号
       open: true, // 自动打开浏览器
       cors: true, // 跨域设置允许
       strictPort: false, // 如果端口已占用直接退出

@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import Blockly from "blockly";
-import BlocklyConfig, { blocks, workspaceBlocks } from "@/blockly";
+import BlocklyConfig, {blocks, initBlockly, workspaceBlocks} from "@/blockly";
 import aronaGenerator from "@/blockly/generator";
 import { BlocklyProject, BlocklyProjectWorkspace } from "@/interface/modules/blockly";
 import {
@@ -34,10 +34,6 @@ import {
   updateBlocklyProject,
 } from "@/api/modules/blockly";
 import { errorMessage, IConfirm, infoMessage, IPrompt, successMessage, warningMessage } from "@/utils/message";
-import addBlocks from "@/blockly/blocks";
-import injectExtensions from "@/blockly/extensions";
-import { doFetchContacts } from "@/blockly/BlocklyUtil";
-import addMutators from "@/blockly/mutators";
 
 const blocklyDiv = ref();
 const output = ref<string>();
@@ -47,14 +43,9 @@ const selectBlockIndex = ref<number>();
 const debugMode = ref(true); // false 原生 true format好看
 const isNewProject = ref(false);
 onMounted(() => {
-  Blockly.defineBlocksWithJsonArray(blocks);
-  addBlocks();
-  addMutators();
+  initBlockly();
   workspace.value = Blockly.inject(blocklyDiv.value, BlocklyConfig);
-  injectExtensions();
-  doFetchContacts().then(() => {
-    doFetchBlocklyProjectList();
-  });
+  doFetchBlocklyProjectList();
 });
 function doFetchBlocklyProjectList() {
   fetchBlocklyProjectList()
@@ -128,7 +119,11 @@ function onResetWorkspace() {
   IConfirm("警告", "重置后所有未保存的内容都将丢失,是否确认?", {
     type: "warning",
   }).then(() => {
-    setBlock(selectBlockIndex.value!);
+    if (selectBlockIndex.value) {
+      setBlock(selectBlockIndex.value!);
+    } else {
+      onCreateNewProject(true);
+    }
   });
 }
 function onCreateNewProject(skipWarning: boolean) {
@@ -170,6 +165,7 @@ function onDeleteProject() {
 
 function doCreate() {
   workspace.value.clear();
+  selectBlockIndex.value = undefined;
   Blockly.Xml.domToWorkspace(workspaceBlocks, workspace.value);
 }
 function onDebug() {

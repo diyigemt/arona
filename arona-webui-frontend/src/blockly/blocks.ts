@@ -1,5 +1,5 @@
-import Blockly, { Block, BlockSvg, FieldDropdown, FieldTextInput } from "blockly";
-import { AbstractEventJson } from "blockly/core/events/events_abstract";
+import Blockly, { BlockSvg, FieldDropdown, FieldTextInput } from "blockly";
+import { Abstract } from "blockly/core/events/events_abstract";
 import BlocklyUtil from "@/blockly/BlocklyUtil";
 import { exchange } from "@/blockly/images";
 import useBaseStore from "@/store/base";
@@ -8,7 +8,7 @@ import { blocks } from "@/blockly/index";
 export default function addBlocks() {
   Blockly.defineBlocksWithJsonArray(blocks);
   Blockly.Blocks.senderBlock = {
-    init(this: Block) {
+    init() {
       // @ts-ignore
       this.appendValueInput("IDValueInput")
         .setCheck("LogicType")
@@ -68,7 +68,7 @@ export default function addBlocks() {
       (this.getField("manualIDInput")! as FieldTextInput).setVisible(false);
       this.setOutput(true, "ExpressionType");
       this.setColour(230);
-      this.setOnChange((event) => {
+      this.setOnChange((event: Abstract) => {
         const root = this.getRootBlock();
         const res = this.getField("IDInput") as FieldDropdown;
         let flag = false;
@@ -115,7 +115,7 @@ export default function addBlocks() {
     },
   };
   Blockly.Blocks.groupIDBlock = {
-    init(this: Block) {
+    init() {
       this.appendValueInput("groupIDValueInput")
         .setCheck("LogicType")
         .appendField("群为 ")
@@ -130,7 +130,7 @@ export default function addBlocks() {
           }),
           "groupIDInput",
         );
-      this.setOnChange((event) => {
+      this.setOnChange((event: Abstract) => {
         const root = this.getRootBlock();
         const res = this.getField("groupIDInput") as FieldDropdown;
         if ((event.type === "change" || event.type === "move") && root.getField("TriggerType") != null) {
@@ -157,7 +157,7 @@ export default function addBlocks() {
     },
   };
   Blockly.Blocks.friend_search_block = {
-    init(this: Block) {
+    init() {
       this.appendValueInput("NAME")
         .setCheck(null)
         .appendField("单击以查找")
@@ -167,7 +167,7 @@ export default function addBlocks() {
       this.setTooltip("");
       this.setHelpUrl("");
       // TODO 细化类型
-      this.data = "select";
+      this.data = "friend";
     },
   };
 }

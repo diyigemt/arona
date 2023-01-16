@@ -2,10 +2,13 @@
 /// <reference types="vite/client" />
 /// <reference types="vite-svg-loader" />
 // 声明自动引入的 vue 组件
-import { Block } from "blockly";
+// @ts-ignore
+// @ts-ignore
+
+import { Block } from "blockly/core/block";
 
 declare module '*.vue' {
-  import { DefineComponent } from 'vue';
+  import { DefineComponent } from "vue";
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
   const component: DefineComponent<{}, {}, any>;
   export default component;
@@ -13,14 +16,14 @@ declare module '*.vue' {
 
 // 声明 icons 引入的组件
 declare module '~icons/*' {
-  import { FunctionalComponent, SVGAttributes } from 'vue';
+  import { FunctionalComponent, SVGAttributes } from "vue";
   const component: FunctionalComponent<SVGAttributes>;
   export default component;
 }
 
 // 声明 md 文件
 declare module '*.md' {
-  import type { DefineComponent } from 'vue';
+  import type { DefineComponent } from "vue";
   const component: DefineComponent<{}, {}, any>;
   export default component;
 }
@@ -41,8 +44,16 @@ declare interface Window {
   // extend the window
 }
 
-declare module "blockly" {
-  static const Blocks: {
-    "friend_search_block": Block
+declare global {
+  // @ts-ignore
+  module "blockly" {
+    type SelectType = "friend"
+    interface ExtendBlock extends Block {
+      data: SelectType | string;
+    }
+    const Blocks: {
+      [key: string]: ExtendBlock
+    }
   }
 }
+

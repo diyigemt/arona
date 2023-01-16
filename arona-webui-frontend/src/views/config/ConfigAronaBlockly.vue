@@ -3,7 +3,7 @@
     <el-select v-model="selectBlockIndex" style="margin-right: 16px" @change="setBlock">
       <el-option v-for="(e, index) in blockList" :key="index" :label="e.name" :value="index" @change="setBlock" />
     </el-select>
-    <el-button type="primary" @click="onCreateNewProject">新建项目</el-button>
+    <el-button type="primary" @click="onCreateNewProject()">新建项目</el-button>
     <el-button type="primary" @click="onSaveCurrentProject">保存当前项目</el-button>
     <el-button type="danger" @click="onResetWorkspace">重置</el-button>
     <el-button type="danger" @click="onDeleteProject">删除</el-button>
@@ -129,7 +129,7 @@ function onResetWorkspace() {
     }
   });
 }
-function onCreateNewProject(skipWarning: boolean) {
+function onCreateNewProject(skipWarning = false) {
   isNewProject.value = true;
   if (skipWarning) {
     doCreate();

@@ -20,5 +20,16 @@
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   // 编译器默认排除的编译文件
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  // ts-node 特殊编译选项
+  "ts-node": {
+    "compilerOptions": {
+      "target": "es2020",
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+      "useDefineForClassFields": true,
+      "forceConsistentCasingInFileNames": true,
+      "module": "CommonJS"
+    }
+  }
 }

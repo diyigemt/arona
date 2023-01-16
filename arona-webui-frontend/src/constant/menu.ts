@@ -8,14 +8,6 @@ interface MenuItem {
 }
 const ConfigMenu: SubMenuItem[] = [
   {
-    name: "arona.yml",
-    path: "/config/config-arona",
-  },
-  {
-    name: "arona-gacha.yml",
-    path: "/config/config-arona-gacha",
-  },
-  {
     name: "条件执行",
     path: "/config/config-arona-blockly",
   },

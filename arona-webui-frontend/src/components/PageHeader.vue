@@ -16,7 +16,7 @@ const props = defineProps<Props>();
 const goBack = () => {
   router.go(-1);
 };
-const routerTitle = computed(() => route.meta.title || props.title || "");
+const routerTitle = computed(() => (route.meta.title as string) || (props.title as string) || "");
 interface Props {
   title?: string;
 }

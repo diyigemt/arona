@@ -1,4 +1,5 @@
 import Blockly, { Block, BlockSvg, FieldDropdown, FieldTextInput } from "blockly";
+import { AbstractEventJson } from "blockly/core/events/events_abstract";
 import BlocklyUtil from "@/blockly/BlocklyUtil";
 import { exchange } from "@/blockly/images";
 import useBaseStore from "@/store/base";
@@ -55,7 +56,7 @@ export default function addBlocks() {
                   }
                   break;
                 case "FriendMessageEvent":
-                  return baseStore.friends();
+                  return baseStore.friends().map((item) => [`${item.remark} (${item.id})`, item.id.toString()]);
                 default:
                   break;
               }
@@ -153,6 +154,20 @@ export default function addBlocks() {
       });
       this.setOutput(true, "ExpressionType");
       this.setColour(230);
+    },
+  };
+  Blockly.Blocks.friend_search_block = {
+    init(this: Block) {
+      this.appendValueInput("NAME")
+        .setCheck(null)
+        .appendField("单击以查找")
+        .appendField(new Blockly.FieldLabelSerializable(""), "NAME");
+      this.setOutput(true, null);
+      this.setColour(230);
+      this.setTooltip("");
+      this.setHelpUrl("");
+      // TODO 细化类型
+      this.data = "select";
     },
   };
 }

@@ -1,7 +1,9 @@
+// @ts-nocheck
 /// <reference types="vite/client" />
 /// <reference types="vite-svg-loader" />
-
 // 声明自动引入的 vue 组件
+import { Block } from "blockly";
+
 declare module '*.vue' {
   import { DefineComponent } from 'vue';
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
@@ -37,4 +39,10 @@ declare interface ImportMeta {
 
 declare interface Window {
   // extend the window
+}
+
+declare module "blockly" {
+  static const Blocks: {
+    "friend_search_block": Block
+  }
 }

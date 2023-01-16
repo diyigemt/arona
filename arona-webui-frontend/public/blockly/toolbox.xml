@@ -3,6 +3,7 @@
         <block type="groupIDBlock"/>
         <block type="senderBlock"/>
         <block type="logicBlock"/>
+        <block type="friend_search_block"/>
     </category>
     <category name="行为">
         <block type="sendMsgBlock">

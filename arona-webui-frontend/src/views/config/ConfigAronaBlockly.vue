@@ -23,7 +23,9 @@
 </template>
 
 <script setup lang="ts">
-import Blockly from "blockly";
+import Blockly, { Block } from "blockly";
+import { ClickJson } from "blockly/core/events/events_click";
+import { ElMessageBox } from "element-plus";
 import BlocklyConfig, { initBlockly, workspaceBlocks } from "@/blockly";
 import aronaGenerator from "@/blockly/generator";
 import { BlocklyProject, BlocklyProjectWorkspace } from "@/interface/modules/blockly";
@@ -47,9 +49,22 @@ onMounted(() => {
   // 临时手段，选择群功能补上后记得删
   BlocklyUtil.fetchAllGroupMember();
   initBlockly();
-  workspace.value = Blockly.inject(blocklyDiv.value, BlocklyConfig);
+  const ws = Blockly.inject(blocklyDiv.value, BlocklyConfig);
+  ws.addChangeListener(onBlockClick);
+  workspace.value = ws;
   doFetchBlocklyProjectList();
 });
+function onBlockClick(event: Blockly.Events.ClickJson) {
+  if (event.targetType === "block" && event.type === "click") {
+    const { blockId } = event;
+    const block: Block = workspace.value.getBlockById(blockId);
+    if (block.data === "select") {
+      ElMessageBox.prompt("请输入", "").then(({ value }) => {
+        block.getField("NAME")?.setValue(value);
+      });
+    }
+  }
+}
 function doFetchBlocklyProjectList() {
   fetchBlocklyProjectList()
     .then((res) => {

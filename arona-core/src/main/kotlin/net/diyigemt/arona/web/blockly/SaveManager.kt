@@ -59,7 +59,7 @@ object SaveManager {
             "meta.json" -> json.encodeToString(Meta.serializer(), tmp).byteInputStream()
             "userData.json" -> json.encodeToString(
               UserData.serializer(),
-              UserData(mutableListOf(), mutableListOf())
+              UserData(mutableListOf())
             ).byteInputStream()
             else -> "".byteInputStream()
           }, params

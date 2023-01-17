@@ -31,7 +31,7 @@ class BlocklySave(file: File): File(file.absolutePath) {
   constructor(file: File, metaData: Meta): this(file) {
     kotlin.runCatching {
       meta = metaData
-      userData = UserData(mutableListOf(), mutableListOf())
+      userData = UserData(mutableListOf())
     }.onFailure {
       Arona.error("存档已损坏")
       throw it
@@ -86,7 +86,6 @@ class BlocklySave(file: File): File(file.absolutePath) {
 
   fun wipeUserData(): Boolean = kotlin.runCatching {
     userData.members = mutableListOf()
-    userData.friends = mutableListOf()
     writeDataToSave("userData.json", json.encodeToString(UserData.serializer(), userData).byteInputStream())
     return@runCatching true
   }.getOrElse {

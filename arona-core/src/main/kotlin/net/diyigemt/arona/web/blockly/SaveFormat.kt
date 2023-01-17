@@ -37,7 +37,6 @@ data class Meta(
 
 @Serializable
 data class UserData(
-  var friends: List<BotFriend>,
   var members: List<Members>,
 ): SaveDataElement
 

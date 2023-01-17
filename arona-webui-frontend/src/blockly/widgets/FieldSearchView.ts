@@ -1,44 +1,34 @@
-import Blockly, { BlockSvg, FieldDropdown } from "blockly";
+import Blockly, { BlockSvg, Field, FieldDropdown } from "blockly";
 import { createApp } from "vue";
+import { FieldConfig } from "blockly/core/field";
+import { FieldDropdownFromJsonConfig, FieldDropdownValidator, MenuGenerator } from "blockly/core/field_dropdown";
 import BlocklyUtil from "@/blockly/BlocklyUtil";
 import SearchView from "@/blockly/widgets/SearchView.vue";
 
 export default class FieldSearchView extends FieldDropdown {
-  // eslint-disable-next-line camelcase,no-underscore-dangle,class-methods-use-this,@typescript-eslint/no-unused-vars
-  protected showEditor_(opt_e?: MouseEvent) {
-    const container = document.createElement("div") as HTMLDivElement;
-    container.id = "fieldSearchViewContainer";
-    Blockly.DropDownDiv.getContentDiv().appendChild(container);
-    createApp(SearchView).mount("#fieldSearchViewContainer");
-    Blockly.DropDownDiv.showPositionedByField(this, this.dropdownDispose.bind(this));
-    // eslint-disable-next-line no-underscore-dangle
-    // super.showEditor_(opt_e);
+  vm = createApp(SearchView);
+
+  container = Blockly.DropDownDiv.getContentDiv() as HTMLElement;
+
+  // eslint-disable-next-line camelcase
+  constructor(menuGenerator: MenuGenerator, opt_validator?: FieldDropdownValidator, opt_config?: FieldConfig) {
+    super(menuGenerator, opt_validator, opt_config);
+    // Blockly.DropDownDiv.getContentDiv().appendChild(this.container);
+    // this.container.id = "fieldSearchViewContainer";
+    this.vm.mount(this.container);
   }
 
-  protected dropdownDispose() {
-
+  // eslint-disable-next-line camelcase,no-underscore-dangle,class-methods-use-this,@typescript-eslint/no-unused-vars
+  protected showEditor_(opt_e?: MouseEvent) {
+    // const container = document.createElement("div") as HTMLDivElement;
+    // Blockly.DropDownDiv.getContentDiv().appendChild(container);
+    // container.id = "fieldSearchViewContainer";
+    // this.vm.mount("#fieldSearchViewContainer");
+    this.container.style.width = "100";
+    Blockly.DropDownDiv.showPositionedByField(this);
+    // eslint-disable-next-line no-underscore-dangle
+    // super.showEditor_(opt_e);
   }
 }
 
 BlocklyUtil.registerField("field_search_view", FieldSearchView);
-
-// Blockly.Css.register(`
-// .fieldSearchViewContainer {
-//   box-sizing: border-box;
-//   align-items: center;
-//   display: block;
-//   height: auto;
-//   justify-content: center;
-//   width: auto;
-//   margin-left: 5px;
-//   margin-right: 5px;
-// }
-//
-// #searchInput {
-//   height: 30px;
-//   border: 2px solid #e8e1e1;
-//   border-radius: 5px;
-//   padding-inline-start: 10px;
-//   margin-bottom: 10px;
-// }
-// `);

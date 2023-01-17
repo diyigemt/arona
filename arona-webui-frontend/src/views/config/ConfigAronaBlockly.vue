@@ -120,7 +120,6 @@ function onSaveCurrentProject() {
         uuid: null,
         blocklyProject: JSON.stringify(Blockly.serialization.workspaces.save(workspace.value)),
         userData: JSON.stringify({
-          friends: baseStore.friends(),
           members: groupBlocks,
         }),
       })
@@ -139,7 +138,6 @@ function onSaveCurrentProject() {
       uuid: (blockList.value || [])[selectBlockIndex.value as number].uuid,
       blocklyProject: JSON.stringify(Blockly.serialization.workspaces.save(workspace.value)),
       userData: JSON.stringify({
-        friends: baseStore.friends(),
         members: groupBlocks,
       }),
     }).then(() => {
@@ -223,7 +221,6 @@ function onDebug() {
       uuid: proj?.uuid,
       blocklyProject: debugMode.value ? row : JSON.stringify(row),
       userData: {
-        friends: baseStore.friends(),
         members: groupBlocks,
       },
     },

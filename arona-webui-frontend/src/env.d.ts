@@ -6,6 +6,7 @@
 // @ts-ignore
 
 import { Block } from "blockly/core/block";
+import * as B from "blockly/core";
 
 declare module '*.vue' {
   import { DefineComponent } from "vue";
@@ -47,12 +48,13 @@ declare interface Window {
 declare global {
   // @ts-ignore
   module "blockly" {
-    type SelectType = "friend"
+    export * from "blockly/core";
+    type SelectType = "friend";
     interface ExtendBlock extends Block {
       data: SelectType | string;
     }
     const Blocks: {
-      [key: string]: ExtendBlock
+      [key: string]: ExtendBlock;
     }
   }
 }

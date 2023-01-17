@@ -6,11 +6,11 @@ import SearchView from "@/blockly/widgets/SearchView.vue";
 export default class FieldSearchView extends FieldDropdown {
   // eslint-disable-next-line camelcase,no-underscore-dangle,class-methods-use-this,@typescript-eslint/no-unused-vars
   protected showEditor_(opt_e?: MouseEvent) {
-    const container = document.createElement("div") as HTMLDivElement;
-    container.id = "fieldSearchViewContainer";
-    Blockly.DropDownDiv.getContentDiv().appendChild(container);
-    createApp(SearchView).mount("#fieldSearchViewContainer");
-    Blockly.DropDownDiv.showPositionedByField(this, this.dropdownDispose.bind(this));
+    // const container = document.createElement("div") as HTMLDivElement;
+    // container.id = "fieldSearchViewContainer";
+    // Blockly.DropDownDiv.getContentDiv().appendChild(container);
+    // createApp(SearchView).mount("#fieldSearchViewContainer");
+    // Blockly.DropDownDiv.showPositionedByField(this, this.dropdownDispose.bind(this));
     // eslint-disable-next-line no-underscore-dangle
     // super.showEditor_(opt_e);
   }

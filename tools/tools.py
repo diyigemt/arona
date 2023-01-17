@@ -251,6 +251,8 @@ def post_image_to_remote(folder: str):
         print("empty!")
         return
     purgeFiles(purgePath)
+    for p in purgePath:  
+        print(p)
     print("success: %d" % index)
 
 def post_data(action: str, data: any, printResp: bool = True):

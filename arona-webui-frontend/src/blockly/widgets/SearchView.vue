@@ -3,10 +3,6 @@
   <el-button type="primary">wsa</el-button>
 </template>
 
-<script lang="ts">
-export default {
-  name: "FieldSearchView",
-};
-</script>
+<script setup lang="ts"></script>
 
 <style scoped></style>

@@ -31,9 +31,23 @@ data class BotFriend (
 data class BotGroupMember (
   val id : Long,
   val memberName : String,
-  val remark: String
+  val permission: MemberPermission,
+  val specialTitle: String,
+  val joinTimestamp: Int,
+  val lastSpeakTimestamp: Int,
+  val muteTimeRemaining: Int,
+  val group: BotGroup,
 )
 
 fun Group.toGroup(): BotGroup = BotGroup(this.id, this.name, this.botPermission)
 fun Friend.toFriend(): BotFriend = BotFriend(this.id, this.nameCardOrNick, this.remarkOrNick)
-fun NormalMember.toMember(): BotGroupMember = BotGroupMember(this.id, this.nameCardOrNick, this.remarkOrNick)
+fun NormalMember.toMember(): BotGroupMember = BotGroupMember(
+  this.id,
+  this.nameCardOrNick,
+  this.permission,
+  this.specialTitle,
+  this.joinTimestamp,
+  this.lastSpeakTimestamp,
+  this.muteTimeRemaining,
+  BotGroup(this.group.id, this.group.name, this.group.botPermission)
+)

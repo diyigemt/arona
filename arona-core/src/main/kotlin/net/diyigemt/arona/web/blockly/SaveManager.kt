@@ -57,7 +57,10 @@ object SaveManager {
           when(item){
             // TODO: 需要写初始数据的在这里写
             "meta.json" -> json.encodeToString(Meta.serializer(), tmp).byteInputStream()
-            "userData.json" -> json.encodeToString(UserData.serializer(), UserData(mutableListOf())).byteInputStream()
+            "userData.json" -> json.encodeToString(
+              UserData.serializer(),
+              UserData(mutableListOf(), mutableListOf())
+            ).byteInputStream()
             else -> "".byteInputStream()
           }, params
         )
@@ -190,9 +193,9 @@ object SaveManager {
     val res: MutableList<ListSaves> = mutableListOf()
     saves.forEach{
       kotlin.runCatching {
-        it.readDataAsString("BlocklyProject.json")!!.apply {
-          if (this != "") res.add(ListSaves(it.meta.projectName,it.meta.uuid , this))
-        }
+        val project = it.readDataAsString("BlocklyProject.json")!!
+        val userData = it.readDataAsString("userData.json")!!
+        res.add(ListSaves(it.meta.projectName,it.meta.uuid , project, userData))
       }
     }
 

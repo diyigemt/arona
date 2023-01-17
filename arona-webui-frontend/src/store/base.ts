@@ -1,9 +1,10 @@
 import { defineStore } from "pinia";
 import { BaseStoreState } from "./type";
 import { fetchBotContacts, fetchGroupMember } from "@/api/modules/contact";
-import { Friend, Group, Member } from "@/types/contact";
+import { Friend, Member } from "@/types/contact";
 import { ExtendGroup } from "@/interface/http";
 import { HTTP_OK } from "@/constant/http";
+import { UserData } from "@/api/modules/blockly";
 
 const useBaseStore = defineStore({
   id: "common",
@@ -92,6 +93,16 @@ const useBaseStore = defineStore({
         return [];
       }
       return groupList[0].member;
+    },
+    /**
+     * 通过反序列化加载数据
+     * @param json JSON字符串
+     */
+    loadDataFromSave(json: string) {
+      const userData = JSON.parse(json) as UserData;
+      userData.members.forEach((item) => {
+        this.groups().filter((group) => group.id === Number(item.groupId))[0].member = item.members;
+      });
     },
   },
   persist: {

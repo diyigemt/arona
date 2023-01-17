@@ -24,7 +24,6 @@
 
 <script setup lang="ts">
 import Blockly, { Block } from "blockly";
-import { ClickJson } from "blockly/core/events/events_click";
 import { ElMessageBox } from "element-plus";
 import BlocklyConfig, { initBlockly, workspaceBlocks } from "@/blockly";
 import aronaGenerator from "@/blockly/generator";
@@ -36,7 +35,7 @@ import {
   updateBlocklyProject,
 } from "@/api/modules/blockly";
 import { errorMessage, IConfirm, infoMessage, IPrompt, successMessage, warningMessage } from "@/utils/message";
-import BlocklyUtil from "@/blockly/BlocklyUtil";
+import useBaseStore from "@/store/base";
 
 const blocklyDiv = ref();
 const output = ref<string>();
@@ -46,8 +45,6 @@ const selectBlockIndex = ref<number>();
 const debugMode = ref(true); // false 原生 true format好看
 const isNewProject = ref(false);
 onMounted(() => {
-  // 临时手段，选择群功能补上后记得删
-  BlocklyUtil.fetchAllGroupMember();
   initBlockly();
   const ws = Blockly.inject(blocklyDiv.value, BlocklyConfig);
   ws.addChangeListener(onBlockClick);
@@ -91,11 +88,24 @@ function setBlock(index: number) {
   }
   workspace.value.clear();
   const block = (blockList.value || [])[index];
+  const baseStore = useBaseStore();
+  baseStore.loadDataFromSave(block.userData);
   Blockly.serialization.workspaces.load(block.blocklyProject as BlocklyProjectWorkspace, workspace.value);
   selectBlockIndex.value = index;
 }
 function onSaveCurrentProject() {
   const code = aronaGenerator.workspaceToCode(workspace.value);
+  const baseStore = useBaseStore();
+  const groupBlocks = (workspace.value as Blockly.WorkspaceSvg)
+    .getAllBlocks(false)
+    .filter((targetBlock) => targetBlock.type === "groupIDBlock")
+    .map((targetBlock) => {
+      const value = targetBlock.getFieldValue("groupIDInput");
+      return {
+        groupId: value,
+        members: baseStore.memberSync(Number(value)),
+      };
+    });
   onDebug();
   if (isNewProject.value || blockList.value?.length === 0) {
     IPrompt("保存项目", "请输入项目名称:", {
@@ -109,8 +119,10 @@ function onSaveCurrentProject() {
         projectName: value,
         uuid: null,
         blocklyProject: JSON.stringify(Blockly.serialization.workspaces.save(workspace.value)),
-        // TODO: userData List<String>
-        userData: '{"ids": []}',
+        userData: JSON.stringify({
+          friends: baseStore.friends(),
+          members: groupBlocks,
+        }),
       })
         .then(() => {
           doFetchBlocklyProjectList();
@@ -126,7 +138,10 @@ function onSaveCurrentProject() {
       projectName: (blockList.value || [])[selectBlockIndex.value as number].name,
       uuid: (blockList.value || [])[selectBlockIndex.value as number].uuid,
       blocklyProject: JSON.stringify(Blockly.serialization.workspaces.save(workspace.value)),
-      userData: '{"ids": []}',
+      userData: JSON.stringify({
+        friends: baseStore.friends(),
+        members: groupBlocks,
+      }),
     }).then(() => {
       doFetchBlocklyProjectList();
       successMessage("保存成功");
@@ -165,12 +180,12 @@ function onDeleteProject() {
       type: "warning",
     }).then(() => {
       deleteBlocklyProject({
-        trigger: JSON.parse('{"id": 0,"type":"GroupMessageEvent","expressions": [],"actions": []}'),
+        trigger: '{"id": 0,"type":"GroupMessageEvent","expressions": [],"actions": []}',
         projectName: projName,
-        // TODO:只有UUID是有用的，其余的都可以不给，但不能给NULL，后端能过反序列化就行
+        // 只有UUID是有用的，其余的都可以不给，但不能给NULL，后端能过反序列化就行
         uuid: (blockList.value || [])[selectBlockIndex.value as number].uuid,
         blocklyProject: "",
-        userData: '{"ids": []}',
+        userData: "",
       }).then(() => {
         doFetchBlocklyProjectList();
         successMessage("删除成功");
@@ -190,13 +205,27 @@ function onDebug() {
   const code = aronaGenerator.workspaceToCode(workspace.value);
   const row = Blockly.serialization.workspaces.save(workspace.value);
   const proj: BlocklyProject | null = (blockList.value || [])[selectBlockIndex.value as number];
+  const baseStore = useBaseStore();
+  const groupBlocks = (workspace.value as Blockly.WorkspaceSvg)
+    .getAllBlocks(false)
+    .filter((targetBlock) => targetBlock.type === "groupIDBlock")
+    .map((targetBlock) => {
+      const value = targetBlock.getFieldValue("groupIDInput");
+      return {
+        groupId: value,
+        members: baseStore.memberSync(Number(value)),
+      };
+    });
   output.value = JSON.stringify(
     {
       trigger: JSON.parse(code),
       projectName: proj?.name,
       uuid: proj?.uuid,
       blocklyProject: debugMode.value ? row : JSON.stringify(row),
-      userData: "[]",
+      userData: {
+        friends: baseStore.friends(),
+        members: groupBlocks,
+      },
     },
     null,
     2,

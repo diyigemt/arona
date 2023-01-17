@@ -9,7 +9,6 @@ export default function addBlocks() {
   Blockly.defineBlocksWithJsonArray(blocks);
   Blockly.Blocks.senderBlock = {
     init() {
-      // @ts-ignore
       this.appendValueInput("IDValueInput")
         .setCheck("LogicType")
         .appendField(

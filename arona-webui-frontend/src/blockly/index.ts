@@ -1,4 +1,4 @@
-import Blockly, { BlocklyOptions } from "blockly";
+import { BlocklyOptions } from "blockly";
 import addBlocks from "@/blockly/blocks";
 import addMutators from "@/blockly/mutators";
 import injectExtensions from "@/blockly/extensions";
@@ -36,7 +36,6 @@ export const blocks = JSON.parse(
 );
 
 export function initBlockly() {
-  Blockly.defineBlocksWithJsonArray(blocks);
   addBlocks();
   addMutators();
   injectExtensions();

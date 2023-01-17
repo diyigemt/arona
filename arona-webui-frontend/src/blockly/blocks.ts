@@ -4,6 +4,7 @@ import BlocklyUtil from "@/blockly/BlocklyUtil";
 import { exchange } from "@/blockly/images";
 import useBaseStore from "@/store/base";
 import { blocks } from "@/blockly/index";
+import FieldSearchView from "@/blockly/widgets/FieldSearchView";
 
 export default function addBlocks() {
   Blockly.defineBlocksWithJsonArray(blocks);
@@ -41,7 +42,7 @@ export default function addBlocks() {
           "manualIDInput",
         )
         .appendField(
-          new FieldDropdown(() => {
+          new FieldSearchView(() => {
             const root = this.getRootBlock();
             const baseStore = useBaseStore();
             const groupBlock = BlocklyUtil.findContext(this, "groupIDBlock");

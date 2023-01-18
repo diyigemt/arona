@@ -1,30 +1,38 @@
-import Blockly, { BlockSvg, Field, FieldDropdown } from "blockly";
-import { createApp } from "vue";
+import Blockly, { FieldDropdown } from "blockly";
+import { App, createApp } from "vue";
 import { FieldConfig } from "blockly/core/field";
-import { FieldDropdownFromJsonConfig, FieldDropdownValidator, MenuGenerator } from "blockly/core/field_dropdown";
+import { FieldDropdownValidator, MenuGenerator } from "blockly/core/field_dropdown";
 import BlocklyUtil from "@/blockly/BlocklyUtil";
 import SearchView from "@/blockly/widgets/SearchView.vue";
 
 export default class FieldSearchView extends FieldDropdown {
-  vm = createApp(SearchView);
+  dropDownDiv = Blockly.DropDownDiv;
 
-  container = Blockly.DropDownDiv.getContentDiv() as HTMLElement;
+  container = document.createElement("div") as HTMLDivElement;
+
+  vm: App<Element> | null = createApp(SearchView);
 
   // eslint-disable-next-line camelcase
   constructor(menuGenerator: MenuGenerator, opt_validator?: FieldDropdownValidator, opt_config?: FieldConfig) {
     super(menuGenerator, opt_validator, opt_config);
-    // Blockly.DropDownDiv.getContentDiv().appendChild(this.container);
-    // this.container.id = "fieldSearchViewContainer";
-    this.vm.mount(this.container);
+    this.container.id = "fieldSearchViewContainer";
+    this.vm!.mount(this.container);
   }
 
-  // eslint-disable-next-line camelcase,no-underscore-dangle,class-methods-use-this,@typescript-eslint/no-unused-vars
-  protected showEditor_(opt_e?: MouseEvent) {
-    // this.vm.mount("#fieldSearchViewContainer");
-    this.container.style.width = "100";
-    Blockly.DropDownDiv.showPositionedByField(this);
+  // eslint-disable-next-line camelcase,@typescript-eslint/no-unused-vars,no-underscore-dangle
+  protected override showEditor_(opt_e?: MouseEvent) {
+    if (this.vm == null) {
+      this.vm = createApp(SearchView);
+      this.vm!.mount(this.container);
+    }
+    this.dropDownDiv.getContentDiv().appendChild(this.container);
     // eslint-disable-next-line no-underscore-dangle
-    // super.showEditor_(opt_e);
+    this.dropDownDiv.showPositionedByField(this, this.dropdownDispose.bind(this));
+  }
+
+  private dropdownDispose() {
+    this.vm!.unmount();
+    this.vm = null;
   }
 }
 

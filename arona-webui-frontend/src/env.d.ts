@@ -7,6 +7,7 @@
 
 import { Block } from "blockly/core/block";
 import * as B from "blockly/core";
+import {App} from "vue";
 
 declare module '*.vue' {
   import { DefineComponent } from "vue";
@@ -59,3 +60,8 @@ declare global {
   }
 }
 
+declare global {
+  declare interface Window {
+    app: App;
+  }
+}

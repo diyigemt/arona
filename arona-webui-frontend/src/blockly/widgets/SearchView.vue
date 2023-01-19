@@ -19,7 +19,7 @@ const props = defineProps<{
   blockly: FieldSearchView;
 }>();
 onMounted(() => {
-  console.log(props.blockly.container);
+  console.log(props.blockly);
 });
 </script>
 

@@ -26,3 +26,5 @@ app.use(router).use(store);
 app.use(i18n);
 
 app.mount("#app");
+
+window.app = app;

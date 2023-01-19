@@ -120,7 +120,7 @@ export default function addBlocks() {
         .setCheck("LogicType")
         .appendField("群为 ")
         .appendField(
-          new FieldDropdown(() => {
+          new FieldSearchView(() => {
             const root = this.getRootBlock();
             const baseStore = useBaseStore();
             if (root?.getFieldValue("TriggerType")) {

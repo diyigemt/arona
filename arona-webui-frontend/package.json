@@ -13,6 +13,7 @@
     "mock": "nodemon --exec ts-node mock/index.ts --watch src/ --watch mock/ -e ts"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.0.10",
     "@vueuse/core": "^8.9.2",
     "axios": "^0.25.0",
     "blockly": "^9.1.1",

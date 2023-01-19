@@ -1,19 +1,17 @@
 <template>
-  <div id="ddlBorder">
+  <div class="ddl-border">
     <el-space direction="vertical" fill>
       <el-input placeholder="搜索" :prefix-icon="Search" />
-      <div id="ddlDivider" />
-      <el-scrollbar id="ddlScrollBar" max-height="200px">
+      <div class="ddl-divider" />
+      <el-scrollbar max-height="200px">
         <el-button
-          v-for="item in options"
-          :id="generateId(item)"
-          :key="item"
-          ref="btn"
+          v-for="(item, index) in options"
+          :key="index"
           type="primary"
           plain
           class="scrollbar-item"
           :disabled="item[1] === selected"
-          @click="onClickListener($event)"
+          @click="onClickItem(item[1])"
         >
           {{ item[0] }}
         </el-button>
@@ -30,34 +28,25 @@ import FieldSearchView from "@/blockly/widgets/FieldSearchView";
 const props = defineProps<{
   blockly: FieldSearchView;
 }>();
-const btn = ref();
-const options = ref(props.blockly.getOptions());
-const selected = ref(props.blockly.getValue());
+const options = computed(() => props.blockly.getOptions());
+const selected = ref<string>(props.blockly.getValue());
 
 onMounted(() => {
   Blockly.DropDownDiv.showPositionedByField(props.blockly);
 });
 
-function generateId(index: number) {
-  return `ddlBtn${index}`;
-}
-
-function onClickListener(event: Event) {
-  const target = (event.target as HTMLSpanElement).innerText;
-  const res = props.blockly.getOptions().find((value) => {
-    return value[0] === target;
-  })!;
-  props.blockly.setValue(res[1]);
+function onClickItem(id: number) {
+  props.blockly.setValue(id);
   props.blockly.close();
 }
 </script>
 
 <style scoped lang="scss">
-#ddlBorder {
+.ddl-border {
   margin: 4px;
   overflow: hidden;
 }
-#ddlDivider {
+.ddl-divider {
   margin-top: 2px;
   border-top: 1px solid var(--el-border-color);
 }

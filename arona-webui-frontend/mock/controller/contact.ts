@@ -16,7 +16,35 @@ export function getContactList(_: Request, response: Response): Promise<Response
             member: [
               {
                 id: 1355247243,
-                memberName: "群员1",
+                memberName: "这是短的",
+                permission: "MEMBER",
+                specialTitle: "",
+                joinTimestamp: 123,
+                lastSpeakTimestamp: 123,
+                muteTimeRemaining: 123,
+                group: {
+                  id: 1355247243,
+                  name: "这是假的群",
+                  permission: "ADMINISTRATOR",
+                },
+              },
+              {
+                id: 1355247244,
+                memberName: "这是一个很长很长的群员",
+                permission: "MEMBER",
+                specialTitle: "",
+                joinTimestamp: 123,
+                lastSpeakTimestamp: 123,
+                muteTimeRemaining: 123,
+                group: {
+                  id: 1355247243,
+                  name: "这是假的群",
+                  permission: "ADMINISTRATOR",
+                },
+              },
+              {
+                id: 1355247245,
+                memberName: "这也是短的",
                 permission: "MEMBER",
                 specialTitle: "",
                 joinTimestamp: 123,

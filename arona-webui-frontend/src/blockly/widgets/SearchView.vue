@@ -1,22 +1,22 @@
 <template>
   <div class="ddl-border">
-    <el-space direction="vertical" fill>
+    <div>
       <el-input placeholder="搜索" :prefix-icon="Search" />
-      <div class="ddl-divider" />
-      <el-scrollbar max-height="200px">
-        <el-button
-          v-for="(item, index) in options"
-          :key="index"
-          type="primary"
-          plain
-          class="scrollbar-item"
-          :disabled="item[1] === selected"
-          @click="onClickItem(item[1])"
-        >
-          {{ item[0] }}
-        </el-button>
+      <el-divider class="divider" />
+      <el-scrollbar max-height="200px" style="margin-top: 4px">
+        <div v-for="(item, index) in options" :key="index">
+          <el-button
+            type="primary"
+            plain
+            class="scrollbar-item"
+            :disabled="item[1] === selected"
+            @click="onClickItem(item[1])"
+          >
+            {{ item[0] }}
+          </el-button>
+        </div>
       </el-scrollbar>
-    </el-space>
+    </div>
   </div>
 </template>
 
@@ -45,19 +45,19 @@ function onClickItem(id: number) {
 .ddl-border {
   margin: 4px;
   overflow: hidden;
+  width: 200px;
 }
-.ddl-divider {
-  margin-top: 2px;
-  border-top: 1px solid var(--el-border-color);
+.divider {
+  margin: 4px 0;
 }
 .scrollbar-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 200px;
+  width: 100%;
   height: 30px;
-  margin: 4px;
-  text-align: start;
+  margin-bottom: 4px;
+  :deep(span) {
+    width: 100%;
+    text-align: left;
+  }
   //border-radius: 4px;
   //background: var(--el-color-primary-light-9);
   //color: var(--el-color-primary);

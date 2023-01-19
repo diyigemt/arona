@@ -12,7 +12,16 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import FieldSearchView from "@/blockly/widgets/FieldSearchView";
+
+const props = defineProps<{
+  blockly: FieldSearchView;
+}>();
+onMounted(() => {
+  console.log(props.blockly.container);
+});
+</script>
 
 <style scoped lang="scss">
 #ddlBorder {

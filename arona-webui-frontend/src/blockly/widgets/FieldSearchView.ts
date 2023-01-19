@@ -10,7 +10,7 @@ export default class FieldSearchView extends FieldDropdown {
 
   container = document.createElement("div") as HTMLDivElement;
 
-  vm: App<Element> | null = createApp(SearchView);
+  vm: App<Element> | null = this.createVueApp();
 
   // eslint-disable-next-line camelcase
   constructor(menuGenerator: MenuGenerator, opt_validator?: FieldDropdownValidator, opt_config?: FieldConfig) {
@@ -22,7 +22,7 @@ export default class FieldSearchView extends FieldDropdown {
   // eslint-disable-next-line camelcase,@typescript-eslint/no-unused-vars,no-underscore-dangle
   protected override showEditor_(opt_e?: MouseEvent) {
     if (this.vm == null) {
-      this.vm = createApp(SearchView);
+      this.vm = this.createVueApp();
       this.vm!.mount(this.container);
     }
     this.dropDownDiv.getContentDiv().appendChild(this.container);
@@ -33,6 +33,10 @@ export default class FieldSearchView extends FieldDropdown {
   private dropdownDispose() {
     this.vm!.unmount();
     this.vm = null;
+  }
+
+  private createVueApp() {
+    return createApp(SearchView, { blockly: this });
   }
 }
 

@@ -5,9 +5,8 @@
 // @ts-ignore
 // @ts-ignore
 
-import { Block } from "blockly/core/block";
-import * as B from "blockly/core";
-import {App} from "vue";
+import { App } from "vue";
+import {Block} from "blockly";
 
 declare module '*.vue' {
   import { DefineComponent } from "vue";
@@ -42,26 +41,26 @@ declare interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
 
-declare interface Window {
-  // extend the window
-}
-
-declare global {
-  // @ts-ignore
-  module "blockly" {
-    export * from "blockly/core";
-    type SelectType = "friend";
-    interface ExtendBlock extends Block {
-      data: SelectType | string;
-    }
-    const Blocks: {
-      [key: string]: ExtendBlock;
-    }
-  }
-}
-
 declare global {
   declare interface Window {
+    // extend the window
     app: App;
   }
 }
+
+
+type SelectType = "friend";
+interface ExtendBlock extends Block {
+  data: SelectType | string;
+}
+interface Blocks {
+  [key: string]: ExtendBlock;
+}
+
+declare global {
+  module "blockly" {
+    export * from "blockly/core/blockly";
+    const Blocks: Blocks
+  }
+}
+

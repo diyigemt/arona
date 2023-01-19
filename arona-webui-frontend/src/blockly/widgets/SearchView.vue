@@ -13,13 +13,14 @@
 </template>
 
 <script setup lang="ts">
+import Blockly from "blockly";
 import FieldSearchView from "@/blockly/widgets/FieldSearchView";
 
 const props = defineProps<{
   blockly: FieldSearchView;
 }>();
 onMounted(() => {
-  console.log(props.blockly);
+  Blockly.DropDownDiv.showPositionedByField(props.blockly);
 });
 </script>
 

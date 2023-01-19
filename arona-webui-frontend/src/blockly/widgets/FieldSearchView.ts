@@ -1,5 +1,5 @@
 import Blockly, { FieldDropdown } from "blockly";
-import { createVNode, h, render } from "vue";
+import { createVNode, render } from "vue";
 import BlocklyUtil from "@/blockly/BlocklyUtil";
 
 export default class FieldSearchView extends FieldDropdown {
@@ -14,7 +14,6 @@ export default class FieldSearchView extends FieldDropdown {
     const div = Blockly.DropDownDiv.getContentDiv();
     div.appendChild(container);
     // eslint-disable-next-line no-underscore-dangle
-    Blockly.DropDownDiv.showPositionedByField(this);
   }
 }
 

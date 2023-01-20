@@ -19,7 +19,7 @@
             :disabled="item[1] === selected"
             @click="onClickItem(item[1])"
           >
-            {{ item[0] }}
+            {{ peakyBlinder(item[0]) }}
           </el-button>
         </div>
         <el-empty v-if="options && options.length === 0" description="未找到结果" :image-size="75" />
@@ -54,6 +54,13 @@ function onInput() {
   options.value = props.blockly.getOptions().filter((value) => {
     return (value[0] as string).includes(inputText.value);
   });
+}
+
+function peakyBlinder(value: string) {
+  if (value.length >= 20) {
+    return `${value.slice(0, 20)}...`;
+  }
+  return value;
 }
 </script>
 

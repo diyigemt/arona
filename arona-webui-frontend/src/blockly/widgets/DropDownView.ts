@@ -24,7 +24,7 @@ export default class DropDownView extends FieldDropdown {
   }
 
   protected override showEditor_(opt_e?: MouseEvent) {
-    const component = defineAsyncComponent(() => import("./SearchView.vue"));
+    const component = defineAsyncComponent(() => import("./DropDownView.vue"));
     const componentVNode = createVNode(component, { blockly: this, searchInput: this.isSearch });
     componentVNode.appContext = window.app._context;
     const container = document.createElement("div");

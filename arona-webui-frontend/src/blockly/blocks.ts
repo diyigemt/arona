@@ -1,4 +1,4 @@
-import Blockly, { FieldDropdown, FieldTextInput } from "blockly";
+import Blockly, { FieldDropdown } from "blockly";
 import { Abstract } from "blockly/core/events/events_abstract";
 import BlocklyUtil from "@/blockly/BlocklyUtil";
 import useBaseStore from "@/store/base";
@@ -12,18 +12,6 @@ export default function addBlocks() {
       this.appendValueInput("IDValueInput")
         .setCheck("LogicType")
         .appendField("发送者为 ")
-        .appendField(
-          // @ts-ignore
-          new FieldTextInput("123456", (value: string) => {
-            const reg = /[A-z`~!@#$^\-&*()=|{}':;,\\[\].<>/?！￥…（）—【】；："。，、？\s]+/g;
-            const qqReg = /[1-9][0-9]{4,10}/g;
-            if (value.match(reg) != null || value.match(qqReg) == null || value === "") {
-              return null;
-            }
-            return value.replace(reg, "");
-          }),
-          "manualIDInput",
-        )
         .appendField(
           new DropDownView(
             () => {
@@ -53,7 +41,6 @@ export default function addBlocks() {
           ),
           "IDInput",
         );
-      (this.getField("manualIDInput")! as FieldTextInput).setVisible(false);
       this.setOutput(true, "ExpressionType");
       this.setColour(230);
       this.setOnChange((event: Abstract) => {
@@ -119,7 +106,6 @@ export default function addBlocks() {
             },
             undefined,
             undefined,
-            false,
           ),
           "groupIDInput",
         );

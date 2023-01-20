@@ -4,7 +4,7 @@ import BlocklyUtil from "@/blockly/BlocklyUtil";
 import { exchange } from "@/blockly/images";
 import useBaseStore from "@/store/base";
 import { blocks } from "@/blockly/index";
-import FieldSearchView from "@/blockly/widgets/FieldSearchView";
+import DropDownView from "@/blockly/widgets/DropDownView";
 
 export default function addBlocks() {
   Blockly.defineBlocksWithJsonArray(blocks);
@@ -42,27 +42,32 @@ export default function addBlocks() {
           "manualIDInput",
         )
         .appendField(
-          new FieldSearchView(() => {
-            const root = this.getRootBlock();
-            const baseStore = useBaseStore();
-            const groupBlock = BlocklyUtil.findContext(this, "groupIDBlock");
-            if (root != null) {
-              switch (root?.getFieldValue("TriggerType")) {
-                case "GroupMessageEvent":
-                  if (groupBlock) {
-                    return baseStore
-                      .memberSync(Number(groupBlock.getFieldValue("groupIDInput")) || 0)
-                      .map((item) => [`${item.memberName} (${item.id})`, item.id.toString()]);
-                  }
-                  break;
-                case "FriendMessageEvent":
-                  return baseStore.friends().map((item) => [`${item.remark} (${item.id})`, item.id.toString()]);
-                default:
-                  break;
+          new DropDownView(
+            () => {
+              const root = this.getRootBlock();
+              const baseStore = useBaseStore();
+              const groupBlock = BlocklyUtil.findContext(this, "groupIDBlock");
+              if (root != null) {
+                switch (root?.getFieldValue("TriggerType")) {
+                  case "GroupMessageEvent":
+                    if (groupBlock) {
+                      return baseStore
+                        .memberSync(Number(groupBlock.getFieldValue("groupIDInput")) || 0)
+                        .map((item) => [`${item.memberName} (${item.id})`, item.id.toString()]);
+                    }
+                    break;
+                  case "FriendMessageEvent":
+                    return baseStore.friends().map((item) => [`${item.remark} (${item.id})`, item.id.toString()]);
+                  default:
+                    break;
+                }
               }
-            }
-            return [["QQ号", ""]];
-          }),
+              return [["QQ号", ""]];
+            },
+            undefined,
+            undefined,
+            true,
+          ),
           "IDInput",
         );
       (this.getField("manualIDInput")! as FieldTextInput).setVisible(false);
@@ -120,14 +125,19 @@ export default function addBlocks() {
         .setCheck("LogicType")
         .appendField("群为 ")
         .appendField(
-          new FieldSearchView(() => {
-            const root = this.getRootBlock();
-            const baseStore = useBaseStore();
-            if (root?.getFieldValue("TriggerType")) {
-              return baseStore.groups().map((group) => [`${group.name} (${group.id})`, group.id.toString()]);
-            }
-            return [["群号", ""]];
-          }),
+          new DropDownView(
+            () => {
+              const root = this.getRootBlock();
+              const baseStore = useBaseStore();
+              if (root?.getFieldValue("TriggerType")) {
+                return baseStore.groups().map((group) => [`${group.name} (${group.id})`, group.id.toString()]);
+              }
+              return [["群号", ""]];
+            },
+            undefined,
+            undefined,
+            false,
+          ),
           "groupIDInput",
         );
       this.setOnChange((event: Abstract) => {

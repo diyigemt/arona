@@ -1,8 +1,8 @@
 <template>
   <div class="ddl-border">
     <div>
-      <el-input placeholder="搜索" :prefix-icon="Search" />
-      <el-divider class="divider" />
+      <el-input v-if="searchInput" placeholder="搜索" :prefix-icon="Search" />
+      <el-divider v-if="searchInput" class="divider" />
       <el-scrollbar max-height="200px" style="margin-top: 4px">
         <div v-for="(item, index) in options" :key="index">
           <el-button
@@ -23,10 +23,11 @@
 <script setup lang="ts">
 import Blockly from "blockly";
 import { Search } from "@element-plus/icons-vue";
-import FieldSearchView from "@/blockly/widgets/FieldSearchView";
+import DropDownView from "@/blockly/widgets/DropDownView";
 
 const props = defineProps<{
-  blockly: FieldSearchView;
+  blockly: DropDownView;
+  searchInput: boolean;
 }>();
 const options = computed(() => props.blockly.getOptions());
 const selected = ref<string>(props.blockly.getValue());
@@ -35,7 +36,7 @@ onMounted(() => {
   Blockly.DropDownDiv.showPositionedByField(props.blockly);
 });
 
-function onClickItem(id: number) {
+function onClickItem(id: string) {
   props.blockly.setValue(id);
   props.blockly.close();
 }

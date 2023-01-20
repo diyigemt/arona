@@ -3,7 +3,7 @@
   "message0": "收到 %1 时，当 %2 执行 %3",
   "args0": [
     {
-      "type": "field_dropdown",
+      "type": "field_dropdown_view",
       "name": "TriggerType",
       "options": [
         [
@@ -39,7 +39,7 @@
   "message0": "%1 %2",
   "args0": [
     {
-      "type": "field_dropdown",
+      "type": "field_dropdown_view",
       "name": "logicInput",
       "options": [
         [

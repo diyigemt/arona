@@ -1,7 +1,6 @@
-import Blockly, { BlockSvg, FieldDropdown, FieldTextInput } from "blockly";
+import Blockly, { FieldDropdown, FieldTextInput } from "blockly";
 import { Abstract } from "blockly/core/events/events_abstract";
 import BlocklyUtil from "@/blockly/BlocklyUtil";
-import { exchange } from "@/blockly/images";
 import useBaseStore from "@/store/base";
 import { blocks } from "@/blockly/index";
 import DropDownView from "@/blockly/widgets/DropDownView";
@@ -12,22 +11,6 @@ export default function addBlocks() {
     init() {
       this.appendValueInput("IDValueInput")
         .setCheck("LogicType")
-        .appendField(
-          BlocklyUtil.createCustomField(exchange, (image) => {
-            const block = image.getSourceBlock()! as BlockSvg;
-            const dropDown = block.getField("IDInput") as FieldDropdown;
-            const manualInput = block.getField("manualIDInput") as FieldTextInput;
-            if (dropDown.isVisible()) {
-              dropDown.setVisible(false);
-              manualInput.setVisible(true);
-              manualInput.setValue(dropDown.getValue());
-            } else {
-              dropDown.setVisible(true);
-              manualInput.setVisible(false);
-            }
-            block.render(true);
-          }),
-        )
         .appendField("发送者为 ")
         .appendField(
           // @ts-ignore

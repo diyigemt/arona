@@ -46,7 +46,7 @@ function onClickItem(id: string) {
 .ddl-border {
   margin: 4px;
   overflow: hidden;
-  width: 200px;
+  width: auto;
 }
 .divider {
   margin: 4px 0;

@@ -40,7 +40,7 @@ export default class DropDownView extends FieldDropdown {
       "mousewheel",
       this,
       (event: WheelEvent) => {
-        if (this.getOptions().length !== 1) {
+        if (this.getOptions().length !== 1 && this.isEnabled()) {
           let res = this.getOptions().findIndex(
             (value) => value[0] === this.getText() && value[1] === this.getValue(),
           )!;

@@ -178,7 +178,7 @@ function onDeleteProject() {
       type: "warning",
     }).then(() => {
       deleteBlocklyProject({
-        trigger: '{"id": 0,"type":"GroupMessageEvent","expressions": [],"actions": []}',
+        trigger: JSON.parse('{"type":"GroupMessageEvent","expressions": [],"actions": []}'),
         projectName: projName,
         // 只有UUID是有用的，其余的都可以不给，但不能给NULL，后端能过反序列化就行
         uuid: (blockList.value || [])[selectBlockIndex.value as number].uuid,

@@ -40,17 +40,19 @@ export default class DropDownView extends FieldDropdown {
       "mousewheel",
       this,
       (event: WheelEvent) => {
-        if (this.getOptions().length !== 1 && this.isEnabled()) {
-          let res = this.getOptions().findIndex(
+        const len = this.getOptions(false).length;
+        if (len !== 1 && this.isEnabled()) {
+          const currentIndex = this.getOptions().findIndex(
             (value) => value[0] === this.getText() && value[1] === this.getValue(),
           )!;
+          console.log(event);
           // @ts-ignore
           if (event.wheelDelta < 0) {
-            if (res === this.getOptions().length - 1) res = -1;
-            this.setValue(this.getOptions()[res + 1][1]);
+            const nextIndex = (currentIndex + 1) % len;
+            this.setValue(this.getOptions()[nextIndex][1]);
           } else {
-            if (res === 0) res = this.getOptions().length - 1;
-            this.setValue(this.getOptions()[res - 1][1]);
+            const nextIndex = currentIndex - 1 < 0 ? len - 1 : currentIndex - 1;
+            this.setValue(this.getOptions()[nextIndex][1]);
           }
         }
       },

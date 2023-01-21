@@ -81,8 +81,5 @@ function peakyBlinder(value: string) {
     width: 100%;
     text-align: left;
   }
-  //border-radius: 4px;
-  //background: var(--el-color-primary-light-9);
-  //color: var(--el-color-primary);
 }
 </style>

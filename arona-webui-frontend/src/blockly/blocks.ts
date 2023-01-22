@@ -1,10 +1,9 @@
-import Blockly, { BlockSvg, FieldDropdown, FieldTextInput } from "blockly";
+import Blockly, { FieldDropdown } from "blockly";
 import { Abstract } from "blockly/core/events/events_abstract";
 import BlocklyUtil from "@/blockly/BlocklyUtil";
-import { exchange } from "@/blockly/images";
 import useBaseStore from "@/store/base";
 import { blocks } from "@/blockly/index";
-import FieldSearchView from "@/blockly/widgets/FieldSearchView";
+import DropDownView from "@/blockly/widgets/DropDownView";
 
 export default function addBlocks() {
   Blockly.defineBlocksWithJsonArray(blocks);
@@ -12,60 +11,36 @@ export default function addBlocks() {
     init() {
       this.appendValueInput("IDValueInput")
         .setCheck("LogicType")
-        .appendField(
-          BlocklyUtil.createCustomField(exchange, (image) => {
-            const block = image.getSourceBlock()! as BlockSvg;
-            const dropDown = block.getField("IDInput") as FieldDropdown;
-            const manualInput = block.getField("manualIDInput") as FieldTextInput;
-            if (dropDown.isVisible()) {
-              dropDown.setVisible(false);
-              manualInput.setVisible(true);
-              manualInput.setValue(dropDown.getValue());
-            } else {
-              dropDown.setVisible(true);
-              manualInput.setVisible(false);
-            }
-            block.render(true);
-          }),
-        )
         .appendField("发送者为 ")
         .appendField(
-          // @ts-ignore
-          new FieldTextInput("123456", (value: string) => {
-            const reg = /[A-z`~!@#$^\-&*()=|{}':;,\\[\].<>/?！￥…（）—【】；："。，、？\s]+/g;
-            const qqReg = /[1-9][0-9]{4,10}/g;
-            if (value.match(reg) != null || value.match(qqReg) == null || value === "") {
-              return null;
-            }
-            return value.replace(reg, "");
-          }),
-          "manualIDInput",
-        )
-        .appendField(
-          new FieldSearchView(() => {
-            const root = this.getRootBlock();
-            const baseStore = useBaseStore();
-            const groupBlock = BlocklyUtil.findContext(this, "groupIDBlock");
-            if (root != null) {
-              switch (root?.getFieldValue("TriggerType")) {
-                case "GroupMessageEvent":
-                  if (groupBlock) {
-                    return baseStore
-                      .memberSync(Number(groupBlock.getFieldValue("groupIDInput")) || 0)
-                      .map((item) => [`${item.memberName} (${item.id})`, item.id.toString()]);
-                  }
-                  break;
-                case "FriendMessageEvent":
-                  return baseStore.friends().map((item) => [`${item.remark} (${item.id})`, item.id.toString()]);
-                default:
-                  break;
+          new DropDownView(
+            () => {
+              const root = this.getRootBlock();
+              const baseStore = useBaseStore();
+              const groupBlock = BlocklyUtil.findContext(this, "groupIDBlock");
+              if (root != null) {
+                switch (root?.getFieldValue("TriggerType")) {
+                  case "GroupMessageEvent":
+                    if (groupBlock) {
+                      return baseStore
+                        .memberSync(Number(groupBlock.getFieldValue("groupIDInput")) || 0)
+                        .map((item) => [`${item.memberName} (${item.id})`, item.id.toString()]);
+                    }
+                    break;
+                  case "FriendMessageEvent":
+                    return baseStore.friends().map((item) => [`${item.remark} (${item.id})`, item.id.toString()]);
+                  default:
+                    break;
+                }
               }
-            }
-            return [["QQ号", ""]];
-          }),
+              return [["QQ号", ""]];
+            },
+            undefined,
+            undefined,
+            true,
+          ),
           "IDInput",
         );
-      (this.getField("manualIDInput")! as FieldTextInput).setVisible(false);
       this.setOutput(true, "ExpressionType");
       this.setColour(230);
       this.setOnChange((event: Abstract) => {
@@ -120,14 +95,18 @@ export default function addBlocks() {
         .setCheck("LogicType")
         .appendField("群为 ")
         .appendField(
-          new FieldSearchView(() => {
-            const root = this.getRootBlock();
-            const baseStore = useBaseStore();
-            if (root?.getFieldValue("TriggerType")) {
-              return baseStore.groups().map((group) => [`${group.name} (${group.id})`, group.id.toString()]);
-            }
-            return [["群号", ""]];
-          }),
+          new DropDownView(
+            () => {
+              const root = this.getRootBlock();
+              const baseStore = useBaseStore();
+              if (root?.getFieldValue("TriggerType")) {
+                return baseStore.groups().map((group) => [`${group.name} (${group.id})`, group.id.toString()]);
+              }
+              return [["群号", ""]];
+            },
+            undefined,
+            undefined,
+          ),
           "groupIDInput",
         );
       this.setOnChange((event: Abstract) => {

@@ -1,7 +1,12 @@
 <template>
   <div>
-    <el-select v-model="selectBlockIndex" style="margin-right: 16px" @change="setBlock">
-      <el-option v-for="(e, index) in blockList" :key="index" :label="e.name" :value="index" @change="setBlock" />
+    <el-select
+      v-model="selectBlockIndex"
+      style="margin-right: 16px"
+      :disabled="projectList.length === 0"
+      @change="setBlock"
+    >
+      <el-option v-for="(e, index) in projectList" :key="index" :label="e.name" :value="index" @change="setBlock" />
     </el-select>
     <el-button type="primary" @click="onCreateNewProject()">新建项目</el-button>
     <el-button type="primary" @click="onSaveCurrentProject">保存当前项目</el-button>
@@ -40,7 +45,7 @@ import useBaseStore from "@/store/base";
 const blocklyDiv = ref();
 const output = ref<string>();
 const workspace = shallowRef();
-const blockList = ref<BlocklyProject[]>();
+const projectList = ref<BlocklyProject[]>([]);
 const selectBlockIndex = ref<number>();
 const debugMode = ref(true); // false 原生 true format好看
 const isNewProject = ref(false);
@@ -65,7 +70,7 @@ function onBlockClick(event: Blockly.Events.ClickJson) {
 function doFetchBlocklyProjectList() {
   fetchBlocklyProjectList()
     .then((res) => {
-      blockList.value = res.data.map((item) => {
+      projectList.value = res.data.map((item) => {
         item.blocklyProject = JSON.parse(item.blocklyProject as string);
         return item;
       });
@@ -81,13 +86,13 @@ function doFetchBlocklyProjectList() {
 }
 function setBlock(index: number) {
   isNewProject.value = false;
-  if (blockList.value && blockList.value.length <= index) {
+  if (projectList.value && projectList.value.length <= index) {
     infoMessage("没有获取到已存在的blockly项目, 将会新建项目");
     Blockly.Xml.domToWorkspace(workspaceBlocks, workspace.value);
     return;
   }
   workspace.value.clear();
-  const block = (blockList.value || [])[index];
+  const block = (projectList.value || [])[index];
   const baseStore = useBaseStore();
   baseStore.loadDataFromSave(block.userData);
   Blockly.serialization.workspaces.load(block.blocklyProject as BlocklyProjectWorkspace, workspace.value);
@@ -107,7 +112,7 @@ function onSaveCurrentProject() {
       };
     });
   onDebug();
-  if (isNewProject.value || blockList.value?.length === 0) {
+  if (isNewProject.value || projectList.value?.length === 0) {
     IPrompt("保存项目", "请输入项目名称:", {
       confirmButtonText: "保存",
       cancelButtonText: "取消",
@@ -134,8 +139,8 @@ function onSaveCurrentProject() {
   } else {
     updateBlocklyProject({
       trigger: JSON.parse(code),
-      projectName: (blockList.value || [])[selectBlockIndex.value as number].name,
-      uuid: (blockList.value || [])[selectBlockIndex.value as number].uuid,
+      projectName: (projectList.value || [])[selectBlockIndex.value as number].name,
+      uuid: (projectList.value || [])[selectBlockIndex.value as number].uuid,
       blocklyProject: JSON.stringify(Blockly.serialization.workspaces.save(workspace.value)),
       userData: JSON.stringify({
         members: groupBlocks,
@@ -172,16 +177,16 @@ function onCreateNewProject(skipWarning = false) {
 
 function onDeleteProject() {
   if (!isNewProject.value) {
-    const projName = (blockList.value || [])[selectBlockIndex.value as number].name;
+    const projName = (projectList.value || [])[selectBlockIndex.value as number].name;
     // eslint-disable-next-line no-template-curly-in-string
     IConfirm("警告", `确定删除${projName}`, {
       type: "warning",
     }).then(() => {
       deleteBlocklyProject({
-        trigger: '{"id": 0,"type":"GroupMessageEvent","expressions": [],"actions": []}',
+        trigger: JSON.parse('{"type":"GroupMessageEvent","expressions": [],"actions": []}'),
         projectName: projName,
         // 只有UUID是有用的，其余的都可以不给，但不能给NULL，后端能过反序列化就行
-        uuid: (blockList.value || [])[selectBlockIndex.value as number].uuid,
+        uuid: (projectList.value || [])[selectBlockIndex.value as number].uuid,
         blocklyProject: "",
         userData: "",
       }).then(() => {
@@ -202,7 +207,7 @@ function doCreate() {
 function onDebug() {
   const code = aronaGenerator.workspaceToCode(workspace.value);
   const row = Blockly.serialization.workspaces.save(workspace.value);
-  const proj: BlocklyProject | null = (blockList.value || [])[selectBlockIndex.value as number];
+  const proj: BlocklyProject | null = (projectList.value || [])[selectBlockIndex.value as number];
   const baseStore = useBaseStore();
   const groupBlocks = (workspace.value as Blockly.WorkspaceSvg)
     .getAllBlocks(false)

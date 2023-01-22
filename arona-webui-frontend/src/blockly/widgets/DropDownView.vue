@@ -1,8 +1,15 @@
 <template>
   <div class="ddl-border">
     <div>
-      <el-input placeholder="搜索" :prefix-icon="Search" />
-      <el-divider class="divider" />
+      <el-input
+        v-if="searchInput"
+        v-model="inputText"
+        placeholder="搜索"
+        :prefix-icon="Search"
+        clearable
+        @input="onInput"
+      />
+      <el-divider v-if="searchInput" class="divider" />
       <el-scrollbar max-height="200px" style="margin-top: 4px">
         <div v-for="(item, index) in options" :key="index">
           <el-button
@@ -12,32 +19,48 @@
             :disabled="item[1] === selected"
             @click="onClickItem(item[1])"
           >
-            {{ item[0] }}
+            {{ peakyBlinder(item[0]) }}
           </el-button>
         </div>
+        <el-empty v-if="options && options.length === 0" description="未找到结果" :image-size="75" />
       </el-scrollbar>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import Blockly from "blockly";
+import Blockly, { MenuOption } from "blockly";
 import { Search } from "@element-plus/icons-vue";
-import FieldSearchView from "@/blockly/widgets/FieldSearchView";
+import DropDownView from "@/blockly/widgets/DropDownView";
 
 const props = defineProps<{
-  blockly: FieldSearchView;
+  blockly: DropDownView;
+  searchInput: boolean;
 }>();
-const options = computed(() => props.blockly.getOptions());
+const options = ref<MenuOption[]>(props.blockly.getOptions());
 const selected = ref<string>(props.blockly.getValue());
+const inputText = ref<string>("");
 
 onMounted(() => {
   Blockly.DropDownDiv.showPositionedByField(props.blockly);
 });
 
-function onClickItem(id: number) {
+function onClickItem(id: string) {
   props.blockly.setValue(id);
   props.blockly.close();
+}
+
+function onInput() {
+  options.value = props.blockly.getOptions().filter((value) => {
+    return (value[0] as string).includes(inputText.value);
+  });
+}
+
+function peakyBlinder(value: string) {
+  if (value.length >= 20) {
+    return `${value.slice(0, 20)}...`;
+  }
+  return value;
 }
 </script>
 
@@ -45,7 +68,7 @@ function onClickItem(id: number) {
 .ddl-border {
   margin: 4px;
   overflow: hidden;
-  width: 200px;
+  width: auto;
 }
 .divider {
   margin: 4px 0;
@@ -58,8 +81,5 @@ function onClickItem(id: number) {
     width: 100%;
     text-align: left;
   }
-  //border-radius: 4px;
-  //background: var(--el-color-primary-light-9);
-  //color: var(--el-color-primary);
 }
 </style>

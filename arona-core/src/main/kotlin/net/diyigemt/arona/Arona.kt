@@ -112,13 +112,13 @@ object Arona : KotlinPlugin(
 //    // 注册service
     ReflectionUtil.getInterfacePetObjectInstance<AronaService>().forEach {
 //      // 向控制台注册指令
-//      if (it is AbstractCommand) {
-//        it.register()
+      if (it is AbstractCommand) {
+        it.register()
 //        // 直接提供指令执行权限
 //        if (!it::class.hasAnnotation<HideService>()) {
 //          grantCommandName.add(it.primaryName)
 //        }
-//      }
+      }
       AronaServiceManager.register(it)
     }
 

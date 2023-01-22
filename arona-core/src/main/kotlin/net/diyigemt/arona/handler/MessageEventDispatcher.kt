@@ -1,10 +1,12 @@
 package net.diyigemt.arona.handler
 
+import kotlinx.serialization.Serializable
 import net.diyigemt.arona.config.GlobalConfigProvider
 import net.diyigemt.arona.entity.BotGroupConfig
 import net.diyigemt.arona.interfaces.ConfigReader
 import net.diyigemt.arona.interfaces.getConfig
 import net.diyigemt.arona.interfaces.getGroupConfig
+import net.diyigemt.arona.interfaces.getGroupConfigOrDefault
 import net.diyigemt.arona.service.AronaGroupService
 import net.diyigemt.arona.service.AronaMessageReactService
 import net.mamoe.mirai.console.command.CommandManager
@@ -30,17 +32,17 @@ object MessageEventDispatcher:
   override suspend fun handle(event: MessageEvent) {
     val command = event.message.firstOrNull { it is PlainText }?.contentToString() ?: return
     val subjectId = event.subject.id
-    val prefix = getGroupConfig<String>("prefix", subjectId)
+    val prefix = getGroupConfigOrDefault("prefix", subjectId, CommandManager.commandPrefix)
     if (!command.startsWith(prefix)) {
       return
     }
-    val config = getConfig<List<CommandRedirectConfig>>(GlobalConfigProvider.concatGroupKey("config", subjectId), List::class.createType(listOf(
+    val config = getGroupConfig<List<CommandRedirectConfig>>("config", subjectId, List::class.createType(listOf(
       KTypeProjection.invariant(CommandRedirectConfig::class.starProjectedType)
     )))
     if (config.isEmpty()) {
       return
     }
-    val active = config.filter { it.source + prefix == command }
+    val active = config.filter { prefix + it.source == command }
     if (active.isEmpty()) {
       return
     }
@@ -53,6 +55,7 @@ object MessageEventDispatcher:
     }
   }
 
+  @Serializable
   data class CommandRedirectConfig(
     val source: String,
     val target: String

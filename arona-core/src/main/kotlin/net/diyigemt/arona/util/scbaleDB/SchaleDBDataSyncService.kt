@@ -5,9 +5,11 @@ import net.diyigemt.arona.db.DB
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.data.schaledb.MD5
 import net.diyigemt.arona.entity.schaleDB.*
+import net.diyigemt.arona.event.BaseDatabaseInitEvent
 import net.diyigemt.arona.quartz.QuartzProvider
 import net.diyigemt.arona.service.AronaQuartzService
 import net.diyigemt.arona.util.MoshiUtil
+import net.mamoe.mirai.event.globalEventChannel
 import okio.ByteString.Companion.toByteString
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.insert
@@ -192,7 +194,6 @@ object SchaleDBDataSyncService : AronaQuartzService{
       SchaleDBDataSyncServiceJobKey,
       SchaleDBDataSyncServiceJobKey
     ).first
-    QuartzProvider.triggerTask(jobKey!!)
 
     //生日计算，程序启动5秒后进行，每天0点刷新
     birthdayJobKey = QuartzProvider.createCronTask(
@@ -201,7 +202,8 @@ object SchaleDBDataSyncService : AronaQuartzService{
       BirthdayJobKey,
       BirthdayJobKey
     ).first
-    QuartzProvider.createSimpleDelayJob(5){
+    Arona.globalEventChannel().filter { it is BaseDatabaseInitEvent }.subscribeOnce<BaseDatabaseInitEvent> { _ ->
+      QuartzProvider.triggerTask(jobKey!!)
       QuartzProvider.triggerTask(birthdayJobKey)
     }
   }

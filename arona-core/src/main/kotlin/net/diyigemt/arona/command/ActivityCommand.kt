@@ -17,7 +17,7 @@ import net.mamoe.mirai.contact.Contact.Companion.uploadImage
 import net.mamoe.mirai.message.data.Message
 
 object ActivityCommand : CompositeCommand(
-  Arona, "active", "活动",
+  Arona, "arona_active",
   description = "通过bili wiki获取活动列表"
 ), AronaService, CommandInterceptor, ConfigReader {
 

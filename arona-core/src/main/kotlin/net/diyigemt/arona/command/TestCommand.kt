@@ -8,6 +8,7 @@ import net.mamoe.mirai.console.command.SimpleCommand
 object TestCommand: SimpleCommand(
   Arona, "arona_test_01", description = "测试指令转发"
 ), AronaGroupService {
+  @Handler
   suspend fun MemberCommandSenderOnMessage.arona_test_01() {
     subject.sendMessage("测试")
   }

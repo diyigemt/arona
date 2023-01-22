@@ -37,11 +37,7 @@ object GlobalConfigProvider: Initialize {
         Float::class -> value.cast()
         else -> MoshiUtil.reflect.adapter<T>(T::class.createType()).fromJson(value)!!
       }
-      else -> if (value == null && T::class == String::class) {
-        "" as T
-      } else {
-        throw RuntimeException("get config: $key error")
-      }
+      else -> throw RuntimeException("get config: $key error")
     }
 
   @OptIn(ExperimentalStdlibApi::class)
@@ -53,11 +49,11 @@ object GlobalConfigProvider: Initialize {
     }
   }
 
-  inline fun <reified T> getOrDefault(key: String, default: T): T = get(key) ?: default
+  inline fun <reified T> getOrDefault(key: String, default: T): T = runCatchOrElse(default) { get(key) }
+  inline fun <reified T> getGroup(key: String, group: Long): T = groupRunCatch({ get(concatGroupKey(key, group)) }) { get(key) }
+  inline fun <reified T> getGroup(key: String, group: Long, kType: KType): T = groupRunCatch({ get(concatGroupKey(key, group), kType) }) { get(key, kType) }
 
-  inline fun <reified T> getGroup(key: String, group: Long): T = get(concatGroupKey(key, group)) ?: get(key)
-
-  inline fun <reified T> getGroupOrDefault(key: String, group: Long, default: T): T = getOrDefault(concatGroupKey(key, group), default) ?: getOrDefault(key, default)
+  inline fun <reified T> getGroupOrDefault(key: String, group: Long, default: T): T = groupRunCatchOrElse({ get(concatGroupKey(key, group)) }, default) { get(key) }
 
   /**
    * 设置一个该群特有的配置项
@@ -105,6 +101,24 @@ object GlobalConfigProvider: Initialize {
   fun getBotConfig(): List<BotGroupConfig> = get("bots", List::class.createType(listOf(
     KTypeProjection.invariant(BotGroupConfig::class.starProjectedType)
   )))
+
+  fun <T> runCatchOrElse(default: T, target: () -> T): T {
+    return runCatching {
+      target()
+    }.getOrElse { default }
+  }
+
+  fun <T> groupRunCatch(target: () -> T, failBack: () -> T): T {
+    return runCatching {
+      target()
+    }.getOrElse { failBack() }
+  }
+
+  fun <T> groupRunCatchOrElse(target: () -> T, default: T, failBack: () -> T): T {
+    return runCatching {
+      target()
+    }.getOrElse { runCatchOrElse(default) { failBack() } }
+  }
 
   override val priority: Int
     get() = 5

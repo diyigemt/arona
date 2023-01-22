@@ -92,7 +92,7 @@ object GlobalConfigProvider: Initialize {
   /**
    * 获取该群特有的配置项前缀
    */
-  fun concatGroupKey(key: String, group: Long) = "$group.$key"
+  fun concatGroupKey(key: String, group: Long) = if (group == 0L) key else "$group.$key"
 
   /**
    * 拿到服务的群id列表

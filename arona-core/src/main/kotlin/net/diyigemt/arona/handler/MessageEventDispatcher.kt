@@ -1,24 +1,62 @@
 package net.diyigemt.arona.handler
 
-import net.diyigemt.arona.Arona
-import net.diyigemt.arona.event.ConfigInitSuccessEvent
+import net.diyigemt.arona.config.GlobalConfigProvider
+import net.diyigemt.arona.entity.BotGroupConfig
 import net.diyigemt.arona.interfaces.ConfigReader
-import net.diyigemt.arona.interfaces.Initialize
+import net.diyigemt.arona.interfaces.getConfig
+import net.diyigemt.arona.interfaces.getGroupConfig
 import net.diyigemt.arona.service.AronaGroupService
 import net.diyigemt.arona.service.AronaMessageReactService
+import net.mamoe.mirai.console.command.CommandManager
+import net.mamoe.mirai.console.command.CommandSender.Companion.toCommandSender
+import net.mamoe.mirai.console.command.descriptor.ExperimentalCommandDescriptors
+import net.mamoe.mirai.console.command.executeCommand
+import net.mamoe.mirai.console.util.ConsoleExperimentalApi
 import net.mamoe.mirai.event.events.MessageEvent
-import net.mamoe.mirai.event.globalEventChannel
+import net.mamoe.mirai.message.code.MiraiCode.deserializeMiraiCode
 import net.mamoe.mirai.message.data.PlainText
+import net.mamoe.mirai.message.data.SingleMessage
+import kotlin.reflect.KTypeProjection
+import kotlin.reflect.full.createType
+import kotlin.reflect.full.starProjectedType
 
-// 复读
+// 复指令重定向
 object MessageEventDispatcher:
   AronaMessageReactService<MessageEvent>,
   AronaGroupService,
-  ConfigReader, Initialize
+  ConfigReader
 {
+  @OptIn(ExperimentalCommandDescriptors::class, ConsoleExperimentalApi::class)
   override suspend fun handle(event: MessageEvent) {
-    val contentString = event.message.firstOrNull { it is PlainText }?.contentToString() ?: return
+    val command = event.message.firstOrNull { it is PlainText }?.contentToString() ?: return
+    val subjectId = event.subject.id
+    val prefix = getGroupConfig<String>("prefix", subjectId)
+    if (!command.startsWith(prefix)) {
+      return
+    }
+    val config = getConfig<List<CommandRedirectConfig>>(GlobalConfigProvider.concatGroupKey("config", subjectId), List::class.createType(listOf(
+      KTypeProjection.invariant(CommandRedirectConfig::class.starProjectedType)
+    )))
+    if (config.isEmpty()) {
+      return
+    }
+    val active = config.filter { it.source + prefix == command }
+    if (active.isEmpty()) {
+      return
+    }
+    val contentString = event.message.serializeToMiraiCode()
+    val commandSender = event.toCommandSender()
+    active.map {
+      prefix + it.target + contentString.replace(prefix + it.source, "")
+    }.forEach {
+      commandSender.executeCommand(it)
+    }
   }
+
+  data class CommandRedirectConfig(
+    val source: String,
+    val target: String
+  )
 
   override val event = MessageEvent::class
 
@@ -27,9 +65,5 @@ object MessageEventDispatcher:
   override var isGlobal: Boolean = true
   override val description: String = name
   override val configPrefix = "dispatcher"
-  override fun init() {
-    Arona.globalEventChannel().filter { it is ConfigInitSuccessEvent }.subscribeOnce<ConfigInitSuccessEvent> {
-      
-    }
-  }
+
 }

@@ -11,6 +11,7 @@
       />
       <el-divider v-if="searchInput" class="divider" />
       <el-scrollbar v-if="isMultiple" max-height="75px" class="tag-container">
+        <div v-if="tags && tags.length === 0" class="tag-info">点击下方成员以添加</div>
         <el-tag
           v-for="(item, index) in tags"
           :key="index"
@@ -119,5 +120,10 @@ function removeTag(tag: string) {
   height: auto;
   border-radius: 4px;
   padding: 6px;
+}
+.tag-info {
+  text-align: center;
+  font-size: 15px;
+  color: var(--el-text-color-disabled);
 }
 </style>

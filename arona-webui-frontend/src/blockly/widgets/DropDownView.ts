@@ -100,10 +100,6 @@ export default class DropDownView extends FieldDropdown {
     }
   }
 
-  override saveState(_doFullSerialization?: boolean): unknown {
-    return this.isMultiple ? `${this.getValue()}` : this.getValue();
-  }
-
   override getOptions(opt_useCache?: boolean): MenuOption[] {
     if (!this.menuGenerator_) throw TypeError("A menu generator was never defined.");
     if (Array.isArray(this.menuGenerator_)) {
@@ -175,6 +171,7 @@ export default class DropDownView extends FieldDropdown {
 
   splitTags() {
     const res: string[] = [];
+    if (this.generatedOptions_![0][1] === "") return [];
     this.generatedOptions_![0][1].split(",").forEach((value) => {
       const index = this.generatedOptions_!.map((value1) => value1[1]).findIndex(
         (value1, index1) => value1 === value && index1 !== 0,

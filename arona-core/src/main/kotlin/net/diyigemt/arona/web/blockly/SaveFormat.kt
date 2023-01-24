@@ -43,7 +43,7 @@ data class UserData(
 
 @Serializable
 data class Members(
-  val groupId: String = "",
+  val groupId: Long = 0L,
   var members: List<BotGroupMember> = mutableListOf()
 )
 

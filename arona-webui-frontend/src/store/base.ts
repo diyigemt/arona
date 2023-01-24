@@ -61,8 +61,8 @@ const useBaseStore = defineStore({
     },
   },
   actions: {
-    setActiveGroupId(group: number) {
-      this.activeGroupId = group;
+    setActiveGroupId(group?: number) {
+      this.activeGroupId = group || 0;
     },
     fetchBotContact() {
       return fetchBotContacts().then((contact) => {
@@ -74,17 +74,17 @@ const useBaseStore = defineStore({
      * 拿到给定群的成员列表
      *
      * 如果同时指定了bot, 则只在该bot的群列表中获取, 否则查找所有bot
-     * @param group0 指定群号
+     * @param group 指定群号
      * @param bot 指定的机器人qq号
      */
-    members(group0: number, bot?: number) {
+    members(group: number, bot?: number) {
       return new Promise<Member[]>((resolve, reject) => {
-        const group = this.groups(bot);
-        if (group.length === 0) {
+        const group0 = this.groups(bot);
+        if (group0.length === 0) {
           reject(new Error("获取群列表失败"));
           return;
         }
-        const groupList = group.filter((group$) => group$.id === group0);
+        const groupList = group0.filter((group$) => group$.id === group);
         if (groupList.length === 0) {
           reject(new Error("获取群失败"));
           return;
@@ -92,7 +92,7 @@ const useBaseStore = defineStore({
         const { member } = groupList[0];
         // 尝试获取
         if (!member || member.length === 0) {
-          fetchGroupMember(group0, bot).then((data) => {
+          fetchGroupMember(group, bot).then((data) => {
             if (data.code === HTTP_OK) {
               // 缓存一下
               groupList[0].member = data.data;
@@ -108,15 +108,15 @@ const useBaseStore = defineStore({
     },
     /**
      * [member]的同步方法
-     * @param group0 指定群号
+     * @param group 指定群号
      * @param bot 指定的机器人qq号
      */
-    memberSync(group0: number, bot?: number): Member[] {
-      const group = this.groups(bot);
-      if (group.length === 0) {
+    memberSync(group: number, bot?: number): Member[] {
+      const group0 = this.groups(bot);
+      if (group0.length === 0) {
         return [];
       }
-      const groupList = group.filter((group$) => group$.id === group0);
+      const groupList = group0.filter((group$) => group$.id === group);
       if (groupList.length === 0) {
         return [];
       }

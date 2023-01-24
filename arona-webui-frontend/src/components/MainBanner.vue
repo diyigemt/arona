@@ -1,6 +1,6 @@
 <template>
-  <div class="banner-container">
-    <div class="font-bold text-left antialiased font-sans banner-text dot-bg cursor-pointer" @click="goHome">Arona</div>
+  <div class="banner-container cursor-pointer" @click="goHome">
+    <div class="font-bold text-left antialiased font-sans banner-text dot-bg">Arona</div>
     <div>
       <el-select v-model="select" placeholder="全部" @change="updateActiveGroup">
         <el-option v-for="(e, index) in groups" :key="index" :value="e.id" :label="e.name" />
@@ -28,6 +28,14 @@ const groups = computed(() => baseStore.groups());
 .banner-container {
   display: flex;
   justify-content: space-between;
+  position: sticky;
+  z-index: 999;
+  $font-size: 36px;
+  line-height: $font-size + 12px;
+  top: 0;
+  width: 100%;
+  left: 0;
+  padding: 0 20px;
   > div {
     flex: 1;
     &:last-child {
@@ -35,15 +43,7 @@ const groups = computed(() => baseStore.groups());
     }
   }
   .banner-text {
-    $font-size: 36px;
     font-size: $font-size;
-    line-height: $font-size + 12px;
-    position: sticky;
-    z-index: 999;
-    top: 0;
-    width: 100%;
-    left: 0;
-    padding: 0 20px;
   }
 }
 </style>

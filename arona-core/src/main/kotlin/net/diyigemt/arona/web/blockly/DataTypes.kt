@@ -37,14 +37,15 @@ enum class DataTypes: AronaInterceptor{
       TODO("测试用，会直接返回对应的布尔值，不要实现，实现了也没用")
     }
   },
-  // TODO: 日后支持其它种类消息需要调整参数, 对123456L仅支持DEV，在正式发布之前需要删掉
   SENDER {
     override fun run(value: Any, event: MessageEvent?): Boolean {
       val tmp = value as? String ?: kotlin.run {
-        Arona.error("senderID: Convert $value to Long failed")
+        Arona.error("senderID: Convert $value to String failed")
         return false
       }
-      if(tmp.toLong() == event?.sender?.id) return true
+      tmp.split(",").forEach {
+        if(it.toLong() == event?.sender?.id) return true
+      }
 
       return false
     }

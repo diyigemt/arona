@@ -1,7 +1,19 @@
-<xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
+<xml id="toolbox" style="display: none">
     <category name="条件">
-        <block type="groupIDBlock"/>
-        <block type="senderBlock"/>
+        <block type="groupIDBlock">
+            <value name="groupIDValueInput">
+                <block type="logicBlock">
+                    <field name="logicInput">And</field>
+                </block>
+            </value>
+        </block>
+        <block type="senderBlock">
+            <value name="IDValueInput">
+                <block type="logicBlock">
+                    <field name="logicInput">And</field>
+                </block>
+            </value>
+        </block>
         <block type="logicBlock"/>
         <block type="friend_search_block"/>
     </category>

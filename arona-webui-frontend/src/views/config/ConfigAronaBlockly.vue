@@ -106,15 +106,13 @@ function setBlock(index: number) {
 }
 function onSaveCurrentProject() {
   const code = aronaGenerator.workspaceToCode(workspace.value);
-  const baseStore = useBaseStore();
   const groupBlocks = (workspace.value as Blockly.WorkspaceSvg)
     .getAllBlocks(false)
     .filter((targetBlock) => targetBlock.type === "groupIDBlock")
     .map((targetBlock) => {
       const value = targetBlock.getFieldValue("groupIDInput");
       return {
-        groupId: value,
-        members: baseStore.memberSync(Number(value)),
+        groupId: Number(value),
       };
     });
   onDebug();
@@ -214,7 +212,6 @@ function onDebug() {
   const code = aronaGenerator.workspaceToCode(workspace.value);
   const row = Blockly.serialization.workspaces.save(workspace.value);
   const proj: BlocklyProject | null = (projectList.value || [])[selectBlockIndex.value as number];
-  const baseStore = useBaseStore();
   const groupBlocks = (workspace.value as Blockly.WorkspaceSvg)
     .getAllBlocks(false)
     .filter((targetBlock) => targetBlock.type === "groupIDBlock")
@@ -222,7 +219,6 @@ function onDebug() {
       const value = targetBlock.getFieldValue("groupIDInput");
       return {
         groupId: value,
-        members: baseStore.memberSync(Number(value)),
       };
     });
   output.value = JSON.stringify(

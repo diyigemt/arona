@@ -3,7 +3,8 @@ import { Abstract } from "blockly/core/events/events_abstract";
 import BlocklyUtil from "@/blockly/BlocklyUtil";
 import useBaseStore from "@/store/base";
 import { blocks } from "@/blockly/index";
-import DropDownView from "@/blockly/widgets/DropDownView";
+// @ts-ignore
+import DropDownView from "@/blockly/widgets/DropDownView.ts";
 
 export default function addBlocks() {
   Blockly.defineBlocksWithJsonArray(blocks);
@@ -37,6 +38,7 @@ export default function addBlocks() {
             },
             undefined,
             undefined,
+            true,
             true,
           ),
           "IDInput",
@@ -106,6 +108,7 @@ export default function addBlocks() {
             },
             undefined,
             undefined,
+            true,
           ),
           "groupIDInput",
         );

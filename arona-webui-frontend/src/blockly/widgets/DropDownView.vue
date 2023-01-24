@@ -10,19 +10,33 @@
         @input="onInput"
       />
       <el-divider v-if="searchInput" class="divider" />
+      <el-scrollbar v-if="isMultiple" max-height="75px" class="tag-container">
+        <el-tag
+          v-for="(item, index) in tags"
+          :key="index"
+          closable
+          size="small"
+          style="margin-left: 4px"
+          :disable-transitions="true"
+          @close="removeTag(item)"
+        >
+          {{ item }}
+        </el-tag>
+      </el-scrollbar>
+      <el-divider v-if="isMultiple" class="divider" />
       <el-scrollbar max-height="200px" style="margin-top: 4px">
         <div v-for="(item, index) in options" :key="index">
           <el-button
             type="primary"
             plain
             class="scrollbar-item"
-            :disabled="item[1] === selected"
-            @click="onClickItem(item[1])"
+            :disabled="item[1] === selected && !props.isMultiple"
+            @click="onClickItem(item)"
           >
             {{ peakyBlinder(item[0]) }}
           </el-button>
         </div>
-        <el-empty v-if="options && options.length === 0" description="未找到结果" :image-size="75" />
+        <el-empty v-if="options && options.length === 0" description="未找到结果" :image-size="50" />
       </el-scrollbar>
     </div>
   </div>
@@ -36,18 +50,28 @@ import DropDownView from "@/blockly/widgets/DropDownView";
 const props = defineProps<{
   blockly: DropDownView;
   searchInput: boolean;
+  isMultiple: boolean;
 }>();
 const options = ref<MenuOption[]>(props.blockly.getOptions());
 const selected = ref<string>(props.blockly.getValue());
 const inputText = ref<string>("");
+const tags = ref<string[]>([]);
 
 onMounted(() => {
   Blockly.DropDownDiv.showPositionedByField(props.blockly);
 });
 
-function onClickItem(id: string) {
-  props.blockly.setValue(id);
-  props.blockly.close();
+function onClickItem(option: MenuOption) {
+  if (props.isMultiple) {
+    if (tags.value.find((value) => value === option[0]) === undefined) {
+      tags.value.unshift(option[0] as string);
+      props.blockly.updateOptions(JSON.stringify(tags.value), 1);
+      props.blockly.setValue(props.blockly.getOptions(true)[0][1]);
+    }
+  } else {
+    props.blockly.setValue(option[1]);
+    props.blockly.close();
+  }
 }
 
 function onInput() {
@@ -62,13 +86,20 @@ function peakyBlinder(value: string) {
   }
   return value;
 }
+
+function removeTag(tag: string) {
+  tags.value.splice(tags.value.indexOf(tag), 1);
+  props.blockly.updateOptions(JSON.stringify(tags.value), 1);
+  props.blockly.setValue(props.blockly.getOptions(true)[0][1]);
+}
 </script>
 
 <style scoped lang="scss">
 .ddl-border {
   margin: 4px;
   overflow: hidden;
-  width: auto;
+  width: min-content;
+  max-height: 290px;
 }
 .divider {
   margin: 4px 0;
@@ -81,5 +112,12 @@ function peakyBlinder(value: string) {
     width: 100%;
     text-align: left;
   }
+}
+.tag-container {
+  border: 1px solid var(--el-border-color);
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  padding: 6px;
 }
 </style>

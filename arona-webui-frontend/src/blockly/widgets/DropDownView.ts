@@ -135,14 +135,18 @@ export default class DropDownView extends FieldDropdown {
     const res2: string[] = [];
     (JSON.parse(index ? data : `[${data}]`) as string[]).forEach((value) => {
       const tmp = this.generatedOptions_![map.indexOf(value.toString())][index];
-      res2.push(tmp as string);
-      res += `${value}、`.replace(` (${tmp})`, "");
+      if (index === 0) {
+        res += `${tmp}、`.replace(` (${value})`, "");
+      } else {
+        res2.push(tmp as string);
+        res += `${value}、`.replace(` (${tmp})`, "");
+      }
     });
     if (index === 1 && res.length > 20) res = `${res.slice(0, 20)}...`;
     // eslint-disable-next-line no-unused-expressions
     index === 0 ? (this.generatedOptions_![0] = [res, data]) : (this.generatedOptions_![0] = [res, res2.toString()]);
     this.validateOptions(this.generatedOptions_!);
-    console.log(this.generatedOptions_);
+    // console.log(this.generatedOptions_);
   }
 
   // eslint-disable-next-line class-methods-use-this

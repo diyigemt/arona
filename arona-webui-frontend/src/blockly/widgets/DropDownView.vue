@@ -53,10 +53,10 @@ const props = defineProps<{
   searchInput: boolean;
   isMultiple: boolean;
 }>();
-const options = ref<MenuOption[]>(props.blockly.getOptions());
+const tags = ref<string[]>(props.blockly.isMultiple ? props.blockly.splitTags() : []);
+const options = ref<MenuOption[]>(optionFilter());
 const selected = ref<string>(props.blockly.getValue());
 const inputText = ref<string>("");
-const tags = ref<string[]>(props.blockly.isMultiple ? props.blockly.splitTags() : []);
 
 onMounted(() => {
   Blockly.DropDownDiv.showPositionedByField(props.blockly);
@@ -68,6 +68,7 @@ function onClickItem(option: MenuOption) {
       tags.value.unshift(option[0] as string);
       props.blockly.updateOptions(JSON.stringify(tags.value), 1);
       props.blockly.setValue(props.blockly.getOptions(true)[0][1]);
+      options.value = optionFilter();
     }
   } else {
     props.blockly.setValue(option[1]);
@@ -76,7 +77,7 @@ function onClickItem(option: MenuOption) {
 }
 
 function onInput() {
-  options.value = props.blockly.getOptions().filter((value) => {
+  options.value = optionFilter().filter((value) => {
     return (value[0] as string).includes(inputText.value);
   });
 }
@@ -92,6 +93,11 @@ function removeTag(tag: string) {
   tags.value.splice(tags.value.indexOf(tag), 1);
   props.blockly.updateOptions(JSON.stringify(tags.value), 1);
   props.blockly.setValue(props.blockly.getOptions(true)[0][1]);
+  options.value = optionFilter();
+}
+
+function optionFilter() {
+  return props.blockly.getOptions().filter((value) => !tags.value.includes(value[0] as string));
 }
 </script>
 
@@ -125,5 +131,6 @@ function removeTag(tag: string) {
   text-align: center;
   font-size: 15px;
   color: var(--el-text-color-disabled);
+  min-width: 150px;
 }
 </style>

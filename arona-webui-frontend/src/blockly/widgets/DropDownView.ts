@@ -171,14 +171,17 @@ export default class DropDownView extends FieldDropdown {
 
   splitTags() {
     const res: string[] = [];
-    if (this.generatedOptions_![0][1] === "") return [];
+    if (!this.isMultiple || this.generatedOptions_![0][1] === "") return [];
+    this.getOptions();
     this.generatedOptions_![0][1].split(",").forEach((value) => {
       const index = this.generatedOptions_!.map((value1) => value1[1]).findIndex(
         (value1, index1) => value1 === value && index1 !== 0,
       );
       // @ts-ignore
-      res.push(this.generatedOptions_![index][0]);
+      if (index !== -1) res.push(this.generatedOptions_![index][0]);
     });
+    this.updateOptions(JSON.stringify(res), 1);
+    this.setValue(this.generatedOptions_![0][1]);
     return res;
   }
 }

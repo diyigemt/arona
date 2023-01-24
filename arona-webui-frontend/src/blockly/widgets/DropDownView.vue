@@ -55,7 +55,7 @@ const props = defineProps<{
 const options = ref<MenuOption[]>(props.blockly.getOptions());
 const selected = ref<string>(props.blockly.getValue());
 const inputText = ref<string>("");
-const tags = ref<string[]>([]);
+const tags = ref<string[]>(props.blockly.splitTags());
 
 onMounted(() => {
   Blockly.DropDownDiv.showPositionedByField(props.blockly);

@@ -5,12 +5,11 @@ import { FieldDropdownValidator, MenuGenerator, MenuOption } from "blockly/core/
 import { Data } from "blockly/core/browser_events";
 import BlocklyUtil from "@/blockly/BlocklyUtil";
 
+// @ts-ignore
 export default class DropDownView extends FieldDropdown {
   isSearch = false;
 
   isMultiple = false;
-
-  selectedOptions: MenuOption[] = [];
 
   private declare generatedOptions_: MenuOption[] | null;
 
@@ -117,9 +116,7 @@ export default class DropDownView extends FieldDropdown {
     if (this.isMultiple) {
       // @ts-ignore
       const res = this.menuGenerator_();
-      // console.log(res);
       res.unshift(this.generatedOptions_![0]);
-      // console.log(res);
       this.generatedOptions_ = res;
     } else {
       // @ts-ignore
@@ -129,21 +126,21 @@ export default class DropDownView extends FieldDropdown {
     return this.isMultiple ? this.generatedOptions_.slice(1) : this.generatedOptions_;
   }
 
-  updateOptions(state: string, index: number) {
+  updateOptions(data: string, index: number) {
     if (index < 0 || index > 1) throw RangeError(`function: updateOption only accept 0 or 1. Found: ${index}`);
     if (this.isOptionListDynamic()) this.getOptions(false);
     // eslint-disable-next-line no-bitwise
     const map = this.generatedOptions_!.map((value) => value[index ^ 1]);
     let res = "";
     const res2: string[] = [];
-    (JSON.parse(`[${state}]`) as string[]).forEach((value) => {
+    (JSON.parse(index ? data : `[${data}]`) as string[]).forEach((value) => {
       const tmp = this.generatedOptions_![map.indexOf(value.toString())][index];
       res2.push(tmp as string);
       res += `${value}、`.replace(` (${tmp})`, "");
     });
     if (index === 1 && res.length > 20) res = `${res.slice(0, 20)}...`;
     // eslint-disable-next-line no-unused-expressions
-    index === 0 ? (this.generatedOptions_![0] = [res, state]) : (this.generatedOptions_![0] = [res, res2.toString()]);
+    index === 0 ? (this.generatedOptions_![0] = [res, data]) : (this.generatedOptions_![0] = [res, res2.toString()]);
     this.validateOptions(this.generatedOptions_!);
     console.log(this.generatedOptions_);
   }
@@ -170,6 +167,18 @@ export default class DropDownView extends FieldDropdown {
   // eslint-disable-next-line class-methods-use-this
   close() {
     Blockly.DropDownDiv.hide();
+  }
+
+  splitTags() {
+    const res: string[] = [];
+    this.generatedOptions_![0][1].split(",").forEach((value) => {
+      const index = this.generatedOptions_!.map((value1) => value1[1]).findIndex(
+        (value1, index1) => value1 === value && index1 !== 0,
+      );
+      // @ts-ignore
+      res.push(this.generatedOptions_![index][0]);
+    });
+    return res;
   }
 }
 

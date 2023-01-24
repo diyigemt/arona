@@ -94,9 +94,15 @@ function setBlock(index: number) {
   workspace.value.clear();
   const block = (projectList.value || [])[index];
   const baseStore = useBaseStore();
-  baseStore.loadDataFromSave(block.userData);
-  Blockly.serialization.workspaces.load(block.blocklyProject as BlocklyProjectWorkspace, workspace.value);
-  selectBlockIndex.value = index;
+  baseStore
+    .loadDataFromSave(block.userData)
+    .then(() => {
+      Blockly.serialization.workspaces.load(block.blocklyProject as BlocklyProjectWorkspace, workspace.value);
+      selectBlockIndex.value = index;
+    })
+    .catch(() => {
+      errorMessage("存档加载失败");
+    });
 }
 function onSaveCurrentProject() {
   const code = aronaGenerator.workspaceToCode(workspace.value);

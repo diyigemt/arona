@@ -9,9 +9,20 @@ import { UserData } from "@/api/modules/blockly";
 const useBaseStore = defineStore({
   id: "common",
   state: (): BaseStoreState => ({
+    activeGroupId: 0,
     contactList: [],
   }),
   getters: {
+    /**
+     * 拿到当前配置的群的信息
+     *
+     * 注意, 如果当前没有选择任何群, 返回的信息为{id: 0, name: "全部"}
+     */
+    activeGroup(ctx: BaseStoreState): () => ExtendGroup {
+      return () => {
+        return this.findExtendGroupById(ctx.activeGroupId);
+      };
+    },
     /**
      * 拿到所有群列表或者拿到对应bot的群列表
      *
@@ -34,8 +45,25 @@ const useBaseStore = defineStore({
         return list.map((contact) => contact.friends).flat(1);
       };
     },
+    /**
+     * 根据群id获取群的详细信息
+     *
+     * 注意, 如果群不存在, 返回的信息为{id: 0, name: "全部"}
+     */
+    findExtendGroupById(): (id: number) => ExtendGroup {
+      return (id: number) => {
+        const ac = this.groups().filter((group) => group.id === id);
+        if (ac.length === 0) {
+          return DEFAULT_GROUP;
+        }
+        return ac[0];
+      };
+    },
   },
   actions: {
+    setActiveGroupId(group: number) {
+      this.activeGroupId = group;
+    },
     fetchBotContact() {
       return fetchBotContacts().then((contact) => {
         this.contactList = [contact.data];
@@ -98,11 +126,14 @@ const useBaseStore = defineStore({
      * 通过反序列化加载数据
      * @param json JSON字符串
      */
+    // TODO 群员不存在时加载失败
     loadDataFromSave(json: string) {
       const userData = JSON.parse(json) as UserData;
-      userData.members.forEach((item) => {
-        this.groups().filter((group) => group.id === Number(item.groupId))[0].member = item.members;
-      });
+      return Promise.all(
+        userData.members.map((item) => {
+          return this.members(item.groupId);
+        }),
+      );
     },
   },
   persist: {
@@ -110,5 +141,12 @@ const useBaseStore = defineStore({
     paths: [],
   },
 });
+
+const DEFAULT_GROUP: ExtendGroup = {
+  id: 0,
+  name: "全部",
+  permission: "ADMINISTRATOR",
+  member: [],
+};
 
 export default useBaseStore;

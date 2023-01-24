@@ -39,5 +39,6 @@ module.exports = {
     "@typescript-eslint/no-non-null-assertion": "off",
     "no-shadow": "off",
     "@typescript-eslint/no-shadow": ["error"],
+    "no-underscore-dangle": "off", // 允许使用带有下划线的成员变量, this._foo 表明这是一个私有变量
   },
 };

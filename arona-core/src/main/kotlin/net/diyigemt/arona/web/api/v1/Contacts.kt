@@ -30,7 +30,7 @@ object Contacts : Worker, ConfigReader{
         }.onSuccess {
           context.call.respond(responseMessage(BotContact(
             it.id,
-            it.friends.map { friend -> friend.toFriend() },
+            it.friends.filter { friend -> friend.nick != it.nick }.map { friend -> friend.toFriend() },
             it.groups.map { group -> group.toGroup() }
           )))
         }.onFailure {

@@ -1,4 +1,4 @@
-import Blockly, { FieldDropdown } from "blockly";
+import Blockly, { Block, FieldDropdown } from "blockly";
 import { Abstract } from "blockly/core/events/events_abstract";
 import BlocklyUtil from "@/blockly/BlocklyUtil";
 import useBaseStore from "@/store/base";
@@ -9,7 +9,7 @@ import DropDownView from "@/blockly/widgets/DropDownView.ts";
 export default function addBlocks() {
   Blockly.defineBlocksWithJsonArray(blocks);
   Blockly.Blocks.senderBlock = {
-    init() {
+    init(this: Block) {
       this.appendValueInput("IDValueInput")
         .setCheck("LogicType")
         .appendField("发送者为 ")
@@ -25,6 +25,11 @@ export default function addBlocks() {
                     if (groupBlock) {
                       return baseStore
                         .memberSync(Number(groupBlock.getFieldValue("groupIDInput")) || 0)
+                        .map((item) => [`${item.memberName} (${item.id})`, item.id.toString()]);
+                    }
+                    if (baseStore.activeGroup().id !== 0) {
+                      return baseStore
+                        .memberSync(baseStore.activeGroup().id || 0)
                         .map((item) => [`${item.memberName} (${item.id})`, item.id.toString()]);
                     }
                     break;
@@ -84,6 +89,8 @@ export default function addBlocks() {
           }
           if (flag) {
             BlocklyUtil.disableBlock(this, "选择的目标不属于当前事件范围内");
+          } else if (baseStore.activeGroup().id === 0 && BlocklyUtil.findContext(this, "groupIDBlock") == null) {
+            BlocklyUtil.disableBlock(this, "定义全局触发器时该积木块应配合群积木块来使用");
           } else {
             BlocklyUtil.enableBlock(this);
           }

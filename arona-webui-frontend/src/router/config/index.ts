@@ -6,7 +6,7 @@ const ConfigRouter: Array<RouteRecordRaw> = [
     meta: {
       title: "配置文件",
     },
-    component: () => import("@/views/config/ConfigIndex.vue"),
+    component: () => import("@/components/SubPageIndex.vue"),
     children: [
       {
         path: "",

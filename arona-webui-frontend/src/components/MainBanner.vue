@@ -2,7 +2,7 @@
   <div class="banner-container cursor-pointer" @click="goHome">
     <div class="font-bold text-left antialiased font-sans banner-text dot-bg">Arona</div>
     <div>
-      <el-select v-model="select" placeholder="全部" @change="updateActiveGroup">
+      <el-select v-model="select" placeholder="全部" clearable @change="updateActiveGroup">
         <el-option v-for="(e, index) in groups" :key="index" :value="e.id" :label="e.name" />
       </el-select>
     </div>

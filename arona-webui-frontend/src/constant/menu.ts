@@ -8,6 +8,10 @@ interface MenuItem {
 }
 const ConfigMenu: SubMenuItem[] = [
   {
+    name: "主配置",
+    path: "/config/config-arona-main",
+  },
+  {
     name: "条件执行",
     path: "/config/config-arona-blockly",
   },

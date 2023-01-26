@@ -14,6 +14,9 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.10",
+    "@jsplumb/browser-ui": "^5.13.2",
+    "@jsplumb/connector-bezier": "^5.13.2",
+    "@jsplumb/connector-flowchart": "^5.13.2",
     "@vueuse/core": "^8.9.2",
     "axios": "^0.25.0",
     "blockly": "^9.1.1",

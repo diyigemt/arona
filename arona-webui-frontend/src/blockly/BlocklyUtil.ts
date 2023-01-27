@@ -32,7 +32,6 @@ export default class BlocklyUtil {
     if (Blockly.Extensions.isRegistered(name)) {
       Blockly.Extensions.unregister(name);
     }
-    console.log(mixin);
     Blockly.Extensions.registerMutator(name, mixin.toObject(), mixin.controlsHelper, blockList);
   }
 

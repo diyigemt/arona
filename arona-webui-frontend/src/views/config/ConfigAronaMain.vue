@@ -4,44 +4,74 @@
     <el-button @click="addGroupEndpoint">添加群节点</el-button>
   </div>
   <div style="width: 500px; height: 500px">
-    <div ref="container" style="position: relative"></div>
+    <div ref="containerEl" style="position: relative" class="container">
+      <div ref="botGroupEl" style="width: 50%; height: 100%; position: relative">测试1</div>
+      <div ref="groupGroupEl" style="width: 100%; height: 100%; position: relative">测试2</div>
+      <div v-for="(e, index) in bots" :key="'bot-' + index" class="config-drag-item">{{ e }}</div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import * as jsPlumbBrowserUI from "@jsplumb/browser-ui";
 import { BrowserJsPlumbInstance } from "@jsplumb/browser-ui";
-import { EndpointOptions } from "@jsplumb/core";
+import { EndpointOptions, UIGroup } from "@jsplumb/core";
 import { BezierConnector } from "@jsplumb/connector-bezier";
 
-const container = ref<HTMLElement>();
-const instance = ref<BrowserJsPlumbInstance>();
-const form = reactive({});
+const containerEl = ref<HTMLElement>();
+const botGroupEl = ref<HTMLElement>();
+const groupGroupEl = ref<HTMLElement>();
+let instance: BrowserJsPlumbInstance;
+let botGroup: UIGroup<Element>;
+let groupGroup: UIGroup<Element>;
+const bots = ref<number[]>([]);
+const groups = ref<number[]>([]);
 function addBotEndpoint() {
   const bot = document.createElement("div");
   bot.classList.add("config-drag-item");
   bot.innerText = "bot123";
-  container.value!.appendChild(bot);
-  instance.value!.addEndpoint(bot, {}, botEndpointConfig);
+  botGroupEl.value!.appendChild(bot);
+  instance.addEndpoint(bot, {}, botEndpointConfig);
+  instance.addToGroup(botGroup, bot);
 }
 function addGroupEndpoint() {
   const group = document.createElement("div");
   group.classList.add("config-drag-item");
   group.innerText = "group123";
-  container.value!.appendChild(group);
-  instance.value!.addEndpoint(group, {}, groupEndpointConfig);
+  groupGroupEl.value!.appendChild(group);
+  instance.addEndpoint(group, {}, groupEndpointConfig);
+  instance.addToGroup(groupGroup, group);
 }
 onMounted(() => {
-  instance.value = jsPlumbBrowserUI.newInstance({
-    container: container.value,
+  const _instance = jsPlumbBrowserUI.newInstance({
+    container: containerEl.value,
+    dragOptions: {
+      // @ts-ignore
+      containment: "notNegative",
+    },
   });
+  botGroup = _instance.addGroup({
+    el: botGroupEl.value!,
+    id: "botGroup",
+    constrain: true,
+    droppable: false,
+  });
+  groupGroup = _instance.addGroup({
+    el: groupGroupEl.value!,
+    id: "groupGroup",
+    constrain: true,
+    droppable: false,
+  });
+  _instance.setDraggable(botGroupEl.value!, false);
+  _instance.setDraggable(groupGroupEl.value!, false);
+  instance = _instance;
 });
 const botEndpointConfig: EndpointOptions = {
   endpoint: { type: "Dot", options: { radius: 11 } },
   paintStyle: { fill: "#316b31" },
   source: true,
   scope: "green",
-  anchor: "AutoDefault",
+  anchor: ["Right", "AutoDefault"],
   connectorStyle: { stroke: "#316b31", strokeWidth: 6 },
   connector: { type: "Bezier", options: { curviness: 63 } },
   connectorOverlays: [{ type: "Arrow", options: { location: 1 } }],
@@ -53,7 +83,7 @@ const groupEndpointConfig: EndpointOptions = {
   paintStyle: { fill: "#316b31" },
   source: false,
   scope: "green",
-  anchor: "AutoDefault",
+  anchor: ["Left", "AutoDefault"],
   connectorStyle: { stroke: "#316b31", strokeWidth: 6 },
   connector: { type: BezierConnector.type, options: { curviness: 63 } },
   connectorOverlays: [{ type: "Arrow", options: { location: 1 } }],
@@ -63,6 +93,7 @@ const groupEndpointConfig: EndpointOptions = {
 </script>
 
 <style scoped lang="scss">
-.drag-item {
+.container {
+  height: 100%;
 }
 </style>

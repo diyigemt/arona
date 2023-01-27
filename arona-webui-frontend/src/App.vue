@@ -47,6 +47,8 @@ if (!settingStore.isRestoreBackend) {
 }
 .container {
   height: 100vh;
+  max-width: 100%;
+  padding-right: 0;
   transform: translateY(-60px);
   overflow: hidden;
 }

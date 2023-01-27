@@ -1,5 +1,5 @@
 <template>
-  <el-affix :offset="45">
+  <el-affix :offset="60">
     <PageHeader />
   </el-affix>
   <router-view />

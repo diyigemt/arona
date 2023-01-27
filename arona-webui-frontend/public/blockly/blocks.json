@@ -32,7 +32,8 @@
   ],
   "colour": 230,
   "tooltip": "",
-  "helpUrl": ""
+  "helpUrl": "",
+  "mutator": "masterBlockMutator"
 },
 {
   "type": "logicBlock",

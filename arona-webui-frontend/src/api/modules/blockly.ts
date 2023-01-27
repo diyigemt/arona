@@ -1,6 +1,5 @@
 import { BlocklyProject } from "@/interface/modules/blockly";
 import service from "@/api/http";
-import { Friend, Member } from "@/types/contact";
 
 export function fetchBlocklyProjectList() {
   return service.raw<BlocklyProject[]>({
@@ -18,8 +17,7 @@ interface BlocklyProjectSaveData {
 }
 
 export interface UserData {
-  friends: Friend[];
-  members: { groupId: number; members: Member[] }[];
+  members: { groupId: number }[];
 }
 
 export function saveBlocklyProject(data: BlocklyProjectSaveData) {

@@ -16,8 +16,8 @@ export default class MasterBlockMutator extends AbstractMutator {
 
   removePart(this: MutatorBlockSvg) {
     if (this.itemCount !== 0) {
-      const input = this.getInput(`Expressions${this.itemCount}`)!.connection;
-      if (input?.isConnected()) input?.disconnect();
+      const input = this.getInput(`Expressions${this.itemCount}`)!.connection!;
+      if (input.isConnected()) input.disconnect();
       this.removeInput(`Expressions${this.itemCount}`);
       this.removeInput(`Actions${this.itemCount}`);
       this.itemCount--;

@@ -100,6 +100,7 @@ export default function addBlocks() {
   };
   Blockly.Blocks.groupIDBlock = {
     init() {
+      const baseStore = useBaseStore();
       this.appendValueInput("groupIDValueInput")
         .setCheck("LogicType")
         .appendField("群为 ")
@@ -107,7 +108,6 @@ export default function addBlocks() {
           new DropDownView(
             () => {
               const root = this.getRootBlock();
-              const baseStore = useBaseStore();
               if (root?.getFieldValue("TriggerType")) {
                 return baseStore.groups().map((group) => [`${group.name} (${group.id})`, group.id.toString()]);
               }
@@ -136,8 +136,7 @@ export default function addBlocks() {
             BlocklyUtil.disableBlock(this, "请选择目标群");
           } else {
             // 提前预载群成员列表
-            const { members } = useBaseStore();
-            members(Number(group)).then();
+            baseStore.members(Number(group)).then();
           }
         }
       });

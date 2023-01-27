@@ -41,6 +41,7 @@ declare module '@vue/runtime-core' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ShadowCard: typeof import('./components/ShadowCard.vue')['default']
+    SubPageIndex: typeof import('./components/SubPageIndex.vue')['default']
     TheFooter: typeof import('./components/TheFooter.vue')['default']
     ZhProcess: typeof import('./components/ZhProcess.md')['default']
   }

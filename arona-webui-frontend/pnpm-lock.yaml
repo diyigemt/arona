@@ -6,6 +6,9 @@ specifiers:
   '@element-plus/icons-vue': ^2.0.10
   '@iconify/json': ^2.0.29
   '@intlify/vite-plugin-vue-i18n': ^6.0.0
+  '@jsplumb/browser-ui': ^5.13.2
+  '@jsplumb/connector-bezier': ^5.13.2
+  '@jsplumb/connector-flowchart': ^5.13.2
   '@types/express': ^4.17.15
   '@types/node': ^17.0.45
   '@types/nprogress': ^0.2.0
@@ -63,6 +66,9 @@ specifiers:
 
 dependencies:
   '@element-plus/icons-vue': 2.0.10_vue@3.2.45
+  '@jsplumb/browser-ui': 5.13.2
+  '@jsplumb/connector-bezier': 5.13.2
+  '@jsplumb/connector-flowchart': 5.13.2
   '@vueuse/core': 8.9.4_vue@3.2.45
   axios: 0.25.0
   blockly: 9.2.0
@@ -853,6 +859,40 @@ packages:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
+
+  /@jsplumb/browser-ui/5.13.2:
+    resolution: {integrity: sha512-BZ76kPtxESMIdhcCtWXPdICMudJyBVzDxaKY4jlne93Zq1T2ErfpNQ3E6f3JZfvoyvlNbKgh0udYkZ7Yg7BmIQ==}
+    dependencies:
+      '@jsplumb/core': 5.13.2
+    dev: false
+
+  /@jsplumb/common/5.13.2:
+    resolution: {integrity: sha512-ZX/EvvYi4HBkRVtsuSSAa/AuAz4p2wr3RrRz6l+r8yeElzX3lrrBx/fkERY2qwZPkKcOoLCr5ezZ7sslVMnl0Q==}
+    dependencies:
+      '@jsplumb/util': 5.13.2
+    dev: false
+
+  /@jsplumb/connector-bezier/5.13.2:
+    resolution: {integrity: sha512-AALmOvkiP3ouGag6TGkBcd7SbCewPNwsKu9gku9AZqIq+fFu321zJ2IpfoyCFgkoFFSQjJ9jo1sWBbD3gnEXrg==}
+    dependencies:
+      '@jsplumb/core': 5.13.2
+    dev: false
+
+  /@jsplumb/connector-flowchart/5.13.2:
+    resolution: {integrity: sha512-yxX4MDVoWqQagf5tpI4k3pFJpuhlU0kRH+usvsOxCOcF8qvkLnyXH9kYe8p4GXwmp8lq1LUx8aoi4/NkgXUdIQ==}
+    dependencies:
+      '@jsplumb/core': 5.13.2
+    dev: false
+
+  /@jsplumb/core/5.13.2:
+    resolution: {integrity: sha512-IODXQzhpq9QEzGKhPir6+ea8m4KeU3gzJsYjIu8oqSQ4jDhvEYF7TvSfeaNgy9sUAMt3OoKCqxCS4ga9J7LS5A==}
+    dependencies:
+      '@jsplumb/common': 5.13.2
+    dev: false
+
+  /@jsplumb/util/5.13.2:
+    resolution: {integrity: sha512-POrqlZMOo821oa49Xbxb+pNmnxu0z2oS7FOeklRxKuYXR+7nsP0j9PpXjo8E8Ily4TaP+pdUnatb53vAaONO3g==}
+    dev: false
 
   /@mdit-vue/plugin-component/0.8.1:
     resolution: {integrity: sha512-lBkVDc4/uq93CDKBUbKZ25lpBwZ4fghHaBMV956Eb/Qp7isHzqn31qpdJT6S7nPNltt9clkWTVZeZRL7hmRKUw==}

@@ -34,3 +34,21 @@
     }
   }
 }
+
+// 主配置文件连接
+.config-drag-item {
+  background-color: white;
+  border: 1px solid #346789;
+  text-align: center;
+  z-index: 24;
+  cursor: pointer;
+  box-shadow: 2px 2px 19px #aaa;
+  border-radius: 0.5em;
+  position: absolute;
+  color: black;
+  padding-top: 5px;
+  width: 140px;
+  height: 120px;
+  line-height: 12px;
+  transition: box-shadow 0.15s ease-in;
+}

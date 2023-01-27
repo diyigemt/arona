@@ -6,7 +6,7 @@ const SettingRouter: Array<RouteRecordRaw> = [
     meta: {
       title: "设置",
     },
-    component: () => import("@/views/setting/SettingIndex.vue"),
+    component: () => import("@/components/SubPageIndex.vue"),
     children: [
       {
         path: "",

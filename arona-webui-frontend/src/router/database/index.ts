@@ -6,7 +6,7 @@ const DatabaseRouter: Array<RouteRecordRaw> = [
     meta: {
       title: "数据库",
     },
-    component: () => import("@/views/database/DatabaseIndex.vue"),
+    component: () => import("@/components/SubPageIndex.vue"),
     children: [
       {
         path: "",

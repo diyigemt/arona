@@ -129,7 +129,11 @@ const useBaseStore = defineStore({
     // TODO 群员不存在时加载失败
     loadDataFromSave(json: string) {
       const userData = JSON.parse(json) as UserData;
-      return Promise.all(userData.members.map((item) => item.groupId && item.groupId !== 0));
+      return Promise.all(
+        userData.members.map((item) => {
+          return item.groupId !== 0 ? this.members(item.groupId) : this.members(0);
+        }),
+      );
     },
   },
   persist: {

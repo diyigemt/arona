@@ -131,7 +131,7 @@ const useBaseStore = defineStore({
       const userData = JSON.parse(json) as UserData;
       return Promise.all(
         userData.members.map((item) => {
-          return item.groupId !== 0 ? this.members(item.groupId) : this.members(0);
+          return this.members(item.groupId);
         }),
       );
     },

@@ -1,4 +1,5 @@
 import { Block, CodeGenerator } from "blockly";
+import { MutatorBlockSvg } from "@/blockly/mutators/AbstractMutator";
 
 class AronaGenerator extends CodeGenerator {
   ORDER_ATOMIC = 0; // 0 "" ...
@@ -10,22 +11,25 @@ class AronaGenerator extends CodeGenerator {
 
   actions: unknown[] = [];
 
-  masterBlock = (block: Block) => {
-    this.expressions = [];
-    this.actions = [];
+  masterBlock = (block: MutatorBlockSvg) => {
+    const result: { expressions: unknown[]; actions: unknown[] }[] = [];
     const dropdownTriggerType = block.getFieldValue("TriggerType");
-    this.valueToCode(block, "Expressions", this.ORDER_NONE);
-    let statementBlocks = block.getInputTargetBlock("Actions");
-    if (statementBlocks) {
-      do {
-        this.blockToCode(statementBlocks, true);
-        // eslint-disable-next-line no-cond-assign
-      } while ((statementBlocks = statementBlocks.getNextBlock()));
+    for (let item = 0; item <= block.itemCount; item++) {
+      this.expressions = [];
+      this.actions = [];
+      let statementBlocks = block.getInputTargetBlock(`Actions${item}`);
+      if (statementBlocks) {
+        this.valueToCode(block, `Expressions${item}`, this.ORDER_NONE);
+        do {
+          this.blockToCode(statementBlocks, true);
+          // eslint-disable-next-line no-cond-assign
+        } while ((statementBlocks = statementBlocks.getNextBlock()));
+        result.push({ expressions: this.expressions, actions: this.actions });
+      }
     }
     return JSON.stringify({
       type: dropdownTriggerType,
-      expressions: this.expressions,
-      actions: this.actions,
+      triggers: result,
     });
   };
 

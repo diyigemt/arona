@@ -2,7 +2,7 @@ import AbstractMutator, { MutatorBlockSvg } from "@/blockly/mutators/AbstractMut
 
 export default class MasterBlockMutator extends AbstractMutator {
   controlsHelper(this: MutatorBlockSvg): void {
-    this.getInput("Expressions")!.insertFieldAt(0, MasterBlockMutator.createPlusField(), "plus");
+    this.getInput("Expressions0")!.insertFieldAt(0, MasterBlockMutator.createPlusField(), "plus");
   }
 
   addPart(this: MutatorBlockSvg) {

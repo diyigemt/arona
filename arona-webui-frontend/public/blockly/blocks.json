@@ -18,7 +18,7 @@
     },
     {
       "type": "input_value",
-      "name": "Expressions",
+      "name": "Expressions0",
       "check": [
         "ExpressionType",
         "LogicType"
@@ -26,7 +26,7 @@
     },
     {
       "type": "input_statement",
-      "name": "Actions",
+      "name": "Actions0",
       "check": "ActionType"
     }
   ],

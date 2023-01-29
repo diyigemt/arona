@@ -85,7 +85,7 @@ class BlocklySave(file: File): File(file.absolutePath) {
   }
 
   fun wipeUserData(): Boolean = kotlin.runCatching {
-    userData.members = mutableListOf()
+    userData.groups = mutableListOf()
     writeDataToSave("userData.json", json.encodeToString(UserData.serializer(), userData).byteInputStream())
     return@runCatching true
   }.getOrElse {

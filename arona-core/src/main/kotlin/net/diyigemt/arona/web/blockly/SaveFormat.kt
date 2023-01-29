@@ -37,7 +37,7 @@ data class Meta(
 
 @Serializable
 data class UserData(
-  var members: List<Members>,
+  var groups: List<Long>,
 ): SaveDataElement
 
 

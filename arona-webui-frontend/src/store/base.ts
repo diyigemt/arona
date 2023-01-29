@@ -130,8 +130,8 @@ const useBaseStore = defineStore({
     loadDataFromSave(json: string) {
       const userData = JSON.parse(json) as UserData;
       return Promise.all(
-        userData.members.map((item) => {
-          return this.members(item.groupId);
+        userData.groups.map((item) => {
+          return this.members(item);
         }),
       );
     },

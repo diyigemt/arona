@@ -17,7 +17,7 @@ interface BlocklyProjectSaveData {
 }
 
 export interface UserData {
-  members: { groupId: number }[];
+  groups: number[];
 }
 
 export function saveBlocklyProject(data: BlocklyProjectSaveData) {

@@ -13,7 +13,7 @@ object BlocklyInterpreter {
   private val jexlEngine = JexlBuilder().create()
   private val jexlContext = MapContext()
 
-  fun generateBooleanExpression(value: BlocklyExpression, event: MessageEvent?): String {
+  fun generateBooleanExpression(value: BlocklyTrigger, event: MessageEvent?): String {
     var res = ""
     kotlin.runCatching {
       if(value.expressions.isEmpty()) res = "true"

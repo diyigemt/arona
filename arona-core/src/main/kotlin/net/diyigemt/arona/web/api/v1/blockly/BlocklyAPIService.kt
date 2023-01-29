@@ -79,7 +79,7 @@ object BlocklyAPIService: Worker {
       )
     }
 
-    BlocklyService.trigger()
+//    BlocklyService.trigger()
     context.call.respond(HttpStatusCode.OK,
       ServerResponse(200, HttpStatusCode.OK.description, null as String?)
     )

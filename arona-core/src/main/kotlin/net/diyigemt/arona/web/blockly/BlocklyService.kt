@@ -13,15 +13,16 @@ import java.util.*
  *@Create 2022/12/26
  */
 object BlocklyService: Initialize, AronaMessageReactService<MessageEvent> {
-  private val hooks: MutableMap<UUID, BlocklyExpression> = mutableMapOf()
+  private val groupHooks: MutableMap<UUID, List<BlocklyTrigger>> = mutableMapOf()
+  private val friendHooks: MutableMap<UUID, List<BlocklyTrigger>> = mutableMapOf()
 
   override fun init() {
     SaveManager.init()
   }
 
   override suspend fun handle(event: MessageEvent) = when(event) {
-    is GroupMessageEvent -> optionalTrigger(hooks.filter { it.value.type == EventType.GroupMessageEvent }.values, event)
-    is FriendMessageEvent -> optionalTrigger(hooks.filter { it.value.type == EventType.FriendMessageEvent }.values, event)
+    is GroupMessageEvent -> optionalTrigger(groupHooks.values, event)
+    is FriendMessageEvent -> optionalTrigger(friendHooks.values, event)
 
     else -> Arona.error("Undefined event type: ${event.javaClass.name}")
   }
@@ -36,27 +37,49 @@ object BlocklyService: Initialize, AronaMessageReactService<MessageEvent> {
   /**
    * 测试用，会遍历全部的触发器*/
   fun trigger() = Arona.async {
+    val hooks = friendHooks + groupHooks
     for(hook in hooks){
       Arona.info("Begin")
-      val expression = BlocklyInterpreter.generateBooleanExpression(hook.value, null)
-      Arona.info(expression)
-      //TODO:ID判断
-      if (BlocklyInterpreter.evaluateAsBoolean(expression) == true){
-        for (action in hook.value.actions){
-          action.id.run(action.value, null)
+      hook.value.forEach {
+        val expression = BlocklyInterpreter.generateBooleanExpression(it, null)
+        Arona.info(expression)
+        if (BlocklyInterpreter.evaluateAsBoolean(expression) == true){
+          for (action in it.actions) {
+            action.id.run(action.value, null)
+          }
         }
       }
     }
   }
 
-  private fun optionalTrigger(hooks: Collection<BlocklyExpression>, event: MessageEvent) {
+  private fun optionalTrigger(hooks: Collection<List<BlocklyTrigger>>, event: MessageEvent) {
     hooks.forEach {
-      val expression = BlocklyInterpreter.generateBooleanExpression(it, event)
-      Arona.info(expression)
-      if (BlocklyInterpreter.evaluateAsBoolean(expression) == true){
-        it.actions.forEach { actions ->
-          actions.id.run(actions.value, event)
+      it.forEach { trigger ->
+        val expression = BlocklyInterpreter.generateBooleanExpression(trigger, event)
+        Arona.info(expression)
+        if (BlocklyInterpreter.evaluateAsBoolean(expression) == true) {
+          trigger.actions.forEach { actions ->
+            actions.id.run(actions.value, event)
+          }
         }
+      }
+    }
+  }
+
+  fun updateTriggers(uuid: UUID, data: BlocklyExpression, isDelete: Boolean = false) {
+    if(isDelete) {
+      when(data.type) {
+        EventType.GroupMessageEvent -> groupHooks.remove(uuid)
+        EventType.FriendMessageEvent -> friendHooks.remove(uuid)
+
+        else -> Arona.error("Undefined event type: ${data.type}")
+      }
+    } else {
+      when(data.type) {
+        EventType.GroupMessageEvent -> groupHooks[uuid] = data.triggers
+        EventType.FriendMessageEvent -> friendHooks[uuid] = data.triggers
+
+        else -> Arona.error("Undefined event type: ${data.type}")
       }
     }
   }
@@ -64,7 +87,7 @@ object BlocklyService: Initialize, AronaMessageReactService<MessageEvent> {
   fun addHook(data: CommitData): Boolean {
     SaveManager.addSaveFromRemote(data).apply {
       if (this != null) {
-        hooks[this] = data.trigger
+        updateTriggers(this, data.trigger)
         Arona.info("触发器: ${data.projectName}, 添加成功")
 
         return true
@@ -74,13 +97,11 @@ object BlocklyService: Initialize, AronaMessageReactService<MessageEvent> {
     return false
   }
 
-  fun addHook(uuid: UUID, data: BlocklyExpression) = hooks.put(uuid, data)
-
   fun updateHook(data: CommitData): Boolean {
     if (data.uuid == null) return false
     SaveManager.updateSaveFromRemote(data).apply {
       if (this){
-        hooks[data.uuid] = data.trigger
+        updateTriggers(data.uuid, data.trigger)
         Arona.info("触发器: ${data.projectName}, 修改成功")
 
         return true
@@ -101,7 +122,7 @@ object BlocklyService: Initialize, AronaMessageReactService<MessageEvent> {
     val meta = SaveManager.getSaveElementByUUID<Meta>(data.uuid) ?: return -2
     SaveManager.deleteSaveFormRemote(data).apply {
       if(this) {
-        hooks.remove(data.uuid)
+        updateTriggers(data.uuid, data.trigger, true)
         Arona.info("触发器: ${meta.projectName}, 删除成功")
 
         return 0

@@ -105,6 +105,10 @@ data class Actions(
 
 data class BlocklyExpression(
   val type: EventType,
+  val triggers: List<BlocklyTrigger>,
+)
+
+data class BlocklyTrigger(
   val expressions: List<IfExpression>,
   val actions: List<Actions>
 )

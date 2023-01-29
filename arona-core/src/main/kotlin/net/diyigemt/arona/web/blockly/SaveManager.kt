@@ -94,7 +94,7 @@ object SaveManager {
   private fun loadSaveFromLocal(file: File): Boolean{
     kotlin.runCatching {
       val localSave = BlocklySave(file)
-      BlocklyService.addHook(
+      BlocklyService.updateTriggers(
         localSave.meta.uuid,
         MoshiUtil.reflect.adapter(BlocklyExpression::class.java).fromJson(localSave.readDataAsString("expression.json")!!)!!
       )

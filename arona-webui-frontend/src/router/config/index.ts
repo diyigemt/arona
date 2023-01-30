@@ -28,6 +28,22 @@ const ConfigRouter: Array<RouteRecordRaw> = [
         },
         component: () => import("@/views/config/ConfigAronaMain.vue"),
       },
+      {
+        path: "config-arona-reply-group",
+        name: "config-arona-reply-group",
+        meta: {
+          title: "随机回复语句",
+        },
+        component: () => import("@/views/config/ConfigRandomReply.vue"),
+      },
+      {
+        path: "config-arona-reply-label",
+        name: "config-arona-reply-label",
+        meta: {
+          title: "随机回复标签",
+        },
+        component: () => import("@/views/config/ConfigRandomReplyLabel.vue"),
+      },
     ],
   },
 ];

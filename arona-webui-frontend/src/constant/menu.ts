@@ -15,6 +15,14 @@ const ConfigMenu: SubMenuItem[] = [
     name: "条件执行",
     path: "/config/config-arona-blockly",
   },
+  {
+    name: "随机回复语句",
+    path: "/config/config-arona-reply-group",
+  },
+  {
+    name: "随机回复语句标签",
+    path: "/config/config-arona-reply-label",
+  },
 ];
 const DatabaseMenu: SubMenuItem[] = [
   {

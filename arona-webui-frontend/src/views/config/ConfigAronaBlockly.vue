@@ -111,11 +111,9 @@ function onSaveCurrentProject() {
     .getAllBlocks(false)
     .filter((targetBlock) => targetBlock.type === "groupIDBlock")
     .map((targetBlock) => {
-      const value = targetBlock.getFieldValue("groupIDInput");
-      return {
-        groupId: Number(value),
-      };
-    });
+      return Number(targetBlock.getFieldValue("groupIDInput"));
+    })
+    .filter((value, index, array) => array.indexOf(value) === index);
   onDebug();
   if (isNewProject.value || projectList.value?.length === 0) {
     IPrompt("保存项目", "请输入项目名称:", {
@@ -130,7 +128,7 @@ function onSaveCurrentProject() {
         uuid: null,
         blocklyProject: JSON.stringify(Blockly.serialization.workspaces.save(workspace.value)),
         userData: JSON.stringify({
-          members: groupBlocks,
+          groups: groupBlocks,
         }),
       })
         .then(() => {
@@ -148,7 +146,7 @@ function onSaveCurrentProject() {
       uuid: (projectList.value || [])[selectBlockIndex.value as number].uuid,
       blocklyProject: JSON.stringify(Blockly.serialization.workspaces.save(workspace.value)),
       userData: JSON.stringify({
-        members: groupBlocks,
+        groups: groupBlocks,
       }),
     }).then(() => {
       doFetchBlocklyProjectList();
@@ -217,11 +215,9 @@ function onDebug() {
     .getAllBlocks(false)
     .filter((targetBlock) => targetBlock.type === "groupIDBlock")
     .map((targetBlock) => {
-      const value = targetBlock.getFieldValue("groupIDInput");
-      return {
-        groupId: value,
-      };
-    });
+      return Number(targetBlock.getFieldValue("groupIDInput"));
+    })
+    .filter((value, index, array) => array.indexOf(value) === index);
   output.value = JSON.stringify(
     {
       trigger: JSON.parse(code),
@@ -229,7 +225,7 @@ function onDebug() {
       uuid: proj?.uuid,
       blocklyProject: debugMode.value ? row : JSON.stringify(row),
       userData: {
-        members: groupBlocks,
+        groups: groupBlocks,
       },
     },
     null,

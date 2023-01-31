@@ -3,7 +3,6 @@ package net.diyigemt.arona.db
 import kotlinx.coroutines.Dispatchers
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.db.data.schaledb.SchaleDataBase
-import net.diyigemt.arona.interfaces.BaseFunctionProvider
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SqlLogger
 import org.jetbrains.exposed.sql.Transaction
@@ -14,9 +13,7 @@ import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 
-object DataBaseProvider: BaseFunctionProvider() {
-
-  override val tag: String = "arona data base"
+object DataBaseProvider {
 
   sealed class ConnectionStatus {
     object CONNECTED : ConnectionStatus()
@@ -30,7 +27,7 @@ object DataBaseProvider: BaseFunctionProvider() {
 
   private val databaseConnectionList = mutableListOf<Connection>()
 
-  override suspend fun main() {
+  fun start() {
     for(item in DBConstant.dbNameList){
       connectDataBase(item)
     }

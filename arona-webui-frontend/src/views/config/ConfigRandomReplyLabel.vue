@@ -9,34 +9,74 @@
   <el-row>
     <el-table :data="filteredTableData" row-key="id" border stripe>
       <el-table-column type="index" label="编号" width="60" />
-      <el-table-column prop="value" label="标签" />
+      <el-table-column prop="value" label="标签名" />
       <el-table-column prop="weight" label="权重" width="60" />
       <el-table-column prop="label" label="操作" width="120">
-        <template #default>
-          <el-button>没做</el-button>
+        <template #default="{ row }">
+          <el-button type="primary" link @click="onEditLabel(row)">编辑</el-button>
+          <el-button type="danger" link @click="onDeleteLabel(row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
   </el-row>
+  <el-dialog v-model="showEditDialog" show-close append-to-body :title="editOrCreate ? '编辑' : '新建'" width="600">
+    <el-form :model="formData" label-width="100">
+      <el-form-item label="标签名" prop="value">
+        <el-input v-model="formData.value" placeholder="请输入标签名" />
+      </el-form-item>
+      <el-form-item label="权重" prop="value">
+        <el-input-number v-model="formData.weight" placeholder="请输入权重" style="width: 160px;" />
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <div class="text-center">
+        <el-button type="primary">保存</el-button>
+        <el-button @click="showEditDialog = false">取消</el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
 import { dataFilterChain } from "@/utils";
 import { fetchReplyLabels } from "@/api/modules/reply";
 import { ReplyLabel } from "@/interface/modules/reply";
+import { IConfirm } from "@/utils/message";
 
 const tableData = ref<ReplyLabel[]>([]);
 const filterForm = reactive<IFilterForm>({
   content: "",
   weight: undefined,
 });
+const showEditDialog = ref(false);
+const formData = reactive<ReplyLabel>({
+  id: 0,
+  value: "",
+  weight: 1,
+});
 
+function onCreateNewLabel() {}
+function onEditLabel(label: ReplyLabel) {
+  formData.id = label.id;
+  formData.value = label.value;
+  formData.weight = label.weight;
+  showEditDialog.value = true;
+}
+function onDeleteLabel(label: ReplyLabel) {
+  IConfirm("删除", `确认要删除标签: ${label.value} 吗?`, {
+    type: "warning",
+  }).then(() => {});
+}
+
+/**
+ * 判断当前是在编辑还是在新建 true为编辑
+ */
+const editOrCreate = computed(() => formData.id !== 0);
 onMounted(() => {
   fetchReplyLabels().then(({ data: labelData }) => {
     tableData.value = labelData;
   });
 });
-
 const filteredTableData = computed(() =>
   dataFilterChain(tableData.value, filterForm, [filterContent, filterWeight], ["content", "weight"]),
 );

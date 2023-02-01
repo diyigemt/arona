@@ -1,6 +1,6 @@
 <template>
-  <div class="banner-container cursor-pointer" @click="goHome">
-    <div class="font-bold text-left antialiased font-sans banner-text dot-bg">Arona</div>
+  <div class="banner-container cursor-pointer dot-bg" @click="goHome">
+    <div class="font-bold text-left antialiased font-sans banner-text">Arona</div>
     <div>
       <el-select v-model="select" placeholder="全部" clearable @change="updateActiveGroup">
         <el-option v-for="(e, index) in groups" :key="index" :value="e.id" :label="e.name" />

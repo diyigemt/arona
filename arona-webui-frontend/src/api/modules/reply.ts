@@ -14,3 +14,30 @@ export function fetchReplyGroups() {
     method: "GET",
   });
 }
+
+export function deleteReplyLabel(id: number) {
+  return service.raw<void>({
+    url: "/reply/label/delete",
+    data: {
+      id,
+    },
+  });
+}
+
+export function updateReplyLabel(label: ReplyLabel) {
+  return service.raw<void>({
+    url: "/reply/label/update",
+    data: {
+      label,
+    },
+  });
+}
+
+export function createReplyLabel(label: ReplyLabel) {
+  return service.raw<void>({
+    url: "/reply/label/create",
+    data: {
+      label,
+    },
+  });
+}

@@ -33,12 +33,7 @@ import { ElMessageBox } from "element-plus";
 import BlocklyConfig, { initBlockly, workspaceBlocks } from "@/blockly";
 import aronaGenerator from "@/blockly/generator";
 import { BlocklyProject, BlocklyProjectWorkspace } from "@/interface/modules/blockly";
-import {
-  deleteBlocklyProject,
-  fetchBlocklyProjectList,
-  saveBlocklyProject,
-  updateBlocklyProject,
-} from "@/api/modules/blockly";
+import BlocklyApi from "@/api/modules/blockly";
 import { errorMessage, IConfirm, infoMessage, IPrompt, successMessage, warningMessage } from "@/utils/message";
 import useBaseStore from "@/store/base";
 
@@ -68,7 +63,7 @@ function onBlockClick(event: Blockly.Events.ClickJson) {
   }
 }
 function doFetchBlocklyProjectList() {
-  fetchBlocklyProjectList()
+  BlocklyApi.fetchBlocklyProjectList()
     .then((res) => {
       projectList.value = res.data.map((item) => {
         item.blocklyProject = JSON.parse(item.blocklyProject as string);
@@ -122,7 +117,7 @@ function onSaveCurrentProject() {
       inputPattern: /.+/,
       inputErrorMessage: "不能为空",
     }).then(({ value }) => {
-      saveBlocklyProject({
+      BlocklyApi.saveBlocklyProject({
         trigger: JSON.parse(code),
         projectName: value,
         uuid: null,
@@ -140,7 +135,7 @@ function onSaveCurrentProject() {
         });
     });
   } else {
-    updateBlocklyProject({
+    BlocklyApi.updateBlocklyProject({
       trigger: JSON.parse(code),
       projectName: (projectList.value || [])[selectBlockIndex.value as number].name,
       uuid: (projectList.value || [])[selectBlockIndex.value as number].uuid,
@@ -185,7 +180,7 @@ function onDeleteProject() {
     IConfirm("警告", `确定删除${projName}`, {
       type: "warning",
     }).then(() => {
-      deleteBlocklyProject({
+      BlocklyApi.deleteBlocklyProject({
         trigger: JSON.parse('{"type":"GroupMessageEvent","expressions": [],"actions": []}'),
         projectName: projName,
         // 只有UUID是有用的，其余的都可以不给，但不能给NULL，后端能过反序列化就行

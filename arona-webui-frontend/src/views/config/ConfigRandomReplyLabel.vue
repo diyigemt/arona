@@ -35,7 +35,7 @@
     </el-form>
     <template #footer>
       <div class="text-center">
-        <el-button type="primary">保存</el-button>
+        <el-button type="primary" @click="onConfirmEditOrCreate">保存</el-button>
         <el-button @click="showEditDialog = false">取消</el-button>
       </div>
     </template>
@@ -45,7 +45,7 @@
 <script setup lang="ts">
 import { Plus } from "@element-plus/icons-vue";
 import { dataFilterChain, deepCopy, fillForm } from "@/utils";
-import { deleteReplyLabel, fetchReplyLabels } from "@/api/modules/reply";
+import ReplyApi from "@/api/modules/reply";
 import { ReplyLabel } from "@/interface/modules/reply";
 import { IConfirm, successMessage } from "@/utils/message";
 
@@ -62,19 +62,30 @@ const filterForm = reactive<IFilterForm>({
 const showEditDialog = ref(false);
 const formData = reactive<ReplyLabel>(deepCopy(DefaultFormValue));
 
+function onConfirmEditOrCreate() {
+  if (editOrCreate.value) {
+    ReplyApi.updateReplyLabel(formData).then(() => {
+      successMessage("更新成功");
+    });
+  } else {
+    ReplyApi.createReplyLabel(formData).then(() => {
+      successMessage("创建成功");
+    });
+  }
+}
 function onCreateNewLabel() {
-  fillForm<ReplyLabel, ReplyLabel>(formData, deepCopy(DefaultFormValue), ["id", "value", "weight"]);
+  fillForm<ReplyLabel>(formData, deepCopy(DefaultFormValue), ["id", "value", "weight"]);
   showEditDialog.value = true;
 }
 function onEditLabel(label: ReplyLabel) {
-  fillForm<ReplyLabel, ReplyLabel>(formData, label, ["id", "value", "weight"]);
+  fillForm<ReplyLabel>(formData, deepCopy(label), ["id", "value", "weight"]);
   showEditDialog.value = true;
 }
 function onDeleteLabel(label: ReplyLabel) {
   IConfirm("删除", `确认要删除标签: ${label.value} 吗?`, {
     type: "warning",
   }).then(() => {
-    deleteReplyLabel(label.id).then(() => {
+    ReplyApi.deleteReplyLabel(label.id).then(() => {
       successMessage(`标签: ${label.value} 删除成功`);
     });
   });
@@ -84,14 +95,14 @@ function onDeleteLabel(label: ReplyLabel) {
  * 判断当前是在编辑还是在新建 true为编辑
  */
 const editOrCreate = computed(() => formData.id !== 0);
-onMounted(() => {
-  fetchReplyLabels().then(({ data: labelData }) => {
-    tableData.value = labelData;
-  });
-});
 const filteredTableData = computed(() =>
   dataFilterChain(tableData.value, filterForm, [filterContent, filterWeight], ["content", "weight"]),
 );
+onMounted(() => {
+  ReplyApi.fetchReplyLabels().then(({ data: labelData }) => {
+    tableData.value = labelData;
+  });
+});
 function filterContent(data: ReplyLabel[], value: string): ReplyLabel[] {
   return data.filter((label) => label.value.indexOf(value) !== -1);
 }

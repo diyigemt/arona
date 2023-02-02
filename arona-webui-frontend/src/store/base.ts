@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { BaseStoreState } from "./type";
-import { fetchBotContacts, fetchGroupMember } from "@/api/modules/contact";
+import ContactApi from "@/api/modules/contact";
 import { Friend, Member } from "@/types/contact";
 import { ExtendGroup } from "@/interface/http";
 import { HTTP_OK } from "@/constant/http";
@@ -65,7 +65,7 @@ const useBaseStore = defineStore({
       this.activeGroupId = group || 0;
     },
     fetchBotContact() {
-      return fetchBotContacts().then((contact) => {
+      return ContactApi.fetchBotContacts().then((contact) => {
         this.contactList = [contact.data];
         return contact;
       });
@@ -92,7 +92,7 @@ const useBaseStore = defineStore({
         const { member } = groupList[0];
         // 尝试获取
         if (!member || member.length === 0) {
-          fetchGroupMember(group, bot).then((data) => {
+          ContactApi.fetchGroupMember(group, bot).then((data) => {
             if (data.code === HTTP_OK) {
               // 缓存一下
               groupList[0].member = data.data;

@@ -1,10 +1,15 @@
 <template>
-  <el-row>
-    <el-form v-model="filterForm" inline>
-      <el-form-item label="内容包含:" prop="content">
-        <el-input v-model="filterForm.content" clearable />
-      </el-form-item>
-    </el-form>
+  <el-row justify="space-between">
+    <el-col :span="20">
+      <el-form v-model="filterForm" inline>
+        <el-form-item label="内容包含:" prop="content">
+          <el-input v-model="filterForm.content" clearable />
+        </el-form-item>
+      </el-form>
+    </el-col>
+    <el-col :span="4" class="text-right">
+      <el-button type="primary" :icon="Plus" @click="onCreateNewLabel">新增标签</el-button>
+    </el-col>
   </el-row>
   <el-row>
     <el-table :data="filteredTableData" row-key="id" border stripe>
@@ -25,7 +30,7 @@
         <el-input v-model="formData.value" placeholder="请输入标签名" />
       </el-form-item>
       <el-form-item label="权重" prop="value">
-        <el-input-number v-model="formData.weight" placeholder="请输入权重" style="width: 160px;" />
+        <el-input-number v-model="formData.weight" placeholder="请输入权重" style="width: 160px" />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -38,34 +43,41 @@
 </template>
 
 <script setup lang="ts">
-import { dataFilterChain } from "@/utils";
-import { fetchReplyLabels } from "@/api/modules/reply";
+import { Plus } from "@element-plus/icons-vue";
+import { dataFilterChain, deepCopy, fillForm } from "@/utils";
+import { deleteReplyLabel, fetchReplyLabels } from "@/api/modules/reply";
 import { ReplyLabel } from "@/interface/modules/reply";
-import { IConfirm } from "@/utils/message";
+import { IConfirm, successMessage } from "@/utils/message";
 
+const DefaultFormValue: ReplyLabel = {
+  id: 0,
+  value: "",
+  weight: 1,
+};
 const tableData = ref<ReplyLabel[]>([]);
 const filterForm = reactive<IFilterForm>({
   content: "",
   weight: undefined,
 });
 const showEditDialog = ref(false);
-const formData = reactive<ReplyLabel>({
-  id: 0,
-  value: "",
-  weight: 1,
-});
+const formData = reactive<ReplyLabel>(deepCopy(DefaultFormValue));
 
-function onCreateNewLabel() {}
+function onCreateNewLabel() {
+  fillForm<ReplyLabel, ReplyLabel>(formData, deepCopy(DefaultFormValue), ["id", "value", "weight"]);
+  showEditDialog.value = true;
+}
 function onEditLabel(label: ReplyLabel) {
-  formData.id = label.id;
-  formData.value = label.value;
-  formData.weight = label.weight;
+  fillForm<ReplyLabel, ReplyLabel>(formData, label, ["id", "value", "weight"]);
   showEditDialog.value = true;
 }
 function onDeleteLabel(label: ReplyLabel) {
   IConfirm("删除", `确认要删除标签: ${label.value} 吗?`, {
     type: "warning",
-  }).then(() => {});
+  }).then(() => {
+    deleteReplyLabel(label.id).then(() => {
+      successMessage(`标签: ${label.value} 删除成功`);
+    });
+  });
 }
 
 /**

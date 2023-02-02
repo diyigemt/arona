@@ -7,7 +7,7 @@
       </el-aside>
       <el-main class="container">
         <el-scrollbar class="scrollbar-hide-horizontal">
-          <div style="margin-top: 60px">
+          <div style="margin-top: 50px; padding-top: 20px">
             <router-view />
           </div>
         </el-scrollbar>
@@ -49,6 +49,7 @@ if (!settingStore.isRestoreBackend) {
   height: 100vh;
   max-width: 100%;
   padding-right: 0;
+  padding-top: 0;
   transform: translateY(-60px);
   overflow: hidden;
 }

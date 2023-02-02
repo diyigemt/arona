@@ -23,7 +23,11 @@ interface Props {
 </script>
 
 <style lang="scss">
+.dot-bg {
+  margin-right: 20px;
+}
 .page-header {
+  padding-top: 10px;
   margin-bottom: 20px;
 }
 </style>

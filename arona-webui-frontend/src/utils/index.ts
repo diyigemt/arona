@@ -20,6 +20,13 @@ export function deepCopy<T>(data: T): T {
   return JSON.parse(JSON.stringify(data));
 }
 
+export function fillForm<IForm extends object, T extends IForm>(form: T, data: T, keys: (keyof IForm)[]) {
+  keys.forEach((key) => {
+    const value = Reflect.get(data, key);
+    Reflect.set(form, key, value);
+  });
+}
+
 export function dataFilterChain<T, Form extends object>(
   data: T[],
   filterForm: Form,

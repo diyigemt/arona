@@ -36,6 +36,7 @@ const groups = computed(() => baseStore.groups());
   width: 100%;
   left: 0;
   padding: 0 20px;
+  border-bottom: 1px solid var(--el-border-color);
   > div {
     flex: 1;
     &:last-child {

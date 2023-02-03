@@ -4,6 +4,7 @@ import PingRouter from "./ping";
 import BlocklyRouter from "./blockly";
 import ConfigRouter from "./config";
 import ReplyRouter from "./reply";
+import FileRouter from "./file";
 
 const router = Router();
 
@@ -12,5 +13,6 @@ router.use("/ping", PingRouter);
 router.use("/blockly", BlocklyRouter);
 router.use("/config", ConfigRouter);
 router.use("/reply", ReplyRouter);
+router.use("/file", FileRouter);
 
 export default router;

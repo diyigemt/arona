@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { packageResponse } from "../utils";
-import { ReplyGroup, ReplyLabel } from "../../src/interface/modules/reply";
+import { ReplyGroup, ReplyItemType, ReplyLabel } from "../../src/interface/modules/reply";
 
 export function getReplyGroup(_: Request, response: Response): Promise<Response> {
   return new Promise((resolve) => {

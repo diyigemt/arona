@@ -24,3 +24,10 @@ export function IPrompt(title: string, message: string, config?: ElMessageBoxOpt
 export function IConfirm(title: string, message: string, config?: ElMessageBoxOptions) {
   return ElMessageBox.confirm(message, title, config);
 }
+
+export function IWarningConfirm(title: string, message: string, config?: ElMessageBoxOptions) {
+  return IConfirm(title, message, {
+    ...config,
+    type: "warning",
+  });
+}

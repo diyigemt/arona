@@ -1,4 +1,18 @@
-export type ReplyItemType = "String" | "Image";
+import { DropDownSelectListType, enumTypeList } from "@/interface";
+
+interface IReplyItemType {
+  String: "文字";
+  Image: "图片";
+}
+
+const DReplyItemType: IReplyItemType = {
+  Image: "图片",
+  String: "文字",
+};
+
+export const ReplyItemTypeList = enumTypeList(DReplyItemType);
+
+export type ReplyItemType = DropDownSelectListType<IReplyItemType>;
 export interface ReplyItem {
   type: ReplyItemType;
   content: string;

@@ -22,6 +22,14 @@ const ReplyApi = {
       },
     });
   },
+  deleteReplyGroup(id: number) {
+    return service.raw<void>({
+      url: "/reply/group/delete",
+      data: {
+        id,
+      },
+    });
+  },
   updateReplyLabel(label: ReplyLabel) {
     return service.raw<void>({
       url: "/reply/label/update",
@@ -30,11 +38,27 @@ const ReplyApi = {
       },
     });
   },
+  updateReplyGroup(group: ReplyGroup) {
+    return service.raw<void>({
+      url: "/reply/group/update",
+      data: {
+        group,
+      },
+    });
+  },
   createReplyLabel(label: ReplyLabel) {
     return service.raw<void>({
       url: "/reply/label/create",
       data: {
         label,
+      },
+    });
+  },
+  createReplyGroup(group: ReplyGroup) {
+    return service.raw<void>({
+      url: "/reply/group/create",
+      data: {
+        group,
       },
     });
   },

@@ -29,15 +29,17 @@ const settingStore = useSettingStore();
 const router = useRouter();
 initEventBus();
 if (!settingStore.isRestoreBackend) {
-  warningMessage("未配置后端地址,将会跳转到配置界面");
-  router.push("/setting/setting-api");
+  warningAndRedirect("未配置后端地址,将会跳转到配置界面");
 } else {
   heartbeat().then((res) => {
     if (!res) {
-      warningMessage("后端连接失败,将会跳转到配置界面");
-      router.push("/setting/setting-api");
+      warningAndRedirect("后端连接失败,将会跳转到配置界面");
     }
   });
+}
+function warningAndRedirect(msg: string) {
+  warningMessage(msg);
+  router.push("/setting/setting-api");
 }
 </script>
 

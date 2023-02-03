@@ -52,3 +52,9 @@
   line-height: 12px;
   transition: box-shadow 0.15s ease-in;
 }
+
+.dialog-body-padding-bottom-0 {
+  .el-dialog__body {
+    padding-bottom: 0;
+  }
+}

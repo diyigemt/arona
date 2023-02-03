@@ -29,7 +29,7 @@
       <el-form-item label="标签名" prop="value">
         <el-input v-model="formData.value" placeholder="请输入标签名" />
       </el-form-item>
-      <el-form-item label="权重" prop="value">
+      <el-form-item label="权重" prop="weight">
         <el-input-number v-model="formData.weight" placeholder="请输入权重" style="width: 160px" />
       </el-form-item>
     </el-form>
@@ -47,7 +47,7 @@ import { Plus } from "@element-plus/icons-vue";
 import { dataFilterChain, deepCopy, fillForm } from "@/utils";
 import ReplyApi from "@/api/modules/reply";
 import { ReplyLabel } from "@/interface/modules/reply";
-import { IConfirm, successMessage } from "@/utils/message";
+import { IWarningConfirm, successMessage } from "@/utils/message";
 
 const DefaultFormValue: ReplyLabel = {
   id: 0,
@@ -82,9 +82,7 @@ function onEditLabel(label: ReplyLabel) {
   showEditDialog.value = true;
 }
 function onDeleteLabel(label: ReplyLabel) {
-  IConfirm("删除", `确认要删除标签: ${label.value} 吗?`, {
-    type: "warning",
-  }).then(() => {
+  IWarningConfirm("删除", `确认要删除标签: ${label.value} 吗?`).then(() => {
     ReplyApi.deleteReplyLabel(label.id).then(() => {
       successMessage(`标签: ${label.value} 删除成功`);
     });

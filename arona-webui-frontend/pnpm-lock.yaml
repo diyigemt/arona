@@ -10,6 +10,7 @@ specifiers:
   '@jsplumb/connector-bezier': ^5.13.2
   '@jsplumb/connector-flowchart': ^5.13.2
   '@types/express': ^4.17.15
+  '@types/express-fileupload': ^1.4.1
   '@types/node': ^17.0.45
   '@types/nprogress': ^0.2.0
   '@types/svgo': ^2.6.1
@@ -31,6 +32,7 @@ specifiers:
   eslint-plugin-prettier: ^4.0.0
   eslint-plugin-vue: ^8.3.0
   express: ^4.18.2
+  express-fileupload: ^1.4.0
   gantt-schedule-timeline-calendar: ^3.33.13
   husky: ^7.0.4
   lint-staged: ^12.3.2
@@ -95,6 +97,7 @@ devDependencies:
   '@iconify/json': 2.2.7
   '@intlify/vite-plugin-vue-i18n': 6.0.3_vite@3.2.5+vue-i18n@9.2.2
   '@types/express': 4.17.15
+  '@types/express-fileupload': 1.4.1
   '@types/node': 17.0.45
   '@types/nprogress': 0.2.0
   '@types/svgo': 2.6.4
@@ -108,6 +111,7 @@ devDependencies:
   eslint-plugin-import: 2.27.4_d7sd2krenkbelnt3n7nqqoxduu
   eslint-plugin-prettier: 4.2.1_cn4lalcyadplruoxa5mhp7j3dq
   eslint-plugin-vue: 8.7.1_eslint@8.32.0
+  express-fileupload: 1.4.0
   husky: 7.0.4
   lint-staged: 12.5.0
   markdown-it-link-attributes: 4.0.1
@@ -986,10 +990,23 @@ packages:
       '@types/node': 17.0.45
     dev: true
 
+  /@types/busboy/1.5.0:
+    resolution: {integrity: sha512-ncOOhwmyFDW76c/Tuvv9MA9VGYUCn8blzyWmzYELcNGDb0WXWLSmFi7hJq25YdRBYJrmMBB5jZZwUjlJe9HCjQ==}
+    dependencies:
+      '@types/node': 17.0.45
+    dev: true
+
   /@types/connect/3.4.35:
     resolution: {integrity: sha512-cdeYyv4KWoEgpBISTxWvqYsVy444DOqehiF3fM3ne10AmJ62RSyNkUnxMJXHQWRQQX2eR94m5y1IZyDwBjV9FQ==}
     dependencies:
       '@types/node': 17.0.45
+    dev: true
+
+  /@types/express-fileupload/1.4.1:
+    resolution: {integrity: sha512-sbl865h1Sser6SF+efpw2F/+roGISj+PRIbMcGXbtzgJQCBAeeBmoSo7sPge/mBa22ymCHfFPtHFsag/wUxwfg==}
+    dependencies:
+      '@types/busboy': 1.5.0
+      '@types/express': 4.17.15
     dev: true
 
   /@types/express-serve-static-core/4.17.32:
@@ -1768,6 +1785,13 @@ packages:
       electron-to-chromium: 1.4.284
       node-releases: 2.0.8
       update-browserslist-db: 1.0.10_browserslist@4.21.4
+    dev: true
+
+  /busboy/1.6.0:
+    resolution: {integrity: sha512-8SFQbg/0hQ9xy3UNTB0YEnsNBbWfhf7RtnzpL7TkBiTBRfrQ9Fxcnz7VJsleJpyp6rVLvXiuORqjlHi5q+PYuA==}
+    engines: {node: '>=10.16.0'}
+    dependencies:
+      streamsearch: 1.1.0
     dev: true
 
   /bytes/3.1.2:
@@ -2947,6 +2971,13 @@ packages:
       onetime: 5.1.2
       signal-exit: 3.0.7
       strip-final-newline: 2.0.0
+    dev: true
+
+  /express-fileupload/1.4.0:
+    resolution: {integrity: sha512-RjzLCHxkv3umDeZKeFeMg8w7qe0V09w3B7oGZprr/oO2H/ISCgNzuqzn7gV3HRWb37GjRk429CCpSLS2KNTqMQ==}
+    engines: {node: '>=12.0.0'}
+    dependencies:
+      busboy: 1.6.0
     dev: true
 
   /express/4.18.2:
@@ -4910,6 +4941,11 @@ packages:
     resolution: {integrity: sha512-RwNA9Z/7PrK06rYLIzFMlaF+l73iwpzsqRIFgbMLbTcLD6cOao82TaWefPXQvB2fOC4AjuYSEndS7N/mTCbkdQ==}
     engines: {node: '>= 0.8'}
     dev: false
+
+  /streamsearch/1.1.0:
+    resolution: {integrity: sha512-Mcc5wHehp9aXz1ax6bZUyY5afg9u2rv5cqQI3mRrYkGC8rW2hM02jWuwjtL++LS5qinSyhj2QfLyNsuc+VsExg==}
+    engines: {node: '>=10.0.0'}
+    dev: true
 
   /string-argv/0.3.1:
     resolution: {integrity: sha512-a1uQGz7IyVy9YwhqjZIZu1c8JO8dNIe20xBmSS6qu9kv++k3JGzCVmprbNN5Kn+BgzD5E7YYwg1CcjuJMRNsvg==}

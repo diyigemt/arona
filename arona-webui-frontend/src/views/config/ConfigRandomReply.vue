@@ -16,7 +16,7 @@
       </el-form>
     </el-col>
     <el-col :span="4" class="text-right">
-      <el-button type="primary" :icon="Plus" @click="onCreateReply">新增标签</el-button>
+      <el-button type="primary" :icon="Plus" @click="onCreateReplyGroup">新增回复</el-button>
     </el-col>
   </el-row>
   <el-row>
@@ -40,26 +40,87 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="label" label="操作" width="120">
+      <el-table-column prop="operation" label="操作" width="120">
         <template #default="{ row }">
-          <el-button type="primary" link @click="onEditReply(row)">编辑</el-button>
-          <el-button type="danger" link @click="onDeleteReply(row)">删除</el-button>
+          <div v-if="row.children">
+            <el-button type="primary" link @click="onEditReplyGroup(row)">编辑</el-button>
+            <el-button type="danger" link @click="onDeleteReplyGroup(row)">删除</el-button>
+          </div>
         </template>
       </el-table-column>
     </el-table>
   </el-row>
   <el-dialog v-model="showEditDialog" show-close append-to-body :title="editOrCreate ? '编辑' : '新建'" width="600">
-    <el-form :model="formData" label-width="100">
-      <el-form-item label="标签名" prop="value">
-        <el-input v-model="formData.value" placeholder="请输入标签名" />
+    <el-form :model="formData" label-width="60" label-position="left">
+      <el-form-item label="标签" prop="label">
+        <el-select v-model="formData.label" clearable multiple>
+          <el-option v-for="(e, index) in labels" :key="index" :label="e.value" :value="e.id" />
+        </el-select>
       </el-form-item>
-      <el-form-item label="权重" prop="value">
+      <el-form-item label="权重" prop="weight">
         <el-input-number v-model="formData.weight" placeholder="请输入权重" style="width: 160px" />
       </el-form-item>
     </el-form>
+    <el-row style="margin-bottom: 16px">
+      <el-button type="primary" @click="onCreateReplyItem">新增回复</el-button>
+    </el-row>
+    <el-table :data="formData.content" row-key="id" border stripe default-expand-all>
+      <el-table-column type="index" label="编号" width="60" />
+      <el-table-column prop="content" label="内容">
+        <template #default="{ row }">
+          <span v-if="row.type === 'String'">
+            {{ row.content.content || row.content }}
+          </span>
+          <span v-else>这里本来应该是图片的, 但是没做</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="label" label="操作" width="120">
+        <template #default="{ row, $index }">
+          <el-button type="primary" link @click="onEditReplyItem(row, $index)">编辑</el-button>
+          <el-button type="danger" link @click="onDeleteReplyItem(row, $index)">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-dialog
+      v-model="showEditItemDialog"
+      show-close
+      :title="itemEditOrCreate ? '编辑' : '新建'"
+      width="500"
+      class="dialog-body-padding-bottom-0"
+    >
+      <el-form :model="formDataItem" label-width="100" label-position="left">
+        <el-form-item label="消息类型" prop="type">
+          <el-select v-model="formDataItem.type">
+            <el-option v-for="(e, index) in replyItemTypeList" :key="index" :label="e.label" :value="e.value" />
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="formDataItem.type === 'Image'" label="图片" prop="content">
+          <el-upload
+            class="avatar-uploader"
+            :show-file-list="false"
+            :limit="1"
+            :auto-upload="false"
+            :on-change="onImageChange"
+            :http-request="uploadImage"
+          >
+            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+            <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+          </el-upload>
+        </el-form-item>
+        <el-form-item v-if="formDataItem.type === 'String'" label="文字" prop="content">
+          <el-input v-model="formDataItem.content" placeholder="请输入内容" style="width: 160px" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="text-center">
+          <el-button type="primary" @click="onConfirmEditOrCreateItem">保存</el-button>
+          <el-button @click="showEditItemDialog = false">取消</el-button>
+        </div>
+      </template>
+    </el-dialog>
     <template #footer>
       <div class="text-center">
-        <el-button type="primary">保存</el-button>
+        <el-button type="primary" @click="onConfirmEditOrCreateGroup">保存</el-button>
         <el-button @click="showEditDialog = false">取消</el-button>
       </div>
     </template>
@@ -68,15 +129,23 @@
 
 <script setup lang="ts">
 import { Plus } from "@element-plus/icons-vue";
-import { ReplyGroup, ReplyItem, ReplyLabel } from "@/interface/modules/reply";
+import { UploadFile, UploadRequestOptions } from "element-plus";
+import { UploadRawFile } from "element-plus/es/components/upload/src/upload";
+import { ReplyGroup, ReplyItem, ReplyItemType, ReplyItemTypeList, ReplyLabel } from "@/interface/modules/reply";
 import { dataFilterChain, deepCopy, fillForm } from "@/utils";
 import ReplyApi from "@/api/modules/reply";
+import { IWarningConfirm, successMessage } from "@/utils/message";
+import service from "@/api/http";
 
 const DefaultFormValue: ReplyGroup = {
   id: 0,
   label: [],
   weight: 1,
   content: [],
+};
+const DefaultItemFormValue: ReplyItem = {
+  type: "String",
+  content: "",
 };
 const tableData = ref<MapReplyGroup[]>([]);
 const labels = ref<ReplyLabel[]>([]);
@@ -86,20 +155,86 @@ const filterForm = reactive<IFilterForm>({
   label: [],
 });
 const showEditDialog = ref(false);
+const showEditItemDialog = ref(false);
+const itemEditOrCreate = ref(false); // 回复条目编辑类型 true 编辑 false 新建
 const formData = reactive<ReplyGroup>(deepCopy(DefaultFormValue));
-
-function onCreateReply() {
+const formDataItem = reactive<ReplyItem>(deepCopy(DefaultItemFormValue));
+const replyItemTypeList = ref(ReplyItemTypeList);
+const imageUrl = ref<string>("");
+let imageRawFile: UploadRawFile | undefined;
+let imageDirty = false;
+function onCreateReplyGroup() {
   fillForm<ReplyGroup>(formData, deepCopy(DefaultFormValue), ["id", "label", "weight", "content"]);
   showEditDialog.value = true;
 }
-function onEditReply(group: MapReplyGroup) {
+function onEditReplyGroup(group: MapReplyGroup) {
   formData.id = group.id;
   formData.weight = group.weight;
   formData.label = group.label;
   formData.content = group.children && group.children.length > 1 ? group.children : [group.content];
   showEditDialog.value = true;
 }
-function onDeleteReply(group: MapReplyGroup) {}
+function onDeleteReplyGroup(group: MapReplyGroup) {
+  IWarningConfirm("删除", `确认要删除回复吗?`).then(() => {
+    ReplyApi.deleteReplyGroup(group.id).then(() => {
+      successMessage(`删除成功`);
+    });
+  });
+}
+function onCreateReplyItem() {
+  fillForm<ReplyItem>(formDataItem, deepCopy(DefaultItemFormValue), ["type", "content"]);
+  imageUrl.value = "";
+  imageRawFile = undefined;
+  showEditItemDialog.value = true;
+  imageDirty = true;
+}
+function onEditReplyItem(item: ReplyItem, index: number) {
+  showEditItemDialog.value = true;
+  imageDirty = false;
+}
+function onDeleteReplyItem(item: ReplyItem, index: number) {
+  IWarningConfirm("删除", `确认要删除回复吗?`).then(() => {
+    formData.content.splice(index, 1);
+  });
+}
+function onConfirmEditOrCreateGroup() {
+  if (editOrCreate.value) {
+    ReplyApi.updateReplyGroup(formData).then(() => {
+      successMessage("更新成功");
+    });
+  } else {
+    ReplyApi.createReplyGroup(formData).then(() => {
+      successMessage("创建成功");
+    });
+  }
+}
+function onConfirmEditOrCreateItem() {
+  if (imageDirty) {
+    service.upload("/file/image", imageRawFile!).then(({ data }) => {
+      formData.content.push({
+        type: formDataItem.type,
+        content: data,
+      });
+    });
+    // TODO 上传图片
+  } else {
+    formData.content.push({
+      type: formDataItem.type,
+      content: formDataItem.content,
+    });
+  }
+}
+function onImageChange(file: UploadFile) {
+  imageUrl.value = URL.createObjectURL(file.raw!);
+  imageRawFile = file.raw!;
+  imageDirty = true;
+}
+function onImageUploadSuccess() {}
+function uploadImage(options: UploadRequestOptions): Promise<void> {
+  return new Promise((resolve) => {
+    resolve();
+  });
+}
 const filteredTableData = computed(() =>
   dataFilterChain(
     tableData.value,
@@ -185,4 +320,28 @@ interface MapReplyGroup extends Pick<ReplyGroup, "id" | "weight" | "label"> {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.avatar-uploader {
+  :deep(.el-upload) {
+    border: 1px dashed var(--el-border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: var(--el-transition-duration-fast);
+    &:hover {
+      border-color: var(--el-color-primary);
+    }
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 200px;
+    height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 200px;
+  }
+}
+</style>

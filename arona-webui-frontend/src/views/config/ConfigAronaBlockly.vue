@@ -34,7 +34,14 @@ import BlocklyConfig, { initBlockly, workspaceBlocks } from "@/blockly";
 import aronaGenerator from "@/blockly/generator";
 import { BlocklyProject, BlocklyProjectWorkspace } from "@/interface/modules/blockly";
 import BlocklyApi from "@/api/modules/blockly";
-import { errorMessage, IConfirm, infoMessage, IPrompt, successMessage, warningMessage } from "@/utils/message";
+import {
+  errorMessage,
+  infoMessage,
+  IPrompt,
+  IWarningConfirm,
+  successMessage,
+  warningMessage
+} from "@/utils/message";
 import useBaseStore from "@/store/base";
 
 const blocklyDiv = ref();
@@ -150,9 +157,7 @@ function onSaveCurrentProject() {
   }
 }
 function onResetWorkspace() {
-  IConfirm("警告", "重置后所有未保存的内容都将丢失,是否确认?", {
-    type: "warning",
-  }).then(() => {
+  IWarningConfirm("警告", "重置后所有未保存的内容都将丢失,是否确认?").then(() => {
     if (selectBlockIndex.value) {
       setBlock(selectBlockIndex.value!);
     } else {
@@ -165,9 +170,7 @@ function onCreateNewProject(skipWarning = false) {
   if (skipWarning) {
     doCreate();
   } else {
-    IConfirm("警告", "所有未保存的内容都将丢失,是否确认?", {
-      type: "warning",
-    }).then(() => {
+    IWarningConfirm("警告", "所有未保存的内容都将丢失,是否确认?").then(() => {
       doCreate();
     });
   }
@@ -177,9 +180,7 @@ function onDeleteProject() {
   if (!isNewProject.value) {
     const projName = (projectList.value || [])[selectBlockIndex.value as number].name;
     // eslint-disable-next-line no-template-curly-in-string
-    IConfirm("警告", `确定删除${projName}`, {
-      type: "warning",
-    }).then(() => {
+    IWarningConfirm("警告", `确定删除${projName}`).then(() => {
       BlocklyApi.deleteBlocklyProject({
         trigger: JSON.parse('{"type":"GroupMessageEvent","expressions": [],"actions": []}'),
         projectName: projName,

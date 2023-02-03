@@ -100,10 +100,16 @@ const service = {
     return axiosInstance.delete(url, data);
   },
 
-  upload: (url: string, file: FormData | File) =>
-    axiosInstance.post(url, file, {
+  upload(url: string, file: FormData | File) {
+    const data = new FormData();
+    data.set("file", (file as File).stream());
+    axiosInstance({
+      url,
+      data: data,
       headers: { "Content-Type": "multipart/form-data" },
-    }),
+    }) as unknown as Promise<ServerResponse<string>>
+  },
+
   download: (url: string, data: instanceObject) => {
     window.location.href = `${BASE_PREFIX}/${url}?${formatJsonToUrlParams(data)}`;
   },

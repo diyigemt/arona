@@ -27,6 +27,8 @@ interface RequestConfig<D = any> extends AxiosRequestConfig<D> {
   // 当http 200但是 serverResponse.code !== 200 时是否显示 serverResponse.message
   // 默认开启
   showServerResponseError?: boolean;
+  // 返回值是否是文件流
+  isBlob?: boolean;
   version?: "v1" | "v2";
 }
 
@@ -58,6 +60,10 @@ axiosInstance.interceptors.request.use(
 // 响应拦截器
 axiosInstance.interceptors.response.use(
   (response: Response) => {
+    const { config } = response;
+    if (config.isBlob) {
+      return response;
+    }
     if (response.status === HTTP_OK) {
       const resp = response.data as ServerResponse<unknown>;
       if (resp && resp.code !== HTTP_OK && resp.message && response.config.showServerResponseError) {
@@ -71,12 +77,12 @@ axiosInstance.interceptors.response.use(
   (error: ResponseError) => {
     const { response, config } = error;
     if (response) {
-      if (config.showResponseError) {
+      if (config && config.showResponseError) {
         errorMessage(showCodeMessage(response.status));
       }
       return Promise.reject(response.data);
     }
-    if (config.showResponseError) {
+    if (config && config.showResponseError) {
       warningMessage("网络连接异常,请稍后再试!");
     }
     return Promise.reject(error);
@@ -101,16 +107,39 @@ const service = {
   },
 
   upload(url: string, file: FormData | File) {
+    if (Object.hasOwn(file, "get")) {
+      const fileName = encodeURI(((file as FormData).get("file") as File).name);
+      return axiosInstance({
+        url,
+        method: "POST",
+        data: file,
+        headers: buildFileUploadHeader(fileName),
+      }) as unknown as Promise<ServerResponse<string>>
+    }
     const data = new FormData();
-    data.set("file", (file as File).stream());
-    axiosInstance({
+    data.set("file", file as Blob);
+    const fileName = encodeURI((file as File).name);
+    return axiosInstance({
       url,
-      data: data,
-      headers: { "Content-Type": "multipart/form-data" },
+      method: "POST",
+      data,
+      headers: buildFileUploadHeader(fileName),
     }) as unknown as Promise<ServerResponse<string>>
   },
+  download(id: string) {
+    const config: RequestConfig = {
+      url: "/file/image",
+      params: {
+        id
+      },
+      method: "GET",
+      responseType: "blob",
+      isBlob: true
+    }
+    return axiosInstance(config);
+  },
 
-  download: (url: string, data: instanceObject) => {
+  _download: (url: string, data: instanceObject) => {
     window.location.href = `${BASE_PREFIX}/${url}?${formatJsonToUrlParams(data)}`;
   },
 
@@ -123,8 +152,18 @@ export function updateAPIService(host: string, port: number) {
   axiosInstance.defaults.baseURL = currentAPI(host, port);
 }
 
-export function currentAPI(host: string, port: number) {
+export function currentAPI(host?: string, port?: number) {
+  if (!host || !port) {
+    return axiosInstance.defaults.baseURL;
+  }
   return `${host}:${port}`;
+}
+
+function buildFileUploadHeader(fileName: string) {
+  return {
+    "Content-Type": "multipart/form-data",
+    "arona-file-name": fileName
+  }
 }
 
 interface ServerResponse<T> {

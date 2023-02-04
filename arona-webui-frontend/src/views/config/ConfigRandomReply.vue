@@ -27,7 +27,9 @@
           <span v-if="(row.content.type || row.type) === 'String'">
             {{ row.content.content || row.content }}
           </span>
-          <span v-else>这里本来应该是图片的, 但是没做</span>
+          <span v-else>
+            <el-image :src="loadImage(row.content.content || row.content)" lazy />
+          </span>
         </template>
       </el-table-column>
       <el-table-column prop="weight" label="权重" width="60" />
@@ -96,14 +98,16 @@
         </el-form-item>
         <el-form-item v-if="formDataItem.type === 'Image'" label="图片" prop="content">
           <el-upload
+            ref="uploadRef"
             class="avatar-uploader"
             :show-file-list="false"
             :limit="1"
             :auto-upload="false"
+            :on-exceed="onExceed"
             :on-change="onImageChange"
             :http-request="uploadImage"
           >
-            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+            <img v-if="imageUrl" :src="imageUrl" class="avatar" alt="" />
             <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
           </el-upload>
         </el-form-item>
@@ -129,13 +133,14 @@
 
 <script setup lang="ts">
 import { Plus } from "@element-plus/icons-vue";
-import { UploadFile, UploadRequestOptions } from "element-plus";
-import { UploadRawFile } from "element-plus/es/components/upload/src/upload";
+import { genFileId, UploadFile, UploadProps, UploadRequestOptions } from "element-plus";
+import { UploadRawFile, UploadUserFile } from "element-plus/es/components/upload/src/upload";
 import { ReplyGroup, ReplyItem, ReplyItemType, ReplyItemTypeList, ReplyLabel } from "@/interface/modules/reply";
 import { dataFilterChain, deepCopy, fillForm } from "@/utils";
 import ReplyApi from "@/api/modules/reply";
 import { IWarningConfirm, successMessage } from "@/utils/message";
 import service from "@/api/http";
+import FileApi from "@/api/modules/file";
 
 const DefaultFormValue: ReplyGroup = {
   id: 0,
@@ -161,6 +166,7 @@ const formData = reactive<ReplyGroup>(deepCopy(DefaultFormValue));
 const formDataItem = reactive<ReplyItem>(deepCopy(DefaultItemFormValue));
 const replyItemTypeList = ref(ReplyItemTypeList);
 const imageUrl = ref<string>("");
+const uploadRef = ref();
 let imageRawFile: UploadRawFile | undefined;
 let imageDirty = false;
 function onCreateReplyGroup() {
@@ -224,16 +230,28 @@ function onConfirmEditOrCreateItem() {
     });
   }
 }
-function onImageChange(file: UploadFile) {
-  imageUrl.value = URL.createObjectURL(file.raw!);
-  imageRawFile = file.raw!;
+function onExceed(files: File[]): ReturnType<UploadProps["onExceed"]> {
+  uploadRef.value!.clearFiles();
+  const file = files[0] as UploadRawFile;
+  file.uid = genFileId();
+  uploadRef.value!.handleStart(file);
+  doChangeImage(file);
+}
+function onImageChange(file: UploadFile): ReturnType<UploadProps["onChange"]> {
+  doChangeImage(file.raw!);
+}
+function doChangeImage(file: UploadRawFile) {
+  imageUrl.value = URL.createObjectURL(file);
+  imageRawFile = file;
   imageDirty = true;
 }
-function onImageUploadSuccess() {}
 function uploadImage(options: UploadRequestOptions): Promise<void> {
   return new Promise((resolve) => {
     resolve();
   });
+}
+function loadImage(id: string) {
+  return FileApi.buildFileDownloadPath(id);
 }
 const filteredTableData = computed(() =>
   dataFilterChain(

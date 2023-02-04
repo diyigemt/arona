@@ -16,7 +16,7 @@ export function getReplyGroup(_: Request, response: Response): Promise<Response>
           id: 2,
           content: [
             { type: "String", content: "测试2-1" },
-            { type: "Image", content: "测试2-2" },
+            { type: "Image", content: "1000001" },
           ],
           weight: 1,
           label: [2],

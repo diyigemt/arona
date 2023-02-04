@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { uploadImage } from "../controller/file";
+import { getFileById, uploadImage } from "../controller/file";
 
 const FileRouter = Router();
 
-FileRouter.get("/image", uploadImage);
+FileRouter.post("/image", uploadImage);
+FileRouter.get("/image", getFileById);
 
 export default FileRouter;

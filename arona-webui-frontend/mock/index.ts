@@ -12,7 +12,12 @@ function main() {
   const port = 12255;
   app.use(bodyParser.json());
   app.use(cors());
-  app.use(fileUpload());
+  app.use(
+    fileUpload({
+      createParentPath: true,
+      uriDecodeFileNames: true,
+    }),
+  );
   app.use("/api/v1", router);
   try {
     const httpServer = http.createServer(app);

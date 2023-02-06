@@ -7,7 +7,6 @@
     <div ref="containerEl" style="position: relative" class="container">
       <div ref="botGroupEl" style="width: 50%; height: 100%; position: relative">测试1</div>
       <div ref="groupGroupEl" style="width: 100%; height: 100%; position: relative">测试2</div>
-      <div v-for="(e, index) in bots" :key="'bot-' + index" class="config-drag-item">{{ e }}</div>
     </div>
   </div>
 </template>
@@ -24,8 +23,6 @@ const groupGroupEl = ref<HTMLElement>();
 let instance: BrowserJsPlumbInstance;
 let botGroup: UIGroup<Element>;
 let groupGroup: UIGroup<Element>;
-const bots = ref<number[]>([]);
-const groups = ref<number[]>([]);
 function addBotEndpoint() {
   const bot = document.createElement("div");
   bot.classList.add("config-drag-item");

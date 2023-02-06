@@ -8,7 +8,7 @@ const ContactApi = {
    * @returns bot加入的群信息
    */
   fetchBotContacts() {
-    return service.raw<BotContact>({
+    return service.raw<BotContact[]>({
       url: "/contacts",
       method: "GET",
     });

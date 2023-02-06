@@ -9,6 +9,7 @@ import { UserData } from "@/api/modules/blockly";
 const useBaseStore = defineStore({
   id: "common",
   state: (): BaseStoreState => ({
+    config: {},
     activeGroupId: 0,
     contactList: [],
   }),
@@ -59,6 +60,22 @@ const useBaseStore = defineStore({
         return ac[0];
       };
     },
+    getConfig<T>(ctx: BaseStoreState): (key: string, cast: boolean) => T {
+      return (key: string, cast = false) => {
+        const data = Reflect.get(ctx.config, key);
+        if (cast && typeof data === "string") {
+          const aCast = JSON.parse(data);
+          this.setConfig(key, aCast);
+          return aCast;
+        }
+        return data;
+      };
+    },
+    setConfig(ctx: BaseStoreState): (key: string, value: unknown) => void {
+      return (key: string, value: unknown) => {
+        Reflect.set(ctx.config, key, value);
+      };
+    },
   },
   actions: {
     setActiveGroupId(group?: number) {
@@ -66,7 +83,7 @@ const useBaseStore = defineStore({
     },
     fetchBotContact() {
       return ContactApi.fetchBotContacts().then((contact) => {
-        this.contactList = [contact.data];
+        this.contactList = contact.data;
         return contact;
       });
     },

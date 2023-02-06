@@ -25,14 +25,19 @@ object Contacts : Worker, ConfigReader{
         //TODO
         kotlin.runCatching {
           // TODO 将数据结构与bot绑定
-          val bots = GlobalConfigProvider.getBotConfig().map { it.bot }
-          Bot.getInstanceOrNull(bots[0]) ?: throw RuntimeException("bot: ${bots[0]} not found")
+          val bots = GlobalConfigProvider
+            .getBotConfig()
+            .map { it.bot }
+            .mapNotNull { Bot.getInstanceOrNull(it) }
+            .map {
+              BotContact(
+                it.id,
+                it.friends.filter { friend -> friend.nick != it.nick }.map { friend -> friend.toFriend() },
+                it.groups.map { group -> group.toGroup() }
+              )
+            }
         }.onSuccess {
-          context.call.respond(responseMessage(BotContact(
-            it.id,
-            it.friends.filter { friend -> friend.nick != it.nick }.map { friend -> friend.toFriend() },
-            it.groups.map { group -> group.toGroup() }
-          )))
+          context.call.respond(responseMessage(it))
         }.onFailure {
           it.printStackTrace()
           context.call.respond(HttpStatusCode.InternalServerError, fail())

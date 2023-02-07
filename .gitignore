@@ -26,3 +26,4 @@ tools/pixiv.db-journal
 tools/skip
 tools/tmp.png
 tools/tmp2.png
+tools/reflash_cdn.py

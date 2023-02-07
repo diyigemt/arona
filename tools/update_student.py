@@ -6,6 +6,7 @@ import numpy as np
 base_folder = "/student_rank/"
 
 # 更新学生
+# tencentcloud-sdk-python-common==3.0.754
 
 if __name__ == '__main__':
     # 将夜喵的图和wiki图整合

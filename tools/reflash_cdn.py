@@ -32,8 +32,8 @@ def purgeFiles(paths: list[str]):
     if len(paths) == 0:
         return
     try:
-        id = "AKIDFSUK0TkrmlX7UggU5UghX9XggSp1AE8p"
-        key = "iFaopb9TbWEiyzsY0EE0YyAsTr5FqFRO"
+        id = ""
+        key = ""
         cred = credential.Credential(id,key)
 
         httpProfile = HttpProfile()

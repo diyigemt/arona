@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { UploadedFile } from "express-fileupload";
-import { packageResponse, packageResponseError, packageResponseNull } from "../utils";
+import { packageResponse, packageResponseError } from "../utils";
 
 // eslint-disable-next-line import/prefer-default-export
 export function uploadImage(request: Request, response: Response): Promise<Response> {
@@ -11,7 +11,7 @@ export function uploadImage(request: Request, response: Response): Promise<Respo
         ? decodeURI(request.header("arona-file-name") as string)
         : file.name;
       file.mv(`${__dirname}/files/${fileName}`).then(() => {
-        resolve(packageResponseNull(response));
+        resolve(packageResponse(response, "1000002"));
       });
     } else {
       resolve(packageResponseError(response, "没有文件"));

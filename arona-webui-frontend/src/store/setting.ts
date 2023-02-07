@@ -1,10 +1,12 @@
 import { defineStore } from "pinia";
-import { updateAPIService } from "@/api/http";
 import { SettingStoreState } from "./type";
+import { NetworkAdapterType } from "@/interface/http";
+import { updateAPIService } from "@/api/adapter/localhost";
 
 const useSettingStore = defineStore({
   id: "setting",
   state: (): SettingStoreState => ({
+    adapter: "Localhost",
     theme: {
       themeType: "亮蓝色",
       themeColor: "#2080F0FF",
@@ -20,6 +22,9 @@ const useSettingStore = defineStore({
     isRestoreBackend: (state: SettingStoreState) => state.api.host && state.api.port,
   },
   actions: {
+    setAdapter(adapter: NetworkAdapterType) {
+      this.adapter = adapter;
+    },
     setThemeType(type: string) {
       this.theme.themeType = type;
     },

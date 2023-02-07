@@ -2,9 +2,10 @@ import { defineStore } from "pinia";
 import { BaseStoreState } from "./type";
 import ContactApi from "@/api/modules/contact";
 import { Friend, Member } from "@/types/contact";
-import { ExtendGroup } from "@/interface/http";
 import { HTTP_OK } from "@/constant/http";
 import { UserData } from "@/api/modules/blockly";
+import { ExtendGroup } from "@/interface/modules/contact";
+import ConfigApi from "@/api/modules/config";
 
 const useBaseStore = defineStore({
   id: "common",
@@ -60,15 +61,25 @@ const useBaseStore = defineStore({
         return ac[0];
       };
     },
-    getConfig<T>(ctx: BaseStoreState): (key: string, cast: boolean) => T {
-      return (key: string, cast = false) => {
+    /**
+     * 根据key拿到配置信息
+     *
+     * Params: key - 指定key
+     */
+    getConfig(ctx: BaseStoreState): <T>(key: string) => T {
+      return <T>(key: string): T => {
         const data = Reflect.get(ctx.config, key);
-        if (cast && typeof data === "string") {
-          const aCast = JSON.parse(data);
-          this.setConfig(key, aCast);
-          return aCast;
+        // 假设所有配置都是json对象
+        if (typeof data === "string") {
+          try {
+            const aCast = JSON.parse(data);
+            this.setConfig(key, aCast);
+            return aCast;
+          } catch (e: unknown) {
+            return data as T;
+          }
         }
-        return data;
+        return data as T;
       };
     },
     setConfig(ctx: BaseStoreState): (key: string, value: unknown) => void {
@@ -80,12 +91,6 @@ const useBaseStore = defineStore({
   actions: {
     setActiveGroupId(group?: number) {
       this.activeGroupId = group || 0;
-    },
-    fetchBotContact() {
-      return ContactApi.fetchBotContacts().then((contact) => {
-        this.contactList = contact.data;
-        return contact;
-      });
     },
     /**
      * 拿到给定群的成员列表
@@ -151,6 +156,24 @@ const useBaseStore = defineStore({
           return this.members(item);
         }),
       );
+    },
+    /**
+     * 拿到所有管理的bot的联系人列表
+     */
+    fetchBotContact() {
+      return ContactApi.fetchBotContacts().then((data) => {
+        this.contactList = data.data;
+        return data;
+      });
+    },
+    /**
+     * 拿到所有配置文件信息
+     */
+    fetchConfig() {
+      return ConfigApi.fetchConfig().then((data) => {
+        this.config = data.data;
+        return data;
+      });
     },
   },
   persist: {

@@ -28,7 +28,7 @@
             {{ row.content.content || row.content }}
           </span>
           <span v-else>
-            <el-image :src="loadImage(row.content.content || row.content)" lazy />
+            <el-image :src="loadImage(row.content.content || row.content)" lazy fit="contain" style="width: 200px" />
           </span>
         </template>
       </el-table-column>
@@ -73,7 +73,7 @@
           <span v-if="row.type === 'String'">
             {{ row.content.content || row.content }}
           </span>
-          <span v-else>这里本来应该是图片的, 但是没做</span>
+          <el-image :src="loadImage(row.content.content || row.content)" lazy fit="contain" style="width: 200px" />
         </template>
       </el-table-column>
       <el-table-column prop="label" label="操作" width="120">
@@ -215,19 +215,23 @@ function onConfirmEditOrCreateGroup() {
   }
 }
 function onConfirmEditOrCreateItem() {
-  if (imageDirty) {
+  const { type } = formDataItem;
+  if (type === "Image" && imageDirty) {
     service.upload("/file/image", imageRawFile!).then(({ data }) => {
+      successMessage("上传成功");
       formData.content.push({
         type: formDataItem.type,
         content: data,
       });
+      showEditItemDialog.value = false;
     });
     // TODO 上传图片
-  } else {
+  } else if (type === "String") {
     formData.content.push({
       type: formDataItem.type,
       content: formDataItem.content,
     });
+    showEditItemDialog.value = false;
   }
 }
 function onExceed(files: File[]): ReturnType<UploadProps["onExceed"]> {

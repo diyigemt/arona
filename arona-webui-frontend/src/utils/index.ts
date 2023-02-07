@@ -1,6 +1,5 @@
 import { forOwn } from "lodash";
 import { Config2Form, Config2Map } from "@/interface";
-import { Ref } from "vue";
 
 export function extraDomBounding(dom: HTMLElement) {
   const style = getComputedStyle(dom);

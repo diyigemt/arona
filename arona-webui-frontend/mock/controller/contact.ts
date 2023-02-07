@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { packageResponse } from "../utils";
-import { BotContact } from "../../src/interface/http";
+import {BotContact} from "../../src/interface/modules/contact";
 // eslint-disable-next-line import/prefer-default-export
 export function getContactList(_: Request, response: Response): Promise<Response> {
   return new Promise((resolve) => {

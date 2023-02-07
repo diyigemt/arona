@@ -1,9 +1,9 @@
 import service from "@/api/http";
-import { BotGroupConfig } from "@/interface";
+import { ServerAronaConfig } from "@/interface";
 
 const ConfigApi = {
   fetchConfig() {
-    return service.raw<BotGroupConfig[]>({
+    return service.raw<ServerAronaConfig>({
       url: "/config",
       method: "GET",
     });

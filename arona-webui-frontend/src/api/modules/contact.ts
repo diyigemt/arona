@@ -1,6 +1,6 @@
 import service from "@/api/http";
-import { BotContact } from "@/interface/http";
 import { Member } from "@/types/contact";
+import {BotContact} from "@/interface/modules/contact";
 
 const ContactApi = {
   /**

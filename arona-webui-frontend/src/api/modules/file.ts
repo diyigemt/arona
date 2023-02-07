@@ -1,4 +1,5 @@
-import service, { currentAPI } from "@/api/http";
+import service from "@/api/http";
+import {currentAPI} from "@/api/adapter/localhost";
 
 const FileApi = {
   buildFileDownloadPath(id: string) {

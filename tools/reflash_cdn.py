@@ -12,7 +12,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import getpass
 
 from tencentcloud.common.common_client import CommonClient
 from tencentcloud.common import credential
@@ -20,16 +19,21 @@ from tencentcloud.common.exception.tencent_cloud_sdk_exception import TencentClo
 from tencentcloud.common.profile.client_profile import ClientProfile
 from tencentcloud.common.profile.http_profile import HttpProfile
 
+# required pip install --upgrade tencentcloud-sdk-python-common==3.0.754  /// 注意!!!! 必须是这个版本, 新版本有问题
+
+# 提供url完整路径list,刷新对应文件在cdn上的缓存, 
+# 如["https://yuuka.cdn.diyigemt.com/image/filebrowser.db", "https://yuuka.cdn.diyigemt.com/image/filebrowser.db"]
+
+paths = [
+    "https://arona.cdn.diyigemt.com/image/student_rank/%E6%96%B0%E6%98%A5%E7%8B%99.png"
+]
+
 def purgeFiles(paths: list[str]):
     if len(paths) == 0:
         return
     try:
-        id = ""
-        key = ""
-        with open(r"C:\Users\%s\.ssh\tencent" % getpass.getuser(), "r") as f:
-            line = f.readlines()
-            id = line[0].replace("\n", "")
-            key = line[1]
+        id = "AKIDFSUK0TkrmlX7UggU5UghX9XggSp1AE8p"
+        key = "iFaopb9TbWEiyzsY0EE0YyAsTr5FqFRO"
         cred = credential.Credential(id,key)
 
         httpProfile = HttpProfile()
@@ -52,3 +56,6 @@ def purgeFiles(paths: list[str]):
             }))
     except TencentCloudSDKException as err:
         print(err)
+
+if __name__ == "__main__":
+    purgeFiles(paths)

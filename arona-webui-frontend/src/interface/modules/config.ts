@@ -3,6 +3,6 @@ export interface BotGroupConfig {
   groups: number[];
 }
 
-export interface AronaConfig {
+export interface ServerAronaConfig {
   [key: string]: unknown;
 }

@@ -30,10 +30,10 @@
 <script setup lang="ts">
 import { ElForm, ElFormItem, ElRow, ElCol, ElInput, ElButton } from "element-plus";
 import { heartbeat } from "@/api";
-import { updateAPIService } from "@/api/http";
 import { APISettingForm } from "@/interface/modules/setting";
 import useSettingStore from "@/store/setting";
 import { successMessage, warningMessage } from "@/utils/message";
+import {updateAPIService} from "@/api/adapter/localhost";
 
 const settingStore = useSettingStore();
 const form = reactive<APISettingForm>({

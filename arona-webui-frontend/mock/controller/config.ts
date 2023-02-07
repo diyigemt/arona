@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { packageResponse } from "../utils";
-import { AronaConfig, BotGroupConfig } from "../../src/interface";
+import { ServerAronaConfig, BotGroupConfig } from "../../src/interface";
 // eslint-disable-next-line import/prefer-default-export
 export function getConfig(_: Request, response: Response): Promise<Response> {
   return new Promise((resolve) => {
@@ -30,7 +30,7 @@ const BotConfig: BotGroupConfig[] = [
     groups: [1355247242],
   },
 ];
-const AronaMainConfig: AronaConfig = {
+const AronaMainConfig: ServerAronaConfig = {
   bots: BotConfig,
   managerGroup: [1355247243],
   everyDayHour: 8,
@@ -38,38 +38,38 @@ const AronaMainConfig: AronaConfig = {
   offlineMessage: "",
   permissionDeniedMessage: "",
 };
-const AronaNotifyConfig: AronaConfig = {
+const AronaNotifyConfig: ServerAronaConfig = {
   enableJP: "",
   enableEN: "",
   notifyStringJP: "",
   notifyStringEN: "",
   defaultActivityCommandServer: "",
 };
-const AronaTarotConfig: AronaConfig = {
+const AronaTarotConfig: ServerAronaConfig = {
   dayOne: true,
   image: true,
 };
-const AronaRepeatConfig: AronaConfig = {
+const AronaRepeatConfig: ServerAronaConfig = {
   repeat: 3,
 };
-const AronaTrainerConfig: AronaConfig = {
+const AronaTrainerConfig: ServerAronaConfig = {
   tipWhenNull: true,
 };
-const AronaNGAConfig: AronaConfig = {
+const AronaNGAConfig: ServerAronaConfig = {
   uid: "",
   cid: "",
   checkInterval: "",
   source: "",
   cache: "",
 };
-const AronaRemoteConfig: AronaConfig = {
+const AronaRemoteConfig: ServerAronaConfig = {
   checkInterval: 3,
 };
-const AronaWebuiConfig: AronaConfig = {
+const AronaWebuiConfig: ServerAronaConfig = {
   port: 3,
 };
 
-function buildConfig(configs: AronaConfig[]): AronaConfig {
+function buildConfig(configs: ServerAronaConfig[]): ServerAronaConfig {
   const builder = {};
   configs.forEach((config) => {
     Object.keys(config).forEach((key) => {

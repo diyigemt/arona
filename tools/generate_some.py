@@ -16,6 +16,8 @@ fnt = ImageFont.truetype('C:\Windows\Fonts\msyh.ttc', font_size)
 jp_str = "日服"
 en_str = "国际服"
 other_str = "其他"
+# 快捷操作
+QUICK_USAGE = ["国际服未来视", "日服活动", "国际服活动", "日服总力战", "国际服总力战", "日服火力演习", "国际服火力演习"]
 # 总力战
 DECISIVE_BATTLE = ["HOD", "大蛇", "黑白", "鸡斯拉", "寿司", "球", "主教", "GOZ"]
 # 生成杂图帮助
@@ -42,6 +44,7 @@ if __name__ == '__main__':
     index = 0
     jp_list = []
     en_list = []
+    quick_usage_list = []
     other_list = []
     battle_list = []
     someList = post_data("imageDBQuery", {
@@ -50,6 +53,8 @@ if __name__ == '__main__':
     someImageList = json.loads(someList)["data"]
     for image in someImageList:
         file_name = image["name"]
+        if len(list(filter(lambda name: file_name.find(name) != -1, QUICK_USAGE))) > 0:
+            quick_usage_list.append(file_name)
         if len(list(filter(lambda name: file_name.find(name) != -1, DECISIVE_BATTLE))) > 0:
             battle_list.append(file_name)
         elif file_name.find(jp_str) != -1:
@@ -61,16 +66,18 @@ if __name__ == '__main__':
         index += 1
     jp_list.sort(key=len)
     en_list.sort(key=len)
+    quick_usage_list.sort(key=len)
     other_list.sort(key=len)
     battle_list.sort(key=len)
     jp_list = a(jp_list)
     en_list = a(en_list)
+    quick_usage_list = a(quick_usage_list)
     other_list = a(other_list)
     battle_list = a(battle_list)
 
-    draw_list = [jp_list, en_list, other_list, battle_list]
+    draw_list = [jp_list, en_list, quick_usage_list, other_list, battle_list]
 
-    name_list = jp_list + en_list + other_list + battle_list
+    name_list = jp_list + en_list + quick_usage_list + other_list + battle_list
     # 获取每一列文字偏移量  第一列为0
     max_row_width = []
     for i in range(0, len(name_list[0])):

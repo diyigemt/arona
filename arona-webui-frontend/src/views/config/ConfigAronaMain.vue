@@ -1,14 +1,14 @@
 <template>
-  <div>
+  <el-row>
     <el-button @click="addBotEndpoint">添加bot节点</el-button>
     <el-button @click="addGroupEndpoint">添加群节点</el-button>
-  </div>
-  <div style="width: 500px; height: 500px">
-    <div ref="containerEl" style="position: relative" class="container">
-      <div ref="botGroupEl" style="width: 50%; height: 100%; position: relative">测试1</div>
-      <div ref="groupGroupEl" style="width: 100%; height: 100%; position: relative">测试2</div>
+  </el-row>
+  <el-row style="height: 70vh; margin-top: 16px">
+    <div ref="containerEl" style="position: relative" class="jsp-container">
+      <div ref="botGroupEl" style="position: relative"></div>
+      <div ref="groupGroupEl" style="position: relative"></div>
     </div>
-  </div>
+  </el-row>
 </template>
 
 <script setup lang="ts">
@@ -16,6 +16,7 @@ import * as jsPlumbBrowserUI from "@jsplumb/browser-ui";
 import { BrowserJsPlumbInstance } from "@jsplumb/browser-ui";
 import { EndpointOptions, UIGroup } from "@jsplumb/core";
 import { BezierConnector } from "@jsplumb/connector-bezier";
+import { mountAsyncComponent } from "@/utils/vueTools";
 
 const containerEl = ref<HTMLElement>();
 const botGroupEl = ref<HTMLElement>();
@@ -24,9 +25,10 @@ let instance: BrowserJsPlumbInstance;
 let botGroup: UIGroup<Element>;
 let groupGroup: UIGroup<Element>;
 function addBotEndpoint() {
-  const bot = document.createElement("div");
-  bot.classList.add("config-drag-item");
-  bot.innerText = "bot123";
+  const bot = mountAsyncComponent(() => import("./components/MainConfigDragItem.vue"), {
+    content: "123",
+  });
+  bot.classList.add("absolute");
   botGroupEl.value!.appendChild(bot);
   instance.addEndpoint(bot, {}, botEndpointConfig);
   instance.addToGroup(botGroup, bot);
@@ -90,7 +92,14 @@ const groupEndpointConfig: EndpointOptions = {
 </script>
 
 <style scoped lang="scss">
-.container {
+.jsp-container {
+  width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  > div {
+    flex: 1;
+  }
 }
 </style>

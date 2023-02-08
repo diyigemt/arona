@@ -9,7 +9,7 @@ import router from "./routes";
 
 function main() {
   const app = express();
-  const port = 12255;
+  const port = 13801;
   app.use(bodyParser.json());
   app.use(cors());
   app.use(

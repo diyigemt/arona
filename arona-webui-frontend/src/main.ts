@@ -12,6 +12,7 @@ import "virtual:windi.css";
 import "virtual:windi-devtools";
 import "@/assets/styles/index.scss";
 import "element-plus/dist/index.css";
+import { setApp } from "@/utils/vueTools";
 
 const i18n = createI18n({
   locale: "zh-cn",
@@ -27,4 +28,4 @@ app.use(i18n);
 
 app.mount("#app");
 
-window.app = app;
+setApp(app);

@@ -40,17 +40,15 @@
   background-color: white;
   border: 1px solid #346789;
   text-align: center;
-  z-index: 24;
   cursor: pointer;
   box-shadow: 2px 2px 19px #aaa;
-  border-radius: 0.5em;
+  border-radius: 6px;
   position: absolute;
   color: black;
-  padding-top: 5px;
   width: 140px;
-  height: 120px;
-  line-height: 12px;
-  transition: box-shadow 0.15s ease-in;
+  height: 60px;
+  line-height: 1;
+  user-select: none;
 }
 
 .dialog-body-padding-bottom-0 {

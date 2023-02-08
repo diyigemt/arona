@@ -17,7 +17,7 @@
   </div>
   <el-row :gutter="16" style="margin-top: 16px">
     <el-col :span="16">
-      <div id="blockDiv" class="container">
+      <div id="blockDiv" class="main-container">
         <div ref="blocklyDiv" class="blocklyDiv"></div>
       </div>
     </el-col>
@@ -231,7 +231,7 @@ function onDebug() {
 </script>
 
 <style scoped lang="scss">
-.container {
+.main-container {
   width: 100%;
   height: 50vh;
   min-height: 500px;

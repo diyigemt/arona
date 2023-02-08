@@ -41,14 +41,6 @@ declare interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
 
-declare global {
-  declare interface Window {
-    // extend the window
-    app: App;
-  }
-}
-
-
 type SelectType = "friend";
 interface ExtendBlock extends Block {
   data: SelectType | string;

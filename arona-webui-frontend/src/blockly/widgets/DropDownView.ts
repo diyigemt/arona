@@ -4,6 +4,7 @@ import { FieldConfig } from "blockly/core/field";
 import { FieldDropdownValidator, MenuGenerator, MenuOption } from "blockly/core/field_dropdown";
 import { Data } from "blockly/core/browser_events";
 import BlocklyUtil from "@/blockly/BlocklyUtil";
+import { mountAsyncComponent, useApp } from "@/utils/vueTools";
 
 // @ts-ignore
 export default class DropDownView extends FieldDropdown {
@@ -29,15 +30,11 @@ export default class DropDownView extends FieldDropdown {
   }
 
   protected override showEditor_(opt_e?: MouseEvent) {
-    const component = defineAsyncComponent(() => import("./DropDownView.vue"));
-    const componentVNode = createVNode(component, {
+    const container = mountAsyncComponent(() => import("./DropDownView.vue"), {
       blockly: this,
       searchInput: this.isSearch,
       isMultiple: this.isMultiple,
     });
-    componentVNode.appContext = window.app._context;
-    const container = document.createElement("div");
-    render(componentVNode, container);
     const div = Blockly.DropDownDiv.getContentDiv();
     div.appendChild(container);
   }

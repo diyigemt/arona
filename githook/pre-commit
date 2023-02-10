@@ -18,7 +18,7 @@ fi
 # Redirect output to stderr.
 exec 1>&2
 
-if test $(git diff --cached -z HEAD | grep -E "[+]\s+[A-Z_]+SECRET_(ID|KEY): ?\w+" | wc -c) != 0
+if test $(git diff --cached -z HEAD | grep -E "[+]\s*[A-Z_]+SECRET_(ID|KEY): ?\w+" | wc -c) != 0
 then
 	cat <<\EOF
 Error: 你他妈忘记把密码删了, 啥b.

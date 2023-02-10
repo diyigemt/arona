@@ -11,9 +11,15 @@ inputs:
     variables:
       ARONA_BACKEND_ADMIN_SECRET_KEY:
       COS_SECRET_ID:
-      COS_SECRET_KEY:
-      COS_ID: a
-      COS_KEY: a
+      COS_SECRET_KEY: 
+      COS_ID: 1309038720
+      COS_NAME: arona-file
+      REGION: ap-shanghai
+      LOCAL_TMP_PATH: /tmp
+      BASE_FOLDER: image
+      RAW_FOLDER: /raw
+      PNG_FOLDER: /png
+      WEBP_FOLDER: /webp
       TZ: Asia/Shanghai
   handler: index.main_handler
   initTimeout: 10
@@ -24,7 +30,7 @@ inputs:
   publicAccess: true
   region: ap-shanghai
   retryNum: 2
-  runtime: Python3.7
+  runtime: Python3.6
   src: ./src
   tags:
     arona: fn-image-compress

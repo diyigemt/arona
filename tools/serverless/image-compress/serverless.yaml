@@ -9,9 +9,9 @@ inputs:
   eip: false
   environment:
     variables:
-      ARONA_BACKEND_ADMIN_SECRET_KEY: a
-      COS_SECRET_ID: a
-      COS_SECRET_KEY: a
+      ARONA_BACKEND_ADMIN_SECRET_KEY:
+      COS_SECRET_ID:
+      COS_SECRET_KEY:
       COS_ID: a
       COS_KEY: a
       TZ: Asia/Shanghai

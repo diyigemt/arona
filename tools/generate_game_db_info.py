@@ -11,7 +11,7 @@ from fetch_student_info_from_ba_game_db import concat_list, concat_two_im, downl
 import re
 # 要生成的目标 日文名
 target = [
-    "ハスミ(体操服)",
+    "ハナエ",
     # "ジュンコ(正月)",
     # "ハルナ(正月)",
     # "フウカ(正月)"
@@ -35,7 +35,7 @@ def run(playwright: Playwright):
 
     # 拿到成长资源截图
     page.goto("https://ba.game-db.tw/")
-    page.locator("svg").click()
+    page.locator("svg").first.click()
     page.locator("#react-select-2-option-0").click()
     page.get_by_text("一覧表").click()
 
@@ -70,7 +70,7 @@ def run(playwright: Playwright):
             continue
         
         # 切换回中文
-        page.locator("svg").click()
+        page.locator("svg").first.click()
         page.locator("#react-select-2-option-1").click()
         time.sleep(3)
         count = 0
@@ -127,7 +127,7 @@ def run(playwright: Playwright):
         close_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[1]")
         close_btn.click()
         # 切换回日文
-        page.locator("svg").click()
+        page.locator("svg").first.click()
         page.locator("#react-select-2-option-0").click()
         btnFilterList[0].click()
         time.sleep(2)
@@ -136,7 +136,7 @@ def run(playwright: Playwright):
         close_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[1]")
         close_btn.click()
         # 切换回中文
-        page.locator("svg").click()
+        page.locator("svg").first.click()
         page.locator("#react-select-2-option-1").click()
         time.sleep(2)
         btnFilterList[0].click()

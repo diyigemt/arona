@@ -7,5 +7,5 @@ PyYAML==6.0
 requests==2.28.2
 zhconv==1.4.3
 zhon==1.1.5
-tencentcloud-sdk-python-common
+tencentcloud-sdk-python-common=3.0.754
 opencv-python

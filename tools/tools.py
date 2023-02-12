@@ -175,7 +175,8 @@ def update_image_from_api(folder: str, type: int = 2):
         file_path_absolute = folder + file
         
         file_names = list(map(lambda n: replace0(n), file_name.split("_")))
-        
+        # webp压缩
+        # im.save(file_path, format="webp", quality=95, method=6)
         # 将大于4.5M的图片进行压缩
         while os.path.getsize(file_path) / 1024 / 1024 > 5.5:
             im = Image.open(file_path)

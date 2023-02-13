@@ -2,6 +2,7 @@ import os
 import getpass
 import json
 import codecs
+import shutil
 from qcloud_cos import CosConfig
 from qcloud_cos import CosS3Client
 from qcloud_cos.cos_threadpool import SimpleThreadPool
@@ -51,4 +52,9 @@ if __name__ == "__main__":
     for item in some_list + student_list + chapter_list:
         pool.add_task(client.upload_file, Bucket, item[1], item[2])
     pool.wait_completion()
+    # 移动到history文件夹
+    for item in some_list + student_list + chapter_list:
+        local_path = item[2]
+        file_history_path = str(local_path).replace("image", "image/history")
+        shutil.move(local_path, file_history_path)
     pass

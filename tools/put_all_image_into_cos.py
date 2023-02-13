@@ -32,9 +32,9 @@ if __name__ == "__main__":
         with codecs.open(r"C:\Users\%s\.ssh\arona-cos.json" % getpass.getuser(), "r", encoding="utf-8") as f:
             read = json.loads(f.read())
             COS_ID = read["COS_ID"]
-            COS_NAME = read["COS_NAME"]
-            SECRET_ID = read["SECRET_ID"]
-            SECRET_KEY = read["SECRET_KEY"]
+            COS_NAME = read["COS_RAW_NAME"]
+            SECRET_ID = read["SECRET_RAW_ID"]
+            SECRET_KEY = read["SECRET_RAW_KEY"]
             Bucket = COS_NAME + "-" + COS_ID 
     config = CosConfig(Region=REGION, SecretId=SECRET_ID, SecretKey=SECRET_KEY)
     client = CosS3Client(config)
@@ -45,9 +45,9 @@ if __name__ == "__main__":
     student_list = list_folder("/student_rank")
     # 遍历chapter_map文件夹
     chapter_list = list_folder("/chapter_map")
-    print("some: %s" %",".join(list(map(lambda tu: tu[0], some_list))))
-    print("student: %s" % ",".join(list(map(lambda tu: tu[0], student_list))))
-    print("chapter: %s" % ",".join(list(map(lambda tu: tu[0], chapter_list))))
+    print("some: %s" %", ".join(list(map(lambda tu: tu[0], some_list))))
+    print("student: %s" % ", ".join(list(map(lambda tu: tu[0], student_list))))
+    print("chapter: %s" % ", ".join(list(map(lambda tu: tu[0], chapter_list))))
     confirm_action()
     for item in some_list + student_list + chapter_list:
         pool.add_task(client.upload_file, Bucket, item[1], item[2])

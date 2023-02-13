@@ -19,6 +19,7 @@
 /plugin-shared-libraries/
 /tools/img/
 /tools/image/
+/tools/raw/
 /tools/__pycache__/
 tools/pixiv.db
 tools/pixiv.py

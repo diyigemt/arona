@@ -8,7 +8,7 @@ def run(playwright: Playwright):
 
     # 拿到成长资源截图
     page.goto("https://ba.game-db.tw/")
-    page.locator("svg").click()
+    page.locator("svg").first.click()
     page.locator("#react-select-2-option-0").click()
     page.locator("text=早見表 >> nth=1").click()
     time.sleep(2)

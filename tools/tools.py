@@ -221,9 +221,7 @@ def update_image_from_api(folder: str, type: int = 2):
         return
     #信息收集完成
     print(list(map(lambda item: item["name"], dict)))
-    if str(input("process update? [Y/N]:")).lower() != "y":
-        print("abort")
-        exit(0)
+    confirm_action()
     #提交到后端进行处理
     post_data("imageUpdate", dict)
 
@@ -276,6 +274,11 @@ def test_name_exist(name):
     resp = requests.get("https://arona.diyigemt.com/api/v1/image?name=%s" % name, headers=header)
     result = json.loads(resp.content.decode())
     return len(result["data"]) == 1
+
+def confirm_action():
+    if str(input("process update? [Y/N]:")).lower() != "y":
+        print("abort")
+        exit(0)
 
 replace_name = {
     "沙耶": "/老鼠/鼠鼠",

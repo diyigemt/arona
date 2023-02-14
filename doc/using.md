@@ -150,6 +150,15 @@ messageList:
 
 具体配置可看下面的[配置文件详解](#other-name-config-2)
 
+1.0.14版本后，额外增加可通过猜你喜欢自动执行指令的功能<a id="name-guess-using"> </a>
+
+<details>
+    <summary>效果:</summary>
+    <img src="static/name-guess.png" />
+</details>
+
+具体配置可看下面的[配置文件详解](#name-guess-config)
+
 #### 1.9 游戏名记录<a id="game-name"> </a>
 
 `/游戏名 string` 将自己的游戏名添加到记录中。
@@ -360,29 +369,33 @@ arona总的配置。
 
 别名配置。
 
-| 键                | 属性                                     | 作用                                 |
-| ----------------- | ---------------------------------------- | ------------------------------------ |
-| tipWhenNull       | Boole                                    | 对应图片不存在时是否提示模糊搜索结果 |
-| fuzzySearchSource | Enum                                     | 配置模糊查询的检索范围               |
-| override          | List<TrainerOverride(type, name, value)> | 覆写指令`/攻略`提供的参数            |
+| 键                  | 属性                                     | 默认值 | 作用                                 |
+| ------------------- | ---------------------------------------- | ------ | ------------------------------------ |
+| tipWhenNull         | Boole                                    | true   | 对应图片不存在时是否提示模糊搜索结果 |
+| tipRevokeTime       | Int                                      | 10     | 模糊搜索结果撤回时间                 |
+| tipResponseWaitTime | Int                                      | 10     | 等待用户对模糊搜索结果的响应时间     |
+| override            | List<TrainerOverride(type, name, value)> | []     | 覆写指令`/攻略`提供的参数            |
 
-##### 1. tipWhenNull
+##### 1. tipWhenNull<a id="name-guess-config"> </a>
 
 对应图片不存在时是否提示模糊搜索结果，为true时，若名字不正确且没有模糊搜索结果，则回复"请联系管理员添加"
 
-##### 2. fuzzySearchSource
+##### 2. tipRevokeTime
 
-配置在没有对应的攻略内容时，提供的模糊查询内容范围。
+模糊搜索结果撤回时间, 设置为0代表不撤回. 单位是秒
 
-枚举值，可选内容为：
+##### 3.ValueDescription
 
-`ALL`：模糊查询范围包括用户自行配置的覆写内容与作者定义的内容
+等待用户对模糊搜索结果的响应时间, 设置为0代表关闭响应. 单位是秒
 
-`LOCAL_CONFIG`：仅对用户自行配置的覆写内容进行模糊查询
+当tipWhenNull开启且ValueDescription不为0时，效果如下
 
-`REMOTE`：仅对作者定义的内容进行模糊查询
+<details>
+    <summary>效果:</summary>
+    <img src="static/name-guess.png" />
+</details>
 
-##### 3. override
+##### 4. override
 
 配置本地的攻略字段内容
 

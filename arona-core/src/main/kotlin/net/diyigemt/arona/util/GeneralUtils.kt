@@ -1,8 +1,5 @@
 package net.diyigemt.arona.util
 
-import com.taptap.pinyin.PinyinPlus
-import me.towdium.pinin.PinIn
-import me.towdium.pinin.utils.PinyinFormat
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.command.CallMeCommand
 import net.diyigemt.arona.command.TarotCommand
@@ -19,8 +16,6 @@ import net.diyigemt.arona.interfaces.InitializedFunction
 import net.diyigemt.arona.util.NetworkUtil.BACKEND_ADDRESS
 import net.diyigemt.arona.util.NetworkUtil.BACKEND_IMAGE_FOLDER
 import net.diyigemt.arona.util.NetworkUtil.downloadImageFile
-import net.diyigemt.arona.util.other.KWatchChannel
-import net.diyigemt.arona.util.other.asWatchChannel
 import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.UserOrBot
@@ -33,7 +28,6 @@ import java.security.MessageDigest
 object GeneralUtils : InitializedFunction() {
 
   private const val BACKEND_IMAGE_RESOURCE = "${BACKEND_ADDRESS}$BACKEND_IMAGE_FOLDER"
-  private lateinit var PinyinObject: PinIn
   private val Punctuation0: Regex = Regex("[\\u3002\\uff1f\\uff01\\uff0c\\u3001\\uff1b\\uff1a\\u201c\\u201d\\u2018\\u2019\\uff08\\uff09\\u300a\\u300b\\u3008\\u3009\\u3010\\u3011\\u300e\\u300f\\u300c\\u300d\\ufe43\\ufe44\\u3014\\u3015\\u2026\\u2014\\uff5e\\ufe4f\\uffe5]")
   private val Punctuation1: Regex = Regex("[.,/#!\$%^&*;:{}=\\-_+`~()\\[\\]]")
   private val Punctuation2: Regex = Regex("\\s{2,}")
@@ -168,56 +162,10 @@ object GeneralUtils : InitializedFunction() {
     }
   }
 
-  fun toPinyin(str: String): String = toPinyin1(replacePunctuation(str))
-
-  fun toPinyin0(str: String): String = str
-    .toCharArray()
-    .joinToString("") {
-      PinyinObject.getChar(it).pinyins().let { list ->
-        return@let if (list.isEmpty()) {
-          it.toString()
-        } else {
-          PinyinObject.format(list[0])
-        }
-      }
-    }
-
-  fun toPinyin1(str: String): String = PinyinPlus.to(str).replace(" ", "")
-
-  fun fuzzySearch(str: String, dict: List<String>): Int {
-    val pinyin = toPinyin(str)
-    dict.forEachIndexed { index, s ->
-      if (PinyinObject.contains(s, pinyin)) {
-        return index
-      }
-    }
-    return -1
-  }
-
-  fun fuzzySearchDouble(str: String, dict: List<String>): Int {
-    val pinyin = toPinyin(str)
-    dict.forEachIndexed { index, s ->
-      if (PinyinObject.contains(s, pinyin) || fuzzySearch(str, s)) {
-        return index
-      }
-    }
-    return -1
-  }
-
-
-  fun fuzzySearch(source: String, target: String): Boolean = PinyinObject.contains(source, toPinyin(target))
-
   private fun replacePunctuation(str: String): String = str.replace(Punctuation0, "")
     .replace(Punctuation1, "")
     .replace(Punctuation2, "")
 
-  fun fileWatchChannel(path: String): KWatchChannel {
-    val file = File(path)
-    if (!file.exists()) {
-      file.writeText("")
-    }
-    return file.asWatchChannel(KWatchChannel.Mode.SingleFile)
-  }
 
   fun md5(str: String): ByteArray = MessageDigest.getInstance("MD5").digest(str.toByteArray(Charsets.UTF_8))
   fun ByteArray.toHex() = joinToString(separator = "") { byte -> "%02x".format(byte) }
@@ -236,6 +184,5 @@ object GeneralUtils : InitializedFunction() {
     File(imageFileFolder(TrainerCommand.OtherFolder)).also { it.mkdirs() }
     File(imageFileFolder(TarotCommand.TarotImageFolder)).also { it.mkdirs() }
     File(Arona.dataFolderPath(ConfigFolder)).also { it.mkdirs() }
-    PinyinObject = PinIn().config().format(PinyinFormat.RAW).fSh2S(true).commit()
   }
 }

@@ -21,43 +21,26 @@ Arona是依赖于Mirai-Console的一个插件，并不能独立工作，要使�
 
 3. 在[releases](https://github.com/diyigemt/arona/releases)下载最新版本的jar包并放入mirai-console的`plugins`目录下；<a id="step1"> </a>
 
-5. 在[releases](https://github.com/diyigemt/arona/releases)下载`PinIn.zip`文件并解压到`mirai-console`安装目录下的`plugin-libraries`文件夹中，此时目录结构应该为<a id="install-4"> </a>
+4. 启动mirai-console，等到显示如下字样后退出：
 
-   ```bash
-   plugin-libraries
-           └───com
-               └───github
-                   └───Towdium
-                       └───PinIn
-                           └───1.5.1
-                                   PinIn-1.5.1-sources.jar
-                                   PinIn-1.5.1.jar
-                                   PinIn-1.5.1.module
-                                   PinIn-1.5.1.pom
-   ```
-
-​		该文件为`/攻略`指令提供模糊搜索功能，原仓库地址为[Towdium/PinIn](https://github.com/Towdium/PinIn)，如果你知道这个文件夹以及这步操作		是在干什么，你也可以去源仓库下载安装。
-
-5. 启动mirai-console，等到显示如下字样后退出：
-
-   ```bash
-   yyyy-MM-dd HH:mm:ss I/arona: arona loaded
-   yyyy-MM-dd HH:mm:ss I/arona: arona gacha module init success.
-   yyyy-MM-dd HH:mm:ss I/ba-activity-pusher: 别名配置更新成功
-   yyyy-MM-dd HH:mm:ss I/ba-activity-pusher: 中文字体初始化成功
-   yyyy-MM-dd HH:mm:ss I/ba-activity-pusher: Source: STUDENT from GitHub already up to date.
-   yyyy-MM-dd HH:mm:ss I/ba-activity-pusher: Source: LOCALIZATION from GitHub already up to date.
-   yyyy-MM-dd HH:mm:ss I/ba-activity-pusher: Source: RAID from GitHub already up to date.
-   yyyy-MM-dd HH:mm:ss I/ba-activity-pusher: Source: COMMON from GitHub already up to date.
-   ```
+```bash
+yyyy-MM-dd HH:mm:ss I/arona: arona loaded
+yyyy-MM-dd HH:mm:ss I/arona: arona gacha module init success.
+yyyy-MM-dd HH:mm:ss I/ba-activity-pusher: 别名配置更新成功
+yyyy-MM-dd HH:mm:ss I/ba-activity-pusher: 中文字体初始化成功
+yyyy-MM-dd HH:mm:ss I/ba-activity-pusher: Source: STUDENT from GitHub already up to date.
+yyyy-MM-dd HH:mm:ss I/ba-activity-pusher: Source: LOCALIZATION from GitHub already up to date.
+yyyy-MM-dd HH:mm:ss I/ba-activity-pusher: Source: RAID from GitHub already up to date.
+yyyy-MM-dd HH:mm:ss I/ba-activity-pusher: Source: COMMON from GitHub already up to date.
+```
 
 ​		当然由于网络原因可能并没有最后这四项，不过并不影响使用。
 
-6. 在[releases](https://github.com/diyigemt/arona/releases)下载最新版本的arona.db的SQLite文件并替换掉`./data/net.diyigemt.arona/arona.db`文件；
+5. 在[releases](https://github.com/diyigemt/arona/releases)下载最新版本的arona.db的SQLite文件并替换掉`./data/net.diyigemt.arona/arona.db`文件；
 
-7. 在`./config/net.diyigemt.arona/`文件夹下根据自己的喜好编辑arona的配置文件，具体内容将会在下一节解释；
+6. 在`./config/net.diyigemt.arona/`文件夹下根据自己的喜好编辑arona的配置文件，具体内容将会在下一节解释；
 
-8. 再次运行mirai-console即可享受arona的服务。
+7. 再次运行mirai-console即可享受arona的服务。
 
 **注意**，arona的运行依赖`chat-command`插件，该插件的安装方法与[步骤3](#step1)一致，你可以在[这里](https://github.com/project-mirai/chat-command)找到它的下载链接
 

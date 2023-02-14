@@ -3,14 +3,11 @@ package org.example.mirai.plugin
 import com.taptap.pinyin.PinyinPlus
 import io.kotest.common.runBlocking
 import kotlinx.coroutines.channels.consumeEach
-import me.towdium.pinin.PinIn
-import me.towdium.pinin.utils.PinyinFormat
 import me.xdrop.fuzzywuzzy.FuzzySearch
 import net.diyigemt.arona.advance.AronaUpdateChecker
 import net.diyigemt.arona.command.TrainerCommand
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.entity.ActivityType
-import net.diyigemt.arona.entity.TrainerOverride
 import net.diyigemt.arona.util.ActivityUtil
 import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.NetworkUtil
@@ -169,38 +166,6 @@ class TestSimple {
     )
     println(FuzzySearch.extractSorted("鼠", dict))
     println(PinyinPlus.to("鼠鼠"))
-  }
-
-  @Test
-  fun testFuzzySearch2() {
-    val p = PinIn().config().format(PinyinFormat.RAW).fSh2S(true).commit()
-    val dict = listOf(
-      "宝洁",
-      "报界"
-    )
-    println(PinyinPlus.to("侧式"))
-    println(getPinyin("保洁"))
-    println(p.format(p.getChar('阿').pinyins()[0]))
-    println(p.contains("宝洁", PinyinPlus.to("保洁")))
-    println(p.contains("测试1", GeneralUtils.toPinyin("侧式")))
-    val b = p.getPinyin("侧式")
-    val a = "侧式".toCharArray()
-      .joinToString("") {
-        p.getChar(it).pinyins().let { list ->
-          println("a")
-          return@let if (list.isEmpty()) {
-            it.toString()
-          } else {
-            p.format(list[0])
-          }
-        }
-      }
-    println(a)
-  }
-
-  private fun getPinyin(str: String): String {
-    val p = PinIn().config().format(PinyinFormat.RAW).fSh2S(true).commit()
-    return str.toCharArray().joinToString("") { p.format(p.getChar(it).pinyins()[0]) }
   }
 
   @Test

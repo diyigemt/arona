@@ -41,7 +41,6 @@ dependencies {
   implementation("me.xdrop:fuzzywuzzy:1.4.0")
   // https://mvnrepository.com/artifact/com.github.taptap/pinyin-plus
   implementation("com.github.taptap:pinyin-plus:1.0")
-  implementation("com.github.Towdium:PinIn:1.5.1")
   implementation("net.mamoe.yamlkt:yamlkt-jvm:0.10.2")
 }
 

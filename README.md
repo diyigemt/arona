@@ -130,6 +130,7 @@ arona是基于mirai-console的插件。
 2. 修复服务关闭时不断复读服务未开启的问题
 3. 攻略指令新增功能，具体在[这里](./doc/using.md#name-guess-using)，配置在[这里](./doc/using.md#name-guess-config)
 4. 移除额外的拼音库依赖
+5. 攻略指令**不再**提供本地模糊搜索结果
 
 2022-10-26 v1.0.13
 

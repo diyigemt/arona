@@ -24,6 +24,7 @@ object ActivityCommand : CompositeCommand(
   @SubCommand("en")
   @Description("查看国际服活动")
   suspend fun UserCommandSender.activities() {
+    bot
     sendEN(subject)
   }
 

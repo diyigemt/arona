@@ -200,7 +200,7 @@ def run(playwright: Playwright):
             im = Image.open(pp)
             (x, y) = im.size
             rate = source_col / final_db_col
-            resize = im.resize((int(x * rate), int(y * rate)), Image.ANTIALIAS)
+            resize = im.resize((int(x * rate), int(y * rate)), Image.Resampling.LANCZOS)
             resize.save(pp)
             final_db_im = cv2.imdecode(np.fromfile(pp, dtype=np.uint8), -1)
             final_db_row, final_db_col, _ = final_db_im.shape

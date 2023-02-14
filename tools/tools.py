@@ -181,7 +181,7 @@ def update_image_from_api(folder: str, type: int = 2):
         while os.path.getsize(file_path) / 1024 / 1024 > 5.5:
             im = Image.open(file_path)
             (x, y) = im.size
-            resize = im.resize((int(x * 0.95), int(y * 0.95)), Image.ANTIALIAS)
+            resize = im.resize((int(x * 0.95), int(y * 0.95)), Image.Resampling.LANCZOS)
             resize.save(file_path)
         # 计算md5
         hash = ""

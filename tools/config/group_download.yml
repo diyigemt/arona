@@ -9,3 +9,6 @@ image:
   - name: 'test'
     path: './image/student_rank/'
     url: ''
+  - name: '樱子'
+    path: './image/student_rank/'
+    url: 'https://i0.hdslb.com/bfs/article/c23febc38c737aaeec153743fe846656d5c2b064.png@942w_492h_progressive.webp'

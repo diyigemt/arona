@@ -5,6 +5,7 @@ import BlocklyRouter from "./blockly";
 import ConfigRouter from "./config";
 import ReplyRouter from "./reply";
 import FileRouter from "./file";
+import MiraiRouter from "./mirai";
 
 const router = Router();
 
@@ -14,5 +15,6 @@ router.use("/blockly", BlocklyRouter);
 router.use("/config", ConfigRouter);
 router.use("/reply", ReplyRouter);
 router.use("/file", FileRouter);
+router.use("/mirai", MiraiRouter);
 
 export default router;

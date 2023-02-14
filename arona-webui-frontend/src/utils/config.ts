@@ -1,4 +1,5 @@
 import useBaseStore from "@/store/base";
+import { BotGroupConfig } from "@/interface";
 
 const GlobalConfigProvider = {
   get<T>(key: string): T {
@@ -12,7 +13,13 @@ const GlobalConfigProvider = {
     }
     return this.get(this.concatGroupKey(key, group));
   },
+  getBotConfig(): BotGroupConfig[] {
+    const baseStore = useBaseStore();
+    return baseStore.getConfig("bots");
+  },
   concatGroupKey(key: string, group: number): string {
     return !group || group === 0 ? key : `${group}.${key}`;
   },
 };
+
+export default GlobalConfigProvider;

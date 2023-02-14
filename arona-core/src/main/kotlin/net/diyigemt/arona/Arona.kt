@@ -8,6 +8,7 @@
  */
 package net.diyigemt.arona
 
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import net.diyigemt.arona.config.*
 import net.diyigemt.arona.db.DataBaseProvider
@@ -33,8 +34,7 @@ import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.NormalMember
 import net.mamoe.mirai.contact.UserOrBot
-import net.mamoe.mirai.event.GlobalEventChannel
-import net.mamoe.mirai.event.broadcast
+import net.mamoe.mirai.event.*
 import net.mamoe.mirai.event.events.BotOnlineEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
 import net.mamoe.mirai.event.events.NudgeEvent
@@ -124,6 +124,9 @@ object Arona : KotlinPlugin(
 
   fun runSuspend(block: suspend () -> Unit) = launch(coroutineContext) {
     block()
+  }
+  fun runAsync(block: suspend (event: EventChannel<Event>) -> Unit) = async(coroutineContext) {
+    block(globalEventChannel())
   }
   fun sendExitMessage() {
     if (AronaConfig.sendOfflineMessage) {

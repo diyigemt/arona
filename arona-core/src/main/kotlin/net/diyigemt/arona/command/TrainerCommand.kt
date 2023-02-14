@@ -2,13 +2,16 @@ package net.diyigemt.arona.command
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.Serializable
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.config.AronaTrainerConfig
-import net.diyigemt.arona.db.DataBaseProvider
-import net.diyigemt.arona.db.image.ImageTableModel
 import net.diyigemt.arona.entity.TrainerOverride
+import net.diyigemt.arona.quartz.QuartzProvider
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.GeneralUtils.toHex
@@ -19,9 +22,18 @@ import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.console.command.UserCommandSender
 import net.mamoe.mirai.contact.Contact
+import net.mamoe.mirai.contact.Friend
+import net.mamoe.mirai.contact.Group
+import net.mamoe.mirai.contact.Stranger
+import net.mamoe.mirai.event.events.FriendMessageEvent
+import net.mamoe.mirai.event.events.GroupMessageEvent
+import net.mamoe.mirai.event.events.GroupTempMessageEvent
+import net.mamoe.mirai.event.events.MessageEvent
 import net.mamoe.mirai.message.code.MiraiCode.deserializeMiraiCode
+import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
 import java.io.File
+import java.lang.Integer.min
 
 object TrainerCommand : SimpleCommand(
   Arona,"trainer", "攻略",
@@ -34,7 +46,6 @@ object TrainerCommand : SimpleCommand(
   private lateinit var ConfigFileWatcherChannel: KWatchChannel
   private lateinit var ConfigFile: File
   private var ConfigFileMd5: String = ""
-  private val FuzzySearch = mutableListOf<List<String>>()
   private val overrideList = mutableListOf<TrainerOverride>()
   @Handler
   suspend fun UserCommandSender.trainer(str: String) {
@@ -59,44 +70,58 @@ object TrainerCommand : SimpleCommand(
       }
       TrainerOverride.OverrideType.RAW -> {
         val result = GeneralUtils.loadImageOrUpdate(value)
-        val list = result.list.map { it.name }.toMutableList()
+        val list = result.list
         // 没有本地文件
-        if (result.file == null) {
-          // 模糊搜索建议关闭
-          if (!AronaTrainerConfig.tipWhenNull) {
-            return
-          }
-          // 根据配置对数据源进行模糊搜索
-          when (AronaTrainerConfig.fuzzySearchSource) {
-            FuzzySearchSource.ALL -> {
-              list.addAll(fuzzySearch(str))
-            }
-            FuzzySearchSource.LOCAL_CONFIG -> {
-              list.clear()
-              list.addAll(fuzzySearch(str))
-            }
-            FuzzySearchSource.REMOTE -> {}
-          }
-          // 如果仍然没有搜索建议 说明真的找不到
-          if (list.isEmpty()) {
-            if (AronaTrainerConfig.tipWhenNull) {
-              sendMessage("没有对应信息, 请联系作者添加别名或者在配置文件中指定")
-            }
-          } else {
-            // 无精确匹配结果, 但是有搜索建议, 发送建议
-            // 根据相似度进行排序
-            val sourceSet = str.toSet()
-            list.sortByDescending {
-              it.toSet().sumOf { ch -> (if (sourceSet.contains(ch)) 1 else 0).toInt() }
-            }
-            // 去重
-            sendMessage("没有与${str}对应的信息, 是否想要输入:\n${
-              list.toSet().filterIndexed { index, _ -> index < 4 }
-                .joinToString("\n") { "/攻略 $it" }
-            }")
+        if (result.file != null) {
+          sendImage(subject, result.file)
+          return
+        }
+        // 模糊搜索建议关闭
+        if (!AronaTrainerConfig.tipWhenNull) {
+          return
+        }
+        // 如果没有远端搜索建议 说明真的找不到
+        if (list.isEmpty()) {
+          if (AronaTrainerConfig.tipWhenNull) {
+            sendMessage("没有对应信息, 请联系作者添加别名或者在配置文件中指定")
           }
         } else {
-          sendImage(subject, result.file)
+          // 无精确匹配结果, 但是有搜索建议, 发送建议
+          val hasResponseWaitTime = AronaTrainerConfig.tipResponseWaitTime != 0
+          val preMessage = list
+            .map { it.name }
+            .filterIndexed { index, _ -> index < 4 }
+          val message = (if (hasResponseWaitTime) preMessage.mapIndexed { index, it ->
+            "${index + 1}. $it"
+          } else preMessage.map { "/攻略 $it" }).joinToString("\n")
+          val revoke = sendMessage("没有与${str}对应的信息, 是否想要输入:\n$message")
+          if (AronaTrainerConfig.tipRevokeTime != 0) {
+            revoke?.recallIn(min(350, AronaTrainerConfig.tipRevokeTime) * 1000L)
+          }
+          fun send(select: Int) {
+            if (select > list.size || select < 0) {
+              return
+            }
+            val result0 = GeneralUtils.loadImageOrUpdate(list[select - 1].name)
+            if (result0.file != null) {
+              Arona.runSuspend {
+                sendImage(subject, result0.file)
+              }
+            }
+          }
+          if (hasResponseWaitTime) {
+            when(subject) {
+              is Group -> {
+                waitForNextMessage<GroupMessageEvent>(user.id, AronaTrainerConfig.tipResponseWaitTime) { send(it) }
+              }
+              is Friend -> {
+                waitForNextMessage<FriendMessageEvent>(user.id, AronaTrainerConfig.tipResponseWaitTime) { send(it) }
+              }
+              is Stranger -> {
+                waitForNextMessage<GroupTempMessageEvent>(user.id, AronaTrainerConfig.tipResponseWaitTime) { send(it) }
+              }
+            }
+          }
         }
       }
       TrainerOverride.OverrideType.CODE -> {
@@ -105,16 +130,18 @@ object TrainerCommand : SimpleCommand(
     }
   }
 
-  private fun fuzzySearch(source: String): List<String> {
-    val list = FuzzySearch.map {
-      val index = GeneralUtils.fuzzySearchDouble(source, it)
-      return@map if (index == -1) "" else it[index]
-    }.filter { it.isNotBlank() }.toMutableList()
-    // 从数据库查找
-    list.addAll(DataBaseProvider.query { _ ->
-      ImageTableModel.all().map { it.name }.filter { GeneralUtils.fuzzySearch(it, source) || GeneralUtils.fuzzySearch(source, it) }
-    }!!)
-    return list
+  private inline fun <reified T: MessageEvent> waitForNextMessage(target: Long, wait: Int, crossinline block: (select: Int) -> Unit) {
+    Arona.runAsync {
+      withTimeout(wait * 1000L) {
+        val feedback = it.asFlow().filterIsInstance<T>().filter { it.sender.id == target }.first()
+        val messageString = feedback.message.filterIsInstance<PlainText>().firstOrNull()?.toString() ?: "0"
+        kotlin.runCatching {
+          messageString.toInt()
+        }.onSuccess {
+          block(it)
+        }
+      }
+    }
   }
 
   private suspend fun sendImage(contact: Contact, image: File) {
@@ -147,31 +174,19 @@ object TrainerCommand : SimpleCommand(
       err.printStackTrace()
       return
     }.onSuccess {
-      FuzzySearch.clear()
       overrideList.clear()
       overrideList.addAll(it.override)
     }
     overrideList.addAll(AronaTrainerConfig.override.filter {
       !overrideList.any { already -> already.name == it.name }
     })
-    reloadConfig()
     Arona.info("别名配置更新成功")
-  }
-
-  private fun reloadConfig() {
-    overrideList.forEach {
-      FuzzySearch.add(it.name.split(",").map { s -> s.trim() })
-    }
   }
 
   @Serializable
   data class TrainerFileConfig(
     val override: List<TrainerOverride>
   )
-
-  enum class FuzzySearchSource {
-    ALL, LOCAL_CONFIG, REMOTE
-  }
 
   override val id: Int = 20
   override val name: String = "地图与学生攻略"
@@ -180,7 +195,6 @@ object TrainerCommand : SimpleCommand(
     registerService()
     register()
     overrideList.addAll(AronaTrainerConfig.override)
-    reloadConfig()
     // 监视data文件夹下的arona-trainer.yml文件动态添加配置
     ConfigFile = File(Arona.dataFolderPath("/${GeneralUtils.ConfigFolder}/${AutoReadConfigFileName}"))
     if (!ConfigFile.exists()) {

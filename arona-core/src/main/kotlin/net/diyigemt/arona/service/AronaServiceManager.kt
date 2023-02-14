@@ -73,9 +73,6 @@ object AronaServiceManager: InitializedFunction() {
 
   fun checkService(service: AronaService, user: User, subject: Contact): String? = when {
     !service.enable -> {
-      Arona.runSuspend {
-        subject.sendMessage("功能未启用")
-      }
       "功能未启用"
     }
     service is AronaGroupService -> when {

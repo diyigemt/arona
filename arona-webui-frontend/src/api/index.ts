@@ -1,6 +1,6 @@
 import { successMessage } from "@/utils/message";
 import service from "./http";
-import emitter from "@/utils/emitter";
+import emitter from "@/utils/config/emitter";
 
 // eslint-disable-next-line import/prefer-default-export
 export function heartbeat() {

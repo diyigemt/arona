@@ -1,22 +1,10 @@
 <template>
-  <el-form :model="formData">
-    <el-form-item prop="api" label="api:">
-      <el-input v-model="formData.api" />
-    </el-form-item>
-  </el-form>
+  <div class="h1">选择你的英雄</div>
+  <el-space>
+    <ShadowCard> 英雄1 </ShadowCard>
+  </el-space>
 </template>
 
-<script setup lang="ts">
-interface FormData {
-  api: string;
-  params: any;
-  response: any;
-}
-const formData = reactive<FormData>({
-  api: "",
-  params: {},
-  response: {},
-});
-</script>
+<script setup lang="ts"></script>
 
 <style lang="scss" scoped></style>

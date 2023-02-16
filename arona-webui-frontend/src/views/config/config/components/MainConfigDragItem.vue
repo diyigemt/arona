@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import mainEmitter from "@/views/config/event/main";
+import mainEmitter from "@/views/config/config/event/main";
 import { Friend, Group } from "@/types/contact";
 
 const props = withDefaults(defineProps<IProps>(), {

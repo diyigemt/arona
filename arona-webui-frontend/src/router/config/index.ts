@@ -1,50 +1,34 @@
+// 需要鉴权的业务路由
 import { RouteRecordRaw } from "vue-router";
+import ConfigMenu from "@/router/config/config";
+import DatabaseMenu from "@/router/config/database";
+import SettingRouter from "@/router/config/setting";
 
-const ConfigRouter: Array<RouteRecordRaw> = [
+const ConfigRoutes: Array<RouteRecordRaw> = [
   {
     path: "/config",
+    name: "config-index",
+    redirect: "/config/home",
     meta: {
-      title: "配置文件",
+      title: "",
+      icon: "",
     },
-    component: () => import("@/components/SubPageIndex.vue"),
+    component: () => import("@/views/config/ConfigIndex.vue"),
     children: [
       {
-        path: "",
-        redirect: "config-arona-blockly",
-      },
-      {
-        path: "config-arona-blockly",
-        name: "config-arona-blockly",
+        path: "/config/home",
+        name: "config-home",
         meta: {
-          title: "条件执行配置文件",
+          title: "",
+          icon: "",
         },
-        component: () => import("@/views/config/ConfigAronaBlockly.vue"),
+        component: () => import("@/views/config/home/ConfigHome.vue"),
       },
-      {
-        path: "config-arona-main",
-        name: "config-arona-main",
-        meta: {
-          title: "主配置文件",
-        },
-        component: () => import("@/views/config/ConfigAronaMain.vue"),
-      },
-      {
-        path: "config-arona-reply-group",
-        name: "config-arona-reply-group",
-        meta: {
-          title: "随机回复语句",
-        },
-        component: () => import("@/views/config/ConfigRandomReply.vue"),
-      },
-      {
-        path: "config-arona-reply-label",
-        name: "config-arona-reply-label",
-        meta: {
-          title: "随机回复标签",
-        },
-        component: () => import("@/views/config/ConfigRandomReplyLabel.vue"),
-      },
+      ...ConfigMenu,
+      ...DatabaseMenu,
+      ...SettingRouter,
     ],
   },
 ];
-export default ConfigRouter;
+
+export default ConfigRoutes;

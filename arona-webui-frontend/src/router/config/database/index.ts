@@ -2,7 +2,7 @@ import { RouteRecordRaw } from "vue-router";
 
 const DatabaseRouter: Array<RouteRecordRaw> = [
   {
-    path: "/database",
+    path: "database",
     meta: {
       title: "数据库",
     },
@@ -18,7 +18,7 @@ const DatabaseRouter: Array<RouteRecordRaw> = [
         meta: {
           title: "卡池信息数据库",
         },
-        component: () => import("@/views/database/DatabaseGachaPool.vue"),
+        component: () => import("@/views/config/database/DatabaseGachaPool.vue"),
       },
       {
         path: "database-gacha-history",
@@ -26,7 +26,7 @@ const DatabaseRouter: Array<RouteRecordRaw> = [
         meta: {
           title: "抽卡记录数据库",
         },
-        component: () => import("@/views/database/DatabaseGachaHistory.vue"),
+        component: () => import("@/views/config/database/DatabaseGachaHistory.vue"),
       },
     ],
   },

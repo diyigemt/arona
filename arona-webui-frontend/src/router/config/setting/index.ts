@@ -2,7 +2,7 @@ import { RouteRecordRaw } from "vue-router";
 
 const SettingRouter: Array<RouteRecordRaw> = [
   {
-    path: "/setting",
+    path: "setting",
     meta: {
       title: "设置",
     },
@@ -18,7 +18,7 @@ const SettingRouter: Array<RouteRecordRaw> = [
         meta: {
           title: "api设置",
         },
-        component: () => import("@/views/setting/SettingAPI.vue"),
+        component: () => import("@/views/config/setting/SettingAPI.vue"),
       },
     ],
   },

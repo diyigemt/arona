@@ -17,7 +17,7 @@ import { BrowserJsPlumbInstance } from "@jsplumb/browser-ui";
 import { EndpointOptions, UIGroup } from "@jsplumb/core";
 import { BezierConnector } from "@jsplumb/connector-bezier";
 import { mountAsyncComponent } from "@/utils/vueTools";
-import mainEmitter from "@/views/config/event/main";
+import mainEmitter from "@/views/config/config/event/main";
 import useBaseStore from "@/store/base";
 import { Friend } from "@/types/contact";
 import MiraiApi from "@/api/modules/mirai";

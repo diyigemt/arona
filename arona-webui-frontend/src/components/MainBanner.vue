@@ -16,7 +16,7 @@ const router = useRouter();
 const baseStore = useBaseStore();
 const select = ref<number>();
 function goHome() {
-  router.push("/home");
+  router.push("/config");
 }
 function updateActiveGroup(group: number) {
   baseStore.setActiveGroupId(group);

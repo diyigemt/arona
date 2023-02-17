@@ -10,4 +10,9 @@ import zhCn from "element-plus/lib/locale/lang/zh-cn";
 const locale = zhCn;
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@font-face {
+  font-family: "GameFont";
+  src: url("/font/ResourceHanRoundedCN-Medium.ttf");
+}
+</style>

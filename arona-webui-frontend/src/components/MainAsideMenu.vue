@@ -1,26 +1,34 @@
 <template>
   <el-menu :default-active="currentActiveMenu" :default-openeds="mapExpand" router class="main-menu custom-menu">
-    <el-sub-menu v-for="(menu, index) in MenuConfig" :key="index" :index="String(index)">
+    <el-sub-menu index="1">
       <template #title>
-        <span>{{ t(menu.name) }}</span>
+        <span>{{ t("side menu config") }}</span>
       </template>
-      <el-menu-item
-        v-for="(item, jIndex) in menu.children"
-        v-show="item.path"
-        :key="index + '-' + jIndex + '-sub'"
-        :index="item.path"
-        >{{ item.name }}</el-menu-item
-      >
+      <el-menu-item index="/config/config/config-arona-main">主配置</el-menu-item>
+      <el-menu-item index="/config/config/config-arona-blockly">条件执行</el-menu-item>
+      <el-menu-item index="/config/config/config-arona-reply-group">随机回复语句</el-menu-item>
+      <el-menu-item index="/config/config/config-arona-reply-label">随机回复语句标签</el-menu-item>
+    </el-sub-menu>
+    <el-sub-menu index="2">
+      <template #title>
+        <span>{{ t("side menu database") }}</span>
+      </template>
+      <el-menu-item index="/config/database/database-gacha-pool">GachaPool</el-menu-item>
+      <el-menu-item index="/config/database/database-gacha-history">GachaHistory</el-menu-item>
+    </el-sub-menu>
+    <el-sub-menu index="3">
+      <template #title>
+        <span>{{ t("side menu setting") }}</span>
+      </template>
+      <el-menu-item index="/config/setting/setting-api">api</el-menu-item>
     </el-sub-menu>
   </el-menu>
 </template>
 
 <script setup lang="ts">
-import { MenuConfig } from "@/constant";
-
 const { t } = useI18n();
 const route = useRoute();
-const mapExpand = MenuConfig.map((_, index) => String(index));
+const mapExpand = ["1", "2", "3"];
 const currentActiveMenu = computed(() => route.path);
 </script>
 

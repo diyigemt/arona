@@ -63,6 +63,7 @@ specifiers:
   vite-svg-loader: ^3.4.0
   vue: ^3.2.25
   vue-i18n: ^9.1.9
+  vue-responsive-video-background-player: ^2.3.1
   vue-router: ^4.1.2
   vue-tsc: ^1.0.8
 
@@ -89,6 +90,7 @@ dependencies:
   prism-theme-vars: 0.2.4
   vue: 3.2.45
   vue-i18n: 9.2.2_vue@3.2.45
+  vue-responsive-video-background-player: 2.3.1
   vue-router: 4.1.6_vue@3.2.45
 
 devDependencies:
@@ -5654,6 +5656,10 @@ packages:
       '@intlify/vue-devtools': 9.2.2
       '@vue/devtools-api': 6.4.5
       vue: 3.2.45
+
+  /vue-responsive-video-background-player/2.3.1:
+    resolution: {integrity: sha512-9IdFfmHe1cY0PvTw51sYcSO5+gPJya5einLIoktVzBMALEC3yok36X/1+hDfbgihapRYxz3fmyv1o5M1u+0xEA==}
+    dev: false
 
   /vue-router/4.1.6_vue@3.2.45:
     resolution: {integrity: sha512-DYWYwsG6xNPmLq/FmZn8Ip+qrhFEzA14EI12MsMgVxvHFDYvlr4NXpVF5hrRH1wVcDP8fGi5F4rxuJSl8/r+EQ==}

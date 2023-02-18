@@ -34,14 +34,7 @@ import BlocklyConfig, { initBlockly, workspaceBlocks } from "@/blockly";
 import aronaGenerator from "@/blockly/generator";
 import { BlocklyProject, BlocklyProjectWorkspace } from "@/interface/modules/blockly";
 import BlocklyApi from "@/api/modules/blockly";
-import {
-  errorMessage,
-  infoMessage,
-  IPrompt,
-  IWarningConfirm,
-  successMessage,
-  warningMessage
-} from "@/utils/message";
+import { errorMessage, infoMessage, IPrompt, IWarningConfirm, successMessage, warningMessage } from "@/utils/message";
 import useBaseStore from "@/store/base";
 
 const blocklyDiv = ref();
@@ -96,16 +89,14 @@ function setBlock(index: number) {
   workspace.value.clear();
   const block = (projectList.value || [])[index];
   const baseStore = useBaseStore();
-  baseStore
-    .loadDataFromSave(block.userData)
-    .then(() => {
-      Blockly.serialization.workspaces.load(block.blocklyProject as BlocklyProjectWorkspace, workspace.value);
-      selectBlockIndex.value = index;
-    })
-    .catch((e) => {
-      console.error(e);
-      errorMessage("存档加载失败");
-    });
+  baseStore.loadDataFromSave(block.userData, () => {
+    Blockly.serialization.workspaces.load(block.blocklyProject as BlocklyProjectWorkspace, workspace.value);
+    selectBlockIndex.value = index;
+  });
+  // .catch((e) => {
+  //   console.error(e);
+  //   errorMessage("存档加载失败");
+  // });
 }
 function onSaveCurrentProject() {
   const code = aronaGenerator.workspaceToCode(workspace.value);

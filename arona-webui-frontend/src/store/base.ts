@@ -147,15 +147,22 @@ const useBaseStore = defineStore({
     /**
      * 通过反序列化加载数据
      * @param json JSON字符串
+     * @param callBack 当数据准备就绪时的回调，可能会失败几次
      */
     // TODO 群员不存在时加载失败
-    loadDataFromSave(json: string) {
+    loadDataFromSave(json: string, callBack: () => void) {
       const userData = JSON.parse(json) as UserData;
-      return Promise.all(
-        userData.groups.map((item) => {
+      const execute = () => {
+        console.log("call");
+        return userData.groups.map((item) => {
           return this.members(item);
-        }),
-      );
+        });
+      };
+      Promise.all(execute())
+        .then(callBack)
+        .catch(() => {
+          setTimeout(this.loadDataFromSave, 70, json, callBack);
+        });
     },
     /**
      * 拿到所有管理的bot的联系人列表

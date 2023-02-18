@@ -21,5 +21,6 @@
         <block type="sendMsgBlock">
             <field name="Msg">Hallo</field>
         </block>
+        <block type="randomBlock"/>
     </category>
 </xml>

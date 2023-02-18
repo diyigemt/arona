@@ -4,7 +4,7 @@ import addMutators from "@/blockly/mutators";
 import injectExtensions from "@/blockly/extensions";
 
 const BlocklyConfig: BlocklyOptions = {
-  media: "../media/",
+  media: "/media/",
   grid: {
     spacing: 25,
     length: 3,

@@ -25,7 +25,7 @@ object Contacts : Worker, ConfigReader{
         //TODO
         kotlin.runCatching {
           // TODO 将数据结构与bot绑定
-          val bots = GlobalConfigProvider
+          GlobalConfigProvider
             .getBotConfig()
             .map { it.bot }
             .mapNotNull { Bot.getInstanceOrNull(it) }

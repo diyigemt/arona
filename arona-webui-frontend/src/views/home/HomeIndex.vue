@@ -39,7 +39,7 @@ function routerJump(path: string) {
   font-family: "GameFont", serif;
   font-size: 1.2rem;
 }
-$button-card-size: 10vw;
+$button-card-size: 200px;
 .menu {
   position: absolute;
   top: 20%;
@@ -49,7 +49,7 @@ $button-card-size: 10vw;
     position: relative;
     overflow: hidden;
     .menu-content {
-      max-width: calc(2 * #{$button-card-size} + 2 * 8);
+      max-width: calc(2 * #{$button-card-size} + 2 * 8px);
       position: relative;
       z-index: 1;
     }

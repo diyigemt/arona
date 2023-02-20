@@ -153,7 +153,6 @@ const useBaseStore = defineStore({
     loadDataFromSave(json: string, callBack: () => void) {
       const userData = JSON.parse(json) as UserData;
       const execute = () => {
-        console.log("call");
         return userData.groups.map((item) => {
           return this.members(item);
         });

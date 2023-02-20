@@ -17,6 +17,7 @@ const ReplyApi = {
   deleteReplyLabel(id: number) {
     return service.raw<void>({
       url: "/reply/label/delete",
+      method: "POST",
       data: {
         id,
       },
@@ -25,6 +26,7 @@ const ReplyApi = {
   deleteReplyGroup(id: number) {
     return service.raw<void>({
       url: "/reply/group/delete",
+      method: "POST",
       data: {
         id,
       },
@@ -33,6 +35,7 @@ const ReplyApi = {
   updateReplyLabel(label: ReplyLabel) {
     return service.raw<void>({
       url: "/reply/label/update",
+      method: "POST",
       data: {
         label,
       },
@@ -41,6 +44,7 @@ const ReplyApi = {
   updateReplyGroup(group: ReplyGroup) {
     return service.raw<void>({
       url: "/reply/group/update",
+      method: "POST",
       data: {
         group,
       },
@@ -49,6 +53,7 @@ const ReplyApi = {
   createReplyLabel(label: ReplyLabel) {
     return service.raw<void>({
       url: "/reply/label/create",
+      method: "POST",
       data: {
         label,
       },
@@ -57,6 +62,7 @@ const ReplyApi = {
   createReplyGroup(group: ReplyGroup) {
     return service.raw<void>({
       url: "/reply/group/create",
+      method: "POST",
       data: {
         group,
       },

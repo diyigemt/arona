@@ -12,6 +12,7 @@ import net.diyigemt.arona.web.api.v1.blockly.BlocklyAPIService
 import net.diyigemt.arona.web.api.v1.commit.CommitManager
 import net.diyigemt.arona.web.api.v1.config.ConfigService
 import net.diyigemt.arona.web.api.v1.data.Data
+import net.diyigemt.arona.web.api.v1.reply.Labels
 import net.diyigemt.arona.web.api.v1.responseMessage
 
 fun Application.configureSerialization() {
@@ -58,13 +59,18 @@ fun Application.configureSerialization() {
           }
         }
 
-        route("/blockly"){
-          post("/commit"){
+        route("/blockly") {
+          post("/commit") {
             BlocklyAPIService.worker(this)
           }
-          get("/commit"){
+          get("/commit") {
             BlocklyAPIService.worker(this)
           }
+        }
+
+        route("/reply") {
+          get("/label") { Labels.worker(this) }
+          post("/label/{method}") { Labels.worker(this) }
         }
       }
     }

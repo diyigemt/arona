@@ -169,6 +169,7 @@ const imageUrl = ref<string>("");
 const uploadRef = ref();
 let imageRawFile: UploadRawFile | undefined;
 let imageDirty = false;
+let formDataItemIndex: number;
 function onCreateReplyGroup() {
   fillForm<ReplyGroup>(formData, deepCopy(DefaultFormValue), ["id", "label", "weight", "content"]);
   showEditDialog.value = true;
@@ -193,8 +194,12 @@ function onCreateReplyItem() {
   imageRawFile = undefined;
   showEditItemDialog.value = true;
   imageDirty = true;
+  itemEditOrCreate.value = false;
 }
 function onEditReplyItem(item: ReplyItem, index: number) {
+  fillForm<ReplyItem>(formDataItem, deepCopy(item), ["type", "content"]);
+  itemEditOrCreate.value = true;
+  formDataItemIndex = index;
   showEditItemDialog.value = true;
   imageDirty = false;
 }
@@ -221,23 +226,31 @@ function onConfirmEditOrCreateGroup() {
 }
 function onConfirmEditOrCreateItem() {
   const { type } = formDataItem;
-  if (type === "Image" && imageDirty) {
-    service.upload("/file/image", imageRawFile!).then(({ data }) => {
-      successMessage("上传成功");
-      formData.content.push({
-        type: formDataItem.type,
-        content: data,
+  new Promise<ReplyItem>((resolve) => {
+    if (type === "Image" && imageDirty) {
+      service.upload("/file/image", imageRawFile!).then(({ data }) => {
+        successMessage("上传成功");
+        showEditItemDialog.value = false;
+        resolve({
+          type: formDataItem.type,
+          content: data,
+        });
       });
+      // TODO 上传图片
+    } else if (type === "String") {
       showEditItemDialog.value = false;
-    });
-    // TODO 上传图片
-  } else if (type === "String") {
-    formData.content.push({
-      type: formDataItem.type,
-      content: formDataItem.content,
-    });
-    showEditItemDialog.value = false;
-  }
+      resolve({
+        type: formDataItem.type,
+        content: formDataItem.content,
+      });
+    }
+  }).then((data) => {
+    if (itemEditOrCreate.value) {
+      formData.content.splice(formDataItemIndex, 1, data);
+    } else {
+      formData.content.push(data);
+    }
+  });
 }
 function onExceed(files: File[]): ReturnType<UploadProps["onExceed"]> {
   uploadRef.value!.clearFiles();

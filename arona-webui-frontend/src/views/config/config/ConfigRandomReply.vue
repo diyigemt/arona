@@ -73,7 +73,9 @@
           <span v-if="row.type === 'String'">
             {{ row.content.content || row.content }}
           </span>
-          <el-image :src="loadImage(row.content.content || row.content)" lazy fit="contain" style="width: 200px" />
+          <span v-else>
+            <el-image :src="loadImage(row.content.content || row.content)" lazy fit="contain" style="width: 200px" />
+          </span>
         </template>
       </el-table-column>
       <el-table-column prop="label" label="操作" width="120">

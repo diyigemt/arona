@@ -267,7 +267,7 @@ function onExceed(files: File[]): ReturnType<UploadProps["onExceed"]> {
 function onImageChange(file: UploadFile): ReturnType<UploadProps["onChange"]> {
   const fileType = file.raw?.type || "";
   if (!["image/jpeg", "image/png", "image/gif"].includes(fileType)) {
-    warningMessage("不支持jpg/png/gif以外格式的图片");
+    warningMessage("不支持jpg/png/gif格式以外的图片");
     return;
   }
   doChangeImage(file.raw!);

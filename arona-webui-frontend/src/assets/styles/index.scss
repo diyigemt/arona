@@ -6,6 +6,12 @@
 #app {
   width: 100vw;
   height: 100vh;
+  position: relative;
+}
+
+@font-face {
+  font-family: "GameFont";
+  src: url("/font/ResourceHanRoundedCN-Medium.ttf");
 }
 
 // 隐藏横向滚动条

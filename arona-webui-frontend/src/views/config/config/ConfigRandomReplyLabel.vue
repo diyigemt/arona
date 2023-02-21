@@ -63,15 +63,20 @@ const showEditDialog = ref(false);
 const formData = reactive<ReplyLabel>(deepCopy(DefaultFormValue));
 
 function onConfirmEditOrCreate() {
-  if (editOrCreate.value) {
-    ReplyApi.updateReplyLabel(formData).then(() => {
-      successMessage("更新成功");
-    });
-  } else {
-    ReplyApi.createReplyLabel(formData).then(() => {
-      successMessage("创建成功");
-    });
-  }
+  new Promise<string>((resolve) => {
+    if (editOrCreate.value) {
+      ReplyApi.updateReplyLabel(formData).then(() => {
+        resolve("更新成功");
+      });
+    } else {
+      ReplyApi.createReplyLabel(formData).then(() => {
+        resolve("创建成功");
+      });
+    }
+  }).then((msg) => {
+    successMessage(msg);
+    fetchData();
+  });
 }
 function onCreateNewLabel() {
   fillForm<ReplyLabel>(formData, deepCopy(DefaultFormValue), ["id", "value", "weight"]);
@@ -96,10 +101,13 @@ const editOrCreate = computed(() => formData.id !== 0);
 const filteredTableData = computed(() =>
   dataFilterChain(tableData.value, filterForm, [filterContent, filterWeight], ["content", "weight"]),
 );
-onMounted(() => {
+function fetchData() {
   ReplyApi.fetchReplyLabels().then(({ data: labelData }) => {
     tableData.value = labelData;
   });
+}
+onMounted(() => {
+  fetchData();
 });
 function filterContent(data: ReplyLabel[], value: string): ReplyLabel[] {
   return data.filter((label) => label.value.indexOf(value) !== -1);

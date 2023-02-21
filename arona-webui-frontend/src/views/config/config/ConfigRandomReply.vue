@@ -204,15 +204,20 @@ function onDeleteReplyItem(item: ReplyItem, index: number) {
   });
 }
 function onConfirmEditOrCreateGroup() {
-  if (editOrCreate.value) {
-    ReplyApi.updateReplyGroup(formData).then(() => {
-      successMessage("更新成功");
-    });
-  } else {
-    ReplyApi.createReplyGroup(formData).then(() => {
-      successMessage("创建成功");
-    });
-  }
+  new Promise<string>((resolve) => {
+    if (editOrCreate.value) {
+      ReplyApi.updateReplyGroup(formData).then(() => {
+        resolve("更新成功");
+      });
+    } else {
+      ReplyApi.createReplyGroup(formData).then(() => {
+        resolve("创建成功");
+      });
+    }
+  }).then((msg) => {
+    successMessage(msg);
+    fetchData();
+  });
 }
 function onConfirmEditOrCreateItem() {
   const { type } = formDataItem;
@@ -283,7 +288,7 @@ function filterLabel(data: MapReplyGroup[], value: number[]): MapReplyGroup[] {
  * 判断当前是在编辑还是在新建 true为编辑
  */
 const editOrCreate = computed(() => formData.id !== 0);
-onMounted(() => {
+function fetchData() {
   ReplyApi.fetchReplyLabels().then(({ data: labelData }) => {
     labels.value = labelData;
     ReplyApi.fetchReplyGroups().then(({ data }) => {
@@ -326,6 +331,9 @@ onMounted(() => {
       });
     });
   });
+}
+onMounted(() => {
+  fetchData();
 });
 interface IFilterForm {
   content: string;

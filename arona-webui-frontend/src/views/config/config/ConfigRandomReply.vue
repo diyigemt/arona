@@ -139,7 +139,7 @@ import { UploadRawFile, UploadUserFile } from "element-plus/es/components/upload
 import { ReplyGroup, ReplyItem, ReplyItemType, ReplyItemTypeList, ReplyLabel } from "@/interface/modules/reply";
 import { dataFilterChain, deepCopy, fillForm } from "@/utils";
 import ReplyApi from "@/api/modules/reply";
-import { IWarningConfirm, successMessage } from "@/utils/message";
+import { IWarningConfirm, successMessage, warningMessage } from "@/utils/message";
 import service from "@/api/http";
 import FileApi from "@/api/modules/file";
 
@@ -265,6 +265,11 @@ function onExceed(files: File[]): ReturnType<UploadProps["onExceed"]> {
   doChangeImage(file);
 }
 function onImageChange(file: UploadFile): ReturnType<UploadProps["onChange"]> {
+  const fileType = file.raw?.type || "";
+  if (!["image/jpeg", "image/png", "image/gif"].includes(fileType)) {
+    warningMessage("不支持jpg/png/gif以外格式的图片");
+    return;
+  }
   doChangeImage(file.raw!);
 }
 function doChangeImage(file: UploadRawFile) {

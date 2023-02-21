@@ -43,6 +43,7 @@
 </template>
 
 <script setup lang="ts">
+// @ts-ignore
 import { Plus } from "@element-plus/icons-vue";
 import { dataFilterChain, deepCopy, fillForm } from "@/utils";
 import ReplyApi from "@/api/modules/reply";
@@ -66,10 +67,12 @@ function onConfirmEditOrCreate() {
   new Promise<string>((resolve) => {
     if (editOrCreate.value) {
       ReplyApi.updateReplyLabel(formData).then(() => {
+        showEditDialog.value = false;
         resolve("更新成功");
       });
     } else {
       ReplyApi.createReplyLabel(formData).then(() => {
+        showEditDialog.value = false;
         resolve("创建成功");
       });
     }
@@ -90,6 +93,7 @@ function onDeleteLabel(label: ReplyLabel) {
   IWarningConfirm("删除", `确认要删除标签: ${label.value} 吗?`).then(() => {
     ReplyApi.deleteReplyLabel(label.id).then(() => {
       successMessage(`标签: ${label.value} 删除成功`);
+      fetchData();
     });
   });
 }

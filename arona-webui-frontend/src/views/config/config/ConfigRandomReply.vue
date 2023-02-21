@@ -103,6 +103,7 @@
             :show-file-list="false"
             :limit="1"
             :auto-upload="false"
+            accept=".jpg,.png,.gif"
             :on-exceed="onExceed"
             :on-change="onImageChange"
             :http-request="uploadImage"

@@ -299,12 +299,8 @@ function fetchData() {
           label: group.label,
           content:
             group.content.length === 1
-              ? {
-                  ...group.content[0],
-                  id: String(group.id),
-                }
+              ? group.content[0]
               : {
-                  id: String(group.id),
                   type: "String",
                   content: "多个内容",
                 },
@@ -319,13 +315,7 @@ function fetchData() {
               value: "错误",
             };
           }),
-          children:
-            group.content.length === 1
-              ? []
-              : group.content.map((content, index) => ({
-                  ...content,
-                  id: `${group.id}-${index}`,
-                })),
+          children: group.content.length === 1 ? [] : group.content,
         };
         return mapData;
       });
@@ -340,13 +330,10 @@ interface IFilterForm {
   weight: number | undefined;
   label: number[];
 }
-interface IdReplyItem extends ReplyItem {
-  id: string;
-}
 interface MapReplyGroup extends Pick<ReplyGroup, "id" | "weight" | "label"> {
-  content: IdReplyItem;
+  content: ReplyItem;
   mapLabel: ReplyLabel[];
-  children?: IdReplyItem[];
+  children?: ReplyItem[];
 }
 </script>
 

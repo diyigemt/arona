@@ -25,12 +25,23 @@ object Labels: Worker {
   override suspend fun worker(context: PipelineContext<Unit, ApplicationCall>) {
     super.worker(context)
     when(context.call.request.httpMethod) {
-      HttpMethod.Get -> context.call.respond(responseMessage(getLabelItems()))
-      HttpMethod.Post -> {
+      HttpMethod.Get -> kotlin.runCatching {
+        val res: MutableList<LabelItem> = mutableListOf()
+        DataBaseProvider.query {
+          Labels.selectAll().forEach {
+            res.add(LabelItem(it[Labels.id].value, it[Labels.value], it[Labels.weight]))
+          }
+        }
+        return@runCatching res
+      }.onFailure {
+        it.printStackTrace()
+        context.call.respond(ServerResponse(500, HttpStatusCode.InternalServerError.description, ""))
+      }.onSuccess { context.call.respond(responseMessage(it)) }
+      HttpMethod.Post -> kotlin.runCatching {
         val receive = context.call.receiveText()
 
         when(context.call.parameters["method"]) {
-          "create" -> kotlin.runCatching {
+          "create" ->  {
             val json = json.decodeFromString(RequestLabel.serializer(), receive).label
             DataBaseProvider.query {
               Labels.insert {
@@ -38,11 +49,8 @@ object Labels: Worker {
                 it[weight] = json.weight
               }
             }
-          }.onFailure {
-            it.printStackTrace()
-            context.call.respond(ServerResponse(500, HttpStatusCode.InternalServerError.description, ""))
-          }.onSuccess { context.call.respond(responseMessage("")) }
-          "update" -> kotlin.runCatching {
+          }
+          "update" -> {
             val json = json.decodeFromString(RequestLabel.serializer(), receive).label
             DataBaseProvider.query {
               Labels.update({Labels.id eq json.id}) {
@@ -50,33 +58,20 @@ object Labels: Worker {
                 it[weight] = json.weight
               }
             }
-          }.onFailure {
-            it.printStackTrace()
-            context.call.respond(ServerResponse(500, HttpStatusCode.InternalServerError.description, ""))
-          }.onSuccess { context.call.respond(responseMessage("")) }
-          "delete" -> kotlin.runCatching {
+          }
+          "delete" -> {
             val json = json.decodeFromString(DeleteRequest.serializer(), receive)
             DataBaseProvider.query {
               Labels.deleteWhere { Labels.id eq json.id }
             }
-          }.onFailure {
-            it.printStackTrace()
-            context.call.respond(ServerResponse(500, HttpStatusCode.InternalServerError.description, ""))
-          }.onSuccess { context.call.respond(responseMessage("")) }
+          }
+          else -> context.call.respond(ServerResponse(400, HttpStatusCode.BadRequest.description, ""))
         }
-      }
+      }.onFailure {
+        it.printStackTrace()
+        context.call.respond(ServerResponse(500, HttpStatusCode.InternalServerError.description, ""))
+      }.onSuccess { context.call.respond(responseMessage("")) }
     }
-  }
-
-  private fun getLabelItems(): List<LabelItem> {
-    val res: MutableList<LabelItem> = mutableListOf()
-    DataBaseProvider.query {
-      Labels.selectAll().forEach {
-        res.add(LabelItem(it[Labels.id].value, it[Labels.value], it[Labels.weight]))
-      }
-    }
-
-    return res
   }
 
   @Serializable

@@ -13,6 +13,7 @@ import net.diyigemt.arona.web.api.v1.commit.CommitManager
 import net.diyigemt.arona.web.api.v1.config.ConfigService
 import net.diyigemt.arona.web.api.v1.data.Data
 import net.diyigemt.arona.web.api.v1.reply.Labels
+import net.diyigemt.arona.web.api.v1.reply.MessageGroup
 import net.diyigemt.arona.web.api.v1.responseMessage
 
 fun Application.configureSerialization() {
@@ -69,8 +70,15 @@ fun Application.configureSerialization() {
         }
 
         route("/reply") {
-          get("/label") { Labels.worker(this) }
-          post("/label/{method}") { Labels.worker(this) }
+          route("/label") {
+            get { Labels.worker(this) }
+            post("/{method}") { Labels.worker(this) }
+          }
+
+          route("/group") {
+            get { MessageGroup.worker(this) }
+            post("/{method}") { MessageGroup.worker(this) }
+          }
         }
       }
     }

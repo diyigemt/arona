@@ -132,6 +132,7 @@
 </template>
 
 <script setup lang="ts">
+// @ts-ignore
 import { Plus } from "@element-plus/icons-vue";
 import { genFileId, UploadFile, UploadProps, UploadRequestOptions } from "element-plus";
 import { UploadRawFile, UploadUserFile } from "element-plus/es/components/upload/src/upload";
@@ -185,6 +186,8 @@ function onDeleteReplyGroup(group: MapReplyGroup) {
   IWarningConfirm("删除", `确认要删除回复吗?`).then(() => {
     ReplyApi.deleteReplyGroup(group.id).then(() => {
       successMessage(`删除成功`);
+      fetchData();
+      showEditDialog.value = false;
     });
   });
 }
@@ -212,10 +215,12 @@ function onConfirmEditOrCreateGroup() {
   new Promise<string>((resolve) => {
     if (editOrCreate.value) {
       ReplyApi.updateReplyGroup(formData).then(() => {
+        showEditDialog.value = false;
         resolve("更新成功");
       });
     } else {
       ReplyApi.createReplyGroup(formData).then(() => {
+        showEditDialog.value = false;
         resolve("创建成功");
       });
     }

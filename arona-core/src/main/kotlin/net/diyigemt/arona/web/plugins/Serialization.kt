@@ -12,6 +12,7 @@ import net.diyigemt.arona.web.api.v1.blockly.BlocklyAPIService
 import net.diyigemt.arona.web.api.v1.commit.CommitManager
 import net.diyigemt.arona.web.api.v1.config.ConfigService
 import net.diyigemt.arona.web.api.v1.data.Data
+import net.diyigemt.arona.web.api.v1.file.UploadManager
 import net.diyigemt.arona.web.api.v1.reply.Labels
 import net.diyigemt.arona.web.api.v1.reply.MessageGroup
 import net.diyigemt.arona.web.api.v1.responseMessage
@@ -78,6 +79,13 @@ fun Application.configureSerialization() {
           route("/group") {
             get { MessageGroup.worker(this) }
             post("/{method}") { MessageGroup.worker(this) }
+          }
+        }
+
+        route("/file") {
+          route("/image") {
+            get { UploadManager.worker(this) }
+            post { UploadManager.worker(this) }
           }
         }
       }

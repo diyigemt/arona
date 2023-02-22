@@ -7,8 +7,6 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.util.pipeline.*
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
-import net.diyigemt.arona.Arona
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.reply.ContentItem
 import net.diyigemt.arona.db.reply.MessageGroup
@@ -55,7 +53,6 @@ object MessageGroup: Worker {
       HttpMethod.Post -> kotlin.runCatching {
         val receive = context.call.receiveText()
         val intListType = Types.newParameterizedType(List::class.java, Int::class.javaObjectType)
-        Arona.info(receive)
         when(context.call.parameters["method"]) {
           "create" -> {
             val json = json.decodeFromString(ResponseMessageGroup.serializer(), receive).group

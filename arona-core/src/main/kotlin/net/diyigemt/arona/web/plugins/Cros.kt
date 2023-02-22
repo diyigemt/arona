@@ -29,6 +29,7 @@ fun Application.configureCROS(){
     allowHeader("Sec-Fetch-Dest")
     allowHeader("Sec-Fetch-Mode")
     allowHeader("Sec-Fetch-Site")
+    allowHeader("arona-file-name")
     allowHeader(HttpHeaders.UserAgent)
     anyHost() // @TODO: Don't do this in production if possible. Try to limit it.
   }

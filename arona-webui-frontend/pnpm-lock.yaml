@@ -10,6 +10,8 @@ specifiers:
   '@jsplumb/connector-bezier': ^5.13.2
   '@jsplumb/connector-flowchart': ^5.13.2
   '@pixi-spine/base': ^3.1.0
+  '@pixi/filter-advanced-bloom': ^4.0.0
+  '@pixi/particle-emitter': ^5.0.8
   '@types/express': ^4.17.15
   '@types/express-fileupload': ^1.4.1
   '@types/node': ^17.0.45
@@ -35,6 +37,7 @@ specifiers:
   express: ^4.18.2
   express-fileupload: ^1.4.0
   gantt-schedule-timeline-calendar: ^3.33.13
+  gsap: ^3.11.4
   husky: ^7.0.4
   lint-staged: ^12.3.2
   lodash: ^4.17.21
@@ -76,6 +79,8 @@ dependencies:
   '@jsplumb/connector-bezier': 5.13.2
   '@jsplumb/connector-flowchart': 5.13.2
   '@pixi-spine/base': 3.1.2
+  '@pixi/filter-advanced-bloom': 4.2.0
+  '@pixi/particle-emitter': 5.0.8
   '@vueuse/core': 8.9.4_vue@3.2.45
   axios: 0.25.0
   blockly: 9.2.0
@@ -85,6 +90,7 @@ dependencies:
   element-plus: 2.2.28_vue@3.2.45
   express: 4.18.2
   gantt-schedule-timeline-calendar: 3.33.13
+  gsap: 3.11.4
   lodash: 4.17.21
   lodash-es: 4.17.21
   mitt: 3.0.0
@@ -1157,6 +1163,18 @@ packages:
       '@pixi/utils': 6.5.9_56wmgtaor3g36gitvwiown43he
     dev: false
 
+  /@pixi/filter-advanced-bloom/4.2.0:
+    resolution: {integrity: sha512-c/mF9twWhpLUOhr205Vup9EnXl0FMX6ClUnoSgCYJnE3hTWsJ5ewo5HSQfcv/VwFGIyLOFOx+Nz7KVEuFfNPow==}
+    peerDependencies:
+      '@pixi/constants': ^6.0.0
+      '@pixi/core': ^6.0.0
+      '@pixi/settings': ^6.0.0
+    dependencies:
+      '@pixi/filter-kawase-blur': 4.2.0
+    transitivePeerDependencies:
+      - '@pixi/math'
+    dev: false
+
   /@pixi/filter-alpha/6.5.9_@pixi+core@6.5.9:
     resolution: {integrity: sha512-p87mGgMXX64CKUmTSadIOUzA7Q7MxybmsYPZbxFIFWsH2ML07RZChEaZWL2Bzql2CwgfejzxJPkCTXB/Qn5IRQ==}
     peerDependencies:
@@ -1201,6 +1219,14 @@ packages:
       '@pixi/core': 6.5.9
     dependencies:
       '@pixi/core': 6.5.9_yc3lyad5jwyinmndak3aswu4u4
+    dev: false
+
+  /@pixi/filter-kawase-blur/4.2.0:
+    resolution: {integrity: sha512-1QeZqdUD3vh6HtiH930scI9mN/lDvfKW8rmwoE295tj5kbX6OeyRqXDr6KnEaRh/Jzm1hPB6ryRjHDS54x0QpQ==}
+    peerDependencies:
+      '@pixi/constants': ^6.0.0
+      '@pixi/core': ^6.0.0
+      '@pixi/math': ^6.0.0
     dev: false
 
   /@pixi/filter-noise/6.5.9_@pixi+core@6.5.9:
@@ -1349,6 +1375,17 @@ packages:
       '@pixi/math': 6.5.9
       '@pixi/sprite': 6.5.9_b4zyc73gthwid7yuuju7gyyh2m
       '@pixi/utils': 6.5.9_56wmgtaor3g36gitvwiown43he
+    dev: false
+
+  /@pixi/particle-emitter/5.0.8:
+    resolution: {integrity: sha512-OzuZ4+esQo+zJ0u3htuNHHMAE8Ixmr3nz3tEfrTGZHje1vnGyie3ANQj9F0V4OM47oi9jd70njVCmeb7bTkS9A==}
+    peerDependencies:
+      '@pixi/constants': '>=6.0.4 <8.0.0'
+      '@pixi/core': '>=6.0.4 <8.0.0'
+      '@pixi/display': '>=6.0.4 <8.0.0'
+      '@pixi/math': '>=6.0.4 <8.0.0'
+      '@pixi/sprite': '>=6.0.4 <8.0.0'
+      '@pixi/ticker': '>=6.0.4 <8.0.0'
     dev: false
 
   /@pixi/polyfill/6.5.9:
@@ -3911,6 +3948,10 @@ packages:
       section-matter: 1.0.0
       strip-bom-string: 1.0.0
     dev: true
+
+  /gsap/3.11.4:
+    resolution: {integrity: sha512-McHhEguHyExMMnjqKA8G+7TvxmlKQGMbjgwAilnFe1e4id7V/tFveRQ2YMZhTYu0oxHGWvbPltdVYQOu3z1SCA==}
+    dev: false
 
   /hard-rejection/2.1.0:
     resolution: {integrity: sha512-VIZB+ibDhx7ObhAe7OVtoEbuP4h/MuOTHJ+J8h/eBXotJYl0fBgR72xDFCKgIh22OJZIOVNxBMWuhAr10r8HdA==}

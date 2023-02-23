@@ -1,9 +1,7 @@
 import { Application, Loader } from "pixi.js";
 import { SpineParser, Spine } from "pixi-spine";
-import * as PIXI from "pixi.js";
 import { ITrackEntry } from "@pixi-spine/base";
 
-(window as any).__PIXI_INSPECTOR_GLOBAL_HOOK__ && (window as any).__PIXI_INSPECTOR_GLOBAL_HOOK__.register({ PIXI });
 Loader.registerPlugin(SpineParser);
 const SpineManager: SpineManager = {
   get(name: string): SpineInstance {

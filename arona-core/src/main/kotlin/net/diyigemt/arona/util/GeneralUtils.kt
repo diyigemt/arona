@@ -157,6 +157,7 @@ object GeneralUtils : Initialize {
     File(imageFileFolder(TrainerCommand.StudentRankFolder)).also { it.mkdirs() }
     File(imageFileFolder(TrainerCommand.OtherFolder)).also { it.mkdirs() }
     File(imageFileFolder(TarotCommand.TarotImageFolder)).also { it.mkdirs() }
+    File(imageFileFolder("\\userdata")).also { it.mkdirs() }
     File(Arona.dataFolderPath(ConfigFolder)).also { it.mkdirs() }
   }
 }

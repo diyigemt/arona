@@ -7,7 +7,6 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.util.pipeline.*
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.reply.ContentItem
@@ -15,6 +14,7 @@ import net.diyigemt.arona.db.reply.MessageGroup
 import net.diyigemt.arona.db.reply.MessageGroups
 import net.diyigemt.arona.util.MoshiUtil
 import net.diyigemt.arona.web.api.v1.Worker
+import net.diyigemt.arona.web.api.v1.file.UploadManager
 import net.diyigemt.arona.web.api.v1.message.ServerResponse
 import net.diyigemt.arona.web.api.v1.responseMessage
 import org.jetbrains.exposed.sql.deleteWhere
@@ -55,7 +55,6 @@ object MessageGroup: Worker {
       HttpMethod.Post -> kotlin.runCatching {
         val receive = context.call.receiveText()
         val intListType = Types.newParameterizedType(List::class.java, Int::class.javaObjectType)
-        Arona.info(receive)
         when(context.call.parameters["method"]) {
           "create" -> {
             val json = json.decodeFromString(ResponseMessageGroup.serializer(), receive).group
@@ -86,6 +85,7 @@ object MessageGroup: Worker {
 
           else -> context.call.respond(ServerResponse(400, HttpStatusCode.BadRequest.description, ""))
         }
+        if (!UploadManager.mutex.isLocked) Arona.runSuspend { UploadManager.removeUnusedFiles() }
       }.onFailure {
         it.printStackTrace()
         context.call.respond(ServerResponse(500, HttpStatusCode.InternalServerError.description, ""))

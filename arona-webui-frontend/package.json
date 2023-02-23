@@ -29,6 +29,7 @@
     "element-plus": "^2.0.1",
     "express": "^4.18.2",
     "gantt-schedule-timeline-calendar": "^3.33.13",
+    "gsap": "^3.11.4",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "mitt": "^3.0.0",

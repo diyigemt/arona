@@ -10,7 +10,7 @@ import org.jetbrains.exposed.sql.Column
  *@Create 2023/2/21
  */
 object MessageGroups: IntIdTable("MessageGroups") {
-  val content: Column<String> = varchar("content", 255)
+  val content: Column<String> = varchar("content", 1000000)
   val weight: Column<Int> = integer("weight")
   val labels: Column<String> = varchar("labels", 255)
 }

@@ -13,6 +13,7 @@ import net.diyigemt.arona.web.api.v1.commit.CommitManager
 import net.diyigemt.arona.web.api.v1.config.ConfigService
 import net.diyigemt.arona.web.api.v1.data.Data
 import net.diyigemt.arona.web.api.v1.file.UploadManager
+import net.diyigemt.arona.web.api.v1.mirai.BotsAPI
 import net.diyigemt.arona.web.api.v1.reply.Labels
 import net.diyigemt.arona.web.api.v1.reply.MessageGroup
 import net.diyigemt.arona.web.api.v1.responseMessage
@@ -25,15 +26,7 @@ fun Application.configureSerialization() {
   routing {
     authenticate {
       route("/api/v1") {
-        route("/config") {
-          get("/{config}") {
-            ConfigService.worker(this)
-          }
-
-          post("/commit") {
-            CommitManager.worker(this)
-          }
-        }
+        get("/config") { ConfigService.worker(this) }
 
         route("/contacts") {
           get {
@@ -86,6 +79,12 @@ fun Application.configureSerialization() {
           route("/image") {
             get { UploadManager.worker(this) }
             post { UploadManager.worker(this) }
+          }
+        }
+
+        route("mirai") {
+          route("bot") {
+            get { BotsAPI.worker(this) }
           }
         }
       }

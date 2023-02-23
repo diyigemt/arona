@@ -1,15 +1,27 @@
 package net.diyigemt.arona.web.api.v1.file
 
+import com.squareup.moshi.Types
 import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.util.pipeline.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import net.diyigemt.arona.Arona
+import net.diyigemt.arona.db.DataBaseProvider
+import net.diyigemt.arona.db.reply.ContentItem
+import net.diyigemt.arona.db.reply.MessageGroups
+import net.diyigemt.arona.db.reply.MessageKind
 import net.diyigemt.arona.util.GeneralUtils.toHex
+import net.diyigemt.arona.util.MoshiUtil
 import net.diyigemt.arona.web.api.v1.Worker
 import net.diyigemt.arona.web.api.v1.message.ServerResponse
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.selectAll
 import java.io.File
 import java.net.URLDecoder
 import java.util.*
@@ -19,6 +31,7 @@ import java.util.*
  *@Create 2023/2/21
  */
 object UploadManager:Worker {
+  val mutex = Mutex()
   override suspend fun worker(context: PipelineContext<Unit, ApplicationCall>) {
     super.worker(context)
     when(context.call.request.httpMethod) {
@@ -107,6 +120,27 @@ object UploadManager:Worker {
           if (it.compareMagic(bytes)) return it
         }
         return null
+      }
+    }
+  }
+
+  suspend fun removeUnusedFiles() = withContext(Dispatchers.IO) {
+    val type = Types.newParameterizedType(List::class.java, ContentItem::class.java)
+    mutex.withLock {
+      val res: MutableMap<String, FileType> = mutableMapOf()
+      DataBaseProvider.query {
+        MessageGroups.slice(MessageGroups.content).selectAll().map { it[MessageGroups.content] }
+      }?.forEach { contentList ->
+        MoshiUtil.reflect.adapter<List<ContentItem>>(type).fromJson(contentList)?.forEach {
+          if (it.type != MessageKind.String) kotlin.runCatching {
+            res.put(it.content, (FileType.valueOf(File(it.content).extension.uppercase())))
+          }
+        }
+      }
+      kotlin.runCatching {
+        File("${Arona.dataFolder}\\image\\userdata").listFiles()?.filter { it.name !in res.keys }?.forEach {
+          it.delete()
+        }
       }
     }
   }

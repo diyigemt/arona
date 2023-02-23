@@ -1,5 +1,6 @@
 package net.diyigemt.arona.web.api.v1.reply
 
+import com.squareup.moshi.Types
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -9,6 +10,8 @@ import kotlinx.serialization.Serializable
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.reply.LabelItem
 import net.diyigemt.arona.db.reply.Labels
+import net.diyigemt.arona.db.reply.MessageGroups
+import net.diyigemt.arona.util.MoshiUtil
 import net.diyigemt.arona.web.api.v1.Worker
 import net.diyigemt.arona.web.api.v1.message.ServerResponse
 import net.diyigemt.arona.web.api.v1.responseMessage
@@ -22,6 +25,8 @@ import org.jetbrains.exposed.sql.update
  *@Create 2023/2/19
  */
 object Labels: Worker {
+  private val adapter = MoshiUtil.builtIn.adapter<MutableList<Int>>(Types.newParameterizedType(MutableList::class.java, Int::class.javaObjectType))
+
   override suspend fun worker(context: PipelineContext<Unit, ApplicationCall>) {
     super.worker(context)
     when(context.call.request.httpMethod) {
@@ -61,8 +66,20 @@ object Labels: Worker {
           }
           "delete" -> {
             val json = json.decodeFromString(DeleteRequest.serializer(), receive)
+
             DataBaseProvider.query {
               Labels.deleteWhere { Labels.id eq json.id }
+              MessageGroups.slice(MessageGroups.id, MessageGroups.labels).selectAll().map {
+                it[MessageGroups.id] to it[MessageGroups.labels]
+              }.forEach { pair ->
+                adapter.fromJson(pair.second)?.apply {
+                  this.remove(json.id).also { exist ->
+                    if (exist) MessageGroups.update( { MessageGroups.id eq pair.first } ) {
+                      it[labels] = adapter.toJson(this@apply)
+                    }
+                  }
+                }
+              }
             }
           }
           else -> context.call.respond(ServerResponse(400, HttpStatusCode.BadRequest.description, ""))

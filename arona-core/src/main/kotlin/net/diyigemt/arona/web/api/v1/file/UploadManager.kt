@@ -20,7 +20,6 @@ import net.diyigemt.arona.util.GeneralUtils.toHex
 import net.diyigemt.arona.util.MoshiUtil
 import net.diyigemt.arona.web.api.v1.Worker
 import net.diyigemt.arona.web.api.v1.message.ServerResponse
-import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import java.io.File
 import java.net.URLDecoder

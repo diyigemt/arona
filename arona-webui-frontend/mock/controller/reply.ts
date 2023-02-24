@@ -19,13 +19,13 @@ export function getReplyGroup(_: Request, response: Response): Promise<Response>
             { type: "Image", content: "1000001" },
           ],
           weight: 1,
-          label: [2],
+          label: [2, 3],
         },
         {
           id: 3,
           content: [{ type: "String", content: "测试3" }],
           weight: 2,
-          label: [1, 2],
+          label: [2, 1],
         },
       ];
       resolve(packageResponse(response, data));
@@ -45,7 +45,12 @@ export function getReplyLabel(_: Request, response: Response): Promise<Response>
         {
           id: 2,
           value: "标签2",
-          weight: 2,
+          weight: -2,
+        },
+        {
+          id: 3,
+          value: "标签3",
+          weight: 0,
         },
       ];
       resolve(packageResponse(response, data));

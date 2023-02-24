@@ -36,8 +36,8 @@
       <el-table-column prop="label" label="标签" width="250">
         <template #default="{ row }">
           <div style="display: flex; flex-direction: row; gap: 10px">
-            <el-tag v-for="(e, index) in row.mapLabel" :key="index">
-              {{ e.value }}
+            <el-tag v-for="(e, index) in row.mapLabel" :key="index" :type="mapTagType(e.weight)">
+              {{ e.value }}({{ e.weight }})
             </el-tag>
           </div>
         </template>
@@ -310,6 +310,15 @@ function filterWeight(data: MapReplyGroup[], value: number): MapReplyGroup[] {
 function filterLabel(data: MapReplyGroup[], value: number[]): MapReplyGroup[] {
   return data.filter((group) => group.label.some((label) => value.indexOf(label) !== -1));
 }
+function mapTagType(value: number) {
+  if (value > 0) {
+    return "success";
+  }
+  if (value < 0) {
+    return "danger";
+  }
+  return "";
+}
 /**
  * 判断当前是在编辑还是在新建 true为编辑
  */
@@ -330,17 +339,19 @@ function fetchData() {
                   type: "String",
                   content: "多个内容",
                 },
-          mapLabel: group.label.map((label) => {
-            const tmp = labels.value.filter((item) => item.id === label);
-            if (tmp.length > 0) {
-              return tmp[0];
-            }
-            return {
-              id: -1,
-              weight: -1,
-              value: "错误",
-            };
-          }),
+          mapLabel: group.label
+            .map((label) => {
+              const tmp = labels.value.filter((item) => item.id === label);
+              if (tmp.length > 0) {
+                return tmp[0];
+              }
+              return {
+                id: -1,
+                weight: -1,
+                value: "错误",
+              };
+            })
+            .sort((a, b) => b.weight - a.weight),
           children: group.content.length === 1 ? [] : group.content,
         };
         return mapData;

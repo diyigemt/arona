@@ -26,127 +26,163 @@
 // @ts-ignore
 import VideoBackground from "vue-responsive-video-background-player";
 import { Emitter } from "@pixi/particle-emitter";
-import { Application, Container, LoaderResource, Sprite, Texture } from "pixi.js";
+import { Application, Container, InteractionEvent, LoaderResource, Sprite, Texture } from "pixi.js";
 import * as PIXI from "pixi.js";
 import { AdvancedBloomFilter } from "@pixi/filter-advanced-bloom";
 import { Spine } from "pixi-spine";
 import gsap from "gsap";
-import { SleepEmitterConfig, StandEmitterConfig } from "@/constant/emiterConfig";
+import { WatchEmitterConfig, SleepEmitterConfig, StandEmitterConfig, SitEmitterConfig } from "@/constant/emiterConfig";
+import { HomePageAnimationConfigs } from "@/constant/spine";
 
 (window as any).__PIXI_INSPECTOR_GLOBAL_HOOK__ && (window as any).__PIXI_INSPECTOR_GLOBAL_HOOK__.register({ PIXI });
 const backgroundContainer = ref<HTMLElement>();
 const backgroundWidth = 800;
 const standardWidth = 800;
 const standardRate = backgroundWidth / standardWidth;
+const backgroundIdleTrack = 1;
+const backgroundAnimationTrack = 2;
+const backgroundActionTrack1 = 3;
+const backgroundActionTrack2 = 4;
 const backgroundHeight = backgroundWidth * 0.7;
 const backgroundPaddingLeft = 39;
 const backgroundPaddingTop = 24;
 const backgroundPaddingRight = 129;
 const backgroundPaddingBottom = 98;
-const app = new Application({ width: backgroundWidth, height: backgroundHeight });
-app.stage.sortableChildren = true;
-app.loader.add("space", "/spine/arona_workpage.skel");
-app.loader.add("sleepMask", "/image/FX_TEX_Arona_C.png");
-app.loader.add("arona", "/spine/arona_spr.skel");
-app.loader.add("aronaMask", "/image/FX_TEX_Arona_Stand.png");
-app.loader.load((_, resources) => {
-  const spaceResource = Reflect.get(resources, "space");
-  const space = loadSpace(spaceResource);
-  const sleepMaskResource = Reflect.get(resources, "sleepMask");
-  const sleepMask = loadSleepMask(sleepMaskResource);
-  const aronaResource = Reflect.get(resources, "arona");
-  const aronaContainer = new Container();
-  aronaContainer.sortableChildren = true;
-  const arona = loadArona(aronaResource, aronaContainer);
-  app.stage.addChild(aronaContainer);
-  const aronaMaskResource = Reflect.get(resources, "aronaMask");
-  const aronaMask = loadAronaMask(aronaMaskResource, aronaContainer);
+function initBackground(el: HTMLElement) {
+  const randomAnimation = Math.floor(Math.random() * 3);
+  const animationConfig = HomePageAnimationConfigs[randomAnimation];
+  const interactionPoint = animationConfig.interaction;
+  const disappearMaskPath = animationConfig.mask.path;
+  const app = new Application({ width: backgroundWidth, height: backgroundHeight });
+  el.appendChild(app.view);
+  app.stage.sortableChildren = true;
+  app.loader.add("space", "/spine/arona_workpage.skel");
+  app.loader.add("disappearMask", disappearMaskPath);
+  app.loader.add("arona", "/spine/arona_spr.skel");
+  app.loader.add("aronaMask", "/image/FX_TEX_Arona_Stand.png");
+  app.stage.interactive = true;
+  app.loader.load((_, resources) => {
+    const backgroundResource = Reflect.get(resources, "space");
+    const backgroundSpine = loadSpace(backgroundResource, app.stage);
+    backgroundSpine.state.setAnimation(backgroundAnimationTrack, animationConfig.animation.background, true);
 
-  const container = new Container();
-  container.visible = false;
-  container.filters = [new AdvancedBloomFilter({ bloomScale: 1.5, brightness: 1.5 })];
-  container.position.set(standardRate * -15, standardRate * -30);
-  container.scale.set(standardRate * 0.27);
-  app.stage.addChild(container);
-  const emitter = new Emitter(container, SleepEmitterConfig);
-  emitter.autoUpdate = true;
+    const disappearMaskResource = Reflect.get(resources, "disappearMask");
+    const disappearMask = loadSleepMask(
+      disappearMaskResource,
+      app.stage,
+      animationConfig.mask.scale,
+      animationConfig.mask.offset,
+    );
 
-  const container2 = new Container();
-  container2.visible = false;
-  container2.zIndex = 8;
-  container2.filters = [new AdvancedBloomFilter({ bloomScale: 1.5, brightness: 1.5 })];
-  container2.scale.set(standardRate * 0.8);
-  aronaContainer.addChild(container2);
-  const emitter2 = new Emitter(container2, StandEmitterConfig);
-  emitter2.autoUpdate = true;
+    const aronaResource = Reflect.get(resources, "arona");
+    const aronaContainer = new Container();
+    aronaContainer.sortableChildren = true;
+    aronaContainer.visible = false;
+    app.stage.addChild(aronaContainer);
 
-  setTimeout(() => {
-    space.state.setAnimation(3, "Idle_02_Touch_A", false);
-    space.state.setAnimation(4, "Idle_02_Touch_M", false);
-    setTimeout(() => {
-      sleepMask.visible = true;
-      container.visible = true;
-      let trigger = true;
-      const tl = gsap.timeline();
-      emitter.emit = true;
-      tl.to(sleepMask, {
-        alpha: 0.2,
-        duration: 0.8,
-        onUpdate: () => {
-          if (sleepMask.alpha < 0.5 && trigger) {
-            space.state.setAnimation(2, "Dummy", false);
-            space.state.setAnimation(3, "Dummy", false);
-            space.state.setAnimation(4, "Dummy", false);
-            setTimeout(() => {
-              space.state.clearTrack(3);
-              space.state.clearTrack(4);
-              space.state.clearTrack(2);
-            }, 100);
-            trigger = false;
-          }
-        },
-      }).then(() => {
-        sleepMask.visible = false;
-        aronaMask.visible = true;
-        arona.visible = true;
-        emitter2.emit = true;
-        container2.visible = true;
-        const tl2 = gsap.timeline();
-        tl2
-          .to(aronaMask, {
-            alpha: 0.2,
-            duration: 1,
-          })
-          .then(() => {
-            aronaMask.visible = false;
-          });
-      });
-    }, 500);
-  }, 2000);
-});
-function loadSleepMask(resource: LoaderResource) {
+    const arona = loadArona(aronaResource, aronaContainer);
+
+    const aronaMaskResource = Reflect.get(resources, "aronaMask");
+    const aronaMask = loadAronaMask(aronaMaskResource, aronaContainer);
+
+    const sourceParticleContainer = new Container();
+    sourceParticleContainer.visible = false;
+    sourceParticleContainer.filters = [new AdvancedBloomFilter({ bloomScale: 1.5, brightness: 1.5 })];
+    sourceParticleContainer.position.set(
+      standardRate * animationConfig.emitter.offset.x,
+      standardRate * animationConfig.emitter.offset.y,
+    );
+    sourceParticleContainer.scale.set(standardRate * animationConfig.emitter.scale);
+    app.stage.addChild(sourceParticleContainer);
+    const emitter = new Emitter(sourceParticleContainer, animationConfig.emitter.config);
+    emitter.autoUpdate = true;
+
+    const destParticleContainer = new Container();
+    destParticleContainer.visible = false;
+    destParticleContainer.zIndex = 8;
+    destParticleContainer.filters = [new AdvancedBloomFilter({ bloomScale: 1.5, brightness: 1.5 })];
+    destParticleContainer.position.set(-140, -80);
+    aronaContainer.addChild(destParticleContainer);
+    const emitter2 = new Emitter(destParticleContainer, StandEmitterConfig);
+    emitter2.autoUpdate = true;
+
+    app.stage.on("click", (event: InteractionEvent) => {
+      const target = event.data.global;
+      const action =
+        target.x >= interactionPoint.pa.x * standardRate &&
+        target.x <= interactionPoint.pb.x * standardRate &&
+        target.y >= interactionPoint.pa.y * standardRate &&
+        target.y <= interactionPoint.pb.y * standardRate;
+      if (!action) {
+        return;
+      }
+      setTimeout(() => {
+        disappearMask.visible = true;
+        sourceParticleContainer.visible = true;
+        let trigger = true;
+        const tl = gsap.timeline();
+        emitter.emit = true;
+        tl.to(disappearMask, {
+          alpha: 0.2,
+          duration: 0.8,
+          onUpdate: () => {
+            if (disappearMask.alpha < 0.5 && trigger) {
+              backgroundSpine.state.setAnimation(backgroundAnimationTrack, "Dummy", false);
+              backgroundSpine.state.setAnimation(backgroundActionTrack1, "Dummy", false);
+              backgroundSpine.state.setAnimation(backgroundActionTrack2, "Dummy", false);
+              setTimeout(() => {
+                backgroundSpine.state.clearTrack(3);
+                backgroundSpine.state.clearTrack(4);
+                backgroundSpine.state.clearTrack(2);
+              }, 100);
+              trigger = false;
+            }
+          },
+        }).then(() => {
+          disappearMask.visible = false;
+          aronaContainer.visible = true;
+          aronaMask.visible = true;
+          arona.visible = true;
+          emitter2.emit = true;
+          destParticleContainer.visible = true;
+          const tl2 = gsap.timeline();
+          tl2
+            .to(aronaMask, {
+              alpha: 0,
+              duration: 1,
+            })
+            .then(() => {
+              aronaMask.visible = false;
+            });
+        });
+      }, 500);
+      backgroundSpine.state.setAnimation(backgroundActionTrack1, animationConfig.animation.arona[0], false);
+      backgroundSpine.state.setAnimation(backgroundActionTrack2, animationConfig.animation.arona[1], false);
+    });
+  });
+}
+
+function loadSleepMask(resource: LoaderResource, app: Container, scale: number, offset: { x: number; y: number }) {
   const sprite = Sprite.from(resource.texture!);
   sprite.filters = [new AdvancedBloomFilter({ bloomScale: 1, brightness: 1 })];
-  sprite.scale.set(standardRate * 1.3);
-  sprite.position.set(standardRate * 87, standardRate * 115);
+  sprite.scale.set(standardRate * scale);
+  sprite.position.set(standardRate * offset.x, standardRate * offset.y);
   sprite.zIndex = 10;
-  app.stage.addChild(sprite);
+  app.addChild(sprite);
   sprite.visible = false;
   return sprite;
 }
-function loadSpace(resource: LoaderResource) {
+function loadSpace(resource: LoaderResource, app: Container) {
   const backgroundSpine = new Spine(resource.spineData!);
   const sourceWidth = backgroundSpine.width;
   const sourceHeight = backgroundSpine.height;
   const actualWidth = sourceWidth - backgroundPaddingLeft - backgroundPaddingRight;
-  const actualHeight = sourceHeight - backgroundPaddingTop - backgroundPaddingBottom;
   const scale = backgroundWidth / actualWidth;
   backgroundSpine.pivot.set(-0.4777 * sourceWidth, -0.882 * sourceHeight);
   backgroundSpine.scale.set(scale);
-  backgroundSpine.state.setAnimation(1, "Idle_background_00", true);
-  backgroundSpine.state.setAnimation(2, "Idle_02", true);
+  backgroundSpine.state.setAnimation(backgroundIdleTrack, "Idle_background_00", true);
   backgroundSpine.zIndex = 0;
-  app.stage.addChild(backgroundSpine);
+  app.addChild(backgroundSpine);
   return backgroundSpine;
 }
 function loadArona(resource: LoaderResource, container: Container) {
@@ -157,7 +193,6 @@ function loadArona(resource: LoaderResource, container: Container) {
   container.position.set(standardRate * 50, standardRate * 120);
   arona.state.setAnimation(1, "Idle_01", true);
   container.addChild(arona);
-  arona.visible = false;
   return arona;
 }
 function loadAronaMask(resource: LoaderResource, container: Container) {
@@ -177,7 +212,7 @@ function routerJump(path: string) {
   router.push(path);
 }
 onMounted(() => {
-  backgroundContainer.value!.appendChild(app.view);
+  initBackground(backgroundContainer.value!);
 });
 </script>
 

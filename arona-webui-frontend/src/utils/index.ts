@@ -45,3 +45,42 @@ export function dataFilterChain<T, Form extends object>(
   });
   return data;
 }
+
+/**
+ * 返回start至end之间的随机整数
+ * @param start
+ * @param end
+ * @return [start,end)
+ */
+export function randomInt(start: number, end: number) {
+  return Math.floor(Math.random() * (end - start) + start);
+}
+
+/**
+ * 随机选取arr里的一个item
+ * @param arr
+ */
+export function randomArrayItem<T>(arr: T[]): T {
+  const index = randomInt(0, arr.length);
+  return arr[index];
+}
+
+/**
+ * 随机选取arr里0至size-1的一个item,并放回最后
+ * @param arr
+ */
+export function pickRandomArrayItemAndPutBack<T>(arr: T[]) {
+  if (arr.length < 1) {
+    return {
+      arr,
+      item: arr[0],
+    };
+  }
+  const pickItem = randomArrayItem(arr.slice(0, arr.length - 1));
+  arr.splice(arr.indexOf(pickItem), 1);
+  arr.push(pickItem);
+  return {
+    arr,
+    item: pickItem,
+  };
+}

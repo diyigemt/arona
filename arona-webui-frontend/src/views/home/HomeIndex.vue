@@ -26,13 +26,16 @@
 // @ts-ignore
 import VideoBackground from "vue-responsive-video-background-player";
 import { Emitter } from "@pixi/particle-emitter";
-import { Application, Container, InteractionEvent, LoaderResource, Sprite, Texture } from "pixi.js";
+import { Application, Container, InteractionEvent, Loader, LoaderResource, Sprite } from "pixi.js";
 import * as PIXI from "pixi.js";
 import { AdvancedBloomFilter } from "@pixi/filter-advanced-bloom";
 import { Spine } from "pixi-spine";
+import { Sound, sound } from "@pixi/sound";
 import gsap from "gsap";
-import { WatchEmitterConfig, SleepEmitterConfig, StandEmitterConfig, SitEmitterConfig } from "@/constant/emiterConfig";
-import { HomePageAnimationConfigs } from "@/constant/spine";
+import { Dict } from "@pixi/utils";
+import { StandEmitterConfig } from "@/constant/emiterConfig";
+import { HomePageAnimationConfigs, VoiceConfig } from "@/constant/spine";
+import { pickRandomArrayItemAndPutBack, randomArrayItem, randomInt } from "@/utils";
 
 (window as any).__PIXI_INSPECTOR_GLOBAL_HOOK__ && (window as any).__PIXI_INSPECTOR_GLOBAL_HOOK__.register({ PIXI });
 const backgroundContainer = ref<HTMLElement>();
@@ -43,16 +46,44 @@ const backgroundIdleTrack = 1;
 const backgroundAnimationTrack = 2;
 const backgroundActionTrack1 = 3;
 const backgroundActionTrack2 = 4;
+const AronaIdleTrack = 1;
+const AronaFaceTrack = 2;
 const backgroundHeight = backgroundWidth * 0.7;
 const backgroundPaddingLeft = 39;
 const backgroundPaddingTop = 24;
 const backgroundPaddingRight = 129;
 const backgroundPaddingBottom = 98;
+
 function initBackground(el: HTMLElement) {
-  const randomAnimation = Math.floor(Math.random() * 3);
-  const animationConfig = HomePageAnimationConfigs[randomAnimation];
+  const animationConfig = randomArrayItem(HomePageAnimationConfigs);
   const interactionPoint = animationConfig.interaction;
   const disappearMaskPath = animationConfig.mask.path;
+  const inVoiceList = animationConfig.voice.in;
+  const talkVoiceList = animationConfig.voice.talk;
+  const exitVoiceList = animationConfig.voice.exit;
+  let workVoiceList = VoiceConfig;
+  let randomTalkVoiceList = talkVoiceList.map((voice) => voice.voice);
+  let randomTalkVoiceIntervalHandler: number;
+  const randomInVoice = randomArrayItem(inVoiceList);
+  const randomExitVoice = randomArrayItem(exitVoiceList);
+  sound.add("inVoice", {
+    url: `https://yuuka.diyigemt.com/image/full-extra/output/media/Audio/VOC_JP/JP_Arona/${randomInVoice.voice}.mp3`,
+    preload: true,
+  });
+  sound.add("exitVoice", {
+    url: `https://yuuka.diyigemt.com/image/full-extra/output/media/Audio/VOC_JP/JP_Arona/${randomExitVoice.voice}.mp3`,
+    preload: true,
+  });
+  talkVoiceList.forEach((voice) => {
+    sound.add(voice.voice, {
+      url: `https://yuuka.diyigemt.com/image/full-extra/output/media/Audio/VOC_JP/JP_Arona/${voice.voice}.mp3`,
+    });
+  });
+  workVoiceList.forEach((voice) => {
+    sound.add(voice.voice, {
+      url: `https://yuuka.diyigemt.com/image/full-extra/output/media/Audio/VOC_JP/JP_Arona/${voice.voice}.mp3`,
+    });
+  });
   const app = new Application({ width: backgroundWidth, height: backgroundHeight });
   el.appendChild(app.view);
   app.stage.sortableChildren = true;
@@ -61,10 +92,23 @@ function initBackground(el: HTMLElement) {
   app.loader.add("arona", "/spine/arona_spr.skel");
   app.loader.add("aronaMask", "/image/FX_TEX_Arona_Stand.png");
   app.stage.interactive = true;
-  app.loader.load((_, resources) => {
+  function playIdleVoice() {
+    randomTalkVoiceIntervalHandler = window.setTimeout(() => {
+      const pickResult = pickRandomArrayItemAndPutBack(randomTalkVoiceList);
+      randomTalkVoiceList = pickResult.arr;
+      const nextVoiceName = pickResult.item;
+      sound.play(nextVoiceName, {
+        complete: playIdleVoice,
+      });
+    }, 5000);
+  }
+  app.loader.load((_: Loader, resources: Dict<LoaderResource>) => {
     const backgroundResource = Reflect.get(resources, "space");
     const backgroundSpine = loadSpace(backgroundResource, app.stage);
     backgroundSpine.state.setAnimation(backgroundAnimationTrack, animationConfig.animation.background, true);
+    sound.play("inVoice", {
+      complete: playIdleVoice,
+    });
 
     const disappearMaskResource = Reflect.get(resources, "disappearMask");
     const disappearMask = loadSleepMask(
@@ -78,9 +122,35 @@ function initBackground(el: HTMLElement) {
     const aronaContainer = new Container();
     aronaContainer.sortableChildren = true;
     aronaContainer.visible = false;
+    aronaContainer.interactive = true;
     app.stage.addChild(aronaContainer);
 
     const arona = loadArona(aronaResource, aronaContainer);
+    let workVoiceLock = false;
+    function playWorkVoice(cb?: () => void) {
+      if (workVoiceLock) {
+        return;
+      }
+      const pickResult = pickRandomArrayItemAndPutBack(workVoiceList);
+      workVoiceList = pickResult.arr;
+      const nextVoice = pickResult.item;
+      workVoiceLock = true;
+      sound.play(nextVoice.voice, {
+        complete() {
+          arona.state.setAnimation(AronaFaceTrack, "00", false);
+          setTimeout(() => {
+            arona.state.clearTrack(AronaFaceTrack);
+          }, 100);
+          if (cb) {
+            cb();
+          }
+          setTimeout(() => {
+            workVoiceLock = false;
+          }, 2500);
+        },
+      });
+      arona.state.setAnimation(AronaFaceTrack, nextVoice.animationName, false);
+    }
 
     const aronaMaskResource = Reflect.get(resources, "aronaMask");
     const aronaMask = loadAronaMask(aronaMaskResource, aronaContainer);
@@ -105,7 +175,6 @@ function initBackground(el: HTMLElement) {
     aronaContainer.addChild(destParticleContainer);
     const emitter2 = new Emitter(destParticleContainer, StandEmitterConfig);
     emitter2.autoUpdate = true;
-
     app.stage.on("click", (event: InteractionEvent) => {
       const target = event.data.global;
       const action =
@@ -116,6 +185,16 @@ function initBackground(el: HTMLElement) {
       if (!action) {
         return;
       }
+      app.stage.off("click");
+      // 停止播放进入音频
+      sound.pause("inVoice");
+      // 停止播放当前音频
+      if (randomTalkVoiceIntervalHandler) {
+        clearInterval(randomTalkVoiceIntervalHandler);
+        sound.pause(randomTalkVoiceList[randomTalkVoiceList.length - 1]);
+      }
+      sound.play("exitVoice");
+
       setTimeout(() => {
         disappearMask.visible = true;
         sourceParticleContainer.visible = true;
@@ -131,9 +210,9 @@ function initBackground(el: HTMLElement) {
               backgroundSpine.state.setAnimation(backgroundActionTrack1, "Dummy", false);
               backgroundSpine.state.setAnimation(backgroundActionTrack2, "Dummy", false);
               setTimeout(() => {
-                backgroundSpine.state.clearTrack(3);
-                backgroundSpine.state.clearTrack(4);
-                backgroundSpine.state.clearTrack(2);
+                backgroundSpine.state.clearTrack(backgroundAnimationTrack);
+                backgroundSpine.state.clearTrack(backgroundActionTrack1);
+                backgroundSpine.state.clearTrack(backgroundActionTrack2);
               }, 100);
               trigger = false;
             }
@@ -145,6 +224,11 @@ function initBackground(el: HTMLElement) {
           arona.visible = true;
           emitter2.emit = true;
           destParticleContainer.visible = true;
+          playWorkVoice(() => {
+            aronaContainer.on("click", () => {
+              playWorkVoice();
+            });
+          });
           const tl2 = gsap.timeline();
           tl2
             .to(aronaMask, {
@@ -155,7 +239,7 @@ function initBackground(el: HTMLElement) {
               aronaMask.visible = false;
             });
         });
-      }, 500);
+      }, 600);
       backgroundSpine.state.setAnimation(backgroundActionTrack1, animationConfig.animation.arona[0], false);
       backgroundSpine.state.setAnimation(backgroundActionTrack2, animationConfig.animation.arona[1], false);
     });
@@ -191,7 +275,7 @@ function loadArona(resource: LoaderResource, container: Container) {
   arona.zIndex = 5;
   container.scale.set(standardRate * 0.35);
   container.position.set(standardRate * 50, standardRate * 120);
-  arona.state.setAnimation(1, "Idle_01", true);
+  arona.state.setAnimation(AronaIdleTrack, "Idle_01", true);
   container.addChild(arona);
   return arona;
 }

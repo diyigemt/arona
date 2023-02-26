@@ -338,6 +338,18 @@ arona总的配置。
 | messageList | List<Data<String, weight>> | 回复消息列表以及权重            |
 | priority    | EventPriority              | 事件优先级，与mirai-console有关 |
 
+```yaml
+# 回复的消息
+messageList: 
+  - message: 爬
+    weight: 1
+  - message: '${teacherName}别戳了>_<'
+    weight: 1
+# 事件优先级 从高到低可选 HIGHEST, HIGH, NORMAL, LOW, LOWEST, MONITOR
+# 设置后需要重启插件生效
+priority: HIGH
+```
+
 ### 6.arona-repeat.yml
 
 复读模块配置。
@@ -356,6 +368,19 @@ arona总的配置。
 | ----------- | -------------------------- | -------------------- |
 | messageList | List<Data<String, weight>> | 回复消息列表以及权重 |
 | listen      | List\<Long>                | 监听的群友QQ号       |
+
+```yaml
+# 要被骂的id
+listen: 
+  - 123123123
+  - 12312312
+# 返回被骂的信息
+messageList: 
+  - message: 爬
+    weight: 1
+  - message: 老师大变态❤
+    weight: 1
+```
 
 ### 8.arona-tarot.yml
 

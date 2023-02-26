@@ -18,7 +18,22 @@
       </el-space>
     </div>
   </div>
-  <div ref="backgroundContainer" class="emitter" />
+  <div ref="backgroundContainer" class="background">
+    <div
+      ref="chatDialogOuter"
+      class="chat-dialog-outer"
+      :style="{ top: `${chatStyle.position.y}px`, left: `${chatStyle.position.x}px` }"
+    >
+      <div
+        ref="chatDialog"
+        class="chat-dialog"
+        :class="{ 'chat-dialog-left': chatStyle.type === 'left', 'chat-dialog-right': chatStyle.type === 'right' }"
+        :style="{ '--half-height': `${chatDialogHalfHeight}px`, '--arrow-offset': `${chatDialogArrowOffset}px` }"
+      >
+        {{ chatStyle.chat }}
+      </div>
+    </div>
+  </div>
   <!--  </VideoBackground>-->
 </template>
 
@@ -30,15 +45,17 @@ import { Application, Container, InteractionEvent, Loader, LoaderResource, Sprit
 import * as PIXI from "pixi.js";
 import { AdvancedBloomFilter } from "@pixi/filter-advanced-bloom";
 import { Spine } from "pixi-spine";
-import { Sound, sound } from "@pixi/sound";
+import { sound } from "@pixi/sound";
 import gsap from "gsap";
 import { Dict } from "@pixi/utils";
 import { StandEmitterConfig } from "@/constant/emiterConfig";
-import { HomePageAnimationConfigs, VoiceConfig } from "@/constant/spine";
-import { pickRandomArrayItemAndPutBack, randomArrayItem, randomInt } from "@/utils";
+import { HomePageAnimationConfigs, HomePageDialogConfig, VoiceConfig } from "@/constant/spine";
+import { deepCopy, pickRandomArrayItemAndPutBack, randomArrayItem } from "@/utils";
 
 (window as any).__PIXI_INSPECTOR_GLOBAL_HOOK__ && (window as any).__PIXI_INSPECTOR_GLOBAL_HOOK__.register({ PIXI });
 const backgroundContainer = ref<HTMLElement>();
+const chatDialogOuter = ref<HTMLElement>();
+const chatDialog = ref<HTMLElement>();
 const backgroundWidth = 800;
 const standardWidth = 800;
 const standardRate = backgroundWidth / standardWidth;
@@ -53,16 +70,31 @@ const backgroundPaddingLeft = 39;
 const backgroundPaddingTop = 24;
 const backgroundPaddingRight = 129;
 const backgroundPaddingBottom = 98;
+const chatDialogArrowOffset = 40;
+const chatStyle = reactive({
+  chat: "",
+  type: "right",
+  position: {
+    x: 0,
+    y: 0,
+  },
+});
+const chatDialogHalfHeight = ref<number>(0);
+const chatStyleStatic = {
+  x: 0,
+  y: 0,
+};
 
 function initBackground(el: HTMLElement) {
-  const animationConfig = randomArrayItem(HomePageAnimationConfigs);
+  // const animationConfig = randomArrayItem(HomePageAnimationConfigs);
+  const animationConfig = HomePageAnimationConfigs[1];
   const interactionPoint = animationConfig.interaction;
   const disappearMaskPath = animationConfig.mask.path;
   const inVoiceList = animationConfig.voice.in;
   const talkVoiceList = animationConfig.voice.talk;
   const exitVoiceList = animationConfig.voice.exit;
   let workVoiceList = VoiceConfig;
-  let randomTalkVoiceList = talkVoiceList.map((voice) => voice.voice);
+  let randomTalkVoiceList = [...deepCopy(talkVoiceList), ...deepCopy(inVoiceList)];
   let randomTalkVoiceIntervalHandler: number;
   const randomInVoice = randomArrayItem(inVoiceList);
   const randomExitVoice = randomArrayItem(exitVoiceList);
@@ -74,7 +106,7 @@ function initBackground(el: HTMLElement) {
     url: `https://yuuka.diyigemt.com/image/full-extra/output/media/Audio/VOC_JP/JP_Arona/${randomExitVoice.voice}.mp3`,
     preload: true,
   });
-  talkVoiceList.forEach((voice) => {
+  randomTalkVoiceList.forEach((voice) => {
     sound.add(voice.voice, {
       url: `https://yuuka.diyigemt.com/image/full-extra/output/media/Audio/VOC_JP/JP_Arona/${voice.voice}.mp3`,
     });
@@ -93,12 +125,14 @@ function initBackground(el: HTMLElement) {
   app.loader.add("aronaMask", "/image/FX_TEX_Arona_Stand.png");
   app.stage.interactive = true;
   function playIdleVoice() {
+    clearChatDialog();
     randomTalkVoiceIntervalHandler = window.setTimeout(() => {
       const pickResult = pickRandomArrayItemAndPutBack(randomTalkVoiceList);
       randomTalkVoiceList = pickResult.arr;
-      const nextVoiceName = pickResult.item;
-      sound.play(nextVoiceName, {
-        complete: playIdleVoice,
+      const nextVoice = pickResult.item;
+      updateChatDialog(nextVoice.textTW);
+      sound.play(nextVoice.voice, {
+        // complete: playIdleVoice,
       });
     }, 5000);
   }
@@ -106,8 +140,14 @@ function initBackground(el: HTMLElement) {
     const backgroundResource = Reflect.get(resources, "space");
     const backgroundSpine = loadSpace(backgroundResource, app.stage);
     backgroundSpine.state.setAnimation(backgroundAnimationTrack, animationConfig.animation.background, true);
+
     sound.play("inVoice", {
       complete: playIdleVoice,
+    });
+    updateChatStyleStatic(animationConfig.dialog.x, animationConfig.dialog.y);
+    updateChatDialog(randomInVoice.textTW, animationConfig.dialog.type, {
+      x: animationConfig.dialog.x,
+      y: animationConfig.dialog.y,
     });
 
     const disappearMaskResource = Reflect.get(resources, "disappearMask");
@@ -135,9 +175,11 @@ function initBackground(el: HTMLElement) {
       workVoiceList = pickResult.arr;
       const nextVoice = pickResult.item;
       workVoiceLock = true;
+      updateChatDialog(nextVoice.textTW);
       sound.play(nextVoice.voice, {
         complete() {
           arona.state.setAnimation(AronaFaceTrack, "00", false);
+          clearChatDialog();
           setTimeout(() => {
             arona.state.clearTrack(AronaFaceTrack);
           }, 100);
@@ -191,13 +233,15 @@ function initBackground(el: HTMLElement) {
       // 停止播放当前音频
       if (randomTalkVoiceIntervalHandler) {
         clearInterval(randomTalkVoiceIntervalHandler);
-        sound.pause(randomTalkVoiceList[randomTalkVoiceList.length - 1]);
+        sound.pause(randomTalkVoiceList[randomTalkVoiceList.length - 1].voice);
       }
       sound.play("exitVoice");
+      updateChatDialog(randomExitVoice.textTW);
 
       setTimeout(() => {
         disappearMask.visible = true;
         sourceParticleContainer.visible = true;
+        clearChatDialog();
         let trigger = true;
         const tl = gsap.timeline();
         emitter.emit = true;
@@ -224,6 +268,11 @@ function initBackground(el: HTMLElement) {
           arona.visible = true;
           emitter2.emit = true;
           destParticleContainer.visible = true;
+          updateChatStyleStatic(HomePageDialogConfig.x, HomePageDialogConfig.y);
+          updateChatDialog("", "left", {
+            x: HomePageDialogConfig.x,
+            y: HomePageDialogConfig.y,
+          });
           playWorkVoice(() => {
             aronaContainer.on("click", () => {
               playWorkVoice();
@@ -288,6 +337,47 @@ function loadAronaMask(resource: LoaderResource, container: Container) {
   sprite.visible = false;
   return sprite;
 }
+function clearChatDialog() {
+  const timeline = gsap.timeline();
+  timeline.to(chatDialogOuter.value!, {
+    opacity: 0,
+    duration: 0.8,
+    onComplete() {
+      updateChatDialog("");
+    },
+  });
+}
+function updateChatDialog(text: string, type?: string, position?: { x: number; y: number }) {
+  chatStyle.chat = text;
+  if (text) {
+    const timeline = gsap.timeline();
+    timeline.to(chatDialogOuter.value!, {
+      opacity: 1,
+      duration: 0.8,
+    });
+  }
+  if (type) {
+    chatStyle.type = type;
+  }
+  nextTick(() => {
+    const afterStyle = getComputedStyle(chatDialog.value!, "after");
+    const afterHeight = Number(afterStyle.height.replace("px", ""));
+    if (position) {
+      chatStyle.position.y = position.y * standardRate - (standardRate - 1) * afterHeight;
+      chatStyle.position.x = position.x * standardRate + (standardRate - 1) * (chatDialogArrowOffset + afterHeight);
+    }
+    const style = getComputedStyle(chatDialogOuter.value!);
+    chatDialogHalfHeight.value = Number(style.height.replace("px", "")) / 2;
+    const width = Number(style.width.replace("px", ""));
+    if (chatStyle.type === "right") {
+      chatStyle.position.x = chatStyleStatic.x + (standardRate - 1) * (width - chatDialogArrowOffset - afterHeight);
+    }
+  });
+}
+function updateChatStyleStatic(x: number, y: number) {
+  chatStyleStatic.x = x * standardRate;
+  chatStyleStatic.y = y * standardRate;
+}
 const srcList = ["desk", "sleep", "look"].map((it) => `/video/arona_${it}.mp4`);
 const srcIndex = Math.floor(Math.random() * srcList.length);
 const src = srcList[srcIndex];
@@ -305,14 +395,70 @@ onMounted(() => {
   font-family: "GameFont", serif;
   font-size: 1.2rem;
 }
-.emitter {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+.background {
+  position: relative;
+  user-select: none;
   width: 800px;
   height: 600px;
+  transform: translate(200px, 200px);
+  .chat-dialog-outer {
+    position: absolute;
+    opacity: 0;
+  }
+  $chat-dialog-color: rgba(255, 255, 255, 0.8);
+  .chat-dialog {
+    --half-height: 6px;
+    --arrow-offset: 40px;
+    background: $chat-dialog-color;
+    white-space: pre-line;
+    text-align: center;
+    color: black;
+    padding: 0.5em 2em;
+    position: relative;
+    border-radius: var(--half-height);
+    &:after {
+      content: "";
+      position: absolute;
+      border: 0.5em solid transparent;
+    }
+  }
+  $chat-triangle-pos: 40px;
+  .chat-dialog-right:after {
+    border-bottom-color: $chat-dialog-color;
+    border-left-color: $chat-dialog-color;
+    right: var(--arrow-offset);
+    top: -1em;
+  }
+  .chat-dialog-left:after {
+    border-bottom-color: $chat-dialog-color;
+    border-right-color: $chat-dialog-color;
+    left: var(--arrow-offset);
+    top: -1em;
+  }
+  .chat-fade-in {
+    animation: chat-fade-in 1s;
+  }
+  .chat-fade-out {
+    animation: chat-fade-out 1s;
+  }
+  @keyframes chat-fade-in {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes chat-fade-out {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
 }
+
 $button-card-size: 200px;
 .menu {
   position: absolute;

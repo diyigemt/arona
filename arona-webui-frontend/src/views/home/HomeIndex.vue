@@ -22,7 +22,11 @@
     <div
       ref="chatDialogOuter"
       class="chat-dialog-outer"
-      :style="{ top: `${chatStyle.position.y}px`, left: `${chatStyle.position.x}px` }"
+      :style="{
+        top: `${chatStyle.position.y}px`,
+        left: `${chatStyle.position.x}px`,
+        transform: `translateY(${-middleOffset}px)`,
+      }"
     >
       <div
         ref="chatDialog"
@@ -56,16 +60,17 @@ import { deepCopy, pickRandomArrayItemAndPutBack, randomArrayItem } from "@/util
 const backgroundContainer = ref<HTMLElement>();
 const chatDialogOuter = ref<HTMLElement>();
 const chatDialog = ref<HTMLElement>();
-const backgroundWidth = 800;
+let backgroundWidth = 800;
 const standardWidth = 800;
-const standardRate = backgroundWidth / standardWidth;
+let standardRate = backgroundWidth / standardWidth;
 const backgroundIdleTrack = 1;
 const backgroundAnimationTrack = 2;
 const backgroundActionTrack1 = 3;
 const backgroundActionTrack2 = 4;
 const AronaIdleTrack = 1;
 const AronaFaceTrack = 2;
-const backgroundHeight = backgroundWidth * 0.7;
+let backgroundHeight = backgroundWidth * 0.7;
+let middleOffset = 0;
 const backgroundPaddingLeft = 39;
 const backgroundPaddingTop = 24;
 const backgroundPaddingRight = 129;
@@ -86,8 +91,13 @@ const chatStyleStatic = {
 };
 
 function initBackground(el: HTMLElement) {
-  // const animationConfig = randomArrayItem(HomePageAnimationConfigs);
-  const animationConfig = HomePageAnimationConfigs[1];
+  const backgroundStyle = getComputedStyle(el);
+  backgroundWidth = styleToPxNumber(backgroundStyle.width);
+  const viewHeight = styleToPxNumber(backgroundStyle.height);
+  backgroundHeight = backgroundWidth * 0.7;
+  standardRate = backgroundWidth / standardWidth;
+  middleOffset = (backgroundHeight - viewHeight) / 2;
+  const animationConfig = randomArrayItem(HomePageAnimationConfigs);
   const interactionPoint = animationConfig.interaction;
   const disappearMaskPath = animationConfig.mask.path;
   const inVoiceList = animationConfig.voice.in;
@@ -106,6 +116,14 @@ function initBackground(el: HTMLElement) {
     url: `https://yuuka.diyigemt.com/image/full-extra/output/media/Audio/VOC_JP/JP_Arona/${randomExitVoice.voice}.mp3`,
     preload: true,
   });
+  sound.add("mute", {
+    url: `https://yuuka.diyigemt.com/image/full-extra/output/media/Audio/VOC_JP/Mute.mp3`,
+    preload: true,
+  });
+  sound.add("sensei", {
+    url: `https://yuuka.diyigemt.com/image/full-extra/output/media/Audio/VOC_JP/JP_Arona/Arona_Default_TTS.mp3`,
+    preload: true,
+  });
   randomTalkVoiceList.forEach((voice) => {
     sound.add(voice.voice, {
       url: `https://yuuka.diyigemt.com/image/full-extra/output/media/Audio/VOC_JP/JP_Arona/${voice.voice}.mp3`,
@@ -117,6 +135,7 @@ function initBackground(el: HTMLElement) {
     });
   });
   const app = new Application({ width: backgroundWidth, height: backgroundHeight });
+  app.view.style.transform = `translateY(${-middleOffset}px)`;
   el.appendChild(app.view);
   app.stage.sortableChildren = true;
   app.loader.add("space", "/spine/arona_workpage.skel");
@@ -132,7 +151,7 @@ function initBackground(el: HTMLElement) {
       const nextVoice = pickResult.item;
       updateChatDialog(nextVoice.textTW);
       sound.play(nextVoice.voice, {
-        // complete: playIdleVoice,
+        complete: playIdleVoice,
       });
     }, 5000);
   }
@@ -140,16 +159,18 @@ function initBackground(el: HTMLElement) {
     const backgroundResource = Reflect.get(resources, "space");
     const backgroundSpine = loadSpace(backgroundResource, app.stage);
     backgroundSpine.state.setAnimation(backgroundAnimationTrack, animationConfig.animation.background, true);
-
-    sound.play("inVoice", {
-      complete: playIdleVoice,
+    sound.play("mute", {
+      complete() {
+        updateChatStyleStatic(animationConfig.dialog.x, animationConfig.dialog.y);
+        updateChatDialog(randomInVoice.textTW, animationConfig.dialog.type, {
+          x: animationConfig.dialog.x,
+          y: animationConfig.dialog.y,
+        });
+        sound.play("inVoice", {
+          complete: playIdleVoice,
+        });
+      },
     });
-    updateChatStyleStatic(animationConfig.dialog.x, animationConfig.dialog.y);
-    updateChatDialog(randomInVoice.textTW, animationConfig.dialog.type, {
-      x: animationConfig.dialog.x,
-      y: animationConfig.dialog.y,
-    });
-
     const disappearMaskResource = Reflect.get(resources, "disappearMask");
     const disappearMask = loadSleepMask(
       disappearMaskResource,
@@ -175,25 +196,42 @@ function initBackground(el: HTMLElement) {
       workVoiceList = pickResult.arr;
       const nextVoice = pickResult.item;
       workVoiceLock = true;
-      updateChatDialog(nextVoice.textTW);
-      sound.play(nextVoice.voice, {
-        complete() {
-          arona.state.setAnimation(AronaFaceTrack, "00", false);
-          clearChatDialog();
-          setTimeout(() => {
-            arona.state.clearTrack(AronaFaceTrack);
-          }, 100);
-          if (cb) {
-            cb();
-          }
-          setTimeout(() => {
-            workVoiceLock = false;
-          }, 2500);
-        },
+      new Promise<void>((resolve) => {
+        let text = nextVoice.textTW;
+        if (text.indexOf("[USERNAME]") !== -1) {
+          text = text.replace("[USERNAME]", "");
+          sound.play("sensei", {
+            complete() {
+              sound.play(nextVoice.voice, {
+                complete() {
+                  resolve();
+                },
+              });
+            },
+          });
+        } else {
+          sound.play(nextVoice.voice, {
+            complete() {
+              resolve();
+            },
+          });
+        }
+        updateChatDialog(text);
+        arona.state.setAnimation(AronaFaceTrack, nextVoice.animationName, false);
+      }).then(() => {
+        arona.state.setAnimation(AronaFaceTrack, "00", false);
+        clearChatDialog();
+        setTimeout(() => {
+          arona.state.clearTrack(AronaFaceTrack);
+        }, 100);
+        if (cb) {
+          cb();
+        }
+        setTimeout(() => {
+          workVoiceLock = false;
+        }, 2500);
       });
-      arona.state.setAnimation(AronaFaceTrack, nextVoice.animationName, false);
     }
-
     const aronaMaskResource = Reflect.get(resources, "aronaMask");
     const aronaMask = loadAronaMask(aronaMaskResource, aronaContainer);
 
@@ -217,7 +255,8 @@ function initBackground(el: HTMLElement) {
     aronaContainer.addChild(destParticleContainer);
     const emitter2 = new Emitter(destParticleContainer, StandEmitterConfig);
     emitter2.autoUpdate = true;
-    app.stage.on("click", (event: InteractionEvent) => {
+    function handleClick(event: InteractionEvent) {
+      console.log(event);
       const target = event.data.global;
       const action =
         target.x >= interactionPoint.pa.x * standardRate &&
@@ -227,7 +266,7 @@ function initBackground(el: HTMLElement) {
       if (!action) {
         return;
       }
-      app.stage.off("click");
+      app.stage.off("pointerdown");
       // 停止播放进入音频
       sound.pause("inVoice");
       // 停止播放当前音频
@@ -274,7 +313,7 @@ function initBackground(el: HTMLElement) {
             y: HomePageDialogConfig.y,
           });
           playWorkVoice(() => {
-            aronaContainer.on("click", () => {
+            aronaContainer.on("pointerdown", () => {
               playWorkVoice();
             });
           });
@@ -291,7 +330,8 @@ function initBackground(el: HTMLElement) {
       }, 600);
       backgroundSpine.state.setAnimation(backgroundActionTrack1, animationConfig.animation.arona[0], false);
       backgroundSpine.state.setAnimation(backgroundActionTrack2, animationConfig.animation.arona[1], false);
-    });
+    }
+    app.stage.on("pointerdown", handleClick);
   });
 }
 
@@ -361,22 +401,26 @@ function updateChatDialog(text: string, type?: string, position?: { x: number; y
   }
   nextTick(() => {
     const afterStyle = getComputedStyle(chatDialog.value!, "after");
-    const afterHeight = Number(afterStyle.height.replace("px", ""));
+    const afterHeight = styleToPxNumber(afterStyle.height);
     if (position) {
       chatStyle.position.y = position.y * standardRate - (standardRate - 1) * afterHeight;
       chatStyle.position.x = position.x * standardRate + (standardRate - 1) * (chatDialogArrowOffset + afterHeight);
     }
     const style = getComputedStyle(chatDialogOuter.value!);
-    chatDialogHalfHeight.value = Number(style.height.replace("px", "")) / 2;
+    chatDialogHalfHeight.value = styleToPxNumber(style.height) / 2;
     const width = Number(style.width.replace("px", ""));
     if (chatStyle.type === "right") {
-      chatStyle.position.x = chatStyleStatic.x + (standardRate - 1) * (width - chatDialogArrowOffset - afterHeight);
+      const l = width - chatDialogArrowOffset - afterHeight;
+      chatStyle.position.x = chatStyleStatic.x + (standardRate - 1) * l + (249.6 - width) * standardRate;
     }
   });
 }
 function updateChatStyleStatic(x: number, y: number) {
   chatStyleStatic.x = x * standardRate;
   chatStyleStatic.y = y * standardRate;
+}
+function styleToPxNumber(str: string) {
+  return Number(str.replace("px", ""));
 }
 const srcList = ["desk", "sleep", "look"].map((it) => `/video/arona_${it}.mp4`);
 const srcIndex = Math.floor(Math.random() * srcList.length);
@@ -397,13 +441,14 @@ onMounted(() => {
 }
 .background {
   position: relative;
+  overflow: hidden;
   user-select: none;
-  width: 800px;
-  height: 600px;
-  transform: translate(200px, 200px);
+  width: 100%;
+  height: 100%;
   .chat-dialog-outer {
     position: absolute;
     opacity: 0;
+    z-index: 99;
   }
   $chat-dialog-color: rgba(255, 255, 255, 0.8);
   .chat-dialog {

@@ -57,6 +57,7 @@ import { HomePageAnimationConfigs, HomePageDialogConfig, VoiceConfig } from "@/c
 import { deepCopy, pickRandomArrayItemAndPutBack, randomArrayItem } from "@/utils";
 
 (window as any).__PIXI_INSPECTOR_GLOBAL_HOOK__ && (window as any).__PIXI_INSPECTOR_GLOBAL_HOOK__.register({ PIXI });
+let mainApp: Application;
 const backgroundContainer = ref<HTMLElement>();
 const chatDialogOuter = ref<HTMLElement>();
 const chatDialog = ref<HTMLElement>();
@@ -76,6 +77,7 @@ const backgroundPaddingTop = 24;
 const backgroundPaddingRight = 129;
 const backgroundPaddingBottom = 98;
 const chatDialogArrowOffset = 40;
+let randomTalkVoiceIntervalHandler: number;
 const chatStyle = reactive({
   chat: "",
   type: "right",
@@ -105,7 +107,6 @@ function initBackground(el: HTMLElement) {
   const exitVoiceList = animationConfig.voice.exit;
   let workVoiceList = VoiceConfig;
   let randomTalkVoiceList = [...deepCopy(talkVoiceList), ...deepCopy(inVoiceList)];
-  let randomTalkVoiceIntervalHandler: number;
   const randomInVoice = randomArrayItem(inVoiceList);
   const randomExitVoice = randomArrayItem(exitVoiceList);
   sound.add("inVoice", {
@@ -333,6 +334,7 @@ function initBackground(el: HTMLElement) {
     }
     app.stage.on("pointerdown", handleClick);
   });
+  return app;
 }
 
 function loadSleepMask(resource: LoaderResource, app: Container, scale: number, offset: { x: number; y: number }) {
@@ -430,7 +432,19 @@ function routerJump(path: string) {
   router.push(path);
 }
 onMounted(() => {
-  initBackground(backgroundContainer.value!);
+  mainApp = initBackground(backgroundContainer.value!);
+});
+onUnmounted(() => {
+  if (mainApp) {
+    try {
+      mainApp.destroy(true);
+    } catch (e: unknown) {
+      console.log(e);
+    }
+  }
+  if (randomTalkVoiceIntervalHandler) {
+    clearTimeout(randomTalkVoiceIntervalHandler);
+  }
 });
 </script>
 

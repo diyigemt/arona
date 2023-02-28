@@ -71,6 +71,7 @@ const backgroundActionTrack2 = 4;
 const AronaIdleTrack = 1;
 const AronaFaceTrack = 2;
 let backgroundHeight = backgroundWidth * 0.7;
+let viewHeight = 0;
 let middleOffset = 0;
 const backgroundPaddingLeft = 39;
 const backgroundPaddingTop = 24;
@@ -95,7 +96,7 @@ const chatStyleStatic = {
 function initBackground(el: HTMLElement) {
   const backgroundStyle = getComputedStyle(el);
   backgroundWidth = styleToPxNumber(backgroundStyle.width);
-  const viewHeight = styleToPxNumber(backgroundStyle.height);
+  viewHeight = styleToPxNumber(backgroundStyle.height);
   backgroundHeight = backgroundWidth * 0.7;
   standardRate = backgroundWidth / standardWidth;
   middleOffset = (backgroundHeight - viewHeight) / 2;
@@ -260,7 +261,6 @@ function initBackground(el: HTMLElement) {
     const emitter2 = new Emitter(destParticleContainer, StandEmitterConfig);
     emitter2.autoUpdate = true;
     function handleClick(event: InteractionEvent) {
-      console.log(event);
       const target = event.data.global;
       const action =
         target.x >= interactionPoint.pa.x * standardRate &&
@@ -411,11 +411,16 @@ function updateChatDialog(text: string, type?: string, position?: { x: number; y
       chatStyle.position.x = position.x * standardRate + (standardRate - 1) * (chatDialogArrowOffset + afterHeight);
     }
     const style = getComputedStyle(chatDialogOuter.value!);
-    chatDialogHalfHeight.value = styleToPxNumber(style.height) / 2;
+    const chatDialogHeight = styleToPxNumber(style.height);
+    chatDialogHalfHeight.value = chatDialogHeight / 2;
     const width = Number(style.width.replace("px", ""));
     if (chatStyle.type === "right") {
       const l = width - chatDialogArrowOffset - afterHeight;
       chatStyle.position.x = chatStyleStatic.x + (standardRate - 1) * l + (249.6 - width) * standardRate;
+    }
+    // 检查y是不是超过屏幕底部了
+    if (chatStyle.position.y + chatDialogHeight > viewHeight + middleOffset) {
+      chatStyle.position.y = viewHeight + middleOffset - chatDialogHeight - 20;
     }
   });
 }

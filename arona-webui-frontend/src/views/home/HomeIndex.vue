@@ -168,7 +168,10 @@ function initBackground(el: HTMLElement) {
           y: animationConfig.dialog.y,
         });
         sound.play("inVoice", {
-          complete: playIdleVoice,
+          complete() {
+            app.stage.on("pointerdown", handleClick);
+            playIdleVoice();
+          },
         });
       },
     });
@@ -273,8 +276,8 @@ function initBackground(el: HTMLElement) {
       // 停止播放当前音频
       if (randomTalkVoiceIntervalHandler) {
         clearInterval(randomTalkVoiceIntervalHandler);
-        sound.pause(randomTalkVoiceList[randomTalkVoiceList.length - 1].voice);
       }
+      sound.pause(randomTalkVoiceList[randomTalkVoiceList.length - 1].voice);
       sound.play("exitVoice");
       updateChatDialog(randomExitVoice.textTW);
 
@@ -332,7 +335,6 @@ function initBackground(el: HTMLElement) {
       backgroundSpine.state.setAnimation(backgroundActionTrack1, animationConfig.animation.arona[0], false);
       backgroundSpine.state.setAnimation(backgroundActionTrack2, animationConfig.animation.arona[1], false);
     }
-    app.stage.on("pointerdown", handleClick);
   });
   return app;
 }

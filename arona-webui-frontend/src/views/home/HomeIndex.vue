@@ -1,23 +1,4 @@
 <template>
-  <!--  <VideoBackground :src="src" poster="/image/arona_home_poster.jpg" style="height: 100vh">-->
-  <div class="menu">
-    <div class="filter">
-      <el-space class="menu-content" wrap>
-        <ShadowCard class="button-card kivotos" role="button" tabindex="0" @click="routerJump('/')">
-          <div>基沃托斯</div>
-        </ShadowCard>
-        <ShadowCard class="button-card arona" role="button" tabindex="1" @click="routerJump('/config')">
-          <div>设置</div>
-        </ShadowCard>
-        <ShadowCard class="button-card" style="opacity: 0; user-select: none; pointer-events: none">
-          <div>管理</div>
-        </ShadowCard>
-        <ShadowCard class="button-card setting" role="button" tabindex="2" @click="routerJump('/admin')">
-          <div>管理</div>
-        </ShadowCard>
-      </el-space>
-    </div>
-  </div>
   <div ref="backgroundContainer" class="background">
     <div
       ref="chatDialogOuter"
@@ -38,12 +19,27 @@
       </div>
     </div>
   </div>
-  <!--  </VideoBackground>-->
+  <div class="menu">
+    <div class="filter">
+      <el-space class="menu-content" wrap>
+        <ShadowCard class="button-card kivotos" role="button" tabindex="0" @click="routerJump('/')">
+          <div>基沃托斯</div>
+        </ShadowCard>
+        <ShadowCard class="button-card arona" role="button" tabindex="1" @click="routerJump('/config')">
+          <div>设置</div>
+        </ShadowCard>
+        <ShadowCard class="button-card" style="opacity: 0; user-select: none; pointer-events: none">
+          <div>管理</div>
+        </ShadowCard>
+        <ShadowCard class="button-card setting" role="button" tabindex="2" @click="routerJump('/admin')">
+          <div>管理</div>
+        </ShadowCard>
+      </el-space>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-// @ts-ignore
-import VideoBackground from "vue-responsive-video-background-player";
 import { Emitter } from "@pixi/particle-emitter";
 import { Application, Container, InteractionEvent, Loader, LoaderResource, Sprite } from "pixi.js";
 import * as PIXI from "pixi.js";
@@ -168,9 +164,9 @@ function initBackground(el: HTMLElement) {
           x: animationConfig.dialog.x,
           y: animationConfig.dialog.y,
         });
+        app.stage.on("pointerdown", handleClick);
         sound.play("inVoice", {
           complete() {
-            app.stage.on("pointerdown", handleClick);
             playIdleVoice();
           },
         });
@@ -431,9 +427,6 @@ function updateChatStyleStatic(x: number, y: number) {
 function styleToPxNumber(str: string) {
   return Number(str.replace("px", ""));
 }
-const srcList = ["desk", "sleep", "look"].map((it) => `/video/arona_${it}.mp4`);
-const srcIndex = Math.floor(Math.random() * srcList.length);
-const src = srcList[srcIndex];
 const router = useRouter();
 function routerJump(path: string) {
   router.push(path);

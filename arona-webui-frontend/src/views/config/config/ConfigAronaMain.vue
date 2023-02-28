@@ -17,7 +17,7 @@ import { BrowserJsPlumbInstance } from "@jsplumb/browser-ui";
 import { EndpointOptions, UIGroup } from "@jsplumb/core";
 import { BezierConnector } from "@jsplumb/connector-bezier";
 import { mountAsyncComponent } from "@/utils/vueTools";
-import mainEmitter from "@/views/config/config/event/main";
+import MainConfigEmitter from "@/views/config/config/event/main";
 import useBaseStore from "@/store/base";
 import { Friend } from "@/types/contact";
 import MiraiApi from "@/api/modules/mirai";
@@ -25,20 +25,15 @@ import MiraiApi from "@/api/modules/mirai";
 const containerEl = ref<HTMLElement>();
 const botGroupEl = ref<HTMLElement>();
 const groupGroupEl = ref<HTMLElement>();
-const groupList = useBaseStore().groups();
-const botList = [] as Friend[];
 let instance: BrowserJsPlumbInstance;
 let botGroup: UIGroup<Element>;
 let groupGroup: UIGroup<Element>;
-// 保存drag实例和其对应的群号/机器人q号的关系
-const uuidMap = new Map<string, number>();
+
 function addBotEndpoint() {
   const uuid = generateUuid();
   const bot = mountAsyncComponent(() => import("./components/MainConfigDragItem.vue"), {
     uuid,
     type: true,
-    bots: botList,
-    groups: groupList,
   });
   bot.classList.add("absolute");
   botGroupEl.value!.appendChild(bot);
@@ -54,8 +49,6 @@ function addGroupEndpoint() {
   const group = mountAsyncComponent(() => import("./components/MainConfigDragItem.vue"), {
     uuid,
     type: false,
-    bots: botList,
-    groups: groupList,
   });
   group.classList.add("absolute");
   groupGroupEl.value!.appendChild(group);
@@ -66,12 +59,10 @@ function addGroupEndpoint() {
   };
   instance.addToGroup(groupGroup, group);
 }
-function updateContact(data: { uuid: string; value: number }) {
-  uuidMap.set(data.uuid, data.value);
-}
+
 onMounted(() => {
   MiraiApi.fetchBotList().then(({ data }) => {
-    botList.push(...data);
+    MainConfigEmitter.emit("bot-list-update", data);
   });
   const _instance = jsPlumbBrowserUI.newInstance({
     container: containerEl.value,
@@ -106,10 +97,6 @@ onMounted(() => {
   });
   _instance.getConnections();
   instance = _instance;
-  mainEmitter.on("contact-update", updateContact);
-});
-onBeforeUnmount(() => {
-  mainEmitter.off("contact-update", updateContact);
 });
 function generateUuid() {
   return crypto

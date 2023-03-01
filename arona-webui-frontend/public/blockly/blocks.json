@@ -78,7 +78,7 @@
   "args0": [
     {
       "type": "field_input",
-      "name": "Msg",
+      "name": "msgFieldInput",
       "text": "Hallo"
     }
   ],

@@ -161,7 +161,7 @@ export default function addBlocks() {
           true,
           true,
         ),
-        "randomTagInput",
+        "randomTagDropDown",
       );
       this.setPreviousStatement(true, "ActionType");
       this.setNextStatement(true, "ActionType");

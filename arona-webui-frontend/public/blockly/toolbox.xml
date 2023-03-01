@@ -19,7 +19,7 @@
     </category>
     <category name="行为">
         <block type="sendMsgBlock">
-            <field name="Msg">Hallo</field>
+            <field name="msgFieldInput">Hallo</field>
         </block>
         <block type="randomBlock"/>
     </category>

@@ -1,10 +1,11 @@
-import Blockly, { Block, FieldDropdown } from "blockly";
+import Blockly, { Block, BlockSvg, FieldDropdown } from "blockly";
 import { Abstract } from "blockly/core/events/events_abstract";
 import BlocklyUtil from "@/blockly/BlocklyUtil";
 import useBaseStore from "@/store/base";
 import { blocks } from "@/blockly/index";
 // @ts-ignore
 import DropDownView from "@/blockly/widgets/DropDownView.ts";
+import ReplyApi from "@/api/modules/reply";
 
 export default function addBlocks() {
   Blockly.defineBlocksWithJsonArray(blocks);
@@ -142,6 +143,31 @@ export default function addBlocks() {
       });
       this.setOutput(true, "ExpressionType");
       this.setColour(230);
+    },
+  };
+  Blockly.Blocks.randomBlock = {
+    init(this: BlockSvg) {
+      const dummyInput = this.appendDummyInput("randomDummyInput");
+      dummyInput.appendField("随机回复: ");
+      dummyInput.appendField(
+        new DropDownView(
+          () => {
+            return ReplyApi.fetchReplyLabels().then((r) => {
+              return r.data.map((value) => [value.value, value.id.toString()]);
+            });
+          },
+          undefined,
+          undefined,
+          true,
+          true,
+        ),
+        "randomTagInput",
+      );
+      this.setPreviousStatement(true, "ActionType");
+      this.setNextStatement(true, "ActionType");
+      this.setColour(230);
+      this.setTooltip("");
+      this.setHelpUrl("");
     },
   };
   Blockly.Blocks.friend_search_block = {

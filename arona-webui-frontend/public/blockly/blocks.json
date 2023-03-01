@@ -87,24 +87,4 @@
   "colour": 230,
   "tooltip": "",
   "helpUrl": ""
-},
-{
-  "type": "randomBlock",
-  "message0": "随机执行以下之一 %1 %2",
-  "args0": [
-    {
-      "type": "input_dummy"
-    },
-    {
-      "type": "input_statement",
-      "name": "randomStatementInput",
-      "check": "ActionType"
-    }
-  ],
-  "previousStatement": null,
-  "nextStatement": null,
-  "extensions": ["random_block_extension"],
-  "colour": 230,
-  "tooltip": "",
-  "helpUrl": ""
 }]

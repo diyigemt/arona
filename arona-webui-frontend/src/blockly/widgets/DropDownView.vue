@@ -45,6 +45,7 @@
 
 <script setup lang="ts">
 import Blockly, { MenuOption } from "blockly";
+// @ts-ignore
 import { Search } from "@element-plus/icons-vue";
 import DropDownView from "@/blockly/widgets/DropDownView";
 

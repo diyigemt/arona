@@ -93,10 +93,6 @@ function setBlock(index: number) {
     Blockly.serialization.workspaces.load(block.blocklyProject as BlocklyProjectWorkspace, workspace.value);
     selectBlockIndex.value = index;
   });
-  // .catch((e) => {
-  //   console.error(e);
-  //   errorMessage("存档加载失败");
-  // });
 }
 function onSaveCurrentProject() {
   const code = aronaGenerator.workspaceToCode(workspace.value);

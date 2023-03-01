@@ -3,7 +3,6 @@ import BlocklyUtil from "@/blockly/BlocklyUtil";
 
 export default function injectExtensions() {
   BlocklyUtil.registerExtensions("logic_block_extension", logicBlockExtension);
-  BlocklyUtil.registerExtensions("random_block_extension", randomBlockExtension);
 }
 
 function logicBlockExtension(this: Block) {
@@ -44,15 +43,6 @@ function logicBlockExtension(this: Block) {
       if (this.getInputTargetBlock("logicValueInput") == null) {
         BlocklyUtil.disableBlock(this, "右侧缺少条件");
       }
-    }
-  });
-}
-
-function randomBlockExtension(this: Block) {
-  this.setOnChange((event) => {
-    if ((event.type === "change" || event.type === "move") && this.getRootBlock().type === "masterBlock") {
-      const blocks = this.getDescendants(false).slice(1);
-      console.log(blocks);
     }
   });
 }

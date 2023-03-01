@@ -44,9 +44,11 @@ import { Emitter } from "@pixi/particle-emitter";
 import { Application, Container, InteractionEvent, Loader, LoaderResource, Sprite } from "pixi.js";
 import * as PIXI from "pixi.js";
 import { AdvancedBloomFilter } from "@pixi/filter-advanced-bloom";
+import { HslAdjustmentFilter } from "@pixi/filter-hsl-adjustment";
+import { GlitchFilter } from "@pixi/filter-glitch";
 import { Spine } from "pixi-spine";
 import { sound } from "@pixi/sound";
-import gsap from "gsap";
+import gsap, { SteppedEase } from "gsap";
 import { Dict } from "@pixi/utils";
 import { StandEmitterConfig } from "@/constant/emiterConfig";
 import { HomePageAnimationConfigs, HomePageDialogConfig, VoiceConfig } from "@/constant/spine";
@@ -139,6 +141,7 @@ function initBackground(el: HTMLElement) {
   app.loader.add("space", "/spine/arona_workpage.skel");
   app.loader.add("disappearMask", disappearMaskPath);
   app.loader.add("arona", "/spine/arona_spr.skel");
+  app.loader.add("plana", "/spine/NP0035_spr.skel");
   app.loader.add("aronaMask", "/image/FX_TEX_Arona_Stand.png");
   app.stage.interactive = true;
   function playIdleVoice() {
@@ -188,6 +191,11 @@ function initBackground(el: HTMLElement) {
     app.stage.addChild(aronaContainer);
 
     const arona = loadArona(aronaResource, aronaContainer);
+
+    const planaResource = Reflect.get(resources, "plana");
+    const plana = loadArona(planaResource, aronaContainer);
+    plana.visible = false;
+
     let workVoiceLock = false;
     function playWorkVoice(cb?: () => void) {
       if (workVoiceLock) {
@@ -312,11 +320,30 @@ function initBackground(el: HTMLElement) {
             x: HomePageDialogConfig.x,
             y: HomePageDialogConfig.y,
           });
-          playWorkVoice(() => {
-            aronaContainer.on("pointerdown", () => {
-              playWorkVoice();
-            });
+
+          const nextVoice = workVoiceList[0];
+          sound.play("sensei", {
+            complete() {
+              sound.play(nextVoice.voice, {
+                complete() {
+                  plana.state.setAnimation(AronaFaceTrack, "00", false);
+                  clearChatDialog();
+                  setTimeout(() => {
+                    plana.state.clearTrack(AronaFaceTrack);
+                  }, 100);
+                },
+              });
+            },
           });
+          updateChatDialog(nextVoice.textTW.replace("[USERNAME]", ""));
+          arona.state.setAnimation(AronaFaceTrack, nextVoice.animationName, false);
+          plana.state.setAnimation(AronaFaceTrack, nextVoice.animationName, false);
+
+          // playWorkVoice(() => {
+          //   aronaContainer.on("pointerdown", () => {
+          //     playWorkVoice();
+          //   });
+          // });
           const tl2 = gsap.timeline();
           tl2
             .to(aronaMask, {
@@ -326,6 +353,39 @@ function initBackground(el: HTMLElement) {
             .then(() => {
               aronaMask.visible = false;
             });
+          setTimeout(() => {
+            sound.pause("sensei");
+          }, 300);
+          setTimeout(() => {
+            arona.state.clearTracks();
+            const hslAdjustment = new HslAdjustmentFilter({ colorize: true, alpha: 0.6 });
+            app.stage.filters = [hslAdjustment];
+            setTimeout(() => {
+              const glitchFilter = new GlitchFilter({ slices: 5 });
+              app.stage.filters!.push(glitchFilter);
+              const tl3 = gsap.timeline();
+              tl3
+                .to(glitchFilter, {
+                  slices: 10,
+                  ease: SteppedEase.config(5),
+                })
+                .to(
+                  glitchFilter,
+                  {
+                    slices: 5,
+                    ease: SteppedEase.config(5),
+                  },
+                  "+1",
+                )
+                .then(() => {
+                  arona.visible = false;
+                  plana.visible = true;
+                  sound.resume("sensei");
+                  backgroundSpine.filters = [hslAdjustment];
+                  app.stage.filters = [];
+                });
+            }, 300);
+          }, 600);
         });
       }, 600);
       backgroundSpine.state.setAnimation(backgroundActionTrack1, animationConfig.animation.arona[0], false);

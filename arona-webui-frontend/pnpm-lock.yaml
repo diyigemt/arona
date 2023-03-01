@@ -11,6 +11,8 @@ specifiers:
   '@jsplumb/connector-flowchart': ^5.13.2
   '@pixi-spine/base': ^3.1.0
   '@pixi/filter-advanced-bloom': ^4.0.0
+  '@pixi/filter-glitch': <5.0.0
+  '@pixi/filter-hsl-adjustment': ^5.2.0
   '@pixi/particle-emitter': ^5.0.8
   '@pixi/sound': <5.0.0
   '@types/express': ^4.17.15
@@ -81,6 +83,8 @@ dependencies:
   '@jsplumb/connector-flowchart': 5.13.2
   '@pixi-spine/base': 3.1.2
   '@pixi/filter-advanced-bloom': 4.2.0
+  '@pixi/filter-glitch': 4.2.0
+  '@pixi/filter-hsl-adjustment': 5.2.0
   '@pixi/particle-emitter': 5.0.8
   '@pixi/sound': 4.3.1
   '@vueuse/core': 8.9.4_vue@3.2.45
@@ -1223,6 +1227,20 @@ packages:
       '@pixi/core': 6.5.9_yc3lyad5jwyinmndak3aswu4u4
     dev: false
 
+  /@pixi/filter-glitch/4.2.0:
+    resolution: {integrity: sha512-aDyk1zFIchxQfl1aWAa7vxOGKUjicO2+aSysyR5TZWtO8p5u7P9EAoJ4YfzoEEcbcJ4LjLaJgmVy68jVj524vQ==}
+    peerDependencies:
+      '@pixi/constants': ^6.0.0
+      '@pixi/core': ^6.0.0
+      '@pixi/math': ^6.0.0
+    dev: false
+
+  /@pixi/filter-hsl-adjustment/5.2.0:
+    resolution: {integrity: sha512-BjmiKIJQuWNqMUjVUpqkM+HaInQzl7dCvYWj8wx9lSAwjzdOCRVVLbRLdO2TwGdwGIHjR3AylMxY1HZK3P4cLA==}
+    peerDependencies:
+      '@pixi/core': ^7.0.0-X
+    dev: false
+
   /@pixi/filter-kawase-blur/4.2.0:
     resolution: {integrity: sha512-1QeZqdUD3vh6HtiH930scI9mN/lDvfKW8rmwoE295tj5kbX6OeyRqXDr6KnEaRh/Jzm1hPB6ryRjHDS54x0QpQ==}
     peerDependencies:
@@ -1431,7 +1449,6 @@ packages:
 
   /@pixi/sound/4.3.1:
     resolution: {integrity: sha512-KpzJIErU2UbgrrI/6cIbZ0BsWPUDma86TyB9vz7cyJ9W4MHVZx1EYCJ0CeWh2XGtvzbUVOozLPnR18ObPZKokA==}
-    engines: {node: '>=12', npm: '>=7', yarn: please-use-npm}
     peerDependencies:
       '@pixi/core': '>=5 <7'
       '@pixi/loaders': '>=5 <7'

@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import MainConfigEmitter, { freeBot, freeGroup } from "@/views/config/config/event/main";
+import MainConfigEmitter, { botList, groupList, uuidMapEntries} from "@/views/config/config/event/main";
 
 const props = withDefaults(defineProps<IProps>(), {
   uuid: "",
@@ -22,6 +22,13 @@ function changeContact(contact: number) {
     value: contact || 0,
   });
 }
+const mapFilter = computed(() => uuidMapEntries.value.filter((it) => it[0] !== props.uuid));
+const freeBot = computed(() => {
+  return botList.value.filter((bot) => !mapFilter.value.some((it) => it[1] === bot.id));
+});
+const freeGroup = computed(() => {
+  return groupList.value.filter((group) => !mapFilter.value.some((it) => it[1] === group.id));
+});
 const options = computed(() => (props.type ? freeBot.value : freeGroup.value));
 interface IProps {
   uuid: string;

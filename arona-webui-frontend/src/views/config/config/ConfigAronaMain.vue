@@ -95,7 +95,6 @@ onMounted(() => {
     console.log(a, b);
     console.log(_instance.getConnections({ scope: ["green"] }));
   });
-  _instance.getConnections();
   instance = _instance;
 });
 function generateUuid() {

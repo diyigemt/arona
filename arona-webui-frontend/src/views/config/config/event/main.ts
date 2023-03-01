@@ -13,7 +13,7 @@ type Events = {
 const MainConfigEmitter = mitt<Events>();
 // 保存drag实例和其对应的群号/机器人q号的关系
 const uuidMap = ref(new Map<string, number>());
-const botList = ref<Friend[]>([]);
+export const botList = ref<Friend[]>([]);
 function updateContact(data: { uuid: string; value: number }) {
   if (data.value) {
     uuidMap.value.set(data.uuid, data.value);
@@ -27,12 +27,10 @@ function updateBotList(data: Friend[]) {
 MainConfigEmitter.on("contact-update", updateContact);
 MainConfigEmitter.on("bot-list-update", updateBotList);
 
-export const freeGroup = computed(() => {
+export const groupList = computed(() => {
   const baseStore = useBaseStore();
-  return baseStore.groups().filter((group) => ![...uuidMap.value.values()].some((it) => it === group.id));
+  return baseStore.groups();
 });
-export const freeBot = computed(() => {
-  return botList.value.filter((bot) => ![...uuidMap.value.values()].some((it) => it === bot.id));
-});
+export const uuidMapEntries = computed(() => [...uuidMap.value.entries()]);
 
 export default MainConfigEmitter;

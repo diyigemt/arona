@@ -328,6 +328,12 @@ function initBackground(el: HTMLElement) {
                 complete() {
                   plana.state.setAnimation(AronaFaceTrack, "00", false);
                   clearChatDialog();
+                  emitter.destroy();
+                  emitter2.destroy();
+                  sourceParticleContainer.destroy();
+                  destParticleContainer.destroy();
+                  aronaMask.destroy();
+                  disappearMask.destroy();
                   setTimeout(() => {
                     plana.state.clearTrack(AronaFaceTrack);
                   }, 100);

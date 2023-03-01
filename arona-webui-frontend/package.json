@@ -20,6 +20,7 @@
     "@pixi-spine/base": "^3.1.0",
     "@pixi/filter-advanced-bloom": "^4.0.0",
     "@pixi/particle-emitter": "^5.0.8",
+    "@pixi/sound": "<5.0.0",
     "@vueuse/core": "^8.9.2",
     "axios": "^0.25.0",
     "blockly": "^9.1.1",

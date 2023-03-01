@@ -9,28 +9,30 @@
 </template>
 
 <script setup lang="ts">
-import mainEmitter from "@/views/config/config/event/main";
-import { Friend, Group } from "@/types/contact";
+import MainConfigEmitter, { botList, groupList, uuidMapEntries} from "@/views/config/config/event/main";
 
 const props = withDefaults(defineProps<IProps>(), {
   uuid: "",
   type: true,
-  bots: () => [],
-  groups: () => [],
 });
 const select = ref<number>();
 function changeContact(contact: number) {
-  mainEmitter.emit("contact-update", {
+  MainConfigEmitter.emit("contact-update", {
     uuid: props.uuid,
     value: contact || 0,
   });
 }
-const options = computed(() => (props.type ? props.bots : props.groups));
+const mapFilter = computed(() => uuidMapEntries.value.filter((it) => it[0] !== props.uuid));
+const freeBot = computed(() => {
+  return botList.value.filter((bot) => !mapFilter.value.some((it) => it[1] === bot.id));
+});
+const freeGroup = computed(() => {
+  return groupList.value.filter((group) => !mapFilter.value.some((it) => it[1] === group.id));
+});
+const options = computed(() => (props.type ? freeBot.value : freeGroup.value));
 interface IProps {
   uuid: string;
   type: boolean; // 是群选择还是bot选择 true: bot选择
-  bots: Friend[];
-  groups: Group[];
 }
 </script>
 

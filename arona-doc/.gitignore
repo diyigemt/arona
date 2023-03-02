@@ -1,8 +1,7 @@
-node_modules
+/.idea/
+/docs/.vitepress/cache/
+/docs/.vitepress/dist/
+/node_modules/
 .DS_Store
-dist
-dist-ssr
-*.local
-.idea
-dist.7z
-/docs/.vitepress/
+/config/
+/test/

@@ -1,10 +1,9 @@
 import Blockly, { FieldDropdown } from "blockly";
-import { createVNode, render } from "vue";
 import { FieldConfig } from "blockly/core/field";
 import { FieldDropdownValidator, MenuGenerator, MenuOption } from "blockly/core/field_dropdown";
 import { Data } from "blockly/core/browser_events";
 import BlocklyUtil from "@/blockly/BlocklyUtil";
-import { mountAsyncComponent, useApp } from "@/utils/vueTools";
+import { mountAsyncComponent } from "@/utils/vueTools";
 
 // @ts-ignore
 export default class DropDownView extends FieldDropdown {
@@ -12,19 +11,34 @@ export default class DropDownView extends FieldDropdown {
 
   isMultiple = false;
 
+  private store: MenuOption[] = [["请选择", ""]];
+
+  private isAsyncGenerator = false;
+
   private declare generatedOptions_: MenuOption[] | null;
 
   private mouseScrollWrapper: Data | undefined;
 
-  /* eslint-disable camelcase,@typescript-eslint/no-unused-vars,no-underscore-dangle */
+  /* eslint-disable camelcase,@typescript-eslint/no-unused-vars */
   constructor(
-    menuGenerator: MenuGenerator,
+    menuGenerator: MenuGenerator | ((this: DropDownView) => Promise<MenuOption[]>),
     opt_validator?: FieldDropdownValidator,
     opt_config?: FieldConfig,
     isSearch?: boolean,
     isMultiple?: boolean,
   ) {
-    super(menuGenerator, opt_validator, opt_config);
+    // @ts-ignore
+    if (!Array.isArray(menuGenerator) && menuGenerator().constructor.name === "Promise") {
+      super([["请选择", ""]], opt_validator, opt_config);
+      this.isAsyncGenerator = true;
+      // @ts-ignore
+      (menuGenerator() as Promise<MenuOption[]>).then((r) => {
+        this.store = r;
+        this.menuGenerator_ = () => {
+          return this.store;
+        };
+      });
+    } else super(<MenuOption[] | ((this: FieldDropdown) => MenuOption[])>menuGenerator, opt_validator, opt_config);
     if (isSearch !== undefined) this.isSearch = isSearch;
     if (isMultiple !== undefined) this.isMultiple = isMultiple;
   }
@@ -35,8 +49,7 @@ export default class DropDownView extends FieldDropdown {
       searchInput: this.isSearch,
       isMultiple: this.isMultiple,
     });
-    const div = Blockly.DropDownDiv.getContentDiv();
-    div.appendChild(container);
+    Blockly.DropDownDiv.getContentDiv().appendChild(container);
   }
 
   protected override bindEvents_() {
@@ -102,15 +115,24 @@ export default class DropDownView extends FieldDropdown {
     if (Array.isArray(this.menuGenerator_)) {
       if (!this.isMultiple) return this.menuGenerator_;
       const res = this.menuGenerator_;
-      res.unshift(this.generatedOptions_![0]);
+      if (this.generatedOptions_ != null) res.unshift(this.generatedOptions_[0]);
+      this.generatedOptions_ = res;
       return res;
     }
     if (opt_useCache && this.generatedOptions_) return this.generatedOptions_;
     if (this.isMultiple) {
-      // @ts-ignore
-      const res = this.menuGenerator_();
-      res.unshift(this.generatedOptions_![0]);
-      this.generatedOptions_ = res;
+      if (this.generatedOptions_ != null) {
+        if (this.isAsyncGenerator) {
+          // @ts-ignore
+          this.generatedOptions_ = this.menuGenerator_().concat();
+          this.generatedOptions_.unshift(this.generatedOptions_[0]);
+        } else {
+          // @ts-ignore
+          const res = this.menuGenerator_();
+          res.unshift(this.generatedOptions_[0]);
+          this.generatedOptions_ = res;
+        }
+      } else return this.getOptions(false);
     } else {
       // @ts-ignore
       this.generatedOptions_ = this.menuGenerator_();
@@ -139,7 +161,6 @@ export default class DropDownView extends FieldDropdown {
     // eslint-disable-next-line no-unused-expressions
     index === 0 ? (this.generatedOptions_![0] = [res, data]) : (this.generatedOptions_![0] = [res, res2.toString()]);
     this.validateOptions(this.generatedOptions_!);
-    // console.log(this.generatedOptions_);
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -166,7 +187,7 @@ export default class DropDownView extends FieldDropdown {
     Blockly.DropDownDiv.hide();
   }
 
-  splitTags() {
+  splitTags(): string[] {
     const res: string[] = [];
     if (!this.isMultiple || this.generatedOptions_![0][1] === "") return [];
     this.getOptions();

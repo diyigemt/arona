@@ -66,7 +66,6 @@ object Labels: Worker {
           }
           "delete" -> {
             val json = json.decodeFromString(DeleteRequest.serializer(), receive)
-
             DataBaseProvider.query {
               Labels.deleteWhere { Labels.id eq json.id }
               MessageGroups.slice(MessageGroups.id, MessageGroups.labels).selectAll().map {

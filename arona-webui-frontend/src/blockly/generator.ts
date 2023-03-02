@@ -70,12 +70,21 @@ class AronaGenerator extends CodeGenerator {
   };
 
   sendMsgBlock = (block: Block) => {
-    const textMsg = block.getFieldValue("Msg");
+    const textMsg = block.getFieldValue("msgFieldInput");
     this.actions.push({
       id: "SEND_MSG",
       value: [textMsg],
     });
 
+    return "";
+  };
+
+  randomBlock = (block: Block) => {
+    const tags = block.getFieldValue("randomTagDropDown") as string;
+    this.actions.push({
+      id: "RANDOM_MSG",
+      value: [tags.concat().split(",")],
+    });
     return "";
   };
 }

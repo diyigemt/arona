@@ -450,7 +450,7 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 * {
-  font-family: "GameFont", serif;
+  font-family: "Game Font", serif;
   font-size: 1.2rem;
 }
 .background {

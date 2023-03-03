@@ -48,6 +48,7 @@ import Blockly, { MenuOption } from "blockly";
 // @ts-ignore
 import { Search } from "@element-plus/icons-vue";
 import DropDownView from "@/blockly/widgets/DropDownView";
+import {ImageProperties} from "blockly/core/field_dropdown";
 
 const props = defineProps<{
   blockly: DropDownView;
@@ -83,9 +84,12 @@ function onInput() {
   });
 }
 
-function peakyBlinder(value: string) {
-  if (value.length >= 20) {
-    return `${value.slice(0, 20)}...`;
+function peakyBlinder(value: string | ImageProperties) {
+  if (typeof value === "string") {
+    if (value.length >= 20) {
+      return `${value.slice(0, 20)}...`;
+    }
+    return value;
   }
   return value;
 }

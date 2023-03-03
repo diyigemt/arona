@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import MainConfigEmitter, { botList, groupList, uuidMapEntries} from "@/views/config/config/event/main";
+import MainConfigEmitter, { botList, groupList, uuidMapEntries } from "@/views/config/config/event/main";
 
 const props = withDefaults(defineProps<IProps>(), {
   uuid: "",
@@ -29,7 +29,9 @@ const freeBot = computed(() => {
 const freeGroup = computed(() => {
   return groupList.value.filter((group) => !mapFilter.value.some((it) => it[1] === group.id));
 });
-const options = computed(() => (props.type ? freeBot.value : freeGroup.value));
+const options = computed<{ id: number; name: string; remark?: string }[]>(() =>
+  props.type ? freeBot.value : freeGroup.value,
+);
 interface IProps {
   uuid: string;
   type: boolean; // 是群选择还是bot选择 true: bot选择

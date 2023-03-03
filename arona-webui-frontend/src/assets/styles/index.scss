@@ -10,8 +10,12 @@
 }
 
 @font-face {
-  font-family: "GameFont";
-  src: url("/font/ResourceHanRoundedCN-Medium.ttf");
+  font-family: "Game Font";
+  src: url("/font/U-OTF-ShinMGoUpr-Medium.woff");
+}
+@font-face {
+  font-family: "Chinese Game Font";
+  src: url("/font/ResourceHanRoundedCN-Medium.woff");
 }
 
 // 隐藏横向滚动条

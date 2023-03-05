@@ -1,15 +1,6 @@
-import { DefaultTheme, defineConfig } from 'vitepress';
-import { navItems } from '../../config/menu';
+import { defineConfig } from 'vitepress';
+import { NavItem, SidebarItem } from '../config/menu';
 import { withPwa } from '@vite-pwa/vitepress';
-
-function getMenuItems(
-  itemType: 'navbar' | 'sidebar' = 'navbar'
-): DefaultTheme.NavItem[] | DefaultTheme.Sidebar {
-  return navItems.filter(
-    item =>
-      item.meta[`shouldShowIn${itemType[0].toUpperCase()}${itemType.slice(1)}`]
-  );
-}
 
 export default withPwa(
   defineConfig({
@@ -29,8 +20,8 @@ export default withPwa(
     },
 
     themeConfig: {
-      nav: getMenuItems('navbar') as DefaultTheme.NavItem[],
-      sidebar: getMenuItems('sidebar') as DefaultTheme.Sidebar,
+      nav: NavItem,
+      sidebar: SidebarItem,
     },
 
     pwa: {

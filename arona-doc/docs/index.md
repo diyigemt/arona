@@ -1,8 +1,8 @@
 ---
 layout: home
 
-title: シッテムの箱
-titleTemplate: Arona 配置手册
+title: Arona 配置手册
+titleTemplate: シッテムの箱
 
 hero:
   name: Arona 配置手册
@@ -14,7 +14,7 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /terms/
+      link: /guide/what-is
     - theme: alt
       text: View on Github
       link: https://github.com/diyigemt/arona

@@ -32,5 +32,6 @@ object CommandInterceptorManager: InitializedFunction() {
 
   override fun init() {
     ExitCommandInterceptor.registerInterceptor()
+    TempMessageInterceptor.registerInterceptor()
   }
 }

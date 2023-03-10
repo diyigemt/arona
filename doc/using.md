@@ -249,6 +249,11 @@ arona总的配置。
 | sendStatus              | Boolean      | 是否允许arona收集匿名统计信息(未实装)                        |
 | uuid                    | String       | 识别id(无需修改)                                             |
 | remoteCheckInterval     | Int          | 远端操作查询间隔 设置为0表示不开启, 单位是小时               |
+| tempMessageIgnoreType   | Enum         | 是否忽略私聊指令, NONE: \"不忽略\";ONLY_SERVICE_GROUP: \"忽略不在groups群里的群友\";ALL: \"忽略所有\" |
+
+当`tempMessageIgnoreType`值为`NONE`时，该配置不生效, 为`ONLY_SERVICE_GROUP`时会忽略非服务群以外的私聊消息, 为`ALL`时将不会响应私聊消息<a id="ignore-message-type"> </a>
+
+该配置不影响`managerGroup`的私聊消息
 
 ### 2.arona-service.yml<a id="service-names"> </a>
 

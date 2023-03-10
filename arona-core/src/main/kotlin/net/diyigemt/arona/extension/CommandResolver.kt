@@ -1,6 +1,5 @@
 package net.diyigemt.arona.extension
 
-import net.diyigemt.arona.Arona
 import net.diyigemt.arona.config.AronaConfig
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.service.AronaServiceManager
@@ -48,10 +47,15 @@ private object CommandResolverInterceptor: CommandCallInterceptor {
       super.interceptBeforeCall(message, caller)
     }
   }
-  
-  private fun extraCommandName(message: Message): String {
-    val contentToString = message.contentToString().split(" ")
-    return contentToString[0]
-  }
+}
 
+fun extraCommandName(message: Message): String {
+  val contentToString = message.contentToString().split(" ")
+  return contentToString[0]
+}
+
+enum class TempMessageIgnoreType {
+  NONE,
+  ONLY_SERVICE_GROUP,
+  ALL
 }

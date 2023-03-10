@@ -50,17 +50,8 @@ object AronaUpdateChecker: AronaQuartzService {
         }.joinToString("\n")
       val concat = "检测到版本更新,当前版本:${Arona.version}, 新版本:${nowVersion}\n更新日志:\n${newFuture}"
       // 如果本机使用测试版
-      if (Arona.version.identifier != null) {
+      if (nowVersion > Arona.version) {
         // 新的版本发布就提醒更新
-        if (Arona.version.major == nowVersion.major
-          && Arona.version.minor == nowVersion.minor
-          && Arona.version.patch == nowVersion.patch
-          && Arona.version.identifier != nowVersion.identifier
-        ) {
-          Arona.sendMessageToAdmin(concat)
-        }
-      } else {
-        if (nowVersion.identifier != null || Arona.version >= nowVersion) return // 忽略测试版和低版本
         Arona.sendMessageToAdmin(concat)
       }
     }

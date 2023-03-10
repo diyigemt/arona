@@ -1,5 +1,6 @@
 package net.diyigemt.arona.config
 
+import net.diyigemt.arona.extension.TempMessageIgnoreType
 import net.mamoe.mirai.console.data.AutoSavePluginConfig
 import net.mamoe.mirai.console.data.ValueDescription
 import net.mamoe.mirai.console.data.value
@@ -44,5 +45,8 @@ object AronaConfig: AutoSavePluginConfig("arona") {
 
   @ValueDescription("远端操作查询间隔 设置为0表示不开启, 单位是小时")
   val remoteCheckInterval: Int by value(1)
+
+  @ValueDescription("是否忽略私聊指令, NONE: \"不忽略\";ONLY_SERVICE_GROUP: \"忽略不在groups群里的群友\";ALL: \"忽略所有\"")
+  val tempMessageIgnoreType: TempMessageIgnoreType by value(TempMessageIgnoreType.NONE)
 
 }

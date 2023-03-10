@@ -25,3 +25,6 @@ tools/pixiv.db
 tools/pixiv.py
 tools/pixiv.db-journal
 tools/skip
+/arona-doc/*
+/arona-webui-frontend/*
+/arona-webui-backend/*

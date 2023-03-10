@@ -52,7 +52,6 @@ import { StandEmitterConfig } from "@/constant/emiterConfig";
 import { HomePageAnimationConfigs, HomePageDialogConfig, VoiceConfig } from "@/constant/spine";
 import { deepCopy, pickRandomArrayItemAndPutBack, randomArrayItem } from "@/utils";
 
-(window as any).__PIXI_INSPECTOR_GLOBAL_HOOK__ && (window as any).__PIXI_INSPECTOR_GLOBAL_HOOK__.register({ PIXI });
 let mainApp: Application;
 const backgroundContainer = ref<HTMLElement>();
 const chatDialogOuter = ref<HTMLElement>();
@@ -136,11 +135,12 @@ function initBackground(el: HTMLElement) {
   app.view.style.transform = `translateY(${-middleOffset}px)`;
   el.appendChild(app.view);
   app.stage.sortableChildren = true;
-  app.loader.add("space", "/spine/arona_workpage.skel");
+  app.loader.add("space", "/spine/arona_workpage_daytime.skel");
   app.loader.add("disappearMask", disappearMaskPath);
   app.loader.add("arona", "/spine/arona_spr.skel");
   app.loader.add("aronaMask", "/image/FX_TEX_Arona_Stand.png");
   app.stage.interactive = true;
+  (window as any).__PIXI_APP = app;
   function playIdleVoice() {
     clearChatDialog();
     randomTalkVoiceIntervalHandler = window.setTimeout(() => {
@@ -172,6 +172,7 @@ function initBackground(el: HTMLElement) {
         });
       },
     });
+    return;
     const disappearMaskResource = Reflect.get(resources, "disappearMask");
     const disappearMask = loadSleepMask(
       disappearMaskResource,

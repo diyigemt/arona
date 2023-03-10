@@ -262,6 +262,7 @@ arona总的配置。
 
 当`tempMessageIgnoreType`值为`NONE`时，该配置不生效, 为`ONLY_SERVICE_GROUP`时会忽略非服务群以外的私聊消息, 为`ALL`时将不会响应私聊消息<a id="ignore-message-type"> </a>
 
+该配置**不影响**`managerGroup`的私聊指令
 
 ### 2.arona-service.yml<a id="service-names"> </a>
 

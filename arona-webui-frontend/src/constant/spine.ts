@@ -4,6 +4,14 @@ export const HomePageDialogConfig = {
   x: 100,
   y: 450,
 };
+export const PlanaPageAnimationConfig = [
+  {
+    animation: {
+      idle: ["Idle_01"],
+      touch: [],
+    },
+  },
+];
 export const HomePageAnimationConfigs = [
   {
     animation: {

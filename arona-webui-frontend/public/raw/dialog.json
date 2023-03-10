@@ -1,0 +1,2097 @@
+{
+  "aronaTalk": [
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWork",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "12",
+      "LocalizeKR": "[USERNAME] 선생님!\n기다리고 있었습니다!",
+      "LocalizeJP": "[USERNAME]先生！\nお待ちしておりました！",
+      "VoiceClipsKr": [
+        "CALLNAME1",
+        "Arona_Work_In_1"
+      ],
+      "VoiceClipsJp": [
+        "CALLNAME1",
+        "Arona_Work_In_1"
+      ],
+      "ApplyPosition": false,
+      "PosX": -0,
+      "PosY": -0
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWork",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 2,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "25",
+      "LocalizeKR": "자아, 업무를 시작할 시간이에요!",
+      "LocalizeJP": "さあ、\nお仕事を始める時間です！",
+      "VoiceClipsKr": [
+        "Arona_Work_In_2"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_In_2"
+      ],
+      "ApplyPosition": false,
+      "PosX": -0,
+      "PosY": -0
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWork",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 3,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "31",
+      "LocalizeKR": "어떤 업무를 하실 건가요, \n선생님?",
+      "LocalizeJP": "どのお仕事から始めますか、\n先生？",
+      "VoiceClipsKr": [
+        "Arona_Work_In_3"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_In_3"
+      ],
+      "ApplyPosition": false,
+      "PosX": -0,
+      "PosY": -0
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWork",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 4,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "32",
+      "LocalizeKR": "제가 선생님의 업무를 돕겠습니다!",
+      "LocalizeJP": "私が先生のお仕事を\n手伝います！",
+      "VoiceClipsKr": [
+        "Arona_Work_In_4"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_In_4"
+      ],
+      "ApplyPosition": false,
+      "PosX": -0,
+      "PosY": -0
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWork",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "01",
+      "LocalizeKR": "여기서는 선생님의 다양한 업무를 \n진행할 수 있어요!",
+      "LocalizeJP": "ここで先生の、様々なお仕事を\n始めることができます！",
+      "VoiceClipsKr": [
+        "Arona_Work_Talk_1"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Talk_1"
+      ],
+      "ApplyPosition": false,
+      "PosX": -0,
+      "PosY": -0
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWork",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 2,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "25",
+      "LocalizeKR": "[USERNAME] 선생님!\n원하시는 업무를 선택해 주세요.\n제가 옆에서 돕겠습니다!",
+      "LocalizeJP": "[USERNAME] 先生！\nご希望のお仕事を選んでください。\n私が隣で手伝います！",
+      "VoiceClipsKr": [
+        "CALLNAME1",
+        "Arona_Work_Talk_2"
+      ],
+      "VoiceClipsJp": [
+        "CALLNAME1",
+        "Arona_Work_Talk_2"
+      ],
+      "ApplyPosition": false,
+      "PosX": -0,
+      "PosY": -0
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWork",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 3,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "13",
+      "LocalizeKR": "해결해 주셔야 할 업무들이에요.\n어른이란 힘들겠네요.",
+      "LocalizeJP": "解決していただかねば\nならないお仕事がたくさんです。\n大人って大変ですね。",
+      "VoiceClipsKr": [
+        "Arona_Work_Talk_3"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Talk_3"
+      ],
+      "ApplyPosition": false,
+      "PosX": -0,
+      "PosY": -0
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWork",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 4,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "12",
+      "LocalizeKR": "해결해야 할 일들이 잔뜩!\n그치만 힘내는 거예요!",
+      "LocalizeJP": "解決するべきことがいっぱいですね！\n頑張りましょう！",
+      "VoiceClipsKr": [
+        "Arona_Work_Talk_4"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Talk_4"
+      ],
+      "ApplyPosition": false,
+      "PosX": -0,
+      "PosY": -0
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWork",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 5,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "18",
+      "LocalizeKR": "가끔씩은 몸 생각도 해야죠.\n선생님의 건강이 걱정된다구요!",
+      "LocalizeJP": "たまには身体のことも考えないと、\n先生の健康が心配です！",
+      "VoiceClipsKr": [
+        "Arona_Work_Talk_5"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Talk_5"
+      ],
+      "ApplyPosition": false,
+      "PosX": -0,
+      "PosY": -0
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWork",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 6,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "29",
+      "LocalizeKR": "우와….\n일이 엄청나게 많이 있네요.",
+      "LocalizeJP": "うわぁ…。\nものすごい量の仕事ですね。",
+      "VoiceClipsKr": [
+        "Arona_Work_Talk_6"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Talk_6"
+      ],
+      "ApplyPosition": false,
+      "PosX": -0,
+      "PosY": -0
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWork",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 7,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "22",
+      "LocalizeKR": "자, 힘내는 거예요!\n선생님!",
+      "LocalizeJP": "さあ、頑張りましょう！先生！",
+      "VoiceClipsKr": [
+        "Arona_Work_Talk_7_1",
+        "Arona_Work_Talk_7_2"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Talk_7_1",
+        "Arona_Work_Talk_7_2"
+      ],
+      "ApplyPosition": false,
+      "PosX": -0,
+      "PosY": -0
+    }
+  ],
+  "planaTalk": [
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWork",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "02",
+      "LocalizeKR": "접속 확인.",
+      "LocalizeJP": "接続確認。",
+      "VoiceClipsKr": [
+        "NP0035_Work_In_1_1"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_In_1_1"
+      ],
+      "ApplyPosition": false,
+      "PosX": -0,
+      "PosY": -0
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWork",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "03",
+      "LocalizeKR": "[USERNAME] 선생님.\n기다리고 있었습니다.",
+      "LocalizeJP": "[USERNAME]先生。\nお待ちしておりました。",
+      "VoiceClipsKr": [
+        "CALLNAME2",
+        "NP0035_Work_In_1_2"
+      ],
+      "VoiceClipsJp": [
+        "CALLNAME2",
+        "NP0035_Work_In_1_2"
+      ],
+      "ApplyPosition": false,
+      "PosX": -0,
+      "PosY": -0
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWork",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 2,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "15",
+      "LocalizeKR": "업무를 시작할 시간입니다.\n[USERNAME] 선생님.",
+      "LocalizeJP": "お仕事を始める時間です。\n[USERNAME]先生。",
+      "VoiceClipsKr": [
+        "NP0035_Work_In_2",
+        "CALLNAME2"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_In_2",
+        "CALLNAME2"
+      ],
+      "ApplyPosition": false,
+      "PosX": -0,
+      "PosY": -0
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWork",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 3,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "02",
+      "LocalizeKR": "어떤 업무를 하실 겁니까,\n선생님?",
+      "LocalizeJP": "どのお仕事から始めますか。\n先生？",
+      "VoiceClipsKr": [
+        "NP0035_Work_In_3"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_In_3"
+      ],
+      "ApplyPosition": false,
+      "PosX": -0,
+      "PosY": -0
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWork",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 4,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "02",
+      "LocalizeKR": "대기 중.\n해결이 필요한 작업들이\n다수 존재합니다. ",
+      "LocalizeJP": "待機中。\n解決しなければならない作業が\n多数存在しています。",
+      "VoiceClipsKr": [
+        "NP0035_Work_In_4"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_In_4"
+      ],
+      "ApplyPosition": false,
+      "PosX": -0,
+      "PosY": -0
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWork",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "03",
+      "LocalizeKR": "여기서 선생님의 다양한 업무를\n진행할 수 있습니다.",
+      "LocalizeJP": "ここで先生の様々なお仕事を\n進行できます。",
+      "VoiceClipsKr": [
+        "NP0035_Work_Talk_1"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_Talk_1"
+      ],
+      "ApplyPosition": false,
+      "PosX": -0,
+      "PosY": -0
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWork",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 2,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "15",
+      "LocalizeKR": "[USERNAME] 선생님.\n원하시는 업무를 선택해 주십시오.",
+      "LocalizeJP": "[USERNAME]先生。\nご希望のお仕事を選んでください。",
+      "VoiceClipsKr": [
+        "CALLNAME2",
+        "NP0035_Work_Talk_2"
+      ],
+      "VoiceClipsJp": [
+        "CALLNAME2",
+        "NP0035_Work_Talk_2"
+      ],
+      "ApplyPosition": false,
+      "PosX": -0,
+      "PosY": -0
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWork",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 3,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "03",
+      "LocalizeKR": "해결해 주셔야 할 업무들입니다.\n그럼 부탁드립니다.",
+      "LocalizeJP": "解決していただかねばならない\nお仕事がたくさんあります。\nでは、お願いします。",
+      "VoiceClipsKr": [
+        "NP0035_Work_Talk_3"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_Talk_3"
+      ],
+      "ApplyPosition": false,
+      "PosX": -0,
+      "PosY": -0
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWork",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 4,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "13",
+      "LocalizeKR": "혼란. 이해할 수 없는 행동입니다.\n찌르지 말아주세요. 고장납니다. ",
+      "LocalizeJP": "混乱。理解できない行動です。\nつつかないでください。故障します。 ",
+      "VoiceClipsKr": [
+        "NP0035_Work_Talk_4"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_Talk_4"
+      ],
+      "ApplyPosition": false,
+      "PosX": -0,
+      "PosY": -0
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWork",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 5,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "12",
+      "LocalizeKR": "이해했습니다.\n선생님은 지금 딱히 할 일이 없는 것이군요.\n심심한 것이군요.",
+      "LocalizeJP": "理解しました。先生は今、\n特にやるべきことがないのですね。\n暇なのですね。",
+      "VoiceClipsKr": [
+        "NP0035_Work_Talk_5"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_Talk_5"
+      ],
+      "ApplyPosition": false,
+      "PosX": -0,
+      "PosY": -0
+    }
+  ],
+  "aronaOnly": [
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkAronaSit",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "Talk",
+      "ActionName": "",
+      "Duration": 3000,
+      "AnimationName": "",
+      "LocalizeKR": "으응~♬",
+      "LocalizeJP": "ルンルン～♬",
+      "VoiceClipsKr": [
+        "Arona_Work_Sit_In_1"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sit_In_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": 88,
+      "PosY": 240
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkAronaSit",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "Talk",
+      "ActionName": "",
+      "Duration": 3000,
+      "AnimationName": "",
+      "LocalizeKR": "라랄라랄라♪",
+      "LocalizeJP": "ランララン、ララ～ン♪",
+      "VoiceClipsKr": [
+        "Arona_Work_Sit_Talk_1"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sit_Talk_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": 88,
+      "PosY": 240
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkAronaSit",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 2,
+      "DialogType": "Talk",
+      "ActionName": "",
+      "Duration": 3000,
+      "AnimationName": "",
+      "LocalizeKR": "음음음~♩",
+      "LocalizeJP": "ふんふんふん～♩",
+      "VoiceClipsKr": [
+        "Arona_Work_Sit_Talk_2"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sit_Talk_2"
+      ],
+      "ApplyPosition": true,
+      "PosX": 88,
+      "PosY": 240
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkAronaSit",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 3,
+      "DialogType": "Talk",
+      "ActionName": "",
+      "Duration": 3000,
+      "AnimationName": "",
+      "LocalizeKR": "오늘은 또 무슨 일이♬\n기다리고 있을까~♪",
+      "LocalizeJP": "今日はまたっ、どんなことがっ♬\n待ってるのかな～♪",
+      "VoiceClipsKr": [
+        "Arona_Work_Sit_Talk_3"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sit_Talk_3"
+      ],
+      "ApplyPosition": true,
+      "PosX": 88,
+      "PosY": 240
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkAronaSit",
+      "DialogCondition": "Exit",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "Talk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "앗?",
+      "LocalizeJP": "あっ？",
+      "VoiceClipsKr": [
+        "Arona_Work_Sit_Exit_1"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sit_Exit_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": 88,
+      "PosY": 240
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkAronaSit",
+      "DialogCondition": "Exit",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 2,
+      "DialogType": "Talk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "어라?",
+      "LocalizeJP": "あれ？",
+      "VoiceClipsKr": [
+        "Arona_Work_Sit_Exit_2"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sit_Exit_2"
+      ],
+      "ApplyPosition": true,
+      "PosX": 88,
+      "PosY": 240
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkAronaSit",
+      "DialogCondition": "Exit",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 3,
+      "DialogType": "Talk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "앗!",
+      "LocalizeJP": "あっ！",
+      "VoiceClipsKr": [
+        "Arona_Work_Sit_Exit_3"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sit_Exit_3"
+      ],
+      "ApplyPosition": true,
+      "PosX": 88,
+      "PosY": 240
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkAronaSleep",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "음냐. 딸기 우유는… 우히히.",
+      "LocalizeJP": "むにゃ、\nイチゴミルクは…うひひ。",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_In_1"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_In_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": -326,
+      "PosY": 96
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkAronaSleep",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 2,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "이렇게 많이는 못먹어요….",
+      "LocalizeJP": "そんなに\n食べられません…。",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_In_2"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_In_2"
+      ],
+      "ApplyPosition": true,
+      "PosX": -326,
+      "PosY": 96
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkAronaSleep",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "선생님은 참…",
+      "LocalizeJP": "先生ったら…。",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_Talk_1"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_Talk_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": -326,
+      "PosY": 96
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkAronaSleep",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 2,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "…우히히히히.",
+      "LocalizeJP": "…うひひひひ。",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_Talk_2"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_Talk_2"
+      ],
+      "ApplyPosition": true,
+      "PosX": -326,
+      "PosY": 96
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkAronaSleep",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 3,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "음냐.",
+      "LocalizeJP": "むにゃ。",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_Talk_3"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_Talk_3"
+      ],
+      "ApplyPosition": true,
+      "PosX": -326,
+      "PosY": 96
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkAronaSleep",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 4,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "졸고 있는 게\n아니거든요… 음냐.",
+      "LocalizeJP": "居眠りしているわけでは\nないですよぉ…むにゃ。",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_Talk_4"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_Talk_4"
+      ],
+      "ApplyPosition": true,
+      "PosX": -326,
+      "PosY": 96
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkAronaSleep",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 5,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "우힛, 냐암….",
+      "LocalizeJP": "うひっ、にゃあ…。",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_Talk_5"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_Talk_5"
+      ],
+      "ApplyPosition": true,
+      "PosX": -326,
+      "PosY": 96
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkAronaSleep",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 6,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "선생님. 체통을 지키셔야죠….",
+      "LocalizeJP": "先生、\nちゃんとしてください…。",
+      "VoiceClipsKr": [],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_Talk_6"
+      ],
+      "ApplyPosition": true,
+      "PosX": -326,
+      "PosY": 96
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkAronaSleep",
+      "DialogCondition": "Exit",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 1500,
+      "AnimationName": "",
+      "LocalizeKR": "우, 우햣?",
+      "LocalizeJP": "んっ、うひゃっ？",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_Exit_1"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_Exit_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": -326,
+      "PosY": 96
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkAronaSleep",
+      "DialogCondition": "Exit",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 2,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "앗?!",
+      "LocalizeJP": "あひゃっ！？",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_Exit_2"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_Exit_2"
+      ],
+      "ApplyPosition": true,
+      "PosX": -326,
+      "PosY": 96
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkAronaSleep",
+      "DialogCondition": "Exit",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 3,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 1500,
+      "AnimationName": "",
+      "LocalizeKR": "…히익?",
+      "LocalizeJP": "…んぃ？",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_Exit_3"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_Exit_3"
+      ],
+      "ApplyPosition": true,
+      "PosX": -326,
+      "PosY": 96
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkAronaWatch",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "음! 좋아.\n오늘도 날씨는 쾌청하네요.",
+      "LocalizeJP": "うん、よし！\n今日も良い天気ですね。",
+      "VoiceClipsKr": [
+        "Arona_Work_Watch_In_1"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Watch_In_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": 258,
+      "PosY": -68
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkAronaWatch",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 2,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "으음… 비가 오려나.",
+      "LocalizeJP": "うーん…雨、降るのかな。",
+      "VoiceClipsKr": [
+        "Arona_Work_Watch_In_2"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Watch_In_2"
+      ],
+      "ApplyPosition": true,
+      "PosX": 258,
+      "PosY": -68
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkAronaWatch",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "저 멀리에는 뭐가 있는 걸까….",
+      "LocalizeJP": "遥か空の向こうには、\n何があるんだろう…。",
+      "VoiceClipsKr": [
+        "Arona_Work_Watch_Talk_1"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Watch_Talk_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": 258,
+      "PosY": -68
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkAronaWatch",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 2,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 3000,
+      "AnimationName": "",
+      "LocalizeKR": "….",
+      "LocalizeJP": "……。",
+      "VoiceClipsKr": [
+        "Arona_Work_Watch_Talk_2"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Watch_Talk_2"
+      ],
+      "ApplyPosition": true,
+      "PosX": 258,
+      "PosY": -68
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkAronaWatch",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 3,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "…음.",
+      "LocalizeJP": "…うーん。",
+      "VoiceClipsKr": [
+        "Arona_Work_Watch_Talk_3"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Watch_Talk_3"
+      ],
+      "ApplyPosition": true,
+      "PosX": 258,
+      "PosY": -68
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkAronaWatch",
+      "DialogCondition": "Exit",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "앗!",
+      "LocalizeJP": "あっ！",
+      "VoiceClipsKr": [
+        "Arona_Work_Watch_Exit_1"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Watch_Exit_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": 258,
+      "PosY": -68
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkAronaWatch",
+      "DialogCondition": "Exit",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 2,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "어라?",
+      "LocalizeJP": "あれ。",
+      "VoiceClipsKr": [
+        "Arona_Work_Watch_Exit_2"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Watch_Exit_2"
+      ],
+      "ApplyPosition": true,
+      "PosX": 258,
+      "PosY": -68
+    }
+  ],
+  "planaOnly": [
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkPlanaSit",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "Talk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "음…….",
+      "LocalizeJP": "うーん……。",
+      "VoiceClipsKr": [
+        "NP0035_Work_Sit_In_1"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_Sit_In_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": -172,
+      "PosY": 102
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkPlanaSit",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 2,
+      "DialogType": "Talk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "으음…….",
+      "LocalizeJP": "うーーん……。",
+      "VoiceClipsKr": [
+        "NP0035_Work_Sit_In_2"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_Sit_In_2"
+      ],
+      "ApplyPosition": true,
+      "PosX": -172,
+      "PosY": 102
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkPlanaSit",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "Talk",
+      "ActionName": "",
+      "Duration": 3000,
+      "AnimationName": "",
+      "LocalizeKR": "…….",
+      "LocalizeJP": "……。",
+      "VoiceClipsKr": [
+        "NP0035_Work_Sit_Talk_1"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_Sit_Talk_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": -172,
+      "PosY": 102
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkPlanaSit",
+      "DialogCondition": "Exit",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "Talk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "아……!",
+      "LocalizeJP": "あ……！",
+      "VoiceClipsKr": [
+        "NP0035_Work_Sit_Exit_1"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_Sit_Exit_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": -172,
+      "PosY": 102
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkPlanaCabinet",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "Talk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "이곳은…… 그런 건가요.",
+      "LocalizeJP": "ここは……\nそういうことなのですね。",
+      "VoiceClipsKr": [
+        "NP0035_Work_Cabinet_In_1"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_Cabinet_In_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": 136,
+      "PosY": 192
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkPlanaCabinet",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 2,
+      "DialogType": "Talk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "…그렇군요. ",
+      "LocalizeJP": "……そういうことですね。",
+      "VoiceClipsKr": [
+        "NP0035_Work_Cabinet_In_2"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_Cabinet_In_2"
+      ],
+      "ApplyPosition": true,
+      "PosX": 136,
+      "PosY": 192
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkPlanaCabinet",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "Talk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "음… 과연.",
+      "LocalizeJP": "ふむ……なるほど。",
+      "VoiceClipsKr": [
+        "NP0035_Work_Cabinet_Talk_1"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_Cabinet_Talk_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": 136,
+      "PosY": 192
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkPlanaCabinet",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 2,
+      "DialogType": "Talk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "음… 그런 구조군요.",
+      "LocalizeJP": "ふむ……\nそういう構造なんですね。",
+      "VoiceClipsKr": [
+        "NP0035_Work_Cabinet_Talk_2"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_Cabinet_Talk_2"
+      ],
+      "ApplyPosition": true,
+      "PosX": 136,
+      "PosY": 192
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkPlanaCabinet",
+      "DialogCondition": "Exit",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "Talk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "……아.",
+      "LocalizeJP": "……あ。",
+      "VoiceClipsKr": [
+        "NP0035_Work_Cabinet_Exit_1"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_Cabinet_Exit_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": 136,
+      "PosY": 192
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkPlanaUmbrella",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "Talk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "비가 오면 이걸로…….",
+      "LocalizeJP": "雨が降ったらこれで……",
+      "VoiceClipsKr": [
+        "NP0035_Work_Umbrella_In_1"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_Umbrella_In_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": 27,
+      "PosY": 151
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkPlanaUmbrella",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "Talk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "도움이 될 수 있겠죠…?",
+      "LocalizeJP": "役に立つのでしょうか……？",
+      "VoiceClipsKr": [
+        "NP0035_Work_Umbrella_Talk_1"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_Umbrella_Talk_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": 27,
+      "PosY": 151
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkPlanaUmbrella",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 2,
+      "DialogType": "Talk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "저도… 함께…",
+      "LocalizeJP": "私も……一緒に……",
+      "VoiceClipsKr": [
+        "NP0035_Work_Umbrella_Talk_2"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_Umbrella_Talk_2"
+      ],
+      "ApplyPosition": true,
+      "PosX": 27,
+      "PosY": 151
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkPlanaUmbrella",
+      "DialogCondition": "Exit",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "Talk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "아.",
+      "LocalizeJP": "あ。",
+      "VoiceClipsKr": [
+        "NP0035_Work_Umbrella_Exit_1"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_Umbrella_Exit_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": 27,
+      "PosY": 151
+    }
+  ],
+  "coexist": [
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_AronaSleepPeek",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "음냐. 딸기 우유는… 우히히.",
+      "LocalizeJP": "むにゃ、\nイチゴミルクは…うひひ。",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_In_1"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_In_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": -788,
+      "PosY": -550
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_AronaSleepPeek",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "자고 있습니까…….",
+      "LocalizeJP": "寝ているの\nでしょうか……。",
+      "VoiceClipsKr": [
+        "NP0035_Work_AronaSleepPeek_In_1_2"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_AronaSleepPeek_In_1_2"
+      ],
+      "ApplyPosition": true,
+      "PosX": -148,
+      "PosY": -70
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_AronaSleepPeek",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 2,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "이렇게 많이는 못먹어요….",
+      "LocalizeJP": "そんなに\n食べられません……。",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_In_2"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_In_2"
+      ],
+      "ApplyPosition": true,
+      "PosX": -788,
+      "PosY": -550
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_AronaSleepPeek",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 2,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "역시 자고 있군요……",
+      "LocalizeJP": "やはり、\n寝てますね……",
+      "VoiceClipsKr": [
+        "NP0035_Work_AronaSleepPeek_In_2_2"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_AronaSleepPeek_In_2_2"
+      ],
+      "ApplyPosition": true,
+      "PosX": -148,
+      "PosY": -70
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_AronaSleepPeek",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "선생님은 참…",
+      "LocalizeJP": "先生ったら…。",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_Talk_1"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_Talk_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": -788,
+      "PosY": -550
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_AronaSleepPeek",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 2,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "…우히히히히.",
+      "LocalizeJP": "…うひひひひ。",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_Talk_2"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_Talk_2"
+      ],
+      "ApplyPosition": true,
+      "PosX": -788,
+      "PosY": -550
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_AronaSleepPeek",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 3,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "음냐.",
+      "LocalizeJP": "むにゃ。",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_Talk_3"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_Talk_3"
+      ],
+      "ApplyPosition": true,
+      "PosX": -788,
+      "PosY": -550
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_AronaSleepPeek",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 4,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "졸고 있는 게\n아니거든요… 음냐.",
+      "LocalizeJP": "居眠りしているわけでは\nないですよぉ…むにゃ。",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_Talk_4"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_Talk_4"
+      ],
+      "ApplyPosition": true,
+      "PosX": -788,
+      "PosY": -550
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_AronaSleepPeek",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 5,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "우힛, 냐암….",
+      "LocalizeJP": "うひっ、にゃあ…。",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_Talk_5"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_Talk_5"
+      ],
+      "ApplyPosition": true,
+      "PosX": -788,
+      "PosY": -550
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_AronaSleepPeek",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 6,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "선생님. 체통을 지키셔야죠….",
+      "LocalizeJP": "先生、\nちゃんとしてください…。",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_Talk_6"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_Talk_6"
+      ],
+      "ApplyPosition": true,
+      "PosX": -788,
+      "PosY": -550
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_AronaSleepPeek",
+      "DialogCondition": "Exit",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 1500,
+      "AnimationName": "",
+      "LocalizeKR": "우, 우햣?",
+      "LocalizeJP": "んっ、うひゃっ？",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_Exit_1"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_Exit_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": -788,
+      "PosY": -550
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_AronaSleepPeek",
+      "DialogCondition": "Exit",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 2,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "앗?!",
+      "LocalizeJP": "あひゃっ！？",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_Exit_2"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_Exit_2"
+      ],
+      "ApplyPosition": true,
+      "PosX": -788,
+      "PosY": -550
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_AronaSleepPeek",
+      "DialogCondition": "Exit",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 3,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 1500,
+      "AnimationName": "",
+      "LocalizeKR": "…히익?",
+      "LocalizeJP": "…んぃ？",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_Exit_3"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_Exit_3"
+      ],
+      "ApplyPosition": true,
+      "PosX": -788,
+      "PosY": -550
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_AronaSleepSit",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "음냐. 딸기 우유는… 우히히.",
+      "LocalizeJP": "むにゃ、\nイチゴミルクは…うひひ。",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_In_1"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_In_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": -921,
+      "PosY": -244
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_AronaSleepSit",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "딸기 우유…?",
+      "LocalizeJP": "イチゴミルク……？",
+      "VoiceClipsKr": [
+        "NP0035_Work_AronaSleepSit_In_1_2"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_AronaSleepSit_In_1_2"
+      ],
+      "ApplyPosition": true,
+      "PosX": -278,
+      "PosY": 3
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_AronaSleepSit",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 2,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "이렇게 많이는 못먹어요….",
+      "LocalizeJP": "そんなに\n食べられません……。",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_In_2"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_In_2"
+      ],
+      "ApplyPosition": true,
+      "PosX": -921,
+      "PosY": -244
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_AronaSleepSit",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 2,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "선배. 슬슬 일어나야\n할 것 같습니다….",
+      "LocalizeJP": "先輩、そろそろ\n起きないと……。",
+      "VoiceClipsKr": [
+        "NP0035_Work_AronaSleepSit_In_2_2"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_AronaSleepSit_In_2_2"
+      ],
+      "ApplyPosition": true,
+      "PosX": -278,
+      "PosY": 3
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_AronaSleepSit",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "…우히히히히.",
+      "LocalizeJP": "…うひひひひ。",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_Talk_2"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_Talk_2"
+      ],
+      "ApplyPosition": true,
+      "PosX": -921,
+      "PosY": -244
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_AronaSleepSit",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 2,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "음냐.",
+      "LocalizeJP": "むにゃ。",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_Talk_3"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_Talk_3"
+      ],
+      "ApplyPosition": true,
+      "PosX": -921,
+      "PosY": -244
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_AronaSleepSit",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 3,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "졸고 있는 게\n아니거든요… 음냐.",
+      "LocalizeJP": "居眠りしているわけでは\nないですよぉ…むにゃ。",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_Talk_4"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_Talk_4"
+      ],
+      "ApplyPosition": true,
+      "PosX": -921,
+      "PosY": -244
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_AronaSleepSit",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 3,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "진짜요…?",
+      "LocalizeJP": "本当ですか……？",
+      "VoiceClipsKr": [
+        "NP0035_Work_AronaSleepSit_Talk_4_2"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_AronaSleepSit_Talk_4_2"
+      ],
+      "ApplyPosition": true,
+      "PosX": -278,
+      "PosY": 3
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_AronaSleepSit",
+      "DialogCondition": "Exit",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 1500,
+      "AnimationName": "",
+      "LocalizeKR": "우, 우햣?",
+      "LocalizeJP": "んっ、うひゃっ？",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_Exit_1"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_Exit_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": -921,
+      "PosY": -244
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_AronaSleepSit",
+      "DialogCondition": "Exit",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 2,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "앗?!",
+      "LocalizeJP": "あひゃっ！？",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_Exit_2"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_Exit_2"
+      ],
+      "ApplyPosition": true,
+      "PosX": -921,
+      "PosY": -244
+    },
+    {
+      "CharacterId": 9009000,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_AronaSleepSit",
+      "DialogCondition": "Exit",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 3,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 1500,
+      "AnimationName": "",
+      "LocalizeKR": "…히익?",
+      "LocalizeJP": "…んぃ？",
+      "VoiceClipsKr": [
+        "Arona_Work_Sleep_Exit_3"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_Sleep_Exit_3"
+      ],
+      "ApplyPosition": true,
+      "PosX": -921,
+      "PosY": -244
+    }
+  ]
+}

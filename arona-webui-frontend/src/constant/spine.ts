@@ -4,14 +4,377 @@ export const HomePageDialogConfig = {
   x: 100,
   y: 450,
 };
+// const b = Object.keys(a).filter(key => key.indexOf("Talk") === -1).map(key => Reflect.get(a, key))
+// const c = Object.keys(a).filter(key => key.indexOf("Talk") !== -1).map(key => Reflect.get(a, key))
+// const d = [...new Set(b.flat().map(it => it.DialogCategory))].map(key => b.flat().filter(it => it.DialogCategory === key))
+// const f = {}
+// d.forEach(it => Reflect.set(f,it[0].DialogCategory,{in: it.filter(arr => arr.DialogCondition === "Enter").map(arr => ({AnimationName: arr.AnimationName, textJP:arr.LocalizeJP,voice:arr.VoiceClipsJp.reverse()[0], group: arr.GroupId})), talk: it.filter(arr => arr.DialogCondition === "Idle").map(arr => ({AnimationName: arr.AnimationName, textJP:arr.LocalizeJP,voice:arr.VoiceClipsJp.reverse()[0], group: arr.GroupId})), exit: it.filter(arr => arr.DialogCondition === "Exit").map(arr => ({AnimationName: arr.AnimationName, textJP:arr.LocalizeJP,voice:arr.VoiceClipsJp.reverse()[0], group: arr.GroupId}))}))
+// Object.keys(f).forEach(key => {const source = Reflect.get(f, key); Object.keys(source).forEach(k => { Reflect.set(source, k, [...new Set(Reflect.get(source, k).map(it => it.group))].map(group => Reflect.get(source, k).filter(it => it.group === group).map(it => { delete it.group; return it }))) })})
+// const g = Object.keys(f).map(key => ({animation:{idle:[],touch:[]},masks:[{path:"",scale:0,offset:{x:0,y:0}}],emitters:[{scale:0,offset:{x:0,y:0},config:{}}],dialogs:[{x:0,y:0,type:"left"}],interaction:{topLeft:{x:0,y:0},bottomRight:{x:0,y:0}},name: key, voice: Reflect.get(f, key)}))
+// const h = {}
+// Reflect.set(h, "arona", c[0].map(it => ({DialogCategory: it.DialogCategory,DialogCondition: it.DialogCondition,AnimationName:it.AnimationName,LocalizeJP:it.LocalizeJP,VoiceClipsJp:it.VoiceClipsJp})))
+// Reflect.set(h, "plana", c[1].map(it => ({DialogCategory: it.DialogCategory,DialogCondition: it.DialogCondition,AnimationName:it.AnimationName,LocalizeJP:it.LocalizeJP,VoiceClipsJp:it.VoiceClipsJp})))
+// h.arona = h.arona.map(arr => ({AnimationName: arr.AnimationName, textJP:arr.LocalizeJP,voice:arr.VoiceClipsJp}))
+// h.plana = h.plana.map(arr => ({AnimationName: arr.AnimationName, textJP:arr.LocalizeJP,voice:arr.VoiceClipsJp}))
 export const PlanaPageAnimationConfig = [
   {
+    animation: { idle: ["Idle_02"], touch: ["Idle_02_Touch_A", "Idle_02_Touch_M"] },
+    masks: [{ path: "/image/FX_TEX_Arona_C.png", scale: 1.3, offset: { x: 87, y: 115 } }],
+    emitters: [{ scale: 0.26, offset: { x: -15, y: -10 }, config: SitEmitterConfig }],
+    dialogs: [{ x: 88, y: 365, type: "left" }],
+    interaction: { topLeft: { x: 137.16415, y: 163.94717 }, bottomRight: { x: 377.16415, y: 554.94717 } },
+    name: "UIWorkAronaSit",
+    space: "arona_workpage_daytime.skel",
+    voice: {
+      in: [[{ AnimationName: "", textJP: "ルンルン～♬", voice: "Arona_Work_Sit_In_1" }]],
+      talk: [
+        [{ AnimationName: "", textJP: "ランララン、ララ～ン♪", voice: "Arona_Work_Sit_Talk_1" }],
+        [{ AnimationName: "", textJP: "ふんふんふん～♩", voice: "Arona_Work_Sit_Talk_2" }],
+        [
+          {
+            AnimationName: "",
+            textJP: "今日はまたっ、どんなことがっ♬\\n待ってるのかな～♪",
+            voice: "Arona_Work_Sit_Talk_3",
+          },
+        ],
+      ],
+      exit: [
+        [{ AnimationName: "", textJP: "あっ？", voice: "Arona_Work_Sit_Exit_1" }],
+        [{ AnimationName: "", textJP: "あれ？", voice: "Arona_Work_Sit_Exit_2" }],
+        [{ AnimationName: "", textJP: "あっ！", voice: "Arona_Work_Sit_Exit_3" }],
+      ],
+    },
+  },
+  {
+    animation: { idle: ["Idle_00"], touch: ["Idle_00_Touch_A", "Idle_00_Touch_M"] },
+    masks: [{ path: "/image/FX_TEX_Arona_A.png", scale: 2, offset: { x: 70, y: 230 } }],
+    emitters: [{ scale: 0.27, offset: { x: -15, y: -30 }, config: SleepEmitterConfig }],
+    dialogs: [{ x: 50, y: 344, type: "left" }],
+    interaction: { topLeft: { x: 89.16415, y: 291.94717 }, bottomRight: { x: 282.16415, y: 605.94717 } },
+    name: "UIWorkAronaSleep",
+    space: "arona_workpage_daytime.skel",
+    voice: {
+      in: [
+        [{ AnimationName: "", textJP: "むにゃ、\\nイチゴミルクは…うひひ。", voice: "Arona_Work_Sleep_In_1" }],
+        [{ AnimationName: "", textJP: "そんなに\\n食べられません…。", voice: "Arona_Work_Sleep_In_2" }],
+      ],
+      talk: [
+        [{ AnimationName: "", textJP: "先生ったら…。", voice: "Arona_Work_Sleep_Talk_1" }],
+        [{ AnimationName: "", textJP: "…うひひひひ。", voice: "Arona_Work_Sleep_Talk_2" }],
+        [{ AnimationName: "", textJP: "むにゃ。", voice: "Arona_Work_Sleep_Talk_3" }],
+        [
+          {
+            AnimationName: "",
+            textJP: "居眠りしているわけでは\\nないですよぉ…むにゃ。",
+            voice: "Arona_Work_Sleep_Talk_4",
+          },
+        ],
+        [{ AnimationName: "", textJP: "うひっ、にゃあ…。", voice: "Arona_Work_Sleep_Talk_5" }],
+        [{ AnimationName: "", textJP: "先生、\\nちゃんとしてください…。", voice: "Arona_Work_Sleep_Talk_6" }],
+      ],
+      exit: [
+        [{ AnimationName: "", textJP: "んっ、うひゃっ？", voice: "Arona_Work_Sleep_Exit_1" }],
+        [{ AnimationName: "", textJP: "あひゃっ！？", voice: "Arona_Work_Sleep_Exit_2" }],
+        [{ AnimationName: "", textJP: "…んぃ？", voice: "Arona_Work_Sleep_Exit_3" }],
+      ],
+    },
+  },
+  {
+    animation: { idle: ["Idle_01"], touch: ["Idle_01_Touch_A", "Idle_01_Touch_M"] },
+    masks: [{ path: "/image/FX_TEX_Arona_B.png", scale: 0.65, offset: { x: 220, y: 140 } }],
+    emitters: [{ scale: 0.25, offset: { x: -5, y: -10 }, config: WatchEmitterConfig }],
+    dialogs: [{ x: 100, y: 262, type: "right" }],
+    interaction: { topLeft: { x: 246.16415, y: 175.94717 }, bottomRight: { x: 287.16415, y: 380.94717 } },
+    name: "UIWorkAronaWatch",
+    space: "arona_workpage_daytime.skel",
+    voice: {
+      in: [
+        [{ AnimationName: "", textJP: "うん、よし！\\n今日も良い天気ですね。", voice: "Arona_Work_Watch_In_1" }],
+        [{ AnimationName: "", textJP: "うーん…雨、降るのかな。", voice: "Arona_Work_Watch_In_2" }],
+      ],
+      talk: [
+        [{ AnimationName: "", textJP: "遥か空の向こうには、\\n何があるんだろう…。", voice: "Arona_Work_Watch_Talk_1" }],
+        [{ AnimationName: "", textJP: "……。", voice: "Arona_Work_Watch_Talk_2" }],
+        [{ AnimationName: "", textJP: "…うーん。", voice: "Arona_Work_Watch_Talk_3" }],
+      ],
+      exit: [
+        [{ AnimationName: "", textJP: "あっ！", voice: "Arona_Work_Watch_Exit_1" }],
+        [{ AnimationName: "", textJP: "あれ。", voice: "Arona_Work_Watch_Exit_2" }],
+      ],
+    },
+  },
+  {
+    animation: { idle: ["Idle_01"], touch: ["Idle_01_Touch_A", "Idle_01_Touch_M"] },
+    masks: [{ path: "", scale: 0, offset: { x: 0, y: 0 } }],
+    emitters: [{ scale: 0, offset: { x: 0, y: 0 }, config: {} }],
+    dialogs: [{ x: 0, y: 0, type: "left" }],
+    interaction: { topLeft: { x: 0, y: 0 }, bottomRight: { x: 0, y: 0 } },
+    name: "UIWorkPlanaSit",
+    space: "arona_workpage_nighttime.skel",
+    voice: {
+      in: [
+        [{ AnimationName: "", textJP: "うーん……。", voice: "NP0035_Work_Sit_In_1" }],
+        [{ AnimationName: "", textJP: "うーーん……。", voice: "NP0035_Work_Sit_In_2" }],
+      ],
+      talk: [[{ AnimationName: "", textJP: "……。", voice: "NP0035_Work_Sit_Talk_1" }]],
+      exit: [[{ AnimationName: "", textJP: "あ……！", voice: "NP0035_Work_Sit_Exit_1" }]],
+    },
+  },
+  {
+    animation: { idle: ["Idle_00"], touch: ["Idle_00_Touch_A", "Idle_00_Touch_M"] },
+    masks: [{ path: "", scale: 0, offset: { x: 0, y: 0 } }],
+    emitters: [{ scale: 0, offset: { x: 0, y: 0 }, config: {} }],
+    dialogs: [{ x: 0, y: 0, type: "left" }],
+    interaction: { topLeft: { x: 0, y: 0 }, bottomRight: { x: 0, y: 0 } },
+    name: "UIWorkPlanaCabinet",
+    space: "arona_workpage_nighttime.skel",
+    voice: {
+      in: [
+        [{ AnimationName: "", textJP: "ここは……\\nそういうことなのですね。", voice: "NP0035_Work_Cabinet_In_1" }],
+        [{ AnimationName: "", textJP: "……そういうことですね。", voice: "NP0035_Work_Cabinet_In_2" }],
+      ],
+      talk: [
+        [{ AnimationName: "", textJP: "ふむ……なるほど。", voice: "NP0035_Work_Cabinet_Talk_1" }],
+        [{ AnimationName: "", textJP: "ふむ……\\nそういう構造なんですね。", voice: "NP0035_Work_Cabinet_Talk_2" }],
+      ],
+      exit: [[{ AnimationName: "", textJP: "……あ。", voice: "NP0035_Work_Cabinet_Exit_1" }]],
+    },
+  },
+  {
+    animation: { idle: ["Idle_02"], touch: ["Idle_02_Touch_A", "Idle_02_Touch_M"] },
+    masks: [{ path: "", scale: 0, offset: { x: 0, y: 0 } }],
+    emitters: [{ scale: 0, offset: { x: 0, y: 0 }, config: {} }],
+    dialogs: [{ x: 0, y: 0, type: "left" }],
+    interaction: { topLeft: { x: 0, y: 0 }, bottomRight: { x: 0, y: 0 } },
+    name: "UIWorkPlanaUmbrella",
+    space: "arona_workpage_nighttime.skel",
+    voice: {
+      in: [[{ AnimationName: "", textJP: "雨が降ったらこれで……", voice: "NP0035_Work_Umbrella_In_1" }]],
+      talk: [
+        [{ AnimationName: "", textJP: "役に立つのでしょうか……？", voice: "NP0035_Work_Umbrella_Talk_1" }],
+        [{ AnimationName: "", textJP: "私も……一緒に……", voice: "NP0035_Work_Umbrella_Talk_2" }],
+      ],
+      exit: [[{ AnimationName: "", textJP: "あ。", voice: "NP0035_Work_Umbrella_Exit_1" }]],
+    },
+  },
+  {
     animation: {
-      idle: ["Idle_01"],
-      touch: [],
+      idle: ["Idle_00", "Idle_12"],
+      touch: ["Idle_00_Touch_A", "Idle_00_Touch_M", "Idle_12_Touch_A", "Idle_12_Touch_M"],
+    },
+    masks: [{ path: "", scale: 0, offset: { x: 0, y: 0 } }],
+    emitters: [{ scale: 0, offset: { x: 0, y: 0 }, config: {} }],
+    dialogs: [{ x: 0, y: 0, type: "left" }],
+    interaction: { topLeft: { x: 0, y: 0 }, bottomRight: { x: 0, y: 0 } },
+    name: "UIWorkCoexist_AronaSleepPeek",
+    space: "arona_workpage_daytime.skel",
+    voice: {
+      in: [
+        [
+          { AnimationName: "", textJP: "むにゃ、\\nイチゴミルクは…うひひ。", voice: "Arona_Work_Sleep_In_1" },
+          { AnimationName: "", textJP: "寝ているの\\nでしょうか……。", voice: "NP0035_Work_AronaSleepPeek_In_1_2" },
+        ],
+        [
+          { AnimationName: "", textJP: "そんなに\\n食べられません……。", voice: "Arona_Work_Sleep_In_2" },
+          { AnimationName: "", textJP: "やはり、\\n寝てますね……", voice: "NP0035_Work_AronaSleepPeek_In_2_2" },
+        ],
+      ],
+      talk: [
+        [{ AnimationName: "", textJP: "先生ったら…。", voice: "Arona_Work_Sleep_Talk_1" }],
+        [{ AnimationName: "", textJP: "…うひひひひ。", voice: "Arona_Work_Sleep_Talk_2" }],
+        [{ AnimationName: "", textJP: "むにゃ。", voice: "Arona_Work_Sleep_Talk_3" }],
+        [
+          {
+            AnimationName: "",
+            textJP: "居眠りしているわけでは\\nないですよぉ…むにゃ。",
+            voice: "Arona_Work_Sleep_Talk_4",
+          },
+        ],
+        [{ AnimationName: "", textJP: "うひっ、にゃあ…。", voice: "Arona_Work_Sleep_Talk_5" }],
+        [{ AnimationName: "", textJP: "先生、\\nちゃんとしてください…。", voice: "Arona_Work_Sleep_Talk_6" }],
+      ],
+      exit: [
+        [{ AnimationName: "", textJP: "んっ、うひゃっ？", voice: "Arona_Work_Sleep_Exit_1" }],
+        [{ AnimationName: "", textJP: "あひゃっ！？", voice: "Arona_Work_Sleep_Exit_2" }],
+        [{ AnimationName: "", textJP: "…んぃ？", voice: "Arona_Work_Sleep_Exit_3" }],
+      ],
+    },
+  },
+  {
+    animation: {
+      idle: ["Idle_00", "Idle_11"],
+      touch: ["Idle_00_Touch_A", "Idle_00_Touch_M", "Idle_11_Touch_A", "Idle_11_Touch_M"],
+    },
+    masks: [{ path: "", scale: 0, offset: { x: 0, y: 0 } }],
+    emitters: [{ scale: 0, offset: { x: 0, y: 0 }, config: {} }],
+    dialogs: [{ x: 0, y: 0, type: "left" }],
+    interaction: { topLeft: { x: 0, y: 0 }, bottomRight: { x: 0, y: 0 } },
+    name: "UIWorkCoexist_AronaSleepSit",
+    space: "arona_workpage_daytime.skel",
+    voice: {
+      in: [
+        [
+          { AnimationName: "", textJP: "むにゃ、\\nイチゴミルクは…うひひ。", voice: "Arona_Work_Sleep_In_1" },
+          { AnimationName: "", textJP: "イチゴミルク……？", voice: "NP0035_Work_AronaSleepSit_In_1_2" },
+        ],
+        [
+          { AnimationName: "", textJP: "そんなに\\n食べられません……。", voice: "Arona_Work_Sleep_In_2" },
+          { AnimationName: "", textJP: "先輩、そろそろ\\n起きないと……。", voice: "NP0035_Work_AronaSleepSit_In_2_2" },
+        ],
+      ],
+      talk: [
+        [{ AnimationName: "", textJP: "…うひひひひ。", voice: "Arona_Work_Sleep_Talk_2" }],
+        [{ AnimationName: "", textJP: "むにゃ。", voice: "Arona_Work_Sleep_Talk_3" }],
+        [
+          {
+            AnimationName: "",
+            textJP: "居眠りしているわけでは\\nないですよぉ…むにゃ。",
+            voice: "Arona_Work_Sleep_Talk_4",
+          },
+          { AnimationName: "", textJP: "本当ですか……？", voice: "NP0035_Work_AronaSleepSit_Talk_4_2" },
+        ],
+      ],
+      exit: [
+        [{ AnimationName: "", textJP: "んっ、うひゃっ？", voice: "Arona_Work_Sleep_Exit_1" }],
+        [{ AnimationName: "", textJP: "あひゃっ！？", voice: "Arona_Work_Sleep_Exit_2" }],
+        [{ AnimationName: "", textJP: "…んぃ？", voice: "Arona_Work_Sleep_Exit_3" }],
+      ],
+    },
+  },
+  {
+    animation: { idle: ["Idle_03"], touch: ["Idle_03_Touch_A", "Idle_03_Touch_M"] },
+    masks: [{ path: "", scale: 0, offset: { x: 0, y: 0 } }],
+    emitters: [{ scale: 0, offset: { x: 0, y: 0 }, config: {} }],
+    dialogs: [{ x: 0, y: 0, type: "left" }],
+    interaction: { topLeft: { x: 0, y: 0 }, bottomRight: { x: 0, y: 0 } },
+    name: "UIWorkCoexist_PlanaWatchSky",
+    space: "arona_workpage_nighttime.skel",
+    voice: {
+      in: [
+        [
+          { AnimationName: "", textJP: "あれ、見えますか？プラナちゃん？", voice: "Arona_Work_PlanaWatchSky_In_1_1" },
+          { AnimationName: "", textJP: "あれのことですか、先輩？", voice: "NP0035_Work_PlanaWatchSky_In_1_2" },
+          { AnimationName: "", textJP: "はい！あれです！", voice: "Arona_Work_PlanaWatchSky_In_1_3" },
+        ],
+      ],
+      talk: [
+        [
+          { AnimationName: "", textJP: "あっちはどうですか？", voice: "Arona_Work_PlanaWatchSky_Talk_1_1" },
+          { AnimationName: "", textJP: "うーん……。", voice: "NP0035_Work_PlanaWatchSky_Talk_1_2" },
+        ],
+      ],
+      exit: [[{ AnimationName: "", textJP: "……あっ。", voice: "NP0035_Work_PlanaWatchSky_Exit_1" }]],
+    },
+  },
+  {
+    animation: {
+      idle: ["Idle_01", "Idle_11"],
+      touch: ["Idle_01_Touch_A", "Idle_01_Touch_M", "Idle_11_Touch_A", "Idle_11_Touch_M"],
+    },
+    masks: [{ path: "", scale: 0, offset: { x: 0, y: 0 } }],
+    emitters: [{ scale: 0, offset: { x: 0, y: 0 }, config: {} }],
+    dialogs: [{ x: 0, y: 0, type: "left" }],
+    interaction: { topLeft: { x: 0, y: 0 }, bottomRight: { x: 0, y: 0 } },
+    name: "UIWorkCoexist_PlanaSitPeek",
+    space: "arona_workpage_nighttime.skel",
+    voice: {
+      in: [
+        [
+          { AnimationName: "", textJP: "じー", voice: "Arona_Work_PlanaSitPeek_In_1_1" },
+          { AnimationName: "", textJP: "うー－ん……", voice: "NP0035_Work_PlanaSitPeek_In_1_2" },
+        ],
+      ],
+      talk: [
+        [{ AnimationName: "", textJP: "……視線を感じます。", voice: "NP0035_Work_PlanaSitPeek_Talk_1" }],
+        [{ AnimationName: "", textJP: "……困ります。", voice: "NP0035_Work_PlanaSitPeek_Talk_2" }],
+      ],
+      exit: [[{ AnimationName: "", textJP: "あ。", voice: "NP0035_Work_PlanaSitPeek_Exit_1" }]],
     },
   },
 ];
+export const WorkConfig = {
+  arona: [
+    {
+      AnimationName: "12",
+      textJP: "[USERNAME]先生！\\nお待ちしておりました！",
+      voice: ["CALLNAME1", "Arona_Work_In_1"],
+    },
+    { AnimationName: "25", textJP: "さあ、\\nお仕事を始める時間です！", voice: ["Arona_Work_In_2"] },
+    { AnimationName: "31", textJP: "どのお仕事から始めますか、\\n先生？", voice: ["Arona_Work_In_3"] },
+    { AnimationName: "32", textJP: "私が先生のお仕事を\\n手伝います！", voice: ["Arona_Work_In_4"] },
+    {
+      AnimationName: "01",
+      textJP: "ここで先生の、様々なお仕事を\\n始めることができます！",
+      voice: ["Arona_Work_Talk_1"],
+    },
+    {
+      AnimationName: "25",
+      textJP: "[USERNAME] 先生！\\nご希望のお仕事を選んでください。\\n私が隣で手伝います！",
+      voice: ["CALLNAME1", "Arona_Work_Talk_2"],
+    },
+    {
+      AnimationName: "13",
+      textJP: "解決していただかねば\\nならないお仕事がたくさんです。\\n大人って大変ですね。",
+      voice: ["Arona_Work_Talk_3"],
+    },
+    {
+      AnimationName: "12",
+      textJP: "解決するべきことがいっぱいですね！\\n頑張りましょう！",
+      voice: ["Arona_Work_Talk_4"],
+    },
+    {
+      AnimationName: "18",
+      textJP: "たまには身体のことも考えないと、\\n先生の健康が心配です！",
+      voice: ["Arona_Work_Talk_5"],
+    },
+    { AnimationName: "29", textJP: "うわぁ…。\\nものすごい量の仕事ですね。", voice: ["Arona_Work_Talk_6"] },
+    {
+      AnimationName: "22",
+      textJP: "さあ、頑張りましょう！先生！",
+      voice: ["Arona_Work_Talk_7_1", "Arona_Work_Talk_7_2"],
+    },
+  ],
+  plana: [
+    { AnimationName: "02", textJP: "接続確認。", voice: ["NP0035_Work_In_1_1"] },
+    {
+      AnimationName: "03",
+      textJP: "[USERNAME]先生。\\nお待ちしておりました。",
+      voice: ["CALLNAME2", "NP0035_Work_In_1_2"],
+    },
+    {
+      AnimationName: "15",
+      textJP: "お仕事を始める時間です。\\n[USERNAME]先生。",
+      voice: ["NP0035_Work_In_2", "CALLNAME2"],
+    },
+    { AnimationName: "02", textJP: "どのお仕事から始めますか。\\n先生？", voice: ["NP0035_Work_In_3"] },
+    {
+      AnimationName: "02",
+      textJP: "待機中。\\n解決しなければならない作業が\\n多数存在しています。",
+      voice: ["NP0035_Work_In_4"],
+    },
+    { AnimationName: "03", textJP: "ここで先生の様々なお仕事を\\n進行できます。", voice: ["NP0035_Work_Talk_1"] },
+    {
+      AnimationName: "15",
+      textJP: "[USERNAME]先生。\\nご希望のお仕事を選んでください。",
+      voice: ["CALLNAME2", "NP0035_Work_Talk_2"],
+    },
+    {
+      AnimationName: "03",
+      textJP: "解決していただかねばならない\\nお仕事がたくさんあります。\\nでは、お願いします。",
+      voice: ["NP0035_Work_Talk_3"],
+    },
+    {
+      AnimationName: "13",
+      textJP: "混乱。理解できない行動です。\\nつつかないでください。故障します。 ",
+      voice: ["NP0035_Work_Talk_4"],
+    },
+    {
+      AnimationName: "12",
+      textJP: "理解しました。先生は今、\\n特にやるべきことがないのですね。\\n暇なのですね。",
+      voice: ["NP0035_Work_Talk_5"],
+    },
+  ],
+};
 export const HomePageAnimationConfigs = [
   {
     animation: {

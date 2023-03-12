@@ -2092,6 +2092,281 @@
       "ApplyPosition": true,
       "PosX": -921,
       "PosY": -244
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_PlanaWatchSky",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "저기, 보이나요? 프라나 쨩?",
+      "LocalizeJP": "あれ、見えますか？プラナちゃん？",
+      "VoiceClipsKr": [
+        "Arona_Work_PlanaWatchSky_In_1_1"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_PlanaWatchSky_In_1_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": 166,
+      "PosY": 192
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_PlanaWatchSky",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "저것 말인가요, 선배?",
+      "LocalizeJP": "あれのことですか、先輩？",
+      "VoiceClipsKr": [
+        "NP0035_Work_PlanaWatchSky_In_1_2"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_PlanaWatchSky_In_1_2"
+      ],
+      "ApplyPosition": true,
+      "PosX": 22,
+      "PosY": 184
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_PlanaWatchSky",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "네! 저거요!",
+      "LocalizeJP": "はい！あれです！",
+      "VoiceClipsKr": [
+        "Arona_Work_PlanaWatchSky_In_1_3"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_PlanaWatchSky_In_1_3"
+      ],
+      "ApplyPosition": true,
+      "PosX": 166,
+      "PosY": 192
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_PlanaWatchSky",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "저긴 어때요?",
+      "LocalizeJP": "あっちはどうですか？",
+      "VoiceClipsKr": [
+        "Arona_Work_PlanaWatchSky_Talk_1_1"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_PlanaWatchSky_Talk_1_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": 166,
+      "PosY": 192
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_PlanaWatchSky",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "음…….",
+      "LocalizeJP": "うーん……。",
+      "VoiceClipsKr": [
+        "NP0035_Work_PlanaWatchSky_Talk_1_2"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_PlanaWatchSky_Talk_1_2"
+      ],
+      "ApplyPosition": true,
+      "PosX": 22,
+      "PosY": 184
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_PlanaWatchSky",
+      "DialogCondition": "Exit",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "UITalk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "…앗.",
+      "LocalizeJP": "……あっ。",
+      "VoiceClipsKr": [
+        "NP0035_Work_PlanaWatchSky_Exit_1"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_PlanaWatchSky_Exit_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": 22,
+      "PosY": 184
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_PlanaSitPeek",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "Talk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "지이-",
+      "LocalizeJP": "じー",
+      "VoiceClipsKr": [
+        "Arona_Work_PlanaSitPeek_In_1_1"
+      ],
+      "VoiceClipsJp": [
+        "Arona_Work_PlanaSitPeek_In_1_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": 286,
+      "PosY": 335
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_PlanaSitPeek",
+      "DialogCondition": "Enter",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "Talk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "으음……",
+      "LocalizeJP": "うー－ん……",
+      "VoiceClipsKr": [
+        "NP0035_Work_PlanaSitPeek_In_1_2"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_PlanaSitPeek_In_1_2"
+      ],
+      "ApplyPosition": true,
+      "PosX": -155,
+      "PosY": 103
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_PlanaSitPeek",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "Talk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "…시선이 느껴지고 있습니다만.",
+      "LocalizeJP": "……視線を感じます。",
+      "VoiceClipsKr": [
+        "NP0035_Work_PlanaSitPeek_Talk_1"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_PlanaSitPeek_Talk_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": -155,
+      "PosY": 103
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_PlanaSitPeek",
+      "DialogCondition": "Idle",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 2,
+      "DialogType": "Talk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "…곤란하네요.",
+      "LocalizeJP": "……困ります。",
+      "VoiceClipsKr": [
+        "NP0035_Work_PlanaSitPeek_Talk_2"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_PlanaSitPeek_Talk_2"
+      ],
+      "ApplyPosition": true,
+      "PosX": -155,
+      "PosY": 103
+    },
+    {
+      "CharacterId": 9009005,
+      "ProductionStep": "Release",
+      "DialogCategory": "UIWorkCoexist_PlanaSitPeek",
+      "DialogCondition": "Exit",
+      "Anniversary": "None",
+      "StartDate": "",
+      "EndDate": "",
+      "GroupId": 1,
+      "DialogType": "Talk",
+      "ActionName": "",
+      "Duration": 0,
+      "AnimationName": "",
+      "LocalizeKR": "아.",
+      "LocalizeJP": "あ。",
+      "VoiceClipsKr": [
+        "NP0035_Work_PlanaSitPeek_Exit_1"
+      ],
+      "VoiceClipsJp": [
+        "NP0035_Work_PlanaSitPeek_Exit_1"
+      ],
+      "ApplyPosition": true,
+      "PosX": -155,
+      "PosY": 103
     }
   ]
 }

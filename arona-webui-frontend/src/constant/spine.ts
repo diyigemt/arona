@@ -29,10 +29,7 @@ export type PlanaPageAnimationConfig = {
     config: EmitterConfigV3;
   }[];
   dialogs: (Point & { type: DialogArrow })[];
-  interaction: {
-    topLeft: Point;
-    bottomRight: Point;
-  }[];
+  interaction: [Point, Point][];
   name: string;
   space: string;
   voice: {
@@ -47,7 +44,8 @@ export type PlanaPageAnimationConfig = {
 // const f = {}
 // d.forEach(it => Reflect.set(f,it[0].DialogCategory,{in: it.filter(arr => arr.DialogCondition === "Enter").map(arr => ({AnimationName: arr.AnimationName, textJP:arr.LocalizeJP,voice:arr.VoiceClipsJp.reverse()[0], group: arr.GroupId})), talk: it.filter(arr => arr.DialogCondition === "Idle").map(arr => ({AnimationName: arr.AnimationName, textJP:arr.LocalizeJP,voice:arr.VoiceClipsJp.reverse()[0], group: arr.GroupId})), exit: it.filter(arr => arr.DialogCondition === "Exit").map(arr => ({AnimationName: arr.AnimationName, textJP:arr.LocalizeJP,voice:arr.VoiceClipsJp.reverse()[0], group: arr.GroupId}))}))
 // Object.keys(f).forEach(key => {const source = Reflect.get(f, key); Object.keys(source).forEach(k => { Reflect.set(source, k, [...new Set(Reflect.get(source, k).map(it => it.group))].map(group => Reflect.get(source, k).filter(it => it.group === group).map(it => { delete it.group; return it }))) })})
-// const g = Object.keys(f).map(key => ({animation:{idle:[],touch:[]},masks:[{path:"",scale:0,offset:{x:0,y:0}}],emitters:[{scale:0,offset:{x:0,y:0},config:{}}],dialogs:[{x:0,y:0,type:"left"}],interaction:[{topLeft:{x:0,y:0},bottomRight:{x:0,y:0}}],name: key, voice: Reflect.get(f, key)}))
+// const g = Object.keys(f).map(key =>
+// ({animation:{idle:[],touch:[]},masks:[{path:"",scale:0,offset:{x:0,y:0}}],emitters:[{scale:0,offset:{x:0,y:0},config:{}}],dialogs:[{x:0,y:0,type:"left"}],interaction:[[{x:0,y:0},{x:0,y:0}]],name: key, voice: Reflect.get(f, key)}))
 // const h = {}
 // Reflect.set(h, "arona", c[0].map(it => ({DialogCategory: it.DialogCategory,DialogCondition: it.DialogCondition,AnimationName:it.AnimationName,LocalizeJP:it.LocalizeJP,VoiceClipsJp:it.VoiceClipsJp})))
 // Reflect.set(h, "plana", c[1].map(it => ({DialogCategory: it.DialogCategory,DialogCondition: it.DialogCondition,AnimationName:it.AnimationName,LocalizeJP:it.LocalizeJP,VoiceClipsJp:it.VoiceClipsJp})))
@@ -59,7 +57,48 @@ export const PlanaPageAnimationConfig: PlanaPageAnimationConfig[] = [
     masks: [{ path: "/image/FX_TEX_Arona_C.png", scale: 1.3, offset: { x: 87, y: 115 } }],
     emitters: [{ scale: 0.26, offset: { x: -15, y: -10 }, config: SitEmitterConfig }],
     dialogs: [{ x: 88, y: 365, type: "left" }],
-    interaction: [{ topLeft: { x: 137.16415, y: 163.94717 }, bottomRight: { x: 377.16415, y: 554.94717 } }],
+    interaction: [
+      [
+        { x: 181.6000061035156, y: 100.19999694824219 },
+        { x: 211.1999969482422, y: 147.40000915527344 },
+      ],
+      [
+        { x: 207.1999969482422, y: 113.00001525878906 },
+        { x: 242.40000915527344, y: 153.00001525878906 },
+      ],
+      [
+        { x: 126.4000015258789, y: 144.1999969482422 },
+        { x: 216, y: 206.59999084472656 },
+      ],
+      [
+        { x: 143.1999969482422, y: 117.80000305175781 },
+        { x: 223.1999969482422, y: 162.59999084472656 },
+      ],
+      [
+        { x: 134.40000915527344, y: 200.1999969482422 },
+        { x: 201.6000061035156, y: 324.1999969482422 },
+      ],
+      [
+        { x: 155.1999969482422, y: 324.99998474121094 },
+        { x: 89.5999984741211, y: 312.1999969482422 },
+      ],
+      [
+        { x: 105.5999984741211, y: 250.59999084472656 },
+        { x: 154.40000915527344, y: 293.80003356933594 },
+      ],
+      [
+        { x: 198.40000915527344, y: 320.99998474121094 },
+        { x: 299.20001220703125, y: 447.40000915527344 },
+      ],
+      [
+        { x: 168, y: 288.1999969482422 },
+        { x: 266.3999938964844, y: 323.40000915527344 },
+      ],
+      [
+        { x: 180.8000030517578, y: 270.6000213623047 },
+        { x: 220, y: 293.80003356933594 },
+      ],
+    ],
     name: "UIWorkAronaSit",
     space: "arona_workpage_daytime.skel",
     voice: {
@@ -87,7 +126,24 @@ export const PlanaPageAnimationConfig: PlanaPageAnimationConfig[] = [
     masks: [{ path: "/image/FX_TEX_Arona_A.png", scale: 2, offset: { x: 70, y: 230 } }],
     emitters: [{ scale: 0.27, offset: { x: -15, y: -30 }, config: SleepEmitterConfig }],
     dialogs: [{ x: 50, y: 344, type: "left" }],
-    interaction: [{ topLeft: { x: 89.16415, y: 291.94717 }, bottomRight: { x: 282.16415, y: 605.94717 } }],
+    interaction: [
+      [
+        { x: 118.4000015258789, y: 225.80006408691406 },
+        { x: 212.8000030517578, y: 314.6000213623047 },
+      ],
+      [
+        { x: 66.4000015258789, y: 260.1999969482422 },
+        { x: 120.80000305175781, y: 382.6000213623047 },
+      ],
+      [
+        { x: 124.80000305175781, y: 343.40000915527344 },
+        { x: 192.8000030517578, y: 383.40000915527344 },
+      ],
+      [
+        { x: 152, y: 387.40000915527344 },
+        { x: 229.6000061035156, y: 483.40000915527344 },
+      ],
+    ],
     name: "UIWorkAronaSleep",
     space: "arona_workpage_daytime.skel",
     voice: {
@@ -121,7 +177,24 @@ export const PlanaPageAnimationConfig: PlanaPageAnimationConfig[] = [
     masks: [{ path: "/image/FX_TEX_Arona_B.png", scale: 0.65, offset: { x: 220, y: 140 } }],
     emitters: [{ scale: 0.25, offset: { x: -5, y: -10 }, config: WatchEmitterConfig }],
     dialogs: [{ x: 100, y: 262, type: "right" }],
-    interaction: [{ topLeft: { x: 246.16415, y: 175.94717 }, bottomRight: { x: 287.16415, y: 380.94717 } }],
+    interaction: [
+      [
+        { x: 240, y: 127.40000915527344 },
+        { x: 280.8000183105469, y: 168.1999969482422 },
+      ],
+      [
+        { x: 241.6000061035156, y: 169.80006408691406 },
+        { x: 269.6000061035156, y: 209.80006408691406 },
+      ],
+      [
+        { x: 232.8000030517578, y: 206.59999084472656 },
+        { x: 268.8000183105469, y: 294.6000213623047 },
+      ],
+      [
+        { x: 206.40000915527344, y: 202.59999084472656 },
+        { x: 237.6000061035156, y: 221.00001525878906 },
+      ],
+    ],
     name: "UIWorkAronaWatch",
     space: "arona_workpage_daytime.skel",
     voice: {
@@ -145,7 +218,16 @@ export const PlanaPageAnimationConfig: PlanaPageAnimationConfig[] = [
     masks: [{ path: "", scale: 0, offset: { x: 0, y: 0 } }],
     emitters: [{ scale: 0, offset: { x: 0, y: 0 }, config: {} }],
     dialogs: [{ x: 0, y: 0, type: "left" }],
-    interaction: [{ topLeft: { x: 0, y: 0 }, bottomRight: { x: 0, y: 0 } }],
+    interaction: [
+      [
+        { x: 249.6000061035156, y: 157.8000030517578 },
+        { x: 310.3999938964844, y: 369.80003356933594 },
+      ],
+      [
+        { x: 315.20001220703125, y: 288.99998474121094 },
+        { x: 364.8000183105469, y: 371.40000915527344 },
+      ],
+    ],
     name: "UIWorkPlanaSit",
     space: "arona_workpage_nighttime.skel",
     voice: {
@@ -162,7 +244,12 @@ export const PlanaPageAnimationConfig: PlanaPageAnimationConfig[] = [
     masks: [{ path: "", scale: 0, offset: { x: 0, y: 0 } }],
     emitters: [{ scale: 0, offset: { x: 0, y: 0 }, config: {} }],
     dialogs: [{ x: 0, y: 0, type: "left" }],
-    interaction: [{ topLeft: { x: 0, y: 0 }, bottomRight: { x: 0, y: 0 } }],
+    interaction: [
+      [
+        { x: 82.4000015258789, y: 126.59999084472656 },
+        { x: 145.6000061035156, y: 310.6000213623047 },
+      ],
+    ],
     name: "UIWorkPlanaCabinet",
     space: "arona_workpage_nighttime.skel",
     voice: {
@@ -182,7 +269,16 @@ export const PlanaPageAnimationConfig: PlanaPageAnimationConfig[] = [
     masks: [{ path: "", scale: 0, offset: { x: 0, y: 0 } }],
     emitters: [{ scale: 0, offset: { x: 0, y: 0 }, config: {} }],
     dialogs: [{ x: 0, y: 0, type: "left" }],
-    interaction: [{ topLeft: { x: 0, y: 0 }, bottomRight: { x: 0, y: 0 } }],
+    interaction: [
+      [
+        { x: 316.8000183105469, y: 131.40000915527344 },
+        { x: 368, y: 265.80006408691406 },
+      ],
+      [
+        { x: 261.6000061035156, y: 179.40000915527344 },
+        { x: 335.20001220703125, y: 267.40000915527344 },
+      ],
+    ],
     name: "UIWorkPlanaUmbrella",
     space: "arona_workpage_nighttime.skel",
     voice: {
@@ -202,7 +298,28 @@ export const PlanaPageAnimationConfig: PlanaPageAnimationConfig[] = [
     masks: [{ path: "", scale: 0, offset: { x: 0, y: 0 } }],
     emitters: [{ scale: 0, offset: { x: 0, y: 0 }, config: {} }],
     dialogs: [{ x: 0, y: 0, type: "left" }],
-    interaction: [{ topLeft: { x: 0, y: 0 }, bottomRight: { x: 0, y: 0 } }],
+    interaction: [
+      [
+        { x: 255.1999969482422, y: 168.1999969482422 },
+        { x: 280, y: 192.1999969482422 },
+      ],
+      [
+        { x: 118.4000015258789, y: 225.80006408691406 },
+        { x: 212.8000030517578, y: 314.6000213623047 },
+      ],
+      [
+        { x: 66.4000015258789, y: 260.1999969482422 },
+        { x: 120.80000305175781, y: 382.6000213623047 },
+      ],
+      [
+        { x: 124.80000305175781, y: 343.40000915527344 },
+        { x: 192.8000030517578, y: 383.40000915527344 },
+      ],
+      [
+        { x: 152, y: 387.40000915527344 },
+        { x: 229.6000061035156, y: 483.40000915527344 },
+      ],
+    ],
     name: "UIWorkCoexist_AronaSleepPeek",
     space: "arona_workpage_daytime.skel",
     voice: {
@@ -245,7 +362,36 @@ export const PlanaPageAnimationConfig: PlanaPageAnimationConfig[] = [
     masks: [{ path: "", scale: 0, offset: { x: 0, y: 0 } }],
     emitters: [{ scale: 0, offset: { x: 0, y: 0 }, config: {} }],
     dialogs: [{ x: 0, y: 0, type: "left" }],
-    interaction: [{ topLeft: { x: 0, y: 0 }, bottomRight: { x: 0, y: 0 } }],
+    interaction: [
+      [
+        { x: 258.3999938964844, y: 162.59999084472656 },
+        { x: 305.6000061035156, y: 352.99998474121094 },
+      ],
+      [
+        { x: 302.3999938964844, y: 283.40000915527344 },
+        { x: 340, y: 320.99998474121094 },
+      ],
+      [
+        { x: 316, y: 321.80003356933594 },
+        { x: 364.8000183105469, y: 370.6000213623047 },
+      ],
+      [
+        { x: 118.4000015258789, y: 225.80006408691406 },
+        { x: 212.8000030517578, y: 314.6000213623047 },
+      ],
+      [
+        { x: 66.4000015258789, y: 260.1999969482422 },
+        { x: 120.80000305175781, y: 382.6000213623047 },
+      ],
+      [
+        { x: 124.80000305175781, y: 343.40000915527344 },
+        { x: 192.8000030517578, y: 383.40000915527344 },
+      ],
+      [
+        { x: 152, y: 387.40000915527344 },
+        { x: 229.6000061035156, y: 483.40000915527344 },
+      ],
+    ],
     name: "UIWorkCoexist_AronaSleepSit",
     space: "arona_workpage_daytime.skel",
     voice: {
@@ -283,7 +429,28 @@ export const PlanaPageAnimationConfig: PlanaPageAnimationConfig[] = [
     masks: [{ path: "", scale: 0, offset: { x: 0, y: 0 } }],
     emitters: [{ scale: 0, offset: { x: 0, y: 0 }, config: {} }],
     dialogs: [{ x: 0, y: 0, type: "left" }],
-    interaction: [{ topLeft: { x: 0, y: 0 }, bottomRight: { x: 0, y: 0 } }],
+    interaction: [
+      [
+        { x: 520, y: 2.600006103515625 },
+        { x: 356.8000183105469, y: 164.1999969482422 },
+      ],
+      [
+        { x: 383.20001220703125, y: 197.80006408691406 },
+        { x: 371.20001220703125, y: 197.80006408691406 },
+      ],
+      [
+        { x: 384.8000183105469, y: 209.00001525878906 },
+        { x: 396, y: 170.59999084472656 },
+      ],
+      [
+        { x: 424.8000183105469, y: 253.00001525878906 },
+        { x: 387.20001220703125, y: 204.1999969482422 },
+      ],
+      [
+        { x: 401.6000061035156, y: 232.1999969482422 },
+        { x: 420.8000183105469, y: 175.40000915527344 },
+      ],
+    ],
     name: "UIWorkCoexist_PlanaWatchSky",
     space: "arona_workpage_nighttime.skel",
     voice: {
@@ -311,7 +478,28 @@ export const PlanaPageAnimationConfig: PlanaPageAnimationConfig[] = [
     masks: [{ path: "", scale: 0, offset: { x: 0, y: 0 } }],
     emitters: [{ scale: 0, offset: { x: 0, y: 0 }, config: {} }],
     dialogs: [{ x: 0, y: 0, type: "left" }],
-    interaction: { topLeft: { x: 0, y: 0 }, bottomRight: { x: 0, y: 0 } },
+    interaction: [
+      [
+        { x: 396, y: 174.59999084472656 },
+        { x: 416.8000183105469, y: 203.40000915527344 },
+      ],
+      [
+        { x: 380, y: 189.80006408691406 },
+        { x: 405.6000061035156, y: 225.00001525878906 },
+      ],
+      [
+        { x: 258.3999938964844, y: 162.59999084472656 },
+        { x: 305.6000061035156, y: 352.99998474121094 },
+      ],
+      [
+        { x: 302.3999938964844, y: 283.40000915527344 },
+        { x: 340, y: 320.99998474121094 },
+      ],
+      [
+        { x: 316, y: 321.80003356933594 },
+        { x: 364.8000183105469, y: 370.6000213623047 },
+      ],
+    ],
     name: "UIWorkCoexist_PlanaSitPeek",
     space: "arona_workpage_nighttime.skel",
     voice: {

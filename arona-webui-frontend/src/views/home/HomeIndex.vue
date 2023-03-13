@@ -108,7 +108,7 @@ function initBackground(el: HTMLElement) {
   standardRate = backgroundWidth / standardWidth;
   middleOffset = (backgroundHeight - viewHeight) / 2;
   // const animationConfig = randomArrayItem(PlanaPageAnimationConfig);
-  const animationConfig = PlanaPageAnimationConfig[8];
+  const animationConfig = PlanaPageAnimationConfig[9];
   const interactionPoint = animationConfig.interaction;
   const disappearMaskPaths = animationConfig.masks.map((it) => it.path);
   const inVoiceList = animationConfig.voice.in;
@@ -165,12 +165,12 @@ function initBackground(el: HTMLElement) {
   app.loader.add("planaMask", `${ImageResourceUrl}FX_TEX_Plana_Stand.png`);
   app.stage.interactive = true;
   (window as any).__PIXI_APP = app;
-  function checkHitBound(target: Point, bound: { topLeft: Point; bottomRight: Point }) {
+  function checkHitBound(target: Point, bound: [Point, Point]) {
     return (
-      target.x >= bound.topLeft.x * standardRate &&
-      target.x <= bound.bottomRight.x * standardRate &&
-      target.y >= bound.topLeft.y * standardRate &&
-      target.y <= bound.bottomRight.y * standardRate
+      target.x >= bound[0].x * standardRate &&
+      target.x <= bound[1].x * standardRate &&
+      target.y >= bound[0].y * standardRate &&
+      target.y <= bound[1].y * standardRate
     );
   }
   function playListVoice(list: VoiceGroup, cb?: () => void, index = 0) {
@@ -309,10 +309,15 @@ function initBackground(el: HTMLElement) {
     // aronaContainer.addChild(destParticleContainer);
     // const emitter2 = new Emitter(destParticleContainer, StandEmitterConfig);
     // emitter2.autoUpdate = true;
+    let list: any[] = [];
     function handleClick(event: InteractionEvent) {
       const target = event.data.global;
-      console.log(target);
-      if (!interactionPoint.map((it) => checkHitBound(target, it)).reduce((prv, cur) => prv && cur, true)) {
+      list.push({ x: target.x, y: target.y });
+      if (list.length === 2) {
+        console.log(JSON.stringify(list));
+        list = []
+      }
+      if (!interactionPoint.map((it) => checkHitBound(target, it)).reduce((prv, cur) => prv || cur, false)) {
         return;
       }
       app.stage.off("pointerdown");

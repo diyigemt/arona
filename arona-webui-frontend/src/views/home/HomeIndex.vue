@@ -51,8 +51,9 @@ import { StandEmitterConfig } from "@/constant/emiterConfig";
 import {
   HomePageAnimationConfigs,
   HomePageDialogConfig,
-  PlanaPageAnimationConfig,
+  PlanaPageAnimationConfig, Point,
   VoiceConfig,
+  VoiceGroup,
 } from "@/constant/spine";
 import { deepCopy, pickRandomArrayItemAndPutBack, randomArrayItem } from "@/utils";
 
@@ -77,7 +78,10 @@ const backgroundPaddingTop = 24;
 const backgroundPaddingRight = 129;
 const backgroundPaddingBottom = 98;
 const chatDialogArrowOffset = 40;
-let randomTalkVoiceIntervalHandler: number;
+const randomTalkVoiceIntervalHandler: { timeout: number; stop?: () => void } = {
+  timeout: 0,
+  stop: undefined,
+};
 const chatStyle = reactive({
   chat: "",
   type: "right",
@@ -97,7 +101,8 @@ const ImageResourceUrl = "https://yuuka.cdn.diyigemt.com/image/home_page/image/"
 
 function initBackground(el: HTMLElement) {
   const backgroundStyle = getComputedStyle(el);
-  backgroundWidth = styleToPxNumber(backgroundStyle.width);
+  // backgroundWidth = styleToPxNumber(backgroundStyle.width);
+  backgroundWidth = 800;
   viewHeight = styleToPxNumber(backgroundStyle.height);
   backgroundHeight = backgroundWidth * 0.7;
   standardRate = backgroundWidth / standardWidth;
@@ -160,7 +165,16 @@ function initBackground(el: HTMLElement) {
   app.loader.add("planaMask", `${ImageResourceUrl}FX_TEX_Plana_Stand.png`);
   app.stage.interactive = true;
   (window as any).__PIXI_APP = app;
-  function playListVoice(list: { AnimationName: string; textJP: string; voice: string }[], cb?: () => void, index = 0) {
+  function checkHitBound(target: Point, bound: { topLeft: Point; bottomRight: Point }) {
+    return (
+      target.x >= bound.topLeft.x * standardRate &&
+      target.x <= bound.bottomRight.x * standardRate &&
+      target.y >= bound.topLeft.y * standardRate &&
+      target.y <= bound.bottomRight.y * standardRate
+    );
+  }
+  function playListVoice(list: VoiceGroup, cb?: () => void, index = 0) {
+    let _pause = false;
     sound.play(list[index].voice, {
       complete() {
         if (index + 1 >= list.length) {
@@ -169,9 +183,18 @@ function initBackground(el: HTMLElement) {
           }
           return;
         }
+        if (_pause) {
+          return;
+        }
         playListVoice(list, cb, index + 1);
       },
     });
+    return () => {
+      _pause = true;
+    };
+  }
+  function stopListVoice(list: VoiceGroup) {
+    list.forEach((voice) => sound.stop(voice.voice));
   }
   function playIdleVoice() {
     // clearChatDialog();
@@ -179,8 +202,8 @@ function initBackground(el: HTMLElement) {
     randomTalkVoiceList = pickResult.arr;
     const nextVoice = pickResult.item;
     // updateChatDialog(nextVoice.textTW);
-    randomTalkVoiceIntervalHandler = window.setTimeout(() => {
-      playListVoice(nextVoice, playIdleVoice);
+    randomTalkVoiceIntervalHandler.timeout = window.setTimeout(() => {
+      randomTalkVoiceIntervalHandler.stop = playListVoice(nextVoice, playIdleVoice);
     }, 10000);
   }
   app.loader.load((_: Loader, resources: Dict<LoaderResource>) => {
@@ -196,8 +219,8 @@ function initBackground(el: HTMLElement) {
         //   x: animationConfig.dialog.x,
         //   y: animationConfig.dialog.y,
         // });
-        // app.stage.on("pointerdown", handleClick);
-        playListVoice(randomInVoice, () => {
+        app.stage.on("pointerdown", handleClick);
+        randomTalkVoiceIntervalHandler.stop = playListVoice(randomInVoice, () => {
           playIdleVoice();
         });
       },
@@ -286,81 +309,80 @@ function initBackground(el: HTMLElement) {
     // aronaContainer.addChild(destParticleContainer);
     // const emitter2 = new Emitter(destParticleContainer, StandEmitterConfig);
     // emitter2.autoUpdate = true;
-    // function handleClick(event: InteractionEvent) {
-    //   const target = event.data.global;
-    //   const action =
-    //     target.x >= interactionPoint.pa.x * standardRate &&
-    //     target.x <= interactionPoint.pb.x * standardRate &&
-    //     target.y >= interactionPoint.pa.y * standardRate &&
-    //     target.y <= interactionPoint.pb.y * standardRate;
-    //   if (!action) {
-    //     return;
-    //   }
-    //   app.stage.off("pointerdown");
-    //   // 停止播放进入音频
-    //   sound.pause("inVoice");
-    //   // 停止播放当前音频
-    //   if (randomTalkVoiceIntervalHandler) {
-    //     clearInterval(randomTalkVoiceIntervalHandler);
-    //   }
-    //   sound.pause(randomTalkVoiceList[randomTalkVoiceList.length - 1].voice);
-    //   sound.play("exitVoice");
-    //   updateChatDialog(randomExitVoice.textTW);
-    //
-    //   setTimeout(() => {
-    //     disappearMask.visible = true;
-    //     sourceParticleContainer.visible = true;
-    //     clearChatDialog();
-    //     let trigger = true;
-    //     const tl = gsap.timeline();
-    //     emitter.emit = true;
-    //     tl.to(disappearMask, {
-    //       alpha: 0.2,
-    //       duration: 0.8,
-    //       onUpdate: () => {
-    //         if (disappearMask.alpha < 0.5 && trigger) {
-    //           backgroundSpine.state.setAnimation(backgroundAnimationTrack, "Dummy", false);
-    //           backgroundSpine.state.setAnimation(backgroundActionTrack1, "Dummy", false);
-    //           backgroundSpine.state.setAnimation(backgroundActionTrack2, "Dummy", false);
-    //           setTimeout(() => {
-    //             backgroundSpine.state.clearTrack(backgroundAnimationTrack);
-    //             backgroundSpine.state.clearTrack(backgroundActionTrack1);
-    //             backgroundSpine.state.clearTrack(backgroundActionTrack2);
-    //           }, 100);
-    //           trigger = false;
-    //         }
-    //       },
-    //     }).then(() => {
-    //       disappearMask.visible = false;
-    //       aronaContainer.visible = true;
-    //       aronaMask.visible = true;
-    //       arona.visible = true;
-    //       emitter2.emit = true;
-    //       destParticleContainer.visible = true;
-    //       updateChatStyleStatic(HomePageDialogConfig.x, HomePageDialogConfig.y);
-    //       updateChatDialog("", "left", {
-    //         x: HomePageDialogConfig.x,
-    //         y: HomePageDialogConfig.y,
-    //       });
-    //       playWorkVoice(() => {
-    //         aronaContainer.on("pointerdown", () => {
-    //           playWorkVoice();
-    //         });
-    //       });
-    //       const tl2 = gsap.timeline();
-    //       tl2
-    //         .to(aronaMask, {
-    //           alpha: 0,
-    //           duration: 1,
-    //         })
-    //         .then(() => {
-    //           aronaMask.visible = false;
-    //         });
-    //     });
-    //   }, 600);
-    //   backgroundSpine.state.setAnimation(backgroundActionTrack1, animationConfig.animation.arona[0], false);
-    //   backgroundSpine.state.setAnimation(backgroundActionTrack2, animationConfig.animation.arona[1], false);
-    // }
+    function handleClick(event: InteractionEvent) {
+      const target = event.data.global;
+      console.log(target);
+      if (!interactionPoint.map((it) => checkHitBound(target, it)).reduce((prv, cur) => prv && cur, true)) {
+        return;
+      }
+      app.stage.off("pointerdown");
+      // 停止播放进入音频
+      stopListVoice(randomInVoice);
+      // 停止播放当前音频
+      clearInterval(randomTalkVoiceIntervalHandler.timeout);
+      if (randomTalkVoiceIntervalHandler.stop) {
+        randomTalkVoiceIntervalHandler.stop();
+        stopListVoice(randomTalkVoiceList[randomTalkVoiceList.length - 1]);
+      }
+      playListVoice(randomExitVoice);
+      // updateChatDialog(randomExitVoice.textTW);
+
+      // setTimeout(() => {
+      //   disappearMask.visible = true;
+      //   sourceParticleContainer.visible = true;
+      //   clearChatDialog();
+      //   let trigger = true;
+      //   const tl = gsap.timeline();
+      //   emitter.emit = true;
+      //   tl.to(disappearMask, {
+      //     alpha: 0.2,
+      //     duration: 0.8,
+      //     onUpdate: () => {
+      //       if (disappearMask.alpha < 0.5 && trigger) {
+      //         backgroundSpine.state.setAnimation(backgroundAnimationTrack, "Dummy", false);
+      //         backgroundSpine.state.setAnimation(backgroundActionTrack1, "Dummy", false);
+      //         backgroundSpine.state.setAnimation(backgroundActionTrack2, "Dummy", false);
+      //         setTimeout(() => {
+      //           backgroundSpine.state.clearTrack(backgroundAnimationTrack);
+      //           backgroundSpine.state.clearTrack(backgroundActionTrack1);
+      //           backgroundSpine.state.clearTrack(backgroundActionTrack2);
+      //         }, 100);
+      //         trigger = false;
+      //       }
+      //     },
+      //   }).then(() => {
+      //     disappearMask.visible = false;
+      //     aronaContainer.visible = true;
+      //     aronaMask.visible = true;
+      //     arona.visible = true;
+      //     emitter2.emit = true;
+      //     destParticleContainer.visible = true;
+      //     updateChatStyleStatic(HomePageDialogConfig.x, HomePageDialogConfig.y);
+      //     updateChatDialog("", "left", {
+      //       x: HomePageDialogConfig.x,
+      //       y: HomePageDialogConfig.y,
+      //     });
+      //     playWorkVoice(() => {
+      //       aronaContainer.on("pointerdown", () => {
+      //         playWorkVoice();
+      //       });
+      //     });
+      //     const tl2 = gsap.timeline();
+      //     tl2
+      //       .to(aronaMask, {
+      //         alpha: 0,
+      //         duration: 1,
+      //       })
+      //       .then(() => {
+      //         aronaMask.visible = false;
+      //       });
+      //   });
+      // }, 600);
+      const animationStartTrack = animationConfig.animation.idle.length;
+      animationConfig.animation.touch.forEach((animation, index) => {
+        backgroundSpine.state.setAnimation(backgroundAnimationTrack + animationStartTrack + index, animation, false);
+      });
+    }
   });
   return app;
 }
@@ -472,8 +494,9 @@ onUnmounted(() => {
       console.log(e);
     }
   }
-  if (randomTalkVoiceIntervalHandler) {
-    clearTimeout(randomTalkVoiceIntervalHandler);
+  clearTimeout(randomTalkVoiceIntervalHandler.timeout);
+  if (randomTalkVoiceIntervalHandler.stop) {
+    randomTalkVoiceIntervalHandler.stop();
   }
 });
 </script>

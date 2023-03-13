@@ -1,8 +1,45 @@
+import { EmitterConfigV3 } from "@pixi/particle-emitter/index";
 import { SitEmitterConfig, SleepEmitterConfig, WatchEmitterConfig } from "@/constant/emiterConfig";
 
 export const HomePageDialogConfig = {
   x: 100,
   y: 450,
+};
+export interface Point {
+  x: number;
+  y: number;
+}
+export type DialogArrow = "left" | "right";
+export type VoiceConfig = {
+  AnimationName: string;
+  textJP: string;
+  textCN?: string;
+  voice: string;
+};
+export type VoiceGroup = VoiceConfig[];
+export type PlanaPageAnimationConfig = {
+  animation: {
+    idle: string[];
+    touch: string[];
+  };
+  masks: { path: string; scale: number; offset: Point }[];
+  emitters: {
+    scale: number;
+    offset: Point;
+    config: EmitterConfigV3;
+  }[];
+  dialogs: (Point & { type: DialogArrow })[];
+  interaction: {
+    topLeft: Point;
+    bottomRight: Point;
+  }[];
+  name: string;
+  space: string;
+  voice: {
+    in: VoiceGroup[];
+    talk: VoiceGroup[];
+    exit: VoiceGroup[];
+  };
 };
 // const b = Object.keys(a).filter(key => key.indexOf("Talk") === -1).map(key => Reflect.get(a, key))
 // const c = Object.keys(a).filter(key => key.indexOf("Talk") !== -1).map(key => Reflect.get(a, key))
@@ -10,19 +47,19 @@ export const HomePageDialogConfig = {
 // const f = {}
 // d.forEach(it => Reflect.set(f,it[0].DialogCategory,{in: it.filter(arr => arr.DialogCondition === "Enter").map(arr => ({AnimationName: arr.AnimationName, textJP:arr.LocalizeJP,voice:arr.VoiceClipsJp.reverse()[0], group: arr.GroupId})), talk: it.filter(arr => arr.DialogCondition === "Idle").map(arr => ({AnimationName: arr.AnimationName, textJP:arr.LocalizeJP,voice:arr.VoiceClipsJp.reverse()[0], group: arr.GroupId})), exit: it.filter(arr => arr.DialogCondition === "Exit").map(arr => ({AnimationName: arr.AnimationName, textJP:arr.LocalizeJP,voice:arr.VoiceClipsJp.reverse()[0], group: arr.GroupId}))}))
 // Object.keys(f).forEach(key => {const source = Reflect.get(f, key); Object.keys(source).forEach(k => { Reflect.set(source, k, [...new Set(Reflect.get(source, k).map(it => it.group))].map(group => Reflect.get(source, k).filter(it => it.group === group).map(it => { delete it.group; return it }))) })})
-// const g = Object.keys(f).map(key => ({animation:{idle:[],touch:[]},masks:[{path:"",scale:0,offset:{x:0,y:0}}],emitters:[{scale:0,offset:{x:0,y:0},config:{}}],dialogs:[{x:0,y:0,type:"left"}],interaction:{topLeft:{x:0,y:0},bottomRight:{x:0,y:0}},name: key, voice: Reflect.get(f, key)}))
+// const g = Object.keys(f).map(key => ({animation:{idle:[],touch:[]},masks:[{path:"",scale:0,offset:{x:0,y:0}}],emitters:[{scale:0,offset:{x:0,y:0},config:{}}],dialogs:[{x:0,y:0,type:"left"}],interaction:[{topLeft:{x:0,y:0},bottomRight:{x:0,y:0}}],name: key, voice: Reflect.get(f, key)}))
 // const h = {}
 // Reflect.set(h, "arona", c[0].map(it => ({DialogCategory: it.DialogCategory,DialogCondition: it.DialogCondition,AnimationName:it.AnimationName,LocalizeJP:it.LocalizeJP,VoiceClipsJp:it.VoiceClipsJp})))
 // Reflect.set(h, "plana", c[1].map(it => ({DialogCategory: it.DialogCategory,DialogCondition: it.DialogCondition,AnimationName:it.AnimationName,LocalizeJP:it.LocalizeJP,VoiceClipsJp:it.VoiceClipsJp})))
 // h.arona = h.arona.map(arr => ({AnimationName: arr.AnimationName, textJP:arr.LocalizeJP,voice:arr.VoiceClipsJp}))
 // h.plana = h.plana.map(arr => ({AnimationName: arr.AnimationName, textJP:arr.LocalizeJP,voice:arr.VoiceClipsJp}))
-export const PlanaPageAnimationConfig = [
+export const PlanaPageAnimationConfig: PlanaPageAnimationConfig[] = [
   {
     animation: { idle: ["Idle_02"], touch: ["Idle_02_Touch_A", "Idle_02_Touch_M"] },
     masks: [{ path: "/image/FX_TEX_Arona_C.png", scale: 1.3, offset: { x: 87, y: 115 } }],
     emitters: [{ scale: 0.26, offset: { x: -15, y: -10 }, config: SitEmitterConfig }],
     dialogs: [{ x: 88, y: 365, type: "left" }],
-    interaction: { topLeft: { x: 137.16415, y: 163.94717 }, bottomRight: { x: 377.16415, y: 554.94717 } },
+    interaction: [{ topLeft: { x: 137.16415, y: 163.94717 }, bottomRight: { x: 377.16415, y: 554.94717 } }],
     name: "UIWorkAronaSit",
     space: "arona_workpage_daytime.skel",
     voice: {
@@ -50,7 +87,7 @@ export const PlanaPageAnimationConfig = [
     masks: [{ path: "/image/FX_TEX_Arona_A.png", scale: 2, offset: { x: 70, y: 230 } }],
     emitters: [{ scale: 0.27, offset: { x: -15, y: -30 }, config: SleepEmitterConfig }],
     dialogs: [{ x: 50, y: 344, type: "left" }],
-    interaction: { topLeft: { x: 89.16415, y: 291.94717 }, bottomRight: { x: 282.16415, y: 605.94717 } },
+    interaction: [{ topLeft: { x: 89.16415, y: 291.94717 }, bottomRight: { x: 282.16415, y: 605.94717 } }],
     name: "UIWorkAronaSleep",
     space: "arona_workpage_daytime.skel",
     voice: {
@@ -84,7 +121,7 @@ export const PlanaPageAnimationConfig = [
     masks: [{ path: "/image/FX_TEX_Arona_B.png", scale: 0.65, offset: { x: 220, y: 140 } }],
     emitters: [{ scale: 0.25, offset: { x: -5, y: -10 }, config: WatchEmitterConfig }],
     dialogs: [{ x: 100, y: 262, type: "right" }],
-    interaction: { topLeft: { x: 246.16415, y: 175.94717 }, bottomRight: { x: 287.16415, y: 380.94717 } },
+    interaction: [{ topLeft: { x: 246.16415, y: 175.94717 }, bottomRight: { x: 287.16415, y: 380.94717 } }],
     name: "UIWorkAronaWatch",
     space: "arona_workpage_daytime.skel",
     voice: {
@@ -108,7 +145,7 @@ export const PlanaPageAnimationConfig = [
     masks: [{ path: "", scale: 0, offset: { x: 0, y: 0 } }],
     emitters: [{ scale: 0, offset: { x: 0, y: 0 }, config: {} }],
     dialogs: [{ x: 0, y: 0, type: "left" }],
-    interaction: { topLeft: { x: 0, y: 0 }, bottomRight: { x: 0, y: 0 } },
+    interaction: [{ topLeft: { x: 0, y: 0 }, bottomRight: { x: 0, y: 0 } }],
     name: "UIWorkPlanaSit",
     space: "arona_workpage_nighttime.skel",
     voice: {
@@ -125,7 +162,7 @@ export const PlanaPageAnimationConfig = [
     masks: [{ path: "", scale: 0, offset: { x: 0, y: 0 } }],
     emitters: [{ scale: 0, offset: { x: 0, y: 0 }, config: {} }],
     dialogs: [{ x: 0, y: 0, type: "left" }],
-    interaction: { topLeft: { x: 0, y: 0 }, bottomRight: { x: 0, y: 0 } },
+    interaction: [{ topLeft: { x: 0, y: 0 }, bottomRight: { x: 0, y: 0 } }],
     name: "UIWorkPlanaCabinet",
     space: "arona_workpage_nighttime.skel",
     voice: {
@@ -145,7 +182,7 @@ export const PlanaPageAnimationConfig = [
     masks: [{ path: "", scale: 0, offset: { x: 0, y: 0 } }],
     emitters: [{ scale: 0, offset: { x: 0, y: 0 }, config: {} }],
     dialogs: [{ x: 0, y: 0, type: "left" }],
-    interaction: { topLeft: { x: 0, y: 0 }, bottomRight: { x: 0, y: 0 } },
+    interaction: [{ topLeft: { x: 0, y: 0 }, bottomRight: { x: 0, y: 0 } }],
     name: "UIWorkPlanaUmbrella",
     space: "arona_workpage_nighttime.skel",
     voice: {
@@ -165,7 +202,7 @@ export const PlanaPageAnimationConfig = [
     masks: [{ path: "", scale: 0, offset: { x: 0, y: 0 } }],
     emitters: [{ scale: 0, offset: { x: 0, y: 0 }, config: {} }],
     dialogs: [{ x: 0, y: 0, type: "left" }],
-    interaction: { topLeft: { x: 0, y: 0 }, bottomRight: { x: 0, y: 0 } },
+    interaction: [{ topLeft: { x: 0, y: 0 }, bottomRight: { x: 0, y: 0 } }],
     name: "UIWorkCoexist_AronaSleepPeek",
     space: "arona_workpage_daytime.skel",
     voice: {
@@ -208,7 +245,7 @@ export const PlanaPageAnimationConfig = [
     masks: [{ path: "", scale: 0, offset: { x: 0, y: 0 } }],
     emitters: [{ scale: 0, offset: { x: 0, y: 0 }, config: {} }],
     dialogs: [{ x: 0, y: 0, type: "left" }],
-    interaction: { topLeft: { x: 0, y: 0 }, bottomRight: { x: 0, y: 0 } },
+    interaction: [{ topLeft: { x: 0, y: 0 }, bottomRight: { x: 0, y: 0 } }],
     name: "UIWorkCoexist_AronaSleepSit",
     space: "arona_workpage_daytime.skel",
     voice: {
@@ -246,7 +283,7 @@ export const PlanaPageAnimationConfig = [
     masks: [{ path: "", scale: 0, offset: { x: 0, y: 0 } }],
     emitters: [{ scale: 0, offset: { x: 0, y: 0 }, config: {} }],
     dialogs: [{ x: 0, y: 0, type: "left" }],
-    interaction: { topLeft: { x: 0, y: 0 }, bottomRight: { x: 0, y: 0 } },
+    interaction: [{ topLeft: { x: 0, y: 0 }, bottomRight: { x: 0, y: 0 } }],
     name: "UIWorkCoexist_PlanaWatchSky",
     space: "arona_workpage_nighttime.skel",
     voice: {

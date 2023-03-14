@@ -16,11 +16,11 @@
       "LocalizeKR": "[USERNAME] 선생님!\n기다리고 있었습니다!",
       "LocalizeJP": "[USERNAME]先生！\nお待ちしておりました！",
       "VoiceClipsKr": [
-        "CALLNAME1",
+        "Arona_Default_TTS",
         "Arona_Work_In_1"
       ],
       "VoiceClipsJp": [
-        "CALLNAME1",
+        "Arona_Default_TTS",
         "Arona_Work_In_1"
       ],
       "ApplyPosition": false,
@@ -143,11 +143,11 @@
       "LocalizeKR": "[USERNAME] 선생님!\n원하시는 업무를 선택해 주세요.\n제가 옆에서 돕겠습니다!",
       "LocalizeJP": "[USERNAME] 先生！\nご希望のお仕事を選んでください。\n私が隣で手伝います！",
       "VoiceClipsKr": [
-        "CALLNAME1",
+        "Arona_Default_TTS",
         "Arona_Work_Talk_2"
       ],
       "VoiceClipsJp": [
-        "CALLNAME1",
+        "Arona_Default_TTS",
         "Arona_Work_Talk_2"
       ],
       "ApplyPosition": false,
@@ -324,11 +324,11 @@
       "LocalizeKR": "[USERNAME] 선생님.\n기다리고 있었습니다.",
       "LocalizeJP": "[USERNAME]先生。\nお待ちしておりました。",
       "VoiceClipsKr": [
-        "CALLNAME2",
+        "NP0035_Default_TTS",
         "NP0035_Work_In_1_2"
       ],
       "VoiceClipsJp": [
-        "CALLNAME2",
+        "NP0035_Default_TTS",
         "NP0035_Work_In_1_2"
       ],
       "ApplyPosition": false,
@@ -352,11 +352,11 @@
       "LocalizeJP": "お仕事を始める時間です。\n[USERNAME]先生。",
       "VoiceClipsKr": [
         "NP0035_Work_In_2",
-        "CALLNAME2"
+        "NP0035_Default_TTS"
       ],
       "VoiceClipsJp": [
         "NP0035_Work_In_2",
-        "CALLNAME2"
+        "NP0035_Default_TTS"
       ],
       "ApplyPosition": false,
       "PosX": -0,
@@ -453,11 +453,11 @@
       "LocalizeKR": "[USERNAME] 선생님.\n원하시는 업무를 선택해 주십시오.",
       "LocalizeJP": "[USERNAME]先生。\nご希望のお仕事を選んでください。",
       "VoiceClipsKr": [
-        "CALLNAME2",
+        "NP0035_Default_TTS",
         "NP0035_Work_Talk_2"
       ],
       "VoiceClipsJp": [
-        "CALLNAME2",
+        "NP0035_Default_TTS",
         "NP0035_Work_Talk_2"
       ],
       "ApplyPosition": false,

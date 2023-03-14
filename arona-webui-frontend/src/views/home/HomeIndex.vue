@@ -45,9 +45,10 @@ import { Application, Container, DisplayObject, InteractionEvent, Loader, Loader
 import { AdvancedBloomFilter } from "@pixi/filter-advanced-bloom";
 import { ColorOverlayFilter } from "@pixi/filter-color-overlay";
 import { Spine } from "pixi-spine";
-import { sound } from "@pixi/sound";
+import { sound, filters } from "@pixi/sound";
 import gsap from "gsap";
 import { Dict } from "@pixi/utils";
+import { Ref } from "vue";
 import { AronaEmitterConfig, PlanaEmitterConfig } from "@/constant/emiterConfig";
 import {
   EmitterConfig,
@@ -56,6 +57,7 @@ import {
   VoiceConfig,
   VoiceGroup,
   WaifuAppearConfig,
+  WorkConfig,
 } from "@/constant/spine";
 import { deepCopy, pickRandomArrayItemAndPutBack, randomArrayItem, randomInt } from "@/utils";
 
@@ -64,7 +66,8 @@ const backgroundContainer = ref<HTMLElement>();
 const chatDialogOuter = ref<HTMLElement>();
 const chatDialog = ref<HTMLElement>();
 let backgroundWidth = 800;
-const superResolution = 2;
+const superResolution = 2.5;
+const superResolutionBack = 1 / superResolution;
 backgroundWidth *= superResolution;
 const standardWidth = 800;
 let standardRate = backgroundWidth / standardWidth / superResolution;
@@ -103,7 +106,8 @@ const ImageResourceUrl = "https://yuuka.cdn.diyigemt.com/image/home_page/image/"
 
 function initBackground(el: HTMLElement) {
   const backgroundStyle = getComputedStyle(el);
-  // backgroundWidth = styleToPxNumber(backgroundStyle.width);
+  backgroundWidth = styleToPxNumber(backgroundStyle.width);
+  backgroundWidth *= superResolution;
   viewHeight = styleToPxNumber(backgroundStyle.height);
   backgroundHeight = backgroundWidth * 0.7;
   standardRate = backgroundWidth / standardWidth;
@@ -115,7 +119,8 @@ function initBackground(el: HTMLElement) {
   const inVoiceList = animationConfig.voice.in;
   const talkVoiceList = animationConfig.voice.talk;
   const exitVoiceList = animationConfig.voice.exit;
-  const workVoiceList = VoiceConfig;
+  const aronaWorkVoiceList = WorkConfig.arona;
+  const planaWorkVoiceList = WorkConfig.plana;
   let randomTalkVoiceList = [...deepCopy(talkVoiceList), ...deepCopy(inVoiceList)];
   const randomInVoice = randomArrayItem(inVoiceList);
   const randomExitVoice = randomArrayItem(exitVoiceList);
@@ -145,16 +150,26 @@ function initBackground(el: HTMLElement) {
       url: `${VoiceResourceUrl}${voice.voice}.mp3`,
     });
   });
-  workVoiceList.forEach((voice) => {
-    sound.add(voice.voice, {
-      url: `${VoiceResourceUrl}${voice.voice}.mp3`,
+  aronaWorkVoiceList.forEach((voice) => {
+    voice.voice.forEach((name) => {
+      const fName = name.indexOf("CALLNAME") !== -1 ? "Arona_Default_TTS" : name;
+      sound.add(fName, {
+        url: `${VoiceResourceUrl}${fName}.mp3`,
+      });
+    });
+  });
+  planaWorkVoiceList.forEach((voice) => {
+    voice.voice.forEach((name) => {
+      const fName = name.indexOf("CALLNAME") !== -1 ? "NP0035_Default_TTS" : name;
+      sound.add(fName, {
+        url: `${VoiceResourceUrl}${fName}.mp3`,
+      });
     });
   });
   const app = new Application({ width: backgroundWidth, height: backgroundHeight });
   (window as any).__PIXI_APP__ = app;
-  app.view.style.transform = `translateY(${-middleOffset}px) translateX(-50%) scale(${1 / superResolution})`;
-  app.view.style.position = `absolute`;
-  app.view.style.left = `50%`;
+  app.view.style.transform = `translateY(${-middleOffset}px) scale(${superResolutionBack})`;
+  app.view.style.transformOrigin = "0";
   el.appendChild(app.view);
   app.stage.sortableChildren = true;
   // app.loader.add("space", `${SpineResourceUrl}${animationConfig.space}`);
@@ -176,7 +191,7 @@ function initBackground(el: HTMLElement) {
       target.y <= bound[1].y * standardRate
     );
   }
-  function playListVoice(list: VoiceGroup, cb?: () => void, index = 0) {
+  function playListVoice(list: VoiceGroup, cb?: () => void, stereo = 0, index = 0) {
     let _pause = false;
     sound.play(list[index].voice, {
       complete() {
@@ -189,8 +204,9 @@ function initBackground(el: HTMLElement) {
         if (_pause) {
           return;
         }
-        playListVoice(list, cb, index + 1);
+        playListVoice(list, cb, stereo, index + 1);
       },
+      filters: [new filters.StereoFilter(stereo)],
     });
     return () => {
       _pause = true;
@@ -228,12 +244,12 @@ function initBackground(el: HTMLElement) {
         });
       },
     });
-    // const disappearMasks = loadMask(
-    //   disappearMaskPaths.map((_0, index) => Reflect.get(resources, `disappearMask-${index}`)),
-    //   app.stage,
-    //   animationConfig.masks,
-    //   animationConfig.masks.map((it) => it.path.indexOf("Arona") !== -1),
-    // );
+    const disappearMasks = loadMask(
+      disappearMaskPaths.map((_0, index) => Reflect.get(resources, `disappearMask-${index}`)),
+      app.stage,
+      animationConfig.masks,
+      animationConfig.masks.map((it) => it.path.indexOf("Arona") !== -1),
+    );
     const randomPosition = randomInt(0, 2);
     const { waifu: arona, container: aronaContainer } = loadWaifuSpine(
       Reflect.get(resources, "arona"),
@@ -245,78 +261,76 @@ function initBackground(el: HTMLElement) {
       app.stage,
       WaifuAppearConfig.plana.position[randomPosition],
     );
-    // const aronaAppearEmitter = loadEmitter(aronaContainer, [
-    //   { scale: 3, offset: { x: 0, y: 0 }, config: AronaEmitterConfig },
-    // ])[0];
-    // const planaAppearEmitter = loadEmitter(planaContainer, [
-    //   { scale: 3, offset: { x: 0, y: 0 }, config: PlanaEmitterConfig },
-    // ])[0];
-    // const appearEmitters = [aronaAppearEmitter, planaAppearEmitter];
+    const aronaAppearEmitter = loadEmitter(
+      aronaContainer,
+      [{ scale: 3, offset: { x: 0, y: 0 }, config: AronaEmitterConfig }],
+      false,
+    )[0];
+    const planaAppearEmitter = loadEmitter(
+      planaContainer,
+      [{ scale: 3, offset: { x: 0, y: 0 }, config: PlanaEmitterConfig }],
+      false,
+    )[0];
+    const appearEmitters = [aronaAppearEmitter, planaAppearEmitter];
 
     const aronaMask = loadMask(
       [Reflect.get(resources, "aronaMask")],
       aronaContainer,
       [WaifuAppearConfig.arona.mask],
       [true],
+      false,
     )[0];
     const planaMask = loadMask(
       [Reflect.get(resources, "planaMask")],
       planaContainer,
       [WaifuAppearConfig.plana.mask],
       [false],
+      false,
     )[0];
     const appearMasks = [aronaMask, planaMask];
 
     const emitters = loadEmitter(app.stage, animationConfig.emitters);
+
     // const arona = loadArona(aronaResource, aronaContainer);
-    // let workVoiceLock = false;
-    // function playWorkVoice(cb?: () => void) {
-    //   if (workVoiceLock) {
-    //     return;
-    //   }
-    //   const pickResult = pickRandomArrayItemAndPutBack(workVoiceList);
-    //   workVoiceList = pickResult.arr;
-    //   const nextVoice = pickResult.item;
-    //   workVoiceLock = true;
-    //   new Promise<void>((resolve) => {
-    //     let text = nextVoice.textTW;
-    //     if (text.indexOf("[USERNAME]") !== -1) {
-    //       text = text.replace("[USERNAME]", "");
-    //       sound.play("sensei", {
-    //         complete() {
-    //           sound.play(nextVoice.voice, {
-    //             complete() {
-    //               resolve();
-    //             },
-    //           });
-    //         },
-    //       });
-    //     } else {
-    //       sound.play(nextVoice.voice, {
-    //         complete() {
-    //           resolve();
-    //         },
-    //       });
-    //     }
-    //     updateChatDialog(text);
-    //     arona.state.setAnimation(AronaFaceTrack, nextVoice.animationName, false);
-    //   }).then(() => {
-    //     arona.state.setAnimation(AronaFaceTrack, "00", false);
-    //     clearChatDialog();
-    //     setTimeout(() => {
-    //       arona.state.clearTrack(AronaFaceTrack);
-    //     }, 100);
-    //     if (cb) {
-    //       cb();
-    //     }
-    //     setTimeout(() => {
-    //       workVoiceLock = false;
-    //     }, 2500);
-    //   });
-    // }
+    const aronaWorkVoiceLock = ref(false);
+    const planaWorkVoiceLock = ref(false);
+    function playWorkVoice(
+      list: { AnimationName: string; textJP: string; voice: string[] }[],
+      voiceLock: Ref<boolean>,
+      spine: Spine,
+      cb?: () => void,
+      stereo = 0,
+    ) {
+      if (voiceLock.value) {
+        return;
+      }
+      const pickResult = randomArrayItem(list);
+      voiceLock.value = true;
+      new Promise<void>((resolve) => {
+        const text = pickResult.textJP;
+        playListVoice(
+          pickResult.voice.map((it) => ({ AnimationName: "", textJP: "", voice: it })),
+          resolve,
+          stereo,
+        );
+        // updateChatDialog(text);
+        spine.state.setAnimation(AronaFaceTrack, pickResult.AnimationName, false);
+      }).then(() => {
+        spine.state.setAnimation(AronaFaceTrack, "00", false);
+        // clearChatDialog();
+        setTimeout(() => {
+          spine.state.clearTrack(AronaFaceTrack);
+        }, 500);
+        if (cb) {
+          cb();
+        }
+        setTimeout(() => {
+          voiceLock.value = false;
+        }, 2500);
+      });
+    }
     // let list: any[] = [];
     function handleClick(event: InteractionEvent) {
-      return;
       const target = event.data.global;
       // list.push({ x: target.x, y: target.y });
       // if (list.length === 2) {
@@ -392,6 +406,9 @@ function initBackground(el: HTMLElement) {
           //     playWorkVoice();
           //   });
           // });
+          const stereo = randomPosition ? 0.8 : -0.8;
+          playWorkVoice(aronaWorkVoiceList, aronaWorkVoiceLock, arona, undefined, stereo);
+          playWorkVoice(planaWorkVoiceList, planaWorkVoiceLock, plana, undefined, -stereo);
           const tl2 = gsap.timeline();
           tl2
             .to(aronaMask, {
@@ -427,7 +444,9 @@ function loadMask(
   app: Container,
   config: { scale: number; offset: { x: number; y: number } }[],
   arona: boolean[],
+  loadOffset = true,
 ) {
+  const baseScaleRate = loadOffset ? standardRate : 1;
   return resources.map((resource, index) => {
     const sprite = Sprite.from(resource.texture!);
     sprite.alpha = 0.8;
@@ -435,11 +454,11 @@ function loadMask(
       new AdvancedBloomFilter({ bloomScale: 1.5, brightness: 1.5 }),
       new ColorOverlayFilter(arona[index] ? AronaColor : PlanaColor, 1),
     ];
-    sprite.scale.set(standardRate * config[index].scale);
-    sprite.position.set(standardRate * config[index].offset.x, standardRate * config[index].offset.y);
+    sprite.scale.set(baseScaleRate * config[index].scale);
+    sprite.position.set(baseScaleRate * config[index].offset.x, baseScaleRate * config[index].offset.y);
     sprite.zIndex = 10;
     app.addChild(sprite);
-    // sprite.visible = false;
+    sprite.visible = false;
     return sprite;
   });
 }
@@ -459,7 +478,7 @@ function loadSpace(resource: LoaderResource, app: Container) {
 function loadWaifuSpine(resource: LoaderResource, app: Container, init: Point) {
   const container = new Container();
   container.sortableChildren = true;
-  // container.visible = false;
+  container.visible = false;
   container.interactive = true;
   const waifu = new Spine(resource.spineData!);
   waifu.pivot.set(-0.5 * waifu.width, -0.63 * waifu.height);
@@ -474,13 +493,14 @@ function loadWaifuSpine(resource: LoaderResource, app: Container, init: Point) {
     container,
   };
 }
-function loadEmitter(app: Container, configs: EmitterConfig[]) {
+function loadEmitter(app: Container, configs: EmitterConfig[], loadOffset = true) {
+  const baseScaleRate = loadOffset ? standardRate : 1;
   return configs.map((config) => {
     const sourceParticleContainer = new Container();
     sourceParticleContainer.visible = false;
     sourceParticleContainer.filters = [new AdvancedBloomFilter({ bloomScale: 3, brightness: 1.5 })];
-    sourceParticleContainer.position.set(standardRate * config.offset.x, standardRate * config.offset.y);
-    sourceParticleContainer.scale.set(standardRate * config.scale);
+    sourceParticleContainer.position.set(baseScaleRate * config.offset.x, baseScaleRate * config.offset.y);
+    sourceParticleContainer.scale.set(baseScaleRate * config.scale);
     sourceParticleContainer.zIndex = 10;
     app.addChild(sourceParticleContainer);
     const emitter = new Emitter(sourceParticleContainer, config.config);

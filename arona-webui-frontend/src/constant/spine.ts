@@ -573,7 +573,7 @@ export const WaifuAppearConfig: { arona: IWaifuAppearConfig; plana: IWaifuAppear
     mask: {
       scale: 1.16,
       offset: {
-        x: 0,
+        x: -30,
         y: 0,
       },
     },
@@ -602,7 +602,7 @@ export const WaifuAppearConfig: { arona: IWaifuAppearConfig; plana: IWaifuAppear
         y: 110,
       },
       {
-        x: 30,
+        x: 20,
         y: 110,
       },
     ],
@@ -613,7 +613,7 @@ export const WorkConfig = {
     {
       AnimationName: "12",
       textJP: "[USERNAME]先生！\\nお待ちしておりました！",
-      voice: ["CALLNAME1", "Arona_Work_In_1"],
+      voice: ["Arona_Default_TTS", "Arona_Work_In_1"],
     },
     { AnimationName: "25", textJP: "さあ、\\nお仕事を始める時間です！", voice: ["Arona_Work_In_2"] },
     { AnimationName: "31", textJP: "どのお仕事から始めますか、\\n先生？", voice: ["Arona_Work_In_3"] },
@@ -626,7 +626,7 @@ export const WorkConfig = {
     {
       AnimationName: "25",
       textJP: "[USERNAME] 先生！\\nご希望のお仕事を選んでください。\\n私が隣で手伝います！",
-      voice: ["CALLNAME1", "Arona_Work_Talk_2"],
+      voice: ["Arona_Default_TTS", "Arona_Work_Talk_2"],
     },
     {
       AnimationName: "13",
@@ -655,12 +655,12 @@ export const WorkConfig = {
     {
       AnimationName: "03",
       textJP: "[USERNAME]先生。\\nお待ちしておりました。",
-      voice: ["CALLNAME2", "NP0035_Work_In_1_2"],
+      voice: ["NP0035_Default_TTS", "NP0035_Work_In_1_2"],
     },
     {
       AnimationName: "15",
       textJP: "お仕事を始める時間です。\\n[USERNAME]先生。",
-      voice: ["NP0035_Work_In_2", "CALLNAME2"],
+      voice: ["NP0035_Work_In_2", "NP0035_Default_TTS"],
     },
     { AnimationName: "02", textJP: "どのお仕事から始めますか。\\n先生？", voice: ["NP0035_Work_In_3"] },
     {
@@ -672,7 +672,7 @@ export const WorkConfig = {
     {
       AnimationName: "15",
       textJP: "[USERNAME]先生。\\nご希望のお仕事を選んでください。",
-      voice: ["CALLNAME2", "NP0035_Work_Talk_2"],
+      voice: ["NP0035_Default_TTS", "NP0035_Work_Talk_2"],
     },
     {
       AnimationName: "03",

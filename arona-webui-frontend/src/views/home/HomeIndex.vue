@@ -41,33 +41,35 @@
 
 <script setup lang="ts">
 import { Emitter } from "@pixi/particle-emitter";
-import { Application, Container, InteractionEvent, Loader, LoaderResource, Sprite } from "pixi.js";
+import { Application, Container, DisplayObject, InteractionEvent, Loader, LoaderResource, Sprite } from "pixi.js";
 import { AdvancedBloomFilter } from "@pixi/filter-advanced-bloom";
+import { ColorOverlayFilter } from "@pixi/filter-color-overlay";
 import { Spine } from "pixi-spine";
 import { sound } from "@pixi/sound";
 import gsap from "gsap";
 import { Dict } from "@pixi/utils";
-import { StandEmitterConfig } from "@/constant/emiterConfig";
+import { AronaEmitterConfig, PlanaEmitterConfig } from "@/constant/emiterConfig";
 import {
-  HomePageAnimationConfigs,
-  HomePageDialogConfig,
-  PlanaPageAnimationConfig, Point,
+  EmitterConfig,
+  PlanaPageAnimationConfig,
+  Point,
   VoiceConfig,
   VoiceGroup,
+  WaifuAppearConfig,
 } from "@/constant/spine";
-import { deepCopy, pickRandomArrayItemAndPutBack, randomArrayItem } from "@/utils";
+import { deepCopy, pickRandomArrayItemAndPutBack, randomArrayItem, randomInt } from "@/utils";
 
 let mainApp: Application;
 const backgroundContainer = ref<HTMLElement>();
 const chatDialogOuter = ref<HTMLElement>();
 const chatDialog = ref<HTMLElement>();
 let backgroundWidth = 800;
+const superResolution = 2;
+backgroundWidth *= superResolution;
 const standardWidth = 800;
-let standardRate = backgroundWidth / standardWidth;
+let standardRate = backgroundWidth / standardWidth / superResolution;
 const backgroundIdleTrack = 1;
 const backgroundAnimationTrack = 2;
-const backgroundActionTrack1 = 3;
-const backgroundActionTrack2 = 4;
 const AronaIdleTrack = 1;
 const AronaFaceTrack = 2;
 let backgroundHeight = backgroundWidth * 0.7;
@@ -102,13 +104,12 @@ const ImageResourceUrl = "https://yuuka.cdn.diyigemt.com/image/home_page/image/"
 function initBackground(el: HTMLElement) {
   const backgroundStyle = getComputedStyle(el);
   // backgroundWidth = styleToPxNumber(backgroundStyle.width);
-  backgroundWidth = 800;
   viewHeight = styleToPxNumber(backgroundStyle.height);
   backgroundHeight = backgroundWidth * 0.7;
   standardRate = backgroundWidth / standardWidth;
   middleOffset = (backgroundHeight - viewHeight) / 2;
   // const animationConfig = randomArrayItem(PlanaPageAnimationConfig);
-  const animationConfig = PlanaPageAnimationConfig[9];
+  const animationConfig = PlanaPageAnimationConfig[8];
   const interactionPoint = animationConfig.interaction;
   const disappearMaskPaths = animationConfig.masks.map((it) => it.path);
   const inVoiceList = animationConfig.voice.in;
@@ -151,13 +152,15 @@ function initBackground(el: HTMLElement) {
   });
   const app = new Application({ width: backgroundWidth, height: backgroundHeight });
   (window as any).__PIXI_APP__ = app;
-  app.view.style.transform = `translateY(${-middleOffset}px)`;
+  app.view.style.transform = `translateY(${-middleOffset}px) translateX(-50%) scale(${1 / superResolution})`;
+  app.view.style.position = `absolute`;
+  app.view.style.left = `50%`;
   el.appendChild(app.view);
   app.stage.sortableChildren = true;
   // app.loader.add("space", `${SpineResourceUrl}${animationConfig.space}`);
-  app.loader.add("space", `/spine/${animationConfig.space}`);
+  app.loader.add("space", `${SpineResourceUrl}${animationConfig.space}`);
   disappearMaskPaths.forEach((it, index) => {
-    app.loader.add(`disappearMask-${index}`, it);
+    app.loader.add(`disappearMask-${index}`, `${ImageResourceUrl}${it}`);
   });
   app.loader.add("arona", `${SpineResourceUrl}arona_spr.skel`);
   app.loader.add("aronaMask", `${ImageResourceUrl}FX_TEX_Arona_Stand.png`);
@@ -225,21 +228,46 @@ function initBackground(el: HTMLElement) {
         });
       },
     });
-    // const disappearMaskResource = Reflect.get(resources, "disappearMask");
-    // const disappearMask = loadSleepMask(
-    //   disappearMaskResource,
+    // const disappearMasks = loadMask(
+    //   disappearMaskPaths.map((_0, index) => Reflect.get(resources, `disappearMask-${index}`)),
     //   app.stage,
-    //   animationConfig.mask.scale,
-    //   animationConfig.mask.offset,
+    //   animationConfig.masks,
+    //   animationConfig.masks.map((it) => it.path.indexOf("Arona") !== -1),
     // );
-    //
-    // const aronaResource = Reflect.get(resources, "arona");
-    // const aronaContainer = new Container();
-    // aronaContainer.sortableChildren = true;
-    // aronaContainer.visible = false;
-    // aronaContainer.interactive = true;
-    // app.stage.addChild(aronaContainer);
-    //
+    const randomPosition = randomInt(0, 2);
+    const { waifu: arona, container: aronaContainer } = loadWaifuSpine(
+      Reflect.get(resources, "arona"),
+      app.stage,
+      WaifuAppearConfig.arona.position[randomPosition],
+    );
+    const { waifu: plana, container: planaContainer } = loadWaifuSpine(
+      Reflect.get(resources, "plana"),
+      app.stage,
+      WaifuAppearConfig.plana.position[randomPosition],
+    );
+    // const aronaAppearEmitter = loadEmitter(aronaContainer, [
+    //   { scale: 3, offset: { x: 0, y: 0 }, config: AronaEmitterConfig },
+    // ])[0];
+    // const planaAppearEmitter = loadEmitter(planaContainer, [
+    //   { scale: 3, offset: { x: 0, y: 0 }, config: PlanaEmitterConfig },
+    // ])[0];
+    // const appearEmitters = [aronaAppearEmitter, planaAppearEmitter];
+
+    const aronaMask = loadMask(
+      [Reflect.get(resources, "aronaMask")],
+      aronaContainer,
+      [WaifuAppearConfig.arona.mask],
+      [true],
+    )[0];
+    const planaMask = loadMask(
+      [Reflect.get(resources, "planaMask")],
+      planaContainer,
+      [WaifuAppearConfig.plana.mask],
+      [false],
+    )[0];
+    const appearMasks = [aronaMask, planaMask];
+
+    const emitters = loadEmitter(app.stage, animationConfig.emitters);
     // const arona = loadArona(aronaResource, aronaContainer);
     // let workVoiceLock = false;
     // function playWorkVoice(cb?: () => void) {
@@ -286,37 +314,15 @@ function initBackground(el: HTMLElement) {
     //     }, 2500);
     //   });
     // }
-    // const aronaMaskResource = Reflect.get(resources, "aronaMask");
-    // const aronaMask = loadAronaMask(aronaMaskResource, aronaContainer);
-    //
-    // const sourceParticleContainer = new Container();
-    // sourceParticleContainer.visible = false;
-    // sourceParticleContainer.filters = [new AdvancedBloomFilter({ bloomScale: 1.5, brightness: 1.5 })];
-    // sourceParticleContainer.position.set(
-    //   standardRate * animationConfig.emitter.offset.x,
-    //   standardRate * animationConfig.emitter.offset.y,
-    // );
-    // sourceParticleContainer.scale.set(standardRate * animationConfig.emitter.scale);
-    // app.stage.addChild(sourceParticleContainer);
-    // const emitter = new Emitter(sourceParticleContainer, animationConfig.emitter.config);
-    // emitter.autoUpdate = true;
-    //
-    // const destParticleContainer = new Container();
-    // destParticleContainer.visible = false;
-    // destParticleContainer.zIndex = 8;
-    // destParticleContainer.filters = [new AdvancedBloomFilter({ bloomScale: 1.5, brightness: 1.5 })];
-    // destParticleContainer.position.set(-140, -80);
-    // aronaContainer.addChild(destParticleContainer);
-    // const emitter2 = new Emitter(destParticleContainer, StandEmitterConfig);
-    // emitter2.autoUpdate = true;
-    let list: any[] = [];
+    // let list: any[] = [];
     function handleClick(event: InteractionEvent) {
+      return;
       const target = event.data.global;
-      list.push({ x: target.x, y: target.y });
-      if (list.length === 2) {
-        console.log(JSON.stringify(list));
-        list = []
-      }
+      // list.push({ x: target.x, y: target.y });
+      // if (list.length === 2) {
+      //   console.log(JSON.stringify(list));
+      //   list = [];
+      // }
       if (!interactionPoint.map((it) => checkHitBound(target, it)).reduce((prv, cur) => prv || cur, false)) {
         return;
       }
@@ -332,57 +338,80 @@ function initBackground(el: HTMLElement) {
       playListVoice(randomExitVoice);
       // updateChatDialog(randomExitVoice.textTW);
 
-      // setTimeout(() => {
-      //   disappearMask.visible = true;
-      //   sourceParticleContainer.visible = true;
-      //   clearChatDialog();
-      //   let trigger = true;
-      //   const tl = gsap.timeline();
-      //   emitter.emit = true;
-      //   tl.to(disappearMask, {
-      //     alpha: 0.2,
-      //     duration: 0.8,
-      //     onUpdate: () => {
-      //       if (disappearMask.alpha < 0.5 && trigger) {
-      //         backgroundSpine.state.setAnimation(backgroundAnimationTrack, "Dummy", false);
-      //         backgroundSpine.state.setAnimation(backgroundActionTrack1, "Dummy", false);
-      //         backgroundSpine.state.setAnimation(backgroundActionTrack2, "Dummy", false);
-      //         setTimeout(() => {
-      //           backgroundSpine.state.clearTrack(backgroundAnimationTrack);
-      //           backgroundSpine.state.clearTrack(backgroundActionTrack1);
-      //           backgroundSpine.state.clearTrack(backgroundActionTrack2);
-      //         }, 100);
-      //         trigger = false;
-      //       }
-      //     },
-      //   }).then(() => {
-      //     disappearMask.visible = false;
-      //     aronaContainer.visible = true;
-      //     aronaMask.visible = true;
-      //     arona.visible = true;
-      //     emitter2.emit = true;
-      //     destParticleContainer.visible = true;
-      //     updateChatStyleStatic(HomePageDialogConfig.x, HomePageDialogConfig.y);
-      //     updateChatDialog("", "left", {
-      //       x: HomePageDialogConfig.x,
-      //       y: HomePageDialogConfig.y,
-      //     });
-      //     playWorkVoice(() => {
-      //       aronaContainer.on("pointerdown", () => {
-      //         playWorkVoice();
-      //       });
-      //     });
-      //     const tl2 = gsap.timeline();
-      //     tl2
-      //       .to(aronaMask, {
-      //         alpha: 0,
-      //         duration: 1,
-      //       })
-      //       .then(() => {
-      //         aronaMask.visible = false;
-      //       });
-      //   });
-      // }, 600);
+      setTimeout(() => {
+        showMasks(disappearMasks);
+        startEmitters(emitters);
+        // clearChatDialog();
+        let trigger = true;
+        const tl = gsap.timeline();
+        disappearMasks.forEach((it, index) => {
+          if (index === disappearMasks.length - 1) {
+            tl.to(
+              it,
+              {
+                alpha: 0.2,
+                duration: 0.8,
+                onUpdate: () => {
+                  if (disappearMasks[0].alpha < 0.5 && trigger) {
+                    clearBackgroundAnimation(
+                      backgroundSpine,
+                      animationConfig.animation.touch.length + animationConfig.animation.idle.length,
+                    );
+                    trigger = false;
+                  }
+                },
+              },
+              "<",
+            );
+          } else {
+            tl.to(
+              it,
+              {
+                alpha: 0.2,
+                duration: 0.8,
+              },
+              "<",
+            );
+          }
+        });
+        tl.then(() => {
+          hideMasks(disappearMasks);
+          showMasks(appearMasks);
+          aronaContainer.visible = true;
+          arona.visible = true;
+          planaContainer.visible = true;
+          plana.visible = true;
+          startEmitters(appearEmitters);
+          // updateChatStyleStatic(HomePageDialogConfig.x, HomePageDialogConfig.y);
+          // updateChatDialog("", "left", {
+          //   x: HomePageDialogConfig.x,
+          //   y: HomePageDialogConfig.y,
+          // });
+          // playWorkVoice(() => {
+          //   aronaContainer.on("pointerdown", () => {
+          //     playWorkVoice();
+          //   });
+          // });
+          const tl2 = gsap.timeline();
+          tl2
+            .to(aronaMask, {
+              alpha: 0,
+              duration: 1,
+            })
+            .to(
+              planaMask,
+              {
+                alpha: 0,
+                duration: 1,
+              },
+              "<",
+            )
+            .then(() => {
+              aronaMask.visible = false;
+              planaMask.visible = false;
+            });
+        });
+      }, 600);
       const animationStartTrack = animationConfig.animation.idle.length;
       animationConfig.animation.touch.forEach((animation, index) => {
         backgroundSpine.state.setAnimation(backgroundAnimationTrack + animationStartTrack + index, animation, false);
@@ -391,16 +420,28 @@ function initBackground(el: HTMLElement) {
   });
   return app;
 }
-
-function loadSleepMask(resource: LoaderResource, app: Container, scale: number, offset: { x: number; y: number }) {
-  const sprite = Sprite.from(resource.texture!);
-  sprite.filters = [new AdvancedBloomFilter({ bloomScale: 1, brightness: 1 })];
-  sprite.scale.set(standardRate * scale);
-  sprite.position.set(standardRate * offset.x, standardRate * offset.y);
-  sprite.zIndex = 10;
-  app.addChild(sprite);
-  sprite.visible = false;
-  return sprite;
+const AronaColor = [63 / 255, 203 / 255, 255 / 255];
+const PlanaColor = [252 / 255, 172 / 255, 252 / 255];
+function loadMask(
+  resources: LoaderResource[],
+  app: Container,
+  config: { scale: number; offset: { x: number; y: number } }[],
+  arona: boolean[],
+) {
+  return resources.map((resource, index) => {
+    const sprite = Sprite.from(resource.texture!);
+    sprite.alpha = 0.8;
+    sprite.filters = [
+      new AdvancedBloomFilter({ bloomScale: 1.5, brightness: 1.5 }),
+      new ColorOverlayFilter(arona[index] ? AronaColor : PlanaColor, 1),
+    ];
+    sprite.scale.set(standardRate * config[index].scale);
+    sprite.position.set(standardRate * config[index].offset.x, standardRate * config[index].offset.y);
+    sprite.zIndex = 10;
+    app.addChild(sprite);
+    // sprite.visible = false;
+    return sprite;
+  });
 }
 function loadSpace(resource: LoaderResource, app: Container) {
   const backgroundSpine = new Spine(resource.spineData!);
@@ -415,24 +456,69 @@ function loadSpace(resource: LoaderResource, app: Container) {
   app.addChild(backgroundSpine);
   return backgroundSpine;
 }
-function loadArona(resource: LoaderResource, container: Container) {
-  const arona = new Spine(resource.spineData!);
-  arona.pivot.set(-0.5 * arona.width, -0.63 * arona.height);
-  arona.zIndex = 5;
+function loadWaifuSpine(resource: LoaderResource, app: Container, init: Point) {
+  const container = new Container();
+  container.sortableChildren = true;
+  // container.visible = false;
+  container.interactive = true;
+  const waifu = new Spine(resource.spineData!);
+  waifu.pivot.set(-0.5 * waifu.width, -0.63 * waifu.height);
+  waifu.zIndex = 5;
   container.scale.set(standardRate * 0.35);
-  container.position.set(standardRate * 50, standardRate * 120);
-  arona.state.setAnimation(AronaIdleTrack, "Idle_01", true);
-  container.addChild(arona);
-  return arona;
+  container.position.set(standardRate * init.x, standardRate * init.y);
+  waifu.state.setAnimation(AronaIdleTrack, "Idle_01", true);
+  container.addChild(waifu);
+  app.addChild(container);
+  return {
+    waifu,
+    container,
+  };
 }
-function loadAronaMask(resource: LoaderResource, container: Container) {
-  const sprite = Sprite.from(resource.texture!);
-  sprite.filters = [new AdvancedBloomFilter({ bloomScale: 1, brightness: 1 })];
-  sprite.scale.set(1.15);
-  sprite.zIndex = 10;
-  container.addChild(sprite);
-  sprite.visible = false;
-  return sprite;
+function loadEmitter(app: Container, configs: EmitterConfig[]) {
+  return configs.map((config) => {
+    const sourceParticleContainer = new Container();
+    sourceParticleContainer.visible = false;
+    sourceParticleContainer.filters = [new AdvancedBloomFilter({ bloomScale: 3, brightness: 1.5 })];
+    sourceParticleContainer.position.set(standardRate * config.offset.x, standardRate * config.offset.y);
+    sourceParticleContainer.scale.set(standardRate * config.scale);
+    sourceParticleContainer.zIndex = 10;
+    app.addChild(sourceParticleContainer);
+    const emitter = new Emitter(sourceParticleContainer, config.config);
+    emitter.autoUpdate = true;
+    emitter.emit = false;
+    return {
+      emitter,
+      sourceParticleContainer,
+    };
+  });
+}
+function showMasks(masks: (Sprite | Container)[]) {
+  // eslint-disable-next-line no-return-assign
+  masks.forEach((it) => (it.visible = true));
+}
+function hideMasks(masks: (Sprite | Container)[]) {
+  // eslint-disable-next-line no-return-assign
+  masks.forEach((it) => (it.visible = false));
+}
+function startEmitters(items: { emitter: Emitter; sourceParticleContainer: Container<DisplayObject> }[]) {
+  items.forEach((it) => {
+    it.sourceParticleContainer.visible = true;
+    it.emitter.emit = true;
+  });
+}
+function clearBackgroundAnimation(background: Spine, length: number) {
+  let len = Number(length - 1);
+  while (len >= 0) {
+    background.state.setAnimation(backgroundAnimationTrack + length, "Dummy", false);
+    len--;
+  }
+  setTimeout(() => {
+    len = Number(length - 1);
+    while (len >= 0) {
+      background.state.clearTrack(backgroundAnimationTrack + length);
+      len--;
+    }
+  }, 100);
 }
 function clearChatDialog() {
   const timeline = gsap.timeline();

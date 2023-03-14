@@ -1,5 +1,16 @@
 import { EmitterConfigV3 } from "@pixi/particle-emitter/index";
-import { SitEmitterConfig, SleepEmitterConfig, WatchEmitterConfig } from "@/constant/emiterConfig";
+import {
+  AronaPeekEmitterConfig,
+  AronaSitEmitterConfig,
+  AronaSleepEmitterConfig,
+  AronaWatchEmitterConfig,
+  PlanaCabinetEmitterConfig,
+  PlanaPeekEmitterConfig,
+  PlanaSitEmitterConfig,
+  PlanaUmbrellaEmitterConfig,
+  WatchSkyEmitterConfigA,
+  WatchSkyEmitterConfigB,
+} from "@/constant/emiterConfig";
 
 export const HomePageDialogConfig = {
   x: 100,
@@ -17,17 +28,18 @@ export type VoiceConfig = {
   voice: string;
 };
 export type VoiceGroup = VoiceConfig[];
+export type EmitterConfig = {
+  scale: number;
+  offset: Point;
+  config: EmitterConfigV3;
+};
 export type PlanaPageAnimationConfig = {
   animation: {
     idle: string[];
     touch: string[];
   };
   masks: { path: string; scale: number; offset: Point }[];
-  emitters: {
-    scale: number;
-    offset: Point;
-    config: EmitterConfigV3;
-  }[];
+  emitters: EmitterConfig[];
   dialogs: (Point & { type: DialogArrow })[];
   interaction: [Point, Point][];
   name: string;
@@ -45,7 +57,7 @@ export type PlanaPageAnimationConfig = {
 // d.forEach(it => Reflect.set(f,it[0].DialogCategory,{in: it.filter(arr => arr.DialogCondition === "Enter").map(arr => ({AnimationName: arr.AnimationName, textJP:arr.LocalizeJP,voice:arr.VoiceClipsJp.reverse()[0], group: arr.GroupId})), talk: it.filter(arr => arr.DialogCondition === "Idle").map(arr => ({AnimationName: arr.AnimationName, textJP:arr.LocalizeJP,voice:arr.VoiceClipsJp.reverse()[0], group: arr.GroupId})), exit: it.filter(arr => arr.DialogCondition === "Exit").map(arr => ({AnimationName: arr.AnimationName, textJP:arr.LocalizeJP,voice:arr.VoiceClipsJp.reverse()[0], group: arr.GroupId}))}))
 // Object.keys(f).forEach(key => {const source = Reflect.get(f, key); Object.keys(source).forEach(k => { Reflect.set(source, k, [...new Set(Reflect.get(source, k).map(it => it.group))].map(group => Reflect.get(source, k).filter(it => it.group === group).map(it => { delete it.group; return it }))) })})
 // const g = Object.keys(f).map(key =>
-// ({animation:{idle:[],touch:[]},masks:[{path:"",scale:0,offset:{x:0,y:0}}],emitters:[{scale:0,offset:{x:0,y:0},config:{}}],dialogs:[{x:0,y:0,type:"left"}],interaction:[[{x:0,y:0},{x:0,y:0}]],name: key, voice: Reflect.get(f, key)}))
+// ({animation:{idle:[],touch:[]},masks:[{path:"",scale:1,offset:{x:0,y:0}}],emitter:[{scale:1,offset:{x:0,y:0},config:{}}],dialogs:[{x:0,y:0,type:"left"}],interaction:[[{x:0,y:0},{x:0,y:0}]],name: key, voice: Reflect.get(f, key)}))
 // const h = {}
 // Reflect.set(h, "arona", c[0].map(it => ({DialogCategory: it.DialogCategory,DialogCondition: it.DialogCondition,AnimationName:it.AnimationName,LocalizeJP:it.LocalizeJP,VoiceClipsJp:it.VoiceClipsJp})))
 // Reflect.set(h, "plana", c[1].map(it => ({DialogCategory: it.DialogCategory,DialogCondition: it.DialogCondition,AnimationName:it.AnimationName,LocalizeJP:it.LocalizeJP,VoiceClipsJp:it.VoiceClipsJp})))
@@ -54,8 +66,8 @@ export type PlanaPageAnimationConfig = {
 export const PlanaPageAnimationConfig: PlanaPageAnimationConfig[] = [
   {
     animation: { idle: ["Idle_02"], touch: ["Idle_02_Touch_A", "Idle_02_Touch_M"] },
-    masks: [{ path: "/image/FX_TEX_Arona_C.png", scale: 1.3, offset: { x: 87, y: 115 } }],
-    emitters: [{ scale: 0.26, offset: { x: -15, y: -10 }, config: SitEmitterConfig }],
+    masks: [{ path: "FX_TEX_Arona_C.png", scale: 1.37, offset: { x: 87, y: 95 } }],
+    emitters: [{ scale: 0.26, offset: { x: -20, y: -20 }, config: AronaSitEmitterConfig }],
     dialogs: [{ x: 88, y: 365, type: "left" }],
     interaction: [
       [
@@ -123,8 +135,8 @@ export const PlanaPageAnimationConfig: PlanaPageAnimationConfig[] = [
   },
   {
     animation: { idle: ["Idle_00"], touch: ["Idle_00_Touch_A", "Idle_00_Touch_M"] },
-    masks: [{ path: "/image/FX_TEX_Arona_A.png", scale: 2, offset: { x: 70, y: 230 } }],
-    emitters: [{ scale: 0.27, offset: { x: -15, y: -30 }, config: SleepEmitterConfig }],
+    masks: [{ path: "FX_TEX_Arona_A.png", scale: 2.2, offset: { x: 58, y: 209 } }],
+    emitters: [{ scale: 0.27, offset: { x: -15, y: -30 }, config: AronaSleepEmitterConfig }],
     dialogs: [{ x: 50, y: 344, type: "left" }],
     interaction: [
       [
@@ -174,8 +186,8 @@ export const PlanaPageAnimationConfig: PlanaPageAnimationConfig[] = [
   },
   {
     animation: { idle: ["Idle_01"], touch: ["Idle_01_Touch_A", "Idle_01_Touch_M"] },
-    masks: [{ path: "/image/FX_TEX_Arona_B.png", scale: 0.65, offset: { x: 220, y: 140 } }],
-    emitters: [{ scale: 0.25, offset: { x: -5, y: -10 }, config: WatchEmitterConfig }],
+    masks: [{ path: "FX_TEX_Arona_B.png", scale: 0.7, offset: { x: 210, y: 120 } }],
+    emitters: [{ scale: 0.25, offset: { x: -12, y: -10 }, config: AronaWatchEmitterConfig }],
     dialogs: [{ x: 100, y: 262, type: "right" }],
     interaction: [
       [
@@ -215,8 +227,8 @@ export const PlanaPageAnimationConfig: PlanaPageAnimationConfig[] = [
   },
   {
     animation: { idle: ["Idle_01"], touch: ["Idle_01_Touch_A", "Idle_01_Touch_M"] },
-    masks: [{ path: "", scale: 0, offset: { x: 0, y: 0 } }],
-    emitters: [{ scale: 0, offset: { x: 0, y: 0 }, config: {} }],
+    masks: [{ path: "FX_TEX_Plana_B.png", scale: 0.667, offset: { x: 243, y: 146 } }],
+    emitters: [{ scale: 1, offset: { x: 0, y: 0 }, config: PlanaSitEmitterConfig }],
     dialogs: [{ x: 0, y: 0, type: "left" }],
     interaction: [
       [
@@ -241,8 +253,8 @@ export const PlanaPageAnimationConfig: PlanaPageAnimationConfig[] = [
   },
   {
     animation: { idle: ["Idle_00"], touch: ["Idle_00_Touch_A", "Idle_00_Touch_M"] },
-    masks: [{ path: "", scale: 0, offset: { x: 0, y: 0 } }],
-    emitters: [{ scale: 0, offset: { x: 0, y: 0 }, config: {} }],
+    masks: [{ path: "FX_TEX_Plana_A.png", scale: 0.74, offset: { x: 79, y: 120 } }],
+    emitters: [{ scale: 1, offset: { x: 0, y: 0 }, config: PlanaCabinetEmitterConfig }],
     dialogs: [{ x: 0, y: 0, type: "left" }],
     interaction: [
       [
@@ -266,8 +278,8 @@ export const PlanaPageAnimationConfig: PlanaPageAnimationConfig[] = [
   },
   {
     animation: { idle: ["Idle_02"], touch: ["Idle_02_Touch_A", "Idle_02_Touch_M"] },
-    masks: [{ path: "", scale: 0, offset: { x: 0, y: 0 } }],
-    emitters: [{ scale: 0, offset: { x: 0, y: 0 }, config: {} }],
+    masks: [{ path: "FX_TEX_Plana_C.png", scale: 0.575, offset: { x: 256, y: 126 } }],
+    emitters: [{ scale: 1, offset: { x: 0, y: 0 }, config: PlanaUmbrellaEmitterConfig }],
     dialogs: [{ x: 0, y: 0, type: "left" }],
     interaction: [
       [
@@ -295,8 +307,14 @@ export const PlanaPageAnimationConfig: PlanaPageAnimationConfig[] = [
       idle: ["Idle_00", "Idle_12"],
       touch: ["Idle_00_Touch_A", "Idle_00_Touch_M", "Idle_12_Touch_A", "Idle_12_Touch_M"],
     },
-    masks: [{ path: "", scale: 0, offset: { x: 0, y: 0 } }],
-    emitters: [{ scale: 0, offset: { x: 0, y: 0 }, config: {} }],
+    masks: [
+      { path: "FX_TEX_Arona_A.png", scale: 2.2, offset: { x: 58, y: 209 } },
+      { path: "FX_TEX_Plana_D.png", scale: 0.45, offset: { x: 253, y: 165 } },
+    ],
+    emitters: [
+      { scale: 1, offset: { x: 270, y: 180 }, config: PlanaPeekEmitterConfig },
+      { scale: 0.27, offset: { x: -15, y: -30 }, config: AronaSleepEmitterConfig },
+    ],
     dialogs: [{ x: 0, y: 0, type: "left" }],
     interaction: [
       [
@@ -359,8 +377,14 @@ export const PlanaPageAnimationConfig: PlanaPageAnimationConfig[] = [
       idle: ["Idle_00", "Idle_11"],
       touch: ["Idle_00_Touch_A", "Idle_00_Touch_M", "Idle_11_Touch_A", "Idle_11_Touch_M"],
     },
-    masks: [{ path: "", scale: 0, offset: { x: 0, y: 0 } }],
-    emitters: [{ scale: 0, offset: { x: 0, y: 0 }, config: {} }],
+    masks: [
+      { path: "FX_TEX_Arona_A.png", scale: 2.2, offset: { x: 58, y: 209 } },
+      { path: "FX_TEX_Plana_B.png", scale: 0.658, offset: { x: 245, y: 144 } },
+    ],
+    emitters: [
+      { scale: 0.27, offset: { x: -15, y: -30 }, config: AronaSleepEmitterConfig },
+      { scale: 1, offset: { x: 0, y: 0 }, config: PlanaSitEmitterConfig },
+    ],
     dialogs: [{ x: 0, y: 0, type: "left" }],
     interaction: [
       [
@@ -426,29 +450,43 @@ export const PlanaPageAnimationConfig: PlanaPageAnimationConfig[] = [
   },
   {
     animation: { idle: ["Idle_03"], touch: ["Idle_03_Touch_A", "Idle_03_Touch_M"] },
-    masks: [{ path: "", scale: 0, offset: { x: 0, y: 0 } }],
-    emitters: [{ scale: 0, offset: { x: 0, y: 0 }, config: {} }],
+    masks: [
+      { path: "FX_TEX_Arona_E.png", scale: 0.53, offset: { x: 390, y: 167 } },
+      { path: "FX_TEX_Plana_F.png", scale: 0.53, offset: { x: 359, y: 162 } },
+    ],
+    emitters: [
+      { scale: 1, offset: { x: 0, y: 0 }, config: WatchSkyEmitterConfigA },
+      { scale: 1, offset: { x: 0, y: 0 }, config: WatchSkyEmitterConfigB },
+    ],
     dialogs: [{ x: 0, y: 0, type: "left" }],
     interaction: [
       [
-        { x: 520, y: 2.600006103515625 },
-        { x: 356.8000183105469, y: 164.1999969482422 },
+        { x: 363.20001220703125, y: 168.1999969482422 },
+        { x: 381.60003662109375, y: 186.59999084472656 },
       ],
       [
-        { x: 383.20001220703125, y: 197.80006408691406 },
-        { x: 371.20001220703125, y: 197.80006408691406 },
+        { x: 361.60003662109375, y: 185.00001525878906 },
+        { x: 380, y: 198.59999084472656 },
       ],
       [
-        { x: 384.8000183105469, y: 209.00001525878906 },
-        { x: 396, y: 170.59999084472656 },
+        { x: 398.4000244140625, y: 172.1999969482422 },
+        { x: 420, y: 198.59999084472656 },
       ],
       [
-        { x: 424.8000183105469, y: 253.00001525878906 },
-        { x: 387.20001220703125, y: 204.1999969482422 },
+        { x: 400.79998779296875, y: 200.1999969482422 },
+        { x: 418.4000244140625, y: 231.40000915527344 },
       ],
       [
-        { x: 401.6000061035156, y: 232.1999969482422 },
-        { x: 420.8000183105469, y: 175.40000915527344 },
+        { x: 392, y: 209.8000030517578 },
+        { x: 412, y: 233.8000030517578 },
+      ],
+      [
+        { x: 404.79998779296875, y: 229.8000030517578 },
+        { x: 419.20001220703125, y: 253.8000030517578 },
+      ],
+      [
+        { x: 418.4000244140625, y: 178.6000061035156 },
+        { x: 436, y: 199.40000915527344 },
       ],
     ],
     name: "UIWorkCoexist_PlanaWatchSky",
@@ -475,8 +513,14 @@ export const PlanaPageAnimationConfig: PlanaPageAnimationConfig[] = [
       idle: ["Idle_01", "Idle_11"],
       touch: ["Idle_01_Touch_A", "Idle_01_Touch_M", "Idle_11_Touch_A", "Idle_11_Touch_M"],
     },
-    masks: [{ path: "", scale: 0, offset: { x: 0, y: 0 } }],
-    emitters: [{ scale: 0, offset: { x: 0, y: 0 }, config: {} }],
+    masks: [
+      { path: "FX_TEX_Plana_B.png", scale: 0.667, offset: { x: 243, y: 146 } },
+      { path: "FX_TEX_Arona_D.png", scale: 0.5, offset: { x: 379, y: 173 } },
+    ],
+    emitters: [
+      { scale: 1, offset: { x: 0, y: 0 }, config: AronaPeekEmitterConfig },
+      { scale: 1, offset: { x: 0, y: 0 }, config: PlanaSitEmitterConfig },
+    ],
     dialogs: [{ x: 0, y: 0, type: "left" }],
     interaction: [
       [
@@ -517,6 +561,53 @@ export const PlanaPageAnimationConfig: PlanaPageAnimationConfig[] = [
     },
   },
 ];
+export type IWaifuAppearConfig = {
+  mask: {
+    scale: number;
+    offset: Point;
+  };
+  position: [Point, Point];
+};
+export const WaifuAppearConfig: { arona: IWaifuAppearConfig; plana: IWaifuAppearConfig } = {
+  arona: {
+    mask: {
+      scale: 1.16,
+      offset: {
+        x: 0,
+        y: 0,
+      },
+    },
+    position: [
+      {
+        x: 50,
+        y: 120,
+      },
+      {
+        x: 420,
+        y: 120,
+      },
+    ],
+  },
+  plana: {
+    mask: {
+      scale: 4.77,
+      offset: {
+        x: -60,
+        y: 40,
+      },
+    },
+    position: [
+      {
+        x: 400,
+        y: 110,
+      },
+      {
+        x: 30,
+        y: 110,
+      },
+    ],
+  },
+};
 export const WorkConfig = {
   arona: [
     {
@@ -620,7 +711,7 @@ export const HomePageAnimationConfigs = [
         x: -15,
         y: -30,
       },
-      config: SleepEmitterConfig,
+      config: AronaSleepEmitterConfig,
     },
     dialog: {
       x: 50,
@@ -696,7 +787,7 @@ export const HomePageAnimationConfigs = [
         x: -5,
         y: -10,
       },
-      config: WatchEmitterConfig,
+      config: AronaWatchEmitterConfig,
     },
     dialog: {
       x: 100,
@@ -763,7 +854,7 @@ export const HomePageAnimationConfigs = [
         x: -15,
         y: -10,
       },
-      config: SitEmitterConfig,
+      config: AronaSitEmitterConfig,
     },
     dialog: {
       x: 88,

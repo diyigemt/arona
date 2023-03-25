@@ -19,6 +19,7 @@
     "@jsplumb/connector-flowchart": "^5.13.2",
     "@pixi-spine/base": "^3.1.0",
     "@pixi/filter-advanced-bloom": "^4.0.0",
+    "@pixi/filter-color-overlay": "^4.0.0",
     "@pixi/particle-emitter": "^5.0.8",
     "@pixi/sound": "<5.0.0",
     "@vueuse/core": "^8.9.2",

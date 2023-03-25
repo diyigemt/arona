@@ -11,6 +11,7 @@ specifiers:
   '@jsplumb/connector-flowchart': ^5.13.2
   '@pixi-spine/base': ^3.1.0
   '@pixi/filter-advanced-bloom': ^4.0.0
+  '@pixi/filter-color-overlay': ^4.0.0
   '@pixi/particle-emitter': ^5.0.8
   '@pixi/sound': <5.0.0
   '@types/express': ^4.17.15
@@ -81,6 +82,7 @@ dependencies:
   '@jsplumb/connector-flowchart': 5.13.2
   '@pixi-spine/base': 3.1.2
   '@pixi/filter-advanced-bloom': 4.2.0
+  '@pixi/filter-color-overlay': 4.2.0
   '@pixi/particle-emitter': 5.0.8
   '@pixi/sound': 4.3.1
   '@vueuse/core': 8.9.4_vue@3.2.45
@@ -1205,6 +1207,13 @@ packages:
       '@pixi/core': 6.5.9_yc3lyad5jwyinmndak3aswu4u4
     dev: false
 
+  /@pixi/filter-color-overlay/4.2.0:
+    resolution: {integrity: sha512-+xqUIyaRLf35ZRZAybO3tTW0eXMeWTpvPH9nFxucpo7pOeJNc/Z59jPgbtu1N3nTLCEBDtwwq3rGdVSWnSVuVw==}
+    peerDependencies:
+      '@pixi/core': ^6.0.0
+      '@pixi/utils': ^6.0.0
+    dev: false
+
   /@pixi/filter-displacement/6.5.9_pywdjdwjxbgp2kfd7ieppfnwqu:
     resolution: {integrity: sha512-Z8JRUTtOpxNkzacQfedkOVEzIJOSm3gOYB/Vp3Et/S2BTS2ifZ6NoYcsYFY7Cm6ZF+ht/bP3X+DYpkk75px6oA==}
     peerDependencies:
@@ -1431,7 +1440,6 @@ packages:
 
   /@pixi/sound/4.3.1:
     resolution: {integrity: sha512-KpzJIErU2UbgrrI/6cIbZ0BsWPUDma86TyB9vz7cyJ9W4MHVZx1EYCJ0CeWh2XGtvzbUVOozLPnR18ObPZKokA==}
-    engines: {node: '>=12', npm: '>=7', yarn: please-use-npm}
     peerDependencies:
       '@pixi/core': '>=5 <7'
       '@pixi/loaders': '>=5 <7'

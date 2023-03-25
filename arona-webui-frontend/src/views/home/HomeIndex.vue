@@ -19,51 +19,60 @@
       </div>
     </div>
   </div>
-  <div class="menu">
-    <div class="filter">
-      <el-space class="menu-content" wrap>
-        <ShadowCard class="button-card kivotos" role="button" tabindex="0" @click="routerJump('/')">
-          <div>基沃托斯</div>
-        </ShadowCard>
-        <ShadowCard class="button-card arona" role="button" tabindex="1" @click="routerJump('/config')">
-          <div>设置</div>
-        </ShadowCard>
-        <ShadowCard class="button-card" style="opacity: 0; user-select: none; pointer-events: none">
-          <div>管理</div>
-        </ShadowCard>
-        <ShadowCard class="button-card setting" role="button" tabindex="2" @click="routerJump('/admin')">
-          <div>管理</div>
-        </ShadowCard>
-      </el-space>
-    </div>
-  </div>
+  <!--  <div class="menu">-->
+  <!--    <div class="filter">-->
+  <!--      <el-space class="menu-content" wrap>-->
+  <!--        <ShadowCard class="button-card kivotos" role="button" tabindex="0" @click="routerJump('/')">-->
+  <!--          <div>基沃托斯</div>-->
+  <!--        </ShadowCard>-->
+  <!--        <ShadowCard class="button-card arona" role="button" tabindex="1" @click="routerJump('/config')">-->
+  <!--          <div>设置</div>-->
+  <!--        </ShadowCard>-->
+  <!--        <ShadowCard class="button-card" style="opacity: 0; user-select: none; pointer-events: none">-->
+  <!--          <div>管理</div>-->
+  <!--        </ShadowCard>-->
+  <!--        <ShadowCard class="button-card setting" role="button" tabindex="2" @click="routerJump('/admin')">-->
+  <!--          <div>管理</div>-->
+  <!--        </ShadowCard>-->
+  <!--      </el-space>-->
+  <!--    </div>-->
+  <!--  </div>-->
 </template>
 
 <script setup lang="ts">
 import { Emitter } from "@pixi/particle-emitter";
-import { Application, Container, InteractionEvent, Loader, LoaderResource, Sprite } from "pixi.js";
-import * as PIXI from "pixi.js";
+import { Application, Container, DisplayObject, InteractionEvent, Loader, LoaderResource, Sprite } from "pixi.js";
 import { AdvancedBloomFilter } from "@pixi/filter-advanced-bloom";
+import { ColorOverlayFilter } from "@pixi/filter-color-overlay";
 import { Spine } from "pixi-spine";
-import { sound } from "@pixi/sound";
+import { sound, filters } from "@pixi/sound";
 import gsap from "gsap";
 import { Dict } from "@pixi/utils";
-import { StandEmitterConfig } from "@/constant/emiterConfig";
-import { HomePageAnimationConfigs, HomePageDialogConfig, VoiceConfig } from "@/constant/spine";
-import { deepCopy, pickRandomArrayItemAndPutBack, randomArrayItem } from "@/utils";
+import { Ref } from "vue";
+import { AronaEmitterConfig, PlanaEmitterConfig } from "@/constant/emiterConfig";
+import {
+  EmitterConfig,
+  PlanaPageAnimationConfig,
+  Point,
+  VoiceConfig,
+  VoiceGroup,
+  WaifuAppearConfig,
+  WorkConfig,
+} from "@/constant/spine";
+import { deepCopy, pickRandomArrayItemAndPutBack, randomArrayItem, randomInt } from "@/utils";
 
-(window as any).__PIXI_INSPECTOR_GLOBAL_HOOK__ && (window as any).__PIXI_INSPECTOR_GLOBAL_HOOK__.register({ PIXI });
 let mainApp: Application;
 const backgroundContainer = ref<HTMLElement>();
 const chatDialogOuter = ref<HTMLElement>();
 const chatDialog = ref<HTMLElement>();
 let backgroundWidth = 800;
+const superResolution = 2.5;
+const superResolutionBack = 1 / superResolution;
+backgroundWidth *= superResolution;
 const standardWidth = 800;
-let standardRate = backgroundWidth / standardWidth;
+let standardRate = backgroundWidth / standardWidth / superResolution;
 const backgroundIdleTrack = 1;
 const backgroundAnimationTrack = 2;
-const backgroundActionTrack1 = 3;
-const backgroundActionTrack2 = 4;
 const AronaIdleTrack = 1;
 const AronaFaceTrack = 2;
 let backgroundHeight = backgroundWidth * 0.7;
@@ -74,7 +83,10 @@ const backgroundPaddingTop = 24;
 const backgroundPaddingRight = 129;
 const backgroundPaddingBottom = 98;
 const chatDialogArrowOffset = 40;
-let randomTalkVoiceIntervalHandler: number;
+const randomTalkVoiceIntervalHandler: { timeout: number; stop?: () => void } = {
+  timeout: 0,
+  stop: undefined,
+};
 const chatStyle = reactive({
   chat: "",
   type: "right",
@@ -88,262 +100,367 @@ const chatStyleStatic = {
   x: 0,
   y: 0,
 };
+const VoiceResourceUrl = "https://yuuka.cdn.diyigemt.com/image/home_page/voice/";
+const SpineResourceUrl = "https://yuuka.cdn.diyigemt.com/image/home_page/spine/";
+const ImageResourceUrl = "https://yuuka.cdn.diyigemt.com/image/home_page/image/";
 
 function initBackground(el: HTMLElement) {
   const backgroundStyle = getComputedStyle(el);
   backgroundWidth = styleToPxNumber(backgroundStyle.width);
+  backgroundWidth *= superResolution;
   viewHeight = styleToPxNumber(backgroundStyle.height);
   backgroundHeight = backgroundWidth * 0.7;
   standardRate = backgroundWidth / standardWidth;
   middleOffset = (backgroundHeight - viewHeight) / 2;
-  const animationConfig = randomArrayItem(HomePageAnimationConfigs);
+  // const animationConfig = randomArrayItem(PlanaPageAnimationConfig);
+  const animationConfig = PlanaPageAnimationConfig[8];
   const interactionPoint = animationConfig.interaction;
-  const disappearMaskPath = animationConfig.mask.path;
+  const disappearMaskPaths = animationConfig.masks.map((it) => it.path);
   const inVoiceList = animationConfig.voice.in;
   const talkVoiceList = animationConfig.voice.talk;
   const exitVoiceList = animationConfig.voice.exit;
-  let workVoiceList = VoiceConfig;
+  const aronaWorkVoiceList = WorkConfig.arona;
+  const planaWorkVoiceList = WorkConfig.plana;
   let randomTalkVoiceList = [...deepCopy(talkVoiceList), ...deepCopy(inVoiceList)];
   const randomInVoice = randomArrayItem(inVoiceList);
   const randomExitVoice = randomArrayItem(exitVoiceList);
-  sound.add("inVoice", {
-    url: `https://yuuka.diyigemt.com/image/full-extra/output/media/Audio/VOC_JP/JP_Arona/${randomInVoice.voice}.mp3`,
-    preload: true,
-  });
-  sound.add("exitVoice", {
-    url: `https://yuuka.diyigemt.com/image/full-extra/output/media/Audio/VOC_JP/JP_Arona/${randomExitVoice.voice}.mp3`,
-    preload: true,
-  });
-  sound.add("mute", {
-    url: `https://yuuka.diyigemt.com/image/full-extra/output/media/Audio/VOC_JP/Mute.mp3`,
-    preload: true,
-  });
-  sound.add("sensei", {
-    url: `https://yuuka.diyigemt.com/image/full-extra/output/media/Audio/VOC_JP/JP_Arona/Arona_Default_TTS.mp3`,
-    preload: true,
-  });
-  randomTalkVoiceList.forEach((voice) => {
+  randomInVoice.forEach((voice) => {
     sound.add(voice.voice, {
-      url: `https://yuuka.diyigemt.com/image/full-extra/output/media/Audio/VOC_JP/JP_Arona/${voice.voice}.mp3`,
+      url: `${VoiceResourceUrl}${voice.voice}.mp3`,
+      preload: true,
     });
   });
-  workVoiceList.forEach((voice) => {
+  randomExitVoice.forEach((voice) => {
     sound.add(voice.voice, {
-      url: `https://yuuka.diyigemt.com/image/full-extra/output/media/Audio/VOC_JP/JP_Arona/${voice.voice}.mp3`,
+      url: `${VoiceResourceUrl}${voice.voice}.mp3`,
+    });
+  });
+  sound.add("mute", {
+    url: `${VoiceResourceUrl}Mute.mp3`,
+    preload: true,
+  });
+  sound.add("sensei-arona", {
+    url: `${VoiceResourceUrl}Arona_Default_TTS.mp3`,
+  });
+  sound.add("sensei-plana", {
+    url: `${VoiceResourceUrl}NP0035_Default_TTS.mp3`,
+  });
+  randomTalkVoiceList.flat().forEach((voice) => {
+    sound.add(voice.voice, {
+      url: `${VoiceResourceUrl}${voice.voice}.mp3`,
+    });
+  });
+  aronaWorkVoiceList.forEach((voice) => {
+    voice.voice.forEach((name) => {
+      const fName = name.indexOf("CALLNAME") !== -1 ? "Arona_Default_TTS" : name;
+      sound.add(fName, {
+        url: `${VoiceResourceUrl}${fName}.mp3`,
+      });
+    });
+  });
+  planaWorkVoiceList.forEach((voice) => {
+    voice.voice.forEach((name) => {
+      const fName = name.indexOf("CALLNAME") !== -1 ? "NP0035_Default_TTS" : name;
+      sound.add(fName, {
+        url: `${VoiceResourceUrl}${fName}.mp3`,
+      });
     });
   });
   const app = new Application({ width: backgroundWidth, height: backgroundHeight });
-  app.view.style.transform = `translateY(${-middleOffset}px)`;
+  (window as any).__PIXI_APP__ = app;
+  app.view.style.transform = `translateY(${-middleOffset}px) scale(${superResolutionBack})`;
+  app.view.style.transformOrigin = "0";
   el.appendChild(app.view);
   app.stage.sortableChildren = true;
-  app.loader.add("space", "/spine/arona_workpage.skel");
-  app.loader.add("disappearMask", disappearMaskPath);
-  app.loader.add("arona", "/spine/arona_spr.skel");
-  app.loader.add("aronaMask", "/image/FX_TEX_Arona_Stand.png");
+  // app.loader.add("space", `${SpineResourceUrl}${animationConfig.space}`);
+  app.loader.add("space", `${SpineResourceUrl}${animationConfig.space}`);
+  disappearMaskPaths.forEach((it, index) => {
+    app.loader.add(`disappearMask-${index}`, `${ImageResourceUrl}${it}`);
+  });
+  app.loader.add("arona", `${SpineResourceUrl}arona_spr.skel`);
+  app.loader.add("aronaMask", `${ImageResourceUrl}FX_TEX_Arona_Stand.png`);
+  app.loader.add("plana", `${SpineResourceUrl}NP0035_spr.skel`);
+  app.loader.add("planaMask", `${ImageResourceUrl}FX_TEX_Plana_Stand.png`);
   app.stage.interactive = true;
+  (window as any).__PIXI_APP = app;
+  function checkHitBound(target: Point, bound: [Point, Point]) {
+    return (
+      target.x >= bound[0].x * standardRate &&
+      target.x <= bound[1].x * standardRate &&
+      target.y >= bound[0].y * standardRate &&
+      target.y <= bound[1].y * standardRate
+    );
+  }
+  function playListVoice(list: VoiceGroup, cb?: () => void, stereo = 0, index = 0) {
+    let _pause = false;
+    sound.play(list[index].voice, {
+      complete() {
+        if (index + 1 >= list.length) {
+          if (cb) {
+            cb();
+          }
+          return;
+        }
+        if (_pause) {
+          return;
+        }
+        playListVoice(list, cb, stereo, index + 1);
+      },
+      filters: [new filters.StereoFilter(stereo)],
+    });
+    return () => {
+      _pause = true;
+    };
+  }
+  function stopListVoice(list: VoiceGroup) {
+    list.forEach((voice) => sound.stop(voice.voice));
+  }
   function playIdleVoice() {
-    clearChatDialog();
-    randomTalkVoiceIntervalHandler = window.setTimeout(() => {
-      const pickResult = pickRandomArrayItemAndPutBack(randomTalkVoiceList);
-      randomTalkVoiceList = pickResult.arr;
-      const nextVoice = pickResult.item;
-      updateChatDialog(nextVoice.textTW);
-      sound.play(nextVoice.voice, {
-        complete: playIdleVoice,
-      });
-    }, 5000);
+    // clearChatDialog();
+    const pickResult = pickRandomArrayItemAndPutBack(randomTalkVoiceList);
+    randomTalkVoiceList = pickResult.arr;
+    const nextVoice = pickResult.item;
+    // updateChatDialog(nextVoice.textTW);
+    randomTalkVoiceIntervalHandler.timeout = window.setTimeout(() => {
+      randomTalkVoiceIntervalHandler.stop = playListVoice(nextVoice, playIdleVoice);
+    }, 10000);
   }
   app.loader.load((_: Loader, resources: Dict<LoaderResource>) => {
     const backgroundResource = Reflect.get(resources, "space");
     const backgroundSpine = loadSpace(backgroundResource, app.stage);
-    backgroundSpine.state.setAnimation(backgroundAnimationTrack, animationConfig.animation.background, true);
+    animationConfig.animation.idle.forEach((animation, index) => {
+      backgroundSpine.state.setAnimation(backgroundAnimationTrack + index, animation, true);
+    });
     sound.play("mute", {
       complete() {
-        updateChatStyleStatic(animationConfig.dialog.x, animationConfig.dialog.y);
-        updateChatDialog(randomInVoice.textTW, animationConfig.dialog.type, {
-          x: animationConfig.dialog.x,
-          y: animationConfig.dialog.y,
-        });
+        // updateChatStyleStatic(animationConfig.dialog.x, animationConfig.dialog.y);
+        // updateChatDialog(randomInVoice.textTW, animationConfig.dialog.type, {
+        //   x: animationConfig.dialog.x,
+        //   y: animationConfig.dialog.y,
+        // });
         app.stage.on("pointerdown", handleClick);
-        sound.play("inVoice", {
-          complete() {
-            playIdleVoice();
-          },
+        randomTalkVoiceIntervalHandler.stop = playListVoice(randomInVoice, () => {
+          playIdleVoice();
         });
       },
     });
-    const disappearMaskResource = Reflect.get(resources, "disappearMask");
-    const disappearMask = loadSleepMask(
-      disappearMaskResource,
+    const disappearMasks = loadMask(
+      disappearMaskPaths.map((_0, index) => Reflect.get(resources, `disappearMask-${index}`)),
       app.stage,
-      animationConfig.mask.scale,
-      animationConfig.mask.offset,
+      animationConfig.masks,
+      animationConfig.masks.map((it) => it.path.indexOf("Arona") !== -1),
     );
+    const randomPosition = randomInt(0, 2);
+    const { waifu: arona, container: aronaContainer } = loadWaifuSpine(
+      Reflect.get(resources, "arona"),
+      app.stage,
+      WaifuAppearConfig.arona.position[randomPosition],
+    );
+    const { waifu: plana, container: planaContainer } = loadWaifuSpine(
+      Reflect.get(resources, "plana"),
+      app.stage,
+      WaifuAppearConfig.plana.position[randomPosition],
+    );
+    const aronaAppearEmitter = loadEmitter(
+      aronaContainer,
+      [{ scale: 3, offset: { x: 0, y: 0 }, config: AronaEmitterConfig }],
+      false,
+    )[0];
+    const planaAppearEmitter = loadEmitter(
+      planaContainer,
+      [{ scale: 3, offset: { x: 0, y: 0 }, config: PlanaEmitterConfig }],
+      false,
+    )[0];
+    const appearEmitters = [aronaAppearEmitter, planaAppearEmitter];
 
-    const aronaResource = Reflect.get(resources, "arona");
-    const aronaContainer = new Container();
-    aronaContainer.sortableChildren = true;
-    aronaContainer.visible = false;
-    aronaContainer.interactive = true;
-    app.stage.addChild(aronaContainer);
+    const aronaMask = loadMask(
+      [Reflect.get(resources, "aronaMask")],
+      aronaContainer,
+      [WaifuAppearConfig.arona.mask],
+      [true],
+      false,
+    )[0];
+    const planaMask = loadMask(
+      [Reflect.get(resources, "planaMask")],
+      planaContainer,
+      [WaifuAppearConfig.plana.mask],
+      [false],
+      false,
+    )[0];
+    const appearMasks = [aronaMask, planaMask];
 
-    const arona = loadArona(aronaResource, aronaContainer);
-    let workVoiceLock = false;
-    function playWorkVoice(cb?: () => void) {
-      if (workVoiceLock) {
+    const emitters = loadEmitter(app.stage, animationConfig.emitters);
+
+    // const arona = loadArona(aronaResource, aronaContainer);
+    const aronaWorkVoiceLock = ref(false);
+    const planaWorkVoiceLock = ref(false);
+    function playWorkVoice(
+      list: { AnimationName: string; textJP: string; voice: string[] }[],
+      voiceLock: Ref<boolean>,
+      spine: Spine,
+      cb?: () => void,
+      stereo = 0,
+    ) {
+      if (voiceLock.value) {
         return;
       }
-      const pickResult = pickRandomArrayItemAndPutBack(workVoiceList);
-      workVoiceList = pickResult.arr;
-      const nextVoice = pickResult.item;
-      workVoiceLock = true;
+      const pickResult = randomArrayItem(list);
+      voiceLock.value = true;
       new Promise<void>((resolve) => {
-        let text = nextVoice.textTW;
-        if (text.indexOf("[USERNAME]") !== -1) {
-          text = text.replace("[USERNAME]", "");
-          sound.play("sensei", {
-            complete() {
-              sound.play(nextVoice.voice, {
-                complete() {
-                  resolve();
-                },
-              });
-            },
-          });
-        } else {
-          sound.play(nextVoice.voice, {
-            complete() {
-              resolve();
-            },
-          });
-        }
-        updateChatDialog(text);
-        arona.state.setAnimation(AronaFaceTrack, nextVoice.animationName, false);
+        const text = pickResult.textJP;
+        playListVoice(
+          pickResult.voice.map((it) => ({ AnimationName: "", textJP: "", voice: it })),
+          resolve,
+          stereo,
+        );
+        // updateChatDialog(text);
+        spine.state.setAnimation(AronaFaceTrack, pickResult.AnimationName, false);
       }).then(() => {
-        arona.state.setAnimation(AronaFaceTrack, "00", false);
-        clearChatDialog();
+        spine.state.setAnimation(AronaFaceTrack, "00", false);
+        // clearChatDialog();
         setTimeout(() => {
-          arona.state.clearTrack(AronaFaceTrack);
-        }, 100);
+          spine.state.clearTrack(AronaFaceTrack);
+        }, 500);
         if (cb) {
           cb();
         }
         setTimeout(() => {
-          workVoiceLock = false;
+          voiceLock.value = false;
         }, 2500);
       });
     }
-    const aronaMaskResource = Reflect.get(resources, "aronaMask");
-    const aronaMask = loadAronaMask(aronaMaskResource, aronaContainer);
-
-    const sourceParticleContainer = new Container();
-    sourceParticleContainer.visible = false;
-    sourceParticleContainer.filters = [new AdvancedBloomFilter({ bloomScale: 1.5, brightness: 1.5 })];
-    sourceParticleContainer.position.set(
-      standardRate * animationConfig.emitter.offset.x,
-      standardRate * animationConfig.emitter.offset.y,
-    );
-    sourceParticleContainer.scale.set(standardRate * animationConfig.emitter.scale);
-    app.stage.addChild(sourceParticleContainer);
-    const emitter = new Emitter(sourceParticleContainer, animationConfig.emitter.config);
-    emitter.autoUpdate = true;
-
-    const destParticleContainer = new Container();
-    destParticleContainer.visible = false;
-    destParticleContainer.zIndex = 8;
-    destParticleContainer.filters = [new AdvancedBloomFilter({ bloomScale: 1.5, brightness: 1.5 })];
-    destParticleContainer.position.set(-140, -80);
-    aronaContainer.addChild(destParticleContainer);
-    const emitter2 = new Emitter(destParticleContainer, StandEmitterConfig);
-    emitter2.autoUpdate = true;
+    // let list: any[] = [];
     function handleClick(event: InteractionEvent) {
       const target = event.data.global;
-      const action =
-        target.x >= interactionPoint.pa.x * standardRate &&
-        target.x <= interactionPoint.pb.x * standardRate &&
-        target.y >= interactionPoint.pa.y * standardRate &&
-        target.y <= interactionPoint.pb.y * standardRate;
-      if (!action) {
+      // list.push({ x: target.x, y: target.y });
+      // if (list.length === 2) {
+      //   console.log(JSON.stringify(list));
+      //   list = [];
+      // }
+      if (!interactionPoint.map((it) => checkHitBound(target, it)).reduce((prv, cur) => prv || cur, false)) {
         return;
       }
       app.stage.off("pointerdown");
       // 停止播放进入音频
-      sound.pause("inVoice");
+      stopListVoice(randomInVoice);
       // 停止播放当前音频
-      if (randomTalkVoiceIntervalHandler) {
-        clearInterval(randomTalkVoiceIntervalHandler);
+      clearInterval(randomTalkVoiceIntervalHandler.timeout);
+      if (randomTalkVoiceIntervalHandler.stop) {
+        randomTalkVoiceIntervalHandler.stop();
+        stopListVoice(randomTalkVoiceList[randomTalkVoiceList.length - 1]);
       }
-      sound.pause(randomTalkVoiceList[randomTalkVoiceList.length - 1].voice);
-      sound.play("exitVoice");
-      updateChatDialog(randomExitVoice.textTW);
+      playListVoice(randomExitVoice);
+      // updateChatDialog(randomExitVoice.textTW);
 
       setTimeout(() => {
-        disappearMask.visible = true;
-        sourceParticleContainer.visible = true;
-        clearChatDialog();
+        showMasks(disappearMasks);
+        startEmitters(emitters);
+        // clearChatDialog();
         let trigger = true;
         const tl = gsap.timeline();
-        emitter.emit = true;
-        tl.to(disappearMask, {
-          alpha: 0.2,
-          duration: 0.8,
-          onUpdate: () => {
-            if (disappearMask.alpha < 0.5 && trigger) {
-              backgroundSpine.state.setAnimation(backgroundAnimationTrack, "Dummy", false);
-              backgroundSpine.state.setAnimation(backgroundActionTrack1, "Dummy", false);
-              backgroundSpine.state.setAnimation(backgroundActionTrack2, "Dummy", false);
-              setTimeout(() => {
-                backgroundSpine.state.clearTrack(backgroundAnimationTrack);
-                backgroundSpine.state.clearTrack(backgroundActionTrack1);
-                backgroundSpine.state.clearTrack(backgroundActionTrack2);
-              }, 100);
-              trigger = false;
-            }
-          },
-        }).then(() => {
-          disappearMask.visible = false;
+        disappearMasks.forEach((it, index) => {
+          if (index === disappearMasks.length - 1) {
+            tl.to(
+              it,
+              {
+                alpha: 0.2,
+                duration: 0.8,
+                onUpdate: () => {
+                  if (disappearMasks[0].alpha < 0.5 && trigger) {
+                    clearBackgroundAnimation(
+                      backgroundSpine,
+                      animationConfig.animation.touch.length + animationConfig.animation.idle.length,
+                    );
+                    trigger = false;
+                  }
+                },
+              },
+              "<",
+            );
+          } else {
+            tl.to(
+              it,
+              {
+                alpha: 0.2,
+                duration: 0.8,
+              },
+              "<",
+            );
+          }
+        });
+        tl.then(() => {
+          hideMasks(disappearMasks);
+          showMasks(appearMasks);
           aronaContainer.visible = true;
-          aronaMask.visible = true;
           arona.visible = true;
-          emitter2.emit = true;
-          destParticleContainer.visible = true;
-          updateChatStyleStatic(HomePageDialogConfig.x, HomePageDialogConfig.y);
-          updateChatDialog("", "left", {
-            x: HomePageDialogConfig.x,
-            y: HomePageDialogConfig.y,
-          });
-          playWorkVoice(() => {
-            aronaContainer.on("pointerdown", () => {
-              playWorkVoice();
-            });
-          });
+          planaContainer.visible = true;
+          plana.visible = true;
+          startEmitters(appearEmitters);
+          // updateChatStyleStatic(HomePageDialogConfig.x, HomePageDialogConfig.y);
+          // updateChatDialog("", "left", {
+          //   x: HomePageDialogConfig.x,
+          //   y: HomePageDialogConfig.y,
+          // });
+          // playWorkVoice(() => {
+          //   aronaContainer.on("pointerdown", () => {
+          //     playWorkVoice();
+          //   });
+          // });
+          const stereo = randomPosition ? 0.8 : -0.8;
+          playWorkVoice(aronaWorkVoiceList, aronaWorkVoiceLock, arona, undefined, stereo);
+          playWorkVoice(planaWorkVoiceList, planaWorkVoiceLock, plana, undefined, -stereo);
           const tl2 = gsap.timeline();
           tl2
             .to(aronaMask, {
               alpha: 0,
               duration: 1,
             })
+            .to(
+              planaMask,
+              {
+                alpha: 0,
+                duration: 1,
+              },
+              "<",
+            )
             .then(() => {
               aronaMask.visible = false;
+              planaMask.visible = false;
             });
         });
       }, 600);
-      backgroundSpine.state.setAnimation(backgroundActionTrack1, animationConfig.animation.arona[0], false);
-      backgroundSpine.state.setAnimation(backgroundActionTrack2, animationConfig.animation.arona[1], false);
+      const animationStartTrack = animationConfig.animation.idle.length;
+      animationConfig.animation.touch.forEach((animation, index) => {
+        backgroundSpine.state.setAnimation(backgroundAnimationTrack + animationStartTrack + index, animation, false);
+      });
     }
   });
   return app;
 }
-
-function loadSleepMask(resource: LoaderResource, app: Container, scale: number, offset: { x: number; y: number }) {
-  const sprite = Sprite.from(resource.texture!);
-  sprite.filters = [new AdvancedBloomFilter({ bloomScale: 1, brightness: 1 })];
-  sprite.scale.set(standardRate * scale);
-  sprite.position.set(standardRate * offset.x, standardRate * offset.y);
-  sprite.zIndex = 10;
-  app.addChild(sprite);
-  sprite.visible = false;
-  return sprite;
+const AronaColor = [63 / 255, 203 / 255, 255 / 255];
+const PlanaColor = [252 / 255, 172 / 255, 252 / 255];
+function loadMask(
+  resources: LoaderResource[],
+  app: Container,
+  config: { scale: number; offset: { x: number; y: number } }[],
+  arona: boolean[],
+  loadOffset = true,
+) {
+  const baseScaleRate = loadOffset ? standardRate : 1;
+  return resources.map((resource, index) => {
+    const sprite = Sprite.from(resource.texture!);
+    sprite.alpha = 0.8;
+    sprite.filters = [
+      new AdvancedBloomFilter({ bloomScale: 1.5, brightness: 1.5 }),
+      new ColorOverlayFilter(arona[index] ? AronaColor : PlanaColor, 1),
+    ];
+    sprite.scale.set(baseScaleRate * config[index].scale);
+    sprite.position.set(baseScaleRate * config[index].offset.x, baseScaleRate * config[index].offset.y);
+    sprite.zIndex = 10;
+    app.addChild(sprite);
+    sprite.visible = false;
+    return sprite;
+  });
 }
 function loadSpace(resource: LoaderResource, app: Container) {
   const backgroundSpine = new Spine(resource.spineData!);
@@ -358,24 +475,70 @@ function loadSpace(resource: LoaderResource, app: Container) {
   app.addChild(backgroundSpine);
   return backgroundSpine;
 }
-function loadArona(resource: LoaderResource, container: Container) {
-  const arona = new Spine(resource.spineData!);
-  arona.pivot.set(-0.5 * arona.width, -0.63 * arona.height);
-  arona.zIndex = 5;
+function loadWaifuSpine(resource: LoaderResource, app: Container, init: Point) {
+  const container = new Container();
+  container.sortableChildren = true;
+  container.visible = false;
+  container.interactive = true;
+  const waifu = new Spine(resource.spineData!);
+  waifu.pivot.set(-0.5 * waifu.width, -0.63 * waifu.height);
+  waifu.zIndex = 5;
   container.scale.set(standardRate * 0.35);
-  container.position.set(standardRate * 50, standardRate * 120);
-  arona.state.setAnimation(AronaIdleTrack, "Idle_01", true);
-  container.addChild(arona);
-  return arona;
+  container.position.set(standardRate * init.x, standardRate * init.y);
+  waifu.state.setAnimation(AronaIdleTrack, "Idle_01", true);
+  container.addChild(waifu);
+  app.addChild(container);
+  return {
+    waifu,
+    container,
+  };
 }
-function loadAronaMask(resource: LoaderResource, container: Container) {
-  const sprite = Sprite.from(resource.texture!);
-  sprite.filters = [new AdvancedBloomFilter({ bloomScale: 1, brightness: 1 })];
-  sprite.scale.set(1.15);
-  sprite.zIndex = 10;
-  container.addChild(sprite);
-  sprite.visible = false;
-  return sprite;
+function loadEmitter(app: Container, configs: EmitterConfig[], loadOffset = true) {
+  const baseScaleRate = loadOffset ? standardRate : 1;
+  return configs.map((config) => {
+    const sourceParticleContainer = new Container();
+    sourceParticleContainer.visible = false;
+    sourceParticleContainer.filters = [new AdvancedBloomFilter({ bloomScale: 3, brightness: 1.5 })];
+    sourceParticleContainer.position.set(baseScaleRate * config.offset.x, baseScaleRate * config.offset.y);
+    sourceParticleContainer.scale.set(baseScaleRate * config.scale);
+    sourceParticleContainer.zIndex = 10;
+    app.addChild(sourceParticleContainer);
+    const emitter = new Emitter(sourceParticleContainer, config.config);
+    emitter.autoUpdate = true;
+    emitter.emit = false;
+    return {
+      emitter,
+      sourceParticleContainer,
+    };
+  });
+}
+function showMasks(masks: (Sprite | Container)[]) {
+  // eslint-disable-next-line no-return-assign
+  masks.forEach((it) => (it.visible = true));
+}
+function hideMasks(masks: (Sprite | Container)[]) {
+  // eslint-disable-next-line no-return-assign
+  masks.forEach((it) => (it.visible = false));
+}
+function startEmitters(items: { emitter: Emitter; sourceParticleContainer: Container<DisplayObject> }[]) {
+  items.forEach((it) => {
+    it.sourceParticleContainer.visible = true;
+    it.emitter.emit = true;
+  });
+}
+function clearBackgroundAnimation(background: Spine, length: number) {
+  let len = Number(length - 1);
+  while (len >= 0) {
+    background.state.setAnimation(backgroundAnimationTrack + length, "Dummy", false);
+    len--;
+  }
+  setTimeout(() => {
+    len = Number(length - 1);
+    while (len >= 0) {
+      background.state.clearTrack(backgroundAnimationTrack + length);
+      len--;
+    }
+  }, 100);
 }
 function clearChatDialog() {
   const timeline = gsap.timeline();
@@ -442,8 +605,9 @@ onUnmounted(() => {
       console.log(e);
     }
   }
-  if (randomTalkVoiceIntervalHandler) {
-    clearTimeout(randomTalkVoiceIntervalHandler);
+  clearTimeout(randomTalkVoiceIntervalHandler.timeout);
+  if (randomTalkVoiceIntervalHandler.stop) {
+    randomTalkVoiceIntervalHandler.stop();
   }
 });
 </script>

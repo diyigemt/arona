@@ -3,6 +3,7 @@ from fetch_student_info_from_ba_game_db import test_name_exist, download_image, 
 import os
 import cv2
 import numpy as np
+from PIL import Image
 base_folder = "/student_rank/"
 
 # 更新学生
@@ -13,7 +14,10 @@ if __name__ == '__main__':
     # file_list = os.listdir("./image" + base_folder)
     # for file in file_list:
     #     file_name = file.replace(".png", "")
-    #     file_path = file_path = "./image" + base_folder + file
+    #     file_path = "./image" + base_folder + file
+    #     im = Image.open(file_path)
+    #     im = im.convert("RGBA")
+    #     im.save(file_path)
     #     file_names = list(map(lambda n: replace0(n), file_name.split("_")))
     #     stu_name = file_names[0]
     #     new_student = False
@@ -40,6 +44,10 @@ if __name__ == '__main__':
     #         png_name = path.replace("/student_rank/", "")
     #         local_path = "./image/parse/%s" % png_name
     #         source_im = download_image("https://arona.cdn.diyigemt.com/image", path, local_path)
+    #         im = Image.open(local_path)
+    #         im = im.convert("RGBA")
+    #         im.save(local_path)
+    #         source_im = cv2.imdecode(np.fromfile(local_path, dtype=np.uint8), -1)
     #         replace_im = cv2.imdecode(np.fromfile(file_path, dtype=np.uint8), -1)
     #         rows, cols, _ = replace_im.shape
     #         source_im[0:rows,0:cols] = replace_im

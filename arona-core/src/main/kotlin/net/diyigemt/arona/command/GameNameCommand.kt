@@ -5,6 +5,7 @@ import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.name.GameName
 import net.diyigemt.arona.db.name.GameNameTable
 import net.diyigemt.arona.extension.CommandInterceptor
+import net.diyigemt.arona.extension.TempMessageInterceptor
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.util.MessageUtil
 import net.mamoe.mirai.console.command.CommandManager
@@ -58,6 +59,8 @@ object GameNameCommand : SimpleCommand(
   override fun interceptBeforeCall(message: Message, caller: CommandSender): String? {
     if (message.contentToString() != CALL_ME_COMMAND) return null
     if (caller !is UserCommandSender) return null
+    val reason = TempMessageInterceptor.interceptBeforeCall(message, caller)
+    if (reason != null) return null
     val subject = caller.subject
     val member = caller.user
     val list = GameName.find { (GameNameTable.id eq member.id) }.toList()

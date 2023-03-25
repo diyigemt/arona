@@ -126,8 +126,8 @@ arona是基于mirai-console的插件。
 
 2023-03-25 v1.0.14+20230325
 
-1. 修复权限设置不起作用的问题 #8
-2. 修复部分指令没有完全禁止私聊响应的问题 #20
+1. 修复权限设置不起作用的问题 [#8](https://github.com/diyigemt/arona/issues/8)
+2. 修复部分指令没有完全禁止私聊响应的问题 [#20](https://github.com/diyigemt/arona/issues/20)
 
 2023-03-10 v1.0.14+20230310
 

@@ -419,7 +419,7 @@ def fetch_data_from_game_db(page: Page, dict, is_no_translate, base_path = "./im
         
         skill_resource_btn.click()
 
-        time.sleep(12)
+        time.sleep(2)
 
         # 拿到资源列表的class判断是8行资源还是7行
         target_class = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[4]").get_attribute("class")
@@ -452,6 +452,8 @@ def fetch_data_from_game_db(page: Page, dict, is_no_translate, base_path = "./im
 
         equipment_resource_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[3]/div/div[2]")
         equipment_resource_btn.click()
+        time.sleep(12)
+
         equipment_resource = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[4]")
         equipment_resource.screenshot(path="./image/tmp/equipment_resource.png")
 

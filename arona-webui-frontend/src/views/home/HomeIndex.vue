@@ -112,8 +112,8 @@ function initBackground(el: HTMLElement) {
   backgroundHeight = backgroundWidth * 0.7;
   standardRate = backgroundWidth / standardWidth;
   middleOffset = (backgroundHeight - viewHeight) / 2;
-  // const animationConfig = randomArrayItem(PlanaPageAnimationConfig);
-  const animationConfig = PlanaPageAnimationConfig[8];
+  const animationConfig = randomArrayItem(PlanaPageAnimationConfig);
+  // const animationConfig = PlanaPageAnimationConfig[8];
   const interactionPoint = animationConfig.interaction;
   const disappearMaskPaths = animationConfig.masks.map((it) => it.path);
   const inVoiceList = animationConfig.voice.in;
@@ -251,6 +251,7 @@ function initBackground(el: HTMLElement) {
       animationConfig.masks.map((it) => it.path.indexOf("Arona") !== -1),
     );
     const randomPosition = randomInt(0, 2);
+    const stereo = randomPosition ? 0.8 : -0.8;
     const { waifu: arona, container: aronaContainer } = loadWaifuSpine(
       Reflect.get(resources, "arona"),
       app.stage,
@@ -299,6 +300,7 @@ function initBackground(el: HTMLElement) {
       voiceLock: Ref<boolean>,
       spine: Spine,
       cb?: () => void,
+      // eslint-disable-next-line @typescript-eslint/no-shadow
       stereo = 0,
     ) {
       if (voiceLock.value) {
@@ -329,6 +331,12 @@ function initBackground(el: HTMLElement) {
         }, 2500);
       });
     }
+    aronaContainer.addListener("pointerdown", () => {
+      playWorkVoice(aronaWorkVoiceList, aronaWorkVoiceLock, arona, undefined, stereo);
+    });
+    planaContainer.addListener("pointerdown", () => {
+      playWorkVoice(planaWorkVoiceList, planaWorkVoiceLock, plana, undefined, -stereo);
+    });
     // let list: any[] = [];
     function handleClick(event: InteractionEvent) {
       const target = event.data.global;
@@ -406,7 +414,6 @@ function initBackground(el: HTMLElement) {
           //     playWorkVoice();
           //   });
           // });
-          const stereo = randomPosition ? 0.8 : -0.8;
           playWorkVoice(aronaWorkVoiceList, aronaWorkVoiceLock, arona, undefined, stereo);
           playWorkVoice(planaWorkVoiceList, planaWorkVoiceLock, plana, undefined, -stereo);
           const tl2 = gsap.timeline();
@@ -426,6 +433,8 @@ function initBackground(el: HTMLElement) {
             .then(() => {
               aronaMask.visible = false;
               planaMask.visible = false;
+              aronaContainer.interactive = true;
+              planaContainer.interactive = true;
             });
         });
       }, 600);
@@ -479,7 +488,6 @@ function loadWaifuSpine(resource: LoaderResource, app: Container, init: Point) {
   const container = new Container();
   container.sortableChildren = true;
   container.visible = false;
-  container.interactive = true;
   const waifu = new Spine(resource.spineData!);
   waifu.pivot.set(-0.5 * waifu.width, -0.63 * waifu.height);
   waifu.zIndex = 5;

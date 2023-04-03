@@ -4,6 +4,7 @@ import kotlinx.serialization.json.*
 import net.diyigemt.arona.command.ActivityCommand
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.util.ActivityUtil
+import net.diyigemt.arona.util.TimeUtil
 import net.diyigemt.arona.util.TimeUtil.calcTime
 import org.jsoup.Jsoup
 import org.junit.jupiter.api.Test
@@ -238,6 +239,11 @@ class TestActivity {
   @Test
   fun testFinal() {
     ActivityUtil.fetchENActivity()
+  }
+
+  @Test
+  fun testTranslateTimeString() {
+    print(TimeUtil.translateTimeMoreReadable("0天12小时后结束"))
   }
 
 }

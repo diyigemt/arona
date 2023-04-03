@@ -20,7 +20,6 @@ import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.UserOrBot
 import net.mamoe.mirai.contact.nameCardOrNick
-import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
 import org.jetbrains.exposed.sql.and
 import java.io.File
 import java.security.MessageDigest
@@ -31,7 +30,7 @@ object GeneralUtils : InitializedFunction() {
   private val Punctuation0: Regex = Regex("[\\u3002\\uff1f\\uff01\\uff0c\\u3001\\uff1b\\uff1a\\u201c\\u201d\\u2018\\u2019\\uff08\\uff09\\u300a\\u300b\\u3008\\u3009\\u3010\\u3011\\u300e\\u300f\\u300c\\u300d\\ufe43\\ufe44\\u3014\\u3015\\u2026\\u2014\\uff5e\\ufe4f\\uffe5]")
   private val Punctuation1: Regex = Regex("[.,/#!\$%^&*;:{}=\\-_+`~()\\[\\]]")
   private val Punctuation2: Regex = Regex("\\s{2,}")
-  const val ConfigFolder: String = "/config"
+  const val CONFIG_FOLDER: String = "/config"
 
   fun checkService(group: Contact?): Boolean = when (group) {
     is Group -> AronaConfig.groups.contains(group.id)
@@ -57,28 +56,6 @@ object GeneralUtils : InitializedFunction() {
 
   fun randomBoolean(): Boolean = System.currentTimeMillis().toString().let {
     it.substring(it.length - 1).toInt() % 2 == 0
-  }
-
-  suspend fun uploadChapterHelper() {
-    doUpload("/map-cache")
-  }
-
-  suspend fun uploadStudentInfo() {
-    doUpload("/student_info")
-  }
-
-  private suspend fun doUpload(path: String) {
-    val imageFileList = File(Arona.dataFolderPath() + path).listFiles() ?: return
-    val g = Arona.arona.groups[10024841]!!
-    imageFileList.forEach {
-      val name = it.name
-      val res = it.toExternalResource("png")
-      val upload = g.uploadImage(res)
-      val msg = g.sendMessage(upload)
-      Arona.info("$name ${msg.source.originalMessage.serializeToMiraiCode()}")
-      Thread.sleep(1000)
-      res.closed
-    }
   }
 
   /**
@@ -107,7 +84,7 @@ object GeneralUtils : InitializedFunction() {
       // 否则对数据库内容和自定义配置文件进行模糊搜索(指令上级)
       return ImageRequestResult()
     }.getOrNull() ?: return ImageRequestResult()
-    // 服务器没寄, 判断结果是图片文件还剩模糊查询
+    // 服务器没寄, 判断结果是图片文件还是模糊查询
     val imageResultList = result.data
     val imageResult = imageResultList[0]
     // 模糊查询结果
@@ -183,6 +160,6 @@ object GeneralUtils : InitializedFunction() {
     File(imageFileFolder(TrainerCommand.StudentRankFolder)).also { it.mkdirs() }
     File(imageFileFolder(TrainerCommand.OtherFolder)).also { it.mkdirs() }
     File(imageFileFolder(TarotCommand.TarotImageFolder)).also { it.mkdirs() }
-    File(Arona.dataFolderPath(ConfigFolder)).also { it.mkdirs() }
+    File(Arona.dataFolderPath(CONFIG_FOLDER)).also { it.mkdirs() }
   }
 }

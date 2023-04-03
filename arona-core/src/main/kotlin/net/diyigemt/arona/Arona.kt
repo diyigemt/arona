@@ -47,7 +47,18 @@ import kotlin.io.path.absolutePathString
 object Arona : KotlinPlugin(
   JvmPluginDescription.loadFromResource()
 ) {
-  lateinit var arona: Bot
+  var arona: Bot? = null
+    set(value) {
+      field = value
+      if (value != null && aronaTaskList.isNotEmpty()) {
+        aronaTaskList.forEach {
+          runSuspend {
+            it(value)
+          }
+        }
+      }
+    }
+  private val aronaTaskList = mutableListOf<suspend (arona: Bot) -> Unit>()
   private val INIT: List<InitializedFunction> =
     listOf(
       GeneralUtils,
@@ -125,9 +136,11 @@ object Arona : KotlinPlugin(
   fun runSuspend(block: suspend () -> Unit) = launch(coroutineContext) {
     block()
   }
+
   fun runAsync(block: suspend (event: EventChannel<Event>) -> Unit) = async(coroutineContext) {
     block(globalEventChannel())
   }
+
   fun sendExitMessage() {
     if (AronaConfig.sendOfflineMessage) {
       sendMessage(deserializeMiraiCode(AronaConfig.offlineMessage))
@@ -135,18 +148,18 @@ object Arona : KotlinPlugin(
   }
 
   fun sendMessage(message: String) {
-    runSuspend {
-      AronaConfig.groups.forEach {
-        val group =  arona.groups[it] ?: return@forEach
+    runWithArona {
+      AronaConfig.groups.forEach { group0 ->
+        val group = it.groups[group0] ?: return@forEach
         group.sendMessage(message)
       }
     }
   }
 
   fun sendMessageWithFile(block: suspend (group: Contact) -> MessageChain) {
-    runSuspend {
-      AronaConfig.groups.forEach {
-        val group =  arona.groups[it] ?: return@forEach
+    runWithArona {
+      AronaConfig.groups.forEach { group0 ->
+        val group = it.groups[group0] ?: return@forEach
         val message = block(group)
         group.sendMessage(message)
       }
@@ -154,41 +167,53 @@ object Arona : KotlinPlugin(
   }
 
   fun sendMessage(message: MessageChain) {
-    runSuspend {
-      AronaConfig.groups.forEach {
-        val group =  arona.groups[it] ?: return@forEach
+    runWithArona {
+      AronaConfig.groups.forEach { group0 ->
+        val group = it.groups[group0] ?: return@forEach
         group.sendMessage(message)
       }
     }
   }
 
   fun sendMessage(messageBuilder: (group: Group) -> MessageChain) {
-    runSuspend {
-      AronaConfig.groups.forEach {
-        val group =  arona.groups[it] ?: return@forEach
+    runWithArona {
+      AronaConfig.groups.forEach { group0 ->
+        val group = it.groups[group0] ?: return@forEach
         group.sendMessage(messageBuilder(group))
       }
     }
   }
 
   fun sendMessageToAdmin(message: String) {
-    fun getAdmin(id: Long): NormalMember? {
-      AronaConfig.groups.forEach {
-        val admin = arona.groups[it]?.get(id)
-        if (admin != null) return admin
+    runWithArona { arona ->
+      fun getAdmin(id: Long): NormalMember? {
+        AronaConfig.groups.forEach {
+          val admin = arona.groups[it]?.get(id)
+          if (admin != null) return admin
+        }
+        return null
       }
-      return null
+      run {
+        if (AronaConfig.groups.isEmpty() || AronaConfig.managerGroup.isEmpty()) return@run
+        val list = mutableListOf<NormalMember>()
+        AronaConfig.managerGroup.forEach {
+          val admin = getAdmin(it) ?: return@forEach
+          list.add(admin)
+        }
+        list.forEach {
+          it.sendMessage(message)
+        }
+      }
     }
-    runSuspend {
-      if (AronaConfig.groups.isEmpty() || AronaConfig.managerGroup.isEmpty()) return@runSuspend
-      val list = mutableListOf<NormalMember>()
-      AronaConfig.managerGroup.forEach {
-        val admin = getAdmin(it) ?: return@forEach
-        list.add(admin)
+  }
+
+  private fun runWithArona(block: suspend (arona: Bot) -> Unit) {
+    if (arona != null) {
+      runSuspend {
+        block(arona!!)
       }
-      list.forEach {
-        it.sendMessage(message)
-      }
+    } else {
+      aronaTaskList.add(block)
     }
   }
 
@@ -227,13 +252,5 @@ object Arona : KotlinPlugin(
   fun verbose(message: () -> String?) = logger.verbose(message())
 
   fun error(message: () -> String?) = logger.error(message())
-
-  private fun startUpload() {
-    QuartzProvider.createSimpleDelayJob(20) {
-      runSuspend {
-        GeneralUtils.uploadStudentInfo()
-      }
-    }
-  }
 
 }

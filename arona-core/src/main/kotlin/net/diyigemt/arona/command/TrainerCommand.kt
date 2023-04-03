@@ -11,7 +11,6 @@ import kotlinx.serialization.Serializable
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.config.AronaTrainerConfig
 import net.diyigemt.arona.entity.TrainerOverride
-import net.diyigemt.arona.quartz.QuartzProvider
 import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.GeneralUtils.toHex
@@ -196,7 +195,7 @@ object TrainerCommand : SimpleCommand(
     register()
     overrideList.addAll(AronaTrainerConfig.override)
     // 监视data文件夹下的arona-trainer.yml文件动态添加配置
-    ConfigFile = File(Arona.dataFolderPath("/${GeneralUtils.ConfigFolder}/${AutoReadConfigFileName}"))
+    ConfigFile = File(Arona.dataFolderPath("/${GeneralUtils.CONFIG_FOLDER}/${AutoReadConfigFileName}"))
     if (!ConfigFile.exists()) {
       ConfigFile.writeText("override: []", Charsets.UTF_8)
     }

@@ -9,6 +9,7 @@ import net.diyigemt.arona.quartz.QuartzProvider
 import net.diyigemt.arona.service.AronaQuartzService
 import net.diyigemt.arona.util.ActivityUtil
 import net.diyigemt.arona.util.MessageUtil
+import net.diyigemt.arona.util.TimeUtil.calcDiffDayAndHour
 import net.mamoe.mirai.contact.Contact.Companion.uploadImage
 import net.mamoe.mirai.message.code.MiraiCode
 import org.quartz.InterruptableJob
@@ -99,7 +100,7 @@ object ActivityNotify: AronaQuartzService {
       // 非双倍掉落提醒
       val nowH = instance.get(Calendar.HOUR_OF_DAY)
       if (activity.isNotEmpty()) {
-        activity.groupBy { extraHAndD(it).first }.forEach { (h, u) ->
+        activity.groupBy { calcDiffDayAndHour(it.time).first }.forEach { (h, u) ->
           doInsert(u, nowH + h - 1, h.toString())
         }
       }
@@ -114,7 +115,7 @@ object ActivityNotify: AronaQuartzService {
     }
 
     private fun filterPending(activity: Activity): Boolean {
-      val extra = extraHAndD(activity)
+      val extra = calcDiffDayAndHour(activity.time)
       val h = extra.first
       val d = extra.second
       if ((d == 0) && isMaintenanceActivity(activity)) {
@@ -124,7 +125,7 @@ object ActivityNotify: AronaQuartzService {
     }
 
     private fun filterActive(activity: Activity, list: MutableList<Activity>): Boolean {
-      val extra = extraHAndD(activity)
+      val extra = calcDiffDayAndHour(activity.time)
       val h = extra.first
       val d = extra.second
       if (d == 0) {
@@ -137,13 +138,6 @@ object ActivityNotify: AronaQuartzService {
       NotifyType.ALL -> true
       NotifyType.ONLY_24H -> d * 24 + h < 24
       NotifyType.ONLY_48H -> d * 24 + h < 48
-    }
-
-    private fun extraHAndD(activity: Activity): Pair<Int, Int> {
-      val tmp1 = activity.time.substringBefore("天")
-      val d = tmp1.toInt()
-      val h = activity.time.substringAfter("天").substringBefore("小时").toInt()
-      return h to d
     }
 
   }

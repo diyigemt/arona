@@ -26,23 +26,21 @@ object ActivityCommand : CompositeCommand(
   @SubCommand("en")
   @Description("查看国际服活动")
   suspend fun UserCommandSender.activities() {
-    sendEN(subject)
+    val enActivity = ActivityUtil.fetchENActivity()
+    send(subject, enActivity, ServerLocale.GLOBAL)
   }
 
   @SubCommand("jp")
   @Description("查看日服活动")
   suspend fun UserCommandSender.activitiesJP() {
-    sendJP(subject)
-  }
-
-  private suspend fun sendEN(subject: Contact) {
-    val enActivity = ActivityUtil.fetchENActivity()
-    send(subject, enActivity, ServerLocale.GLOBAL)
-  }
-
-  private suspend fun sendJP(subject: Contact) {
     val jpActivity = ActivityUtil.fetchJPActivity()
     send(subject, jpActivity)
+  }
+
+  @SubCommand("cn")
+  @Description("查看国服活动")
+  suspend fun UserCommandSender.activitiesCN() {
+    subject.sendMessage("国服还没开呢,别急")
   }
 
   private suspend fun send(subject: Contact, activities: Pair<List<Activity>, List<Activity>>, serverLocale: ServerLocale = ServerLocale.JP) {
@@ -67,6 +65,6 @@ object ActivityCommand : CompositeCommand(
      if (message.contentToString() != ACTIVITY_COMMAND) return null
      val overrideSubCommand = if (AronaNotifyConfig.defaultActivityCommandServer == ServerLocale.JP) "jp" else "en"
      overrideDefaultCommand(ACTIVITY_COMMAND, overrideSubCommand, caller)
-     return ""
+     return "使用默认/活动配置重新执行指令"
    }
 }

@@ -1,6 +1,5 @@
 # Project exclude paths
 /.gradle/
-/gradle/wrapper/gradle-wrapper.jar
 /build/
 /.idea/
 /test/

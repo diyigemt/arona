@@ -8,6 +8,8 @@ import net.diyigemt.arona.entity.ActivityType
 import net.diyigemt.arona.entity.ServerLocale
 import net.diyigemt.arona.util.GeneralUtils.clearExtraQute
 import net.diyigemt.arona.util.ImageUtil.scale
+import net.diyigemt.arona.util.TimeUtil.calcDiffDayAndHour
+import net.diyigemt.arona.util.TimeUtil.translateTimeMoreReadable
 import net.diyigemt.arona.util.scbaleDB.SchaleDBUtil
 import org.jsoup.Jsoup
 import java.awt.Color
@@ -50,6 +52,7 @@ object ActivityUtil {
     4 to (Color.WHITE to Color(245, 108, 108)),
     5 to (Color.WHITE to Color(103, 194, 58))
   )
+
   // 从b_wiki获取数据
   fun fetchJPActivityFromCN(): Pair<List<Activity>, List<Activity>> {
     val document = Jsoup.connect("https://wiki.biligame.com/bluearchive/%E9%A6%96%E9%A1%B5").get()
@@ -57,8 +60,8 @@ object ActivityUtil {
     val active = mutableListOf<Activity>()
     val pending = mutableListOf<Activity>()
     activities.forEach {
-      val startTime = it.attr("data-start").replace("维护后",ServerMaintenanceEndTimeJP)
-      val endTime = it.attr("data-end").replace("维护前",ServerMaintenanceStartTimeJP)
+      val startTime = it.attr("data-start").replace("维护后", ServerMaintenanceEndTimeJP)
+      val endTime = it.attr("data-end").replace("维护前", ServerMaintenanceStartTimeJP)
       val parseStart = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(startTime)
       val parseEnd = SimpleDateFormat("yyyy/MM/dd HH:mm").parse(endTime)
       val now = Calendar.getInstance().time
@@ -69,17 +72,18 @@ object ActivityUtil {
     return sortAndPackage(active, pending)
   }
 
-  private fun fetchENActivityFromSchaleDB() : Pair<List<Activity>, List<Activity>> = SchaleDBUtil.getGlobalEventData()
+  private fun fetchENActivityFromSchaleDB(): Pair<List<Activity>, List<Activity>> = SchaleDBUtil.getGlobalEventData()
 
-  private fun fetchENActivityFromGameKee() : Pair<List<Activity>, List<Activity>> = GameKeeUtil.getEventData(ServerLocale.GLOBAL)
+  private fun fetchENActivityFromGameKee(): Pair<List<Activity>, List<Activity>> =
+    GameKeeUtil.getEventData(ServerLocale.GLOBAL)
 
-  fun fetchENActivity(): Pair<List<Activity>, List<Activity>>{
+  fun fetchENActivity(): Pair<List<Activity>, List<Activity>> {
     val list = mutableListOf(
       ActivityUtil::fetchENActivityFromSchaleDB,
       ActivityUtil::fetchENActivityFromBiliBili,
       ActivityUtil::fetchENActivityFromGameKee
     )
-    val targetFunction = when(AronaNotifyConfig.defaultENActivitySource) {
+    val targetFunction = when (AronaNotifyConfig.defaultENActivitySource) {
       ActivityENSource.SCHALE_DB -> ActivityUtil::fetchENActivityFromSchaleDB
       ActivityENSource.BILIBILI -> ActivityUtil::fetchENActivityFromBiliBili
       ActivityENSource.GAME_KEE -> ActivityUtil::fetchENActivityFromGameKee
@@ -97,7 +101,7 @@ object ActivityUtil {
       ActivityUtil::fetchJPActivityFromGameKee,
       ActivityUtil::fetchJPActivityFromSchaleDB
     )
-    val targetFunction = when(AronaNotifyConfig.defaultJPActivitySource) {
+    val targetFunction = when (AronaNotifyConfig.defaultJPActivitySource) {
       ActivityJPSource.B_WIKI -> ActivityUtil::fetchJPActivityFromCN
       ActivityJPSource.WIKI_RU -> ActivityUtil::fetchJPActivityFromJP
       ActivityJPSource.GAME_KEE -> ActivityUtil::fetchJPActivityFromGameKee
@@ -109,7 +113,10 @@ object ActivityUtil {
     }
   }
 
-  private fun doFetch(list: MutableList<KFunction0<Pair<List<Activity>, List<Activity>>>>, select: KFunction<Pair<List<Activity>, List<Activity>>>): Pair<List<Activity>, List<Activity>> {
+  private fun doFetch(
+    list: MutableList<KFunction0<Pair<List<Activity>, List<Activity>>>>,
+    select: KFunction<Pair<List<Activity>, List<Activity>>>
+  ): Pair<List<Activity>, List<Activity>> {
     list.remove(select)
     var result = kotlin.runCatching {
       select.isAccessible = true
@@ -168,8 +175,26 @@ object ActivityUtil {
             val parseEndH = simpleDateFormatParse(endH)
             val titleN = "Normal${power}倍掉落"
             val titleH = "Hard${power}倍掉落"
-            insertEnActivity(now, parseStartN, parseEndN, active, pending, titleN, from = ActivityENSource.BILIBILI, type0 = ActivityType.N2_3)
-            insertEnActivity(now, parseStartH, parseEndH, active, pending, titleH, from = ActivityENSource.BILIBILI, type0 = ActivityType.N2_3)
+            insertEnActivity(
+              now,
+              parseStartN,
+              parseEndN,
+              active,
+              pending,
+              titleN,
+              from = ActivityENSource.BILIBILI,
+              type0 = ActivityType.N2_3
+            )
+            insertEnActivity(
+              now,
+              parseStartH,
+              parseEndH,
+              active,
+              pending,
+              titleH,
+              from = ActivityENSource.BILIBILI,
+              type0 = ActivityType.N2_3
+            )
           }
         }
         return@forEach
@@ -207,7 +232,16 @@ object ActivityUtil {
           val parseStart = simpleDateFormatParse(start)
           val parseEnd = simpleDateFormatParse(end)
           val now = Calendar.getInstance().time
-          insertEnActivity(now, parseStart, parseEnd, active, pending, student, from = ActivityENSource.BILIBILI, type0 = ActivityType.PICK_UP)
+          insertEnActivity(
+            now,
+            parseStart,
+            parseEnd,
+            active,
+            pending,
+            student,
+            from = ActivityENSource.BILIBILI,
+            type0 = ActivityType.PICK_UP
+          )
         }
         return@forEach
       }
@@ -228,7 +262,16 @@ object ActivityUtil {
           val now = Calendar.getInstance()
           val title = "游戏维护"
           if (now.before(parseStart)) {
-            insertEnActivity(now.time, parseStart, parseEnd.time, active, pending, title, from = ActivityENSource.BILIBILI, type0 = ActivityType.MAINTENANCE)
+            insertEnActivity(
+              now.time,
+              parseStart,
+              parseEnd.time,
+              active,
+              pending,
+              title,
+              from = ActivityENSource.BILIBILI,
+              type0 = ActivityType.MAINTENANCE
+            )
           }
         }
         return@forEach
@@ -253,7 +296,16 @@ object ActivityUtil {
           parseEnd.set(Calendar.DAY_OF_MONTH, d.toInt())
           parseEnd.set(Calendar.DAY_OF_MONTH, parseEnd.get(Calendar.DAY_OF_MONTH) + 6)
           parseEnd.set(Calendar.HOUR_OF_DAY, 23)
-          insertEnActivity(now, parseStart, parseEnd.time, active, pending, title, from = ActivityENSource.BILIBILI, type0 = ActivityType.DECISIVE_BATTLE)
+          insertEnActivity(
+            now,
+            parseStart,
+            parseEnd.time,
+            active,
+            pending,
+            title,
+            from = ActivityENSource.BILIBILI,
+            type0 = ActivityType.DECISIVE_BATTLE
+          )
         }
         return@forEach
       }
@@ -261,9 +313,11 @@ object ActivityUtil {
     return sortAndPackage(active, pending)
   }
 
-  private fun parseDateString259(year: String, date1: String, date2: String) = parseDateString(year, date1, date2, "02:59")
+  private fun parseDateString259(year: String, date1: String, date2: String) =
+    parseDateString(year, date1, date2, "02:59")
 
-  private fun parseDateString3(year: String, date1: String, date2: String) = parseDateString(year, date1, date2, "03:00")
+  private fun parseDateString3(year: String, date1: String, date2: String) =
+    parseDateString(year, date1, date2, "03:00")
 
   private fun parseDateString(year: String, date1: String, date2: String, suffix: String): String {
     return "${year}/${if (date1.toInt() < 10) "0$date1" else date1}/${if (date2.toInt() < 10) "0$date2" else date2} $suffix"
@@ -276,13 +330,17 @@ object ActivityUtil {
   private fun fetchActivities(): List<JsonObject> {
     var offset = ""
     val res = mutableListOf<JsonObject>()
-    for (i in 0 .. 2) {
-      val document = Jsoup.connect("https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space?offset=${offset}&host_mid=1585224247&timezone_offset=-480")
-        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
-        .ignoreContentType(true)
-        .get()
+    for (i in 0..2) {
+      val document =
+        Jsoup.connect("https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space?offset=${offset}&host_mid=1585224247&timezone_offset=-480")
+          .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
+          .ignoreContentType(true)
+          .get()
       val data = Json.parseToJsonElement(document.text()).jsonObject
-      if (clearExtraQute((data["code"] ?: "-1").toString()).toInt() != 0 || clearExtraQute((data["message"] ?: "-1").toString()).toInt() != 0) {
+      if (clearExtraQute((data["code"] ?: "-1").toString()).toInt() != 0 || clearExtraQute(
+          (data["message"] ?: "-1").toString()
+        ).toInt() != 0
+      ) {
         Arona.error("catch BA en activities error, ${data["message"].toString()}")
         continue
       }
@@ -303,10 +361,11 @@ object ActivityUtil {
   fun fetchJPActivityFromJP0(): Pair<List<Activity>, List<Activity>> {
     val active = mutableListOf<Activity>()
     val pending = mutableListOf<Activity>()
-    val document = Jsoup.connect("https://bluearchive.wikiru.jp/?%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88%E4%B8%80%E8%A6%A7")
-      .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
-      .ignoreContentType(true)
-      .get()
+    val document =
+      Jsoup.connect("https://bluearchive.wikiru.jp/?%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88%E4%B8%80%E8%A6%A7")
+        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
+        .ignoreContentType(true)
+        .get()
     val body = document.getElementById("body") ?: return Pair(active, pending)
     val activities = body.getElementsByClass("list-indent1")
     activities.forEach {
@@ -346,7 +405,7 @@ object ActivityUtil {
     return sortAndPackage(active, pending)
   }
 
-  fun fetchJPActivityFromJP(): Pair<List<Activity>, List<Activity>>{
+  fun fetchJPActivityFromJP(): Pair<List<Activity>, List<Activity>> {
     var res = Jsoup.connect("https://bluearchive.wikiru.jp?cmd=${WikiruCmd}&page=${WikiruPage}")
       .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
       .ignoreContentType(true)
@@ -364,19 +423,21 @@ object ActivityUtil {
     return parse
   }
 
-  private fun fetchJPActivityFromGameKee(): Pair<List<Activity>, List<Activity>> = GameKeeUtil.getEventData(ServerLocale.JP)
+  private fun fetchJPActivityFromGameKee(): Pair<List<Activity>, List<Activity>> =
+    GameKeeUtil.getEventData(ServerLocale.JP)
 
   private fun fetchJPActivityFromSchaleDB(): Pair<List<Activity>, List<Activity>> = SchaleDBUtil.getJPEventData()
 
   // 从wikiru网页爬取维护信息
   private fun fetchJPMaintenanceActivityFromJP(active: MutableList<Activity>, pending: MutableList<Activity>) {
-    val res = Jsoup.connect("https://bluearchive.wikiru.jp/?%E3%83%96%E3%83%AB%E3%83%BC%E3%82%A2%E3%83%BC%E3%82%AB%E3%82%A4%E3%83%96%EF%BC%88%E3%83%96%E3%83%AB%E3%82%A2%E3%82%AB%EF%BC%89%E6%94%BB%E7%95%A5+Wiki")
-      .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
-      .ignoreContentType(true)
-      .get()
-      .body()
-      .getElementById("body")
-      ?: return
+    val res =
+      Jsoup.connect("https://bluearchive.wikiru.jp/?%E3%83%96%E3%83%AB%E3%83%BC%E3%82%A2%E3%83%BC%E3%82%AB%E3%82%A4%E3%83%96%EF%BC%88%E3%83%96%E3%83%AB%E3%82%A2%E3%82%AB%EF%BC%89%E6%94%BB%E7%95%A5+Wiki")
+        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
+        .ignoreContentType(true)
+        .get()
+        .body()
+        .getElementById("body")
+        ?: return
     val tags = res.getElementsByTag("strong")
       .toList()
       .filter {
@@ -393,7 +454,16 @@ object ActivityUtil {
     val end = now.clone() as Calendar
     end.time = start
     end.set(Calendar.HOUR_OF_DAY, ServerMaintenanceEndTimeJP.substringBefore(":").toInt())
-    insertJpActivity(now.time, start, end.time, active, pending, "游戏维护", from = ActivityJPSource.WIKI_RU, type0 = ActivityType.MAINTENANCE)
+    insertJpActivity(
+      now.time,
+      start,
+      end.time,
+      active,
+      pending,
+      "游戏维护",
+      from = ActivityJPSource.WIKI_RU,
+      type0 = ActivityType.MAINTENANCE
+    )
   }
 
   fun constructMessage(activities: Pair<List<Activity>, List<Activity>>): String {
@@ -406,7 +476,10 @@ object ActivityUtil {
     return "正在进行:\n${activeString ?: "无\n"}即将开始:\n${pendingString ?: '无'}"
   }
 
-  private fun sortAndPackage(active: MutableList<Activity>, pending: MutableList<Activity>): Pair<List<Activity>, List<Activity>> {
+  private fun sortAndPackage(
+    active: MutableList<Activity>,
+    pending: MutableList<Activity>
+  ): Pair<List<Activity>, List<Activity>> {
     active.sortByDescending { it.type.level }
     pending.sortByDescending { it.type.level }
     return active to pending
@@ -436,13 +509,16 @@ object ActivityUtil {
       source.contains("游戏维护") -> {
         ActivityType.MAINTENANCE
       }
+
       source.contains("合同火力演習") -> {
         ActivityType.JOINT_EXERCISES
       }
+
       source.contains("特殊作戦") -> {
         activity.content = source.replace("デカグラマトン", "十字神明")
         ActivityType.KABALA
       }
+
       source.contains("総力戦") -> {
         activity.content = source.replace("ビナー", "bina")
         activity.content = source.replace("ヒエロニムス", "主教")
@@ -453,21 +529,26 @@ object ActivityUtil {
         activity.content = source.replace("ホド", "Hod")
         ActivityType.DECISIVE_BATTLE
       }
+
       source.contains("報酬2倍") || source.contains("報酬3倍") -> {
         activity.content = source.replace("ハード", "H")
         activity.content = source.replace("ノーマル", "N")
         ActivityType.SPECIAL_DROP
       }
+
       source.contains("指名手配") -> {
         ActivityType.WANTED_DROP
       }
+
       source.contains("学園交流会") -> {
         ActivityType.COLLEGE_EXCHANGE_DROP
       }
+
       source.contains("スケジュール") -> {
         activity.content = source.replace("スケジュール", "课程表") // 课程表
         ActivityType.SCHEDULE
       }
+
       else -> {
         activity.content = source.replace("_バナー", "") // banner
           .replace("ログインボーナス", "登录奖励")
@@ -492,6 +573,7 @@ object ActivityUtil {
         activity.type = ActivityType.PICK_UP
         source = source.replace("【" + server.serverName + "卡池" + "】", "Pick Up: ")
       }
+
       source.contains("指名手配") -> activity.type = ActivityType.WANTED_DROP
       source.contains("悬赏通缉") -> activity.type = ActivityType.WANTED_DROP
       source.contains("学院交流") -> activity.type = ActivityType.COLLEGE_EXCHANGE_DROP
@@ -506,7 +588,7 @@ object ActivityUtil {
     return activity
   }
 
-  private fun extraActivityJPTypeFromSchaleDB(activity: Activity) : Activity = activity
+  private fun extraActivityJPTypeFromSchaleDB(activity: Activity): Activity = activity
 
   /**
    * 插入日服活动并对活动进行分类
@@ -530,7 +612,7 @@ object ActivityUtil {
   ) {
     var activity = Activity(
       contentSource,
-      TimeUtil.calcTime(now, parseStart, true),
+      TimeUtil.calcTime(parseStart, true),
       serverLocale = ServerLocale.JP,
     )
     if (type0 == ActivityType.NULL) {
@@ -568,7 +650,7 @@ object ActivityUtil {
   ) {
     var activity = Activity(
       contentSource,
-      TimeUtil.calcTime(now, parseStart, true),
+      TimeUtil.calcTime(parseStart, true),
       serverLocale = ServerLocale.GLOBAL,
     )
     if (type0 == ActivityType.NULL) {
@@ -603,18 +685,28 @@ object ActivityUtil {
     if (now.before(parseStart)) {
       pending.add(activity)
     } else if (now.before(parseEnd)) {
-      activity.time = TimeUtil.calcTime(now, parseEnd, false)
+      activity.time = TimeUtil.calcTime(parseEnd, false)
       active.add(activity)
     }
   }
 
   private fun locale(type: ActivityType?): ServerLocale = if (type == null) ServerLocale.JP else ServerLocale.GLOBAL
 
-  fun createActivityImage(activities: Pair<List<Activity>, List<Activity>>, server: ServerLocale = ServerLocale.JP): File {
+  private fun sortActive(active: Activity): Int {
+    val diff = calcDiffDayAndHour(active.time)
+    return diff.first * 24 + diff.second
+  }
+
+  fun createActivityImage(
+    activities: Pair<List<Activity>, List<Activity>>,
+    server: ServerLocale = ServerLocale.JP
+  ): File {
     val title = "${server.serverName}活动日历"
-    val active = activities.first
-    val pending = activities.second
-    val image = ImageUtil.createCalendarImage(max(active.size, 1) + max(pending.size, 1), max(active.maxOfOrNull { it.content.length } ?: 0, pending.maxOfOrNull { it.content.length } ?: 0))
+    val active = activities.first.sortedBy { sortActive(it) }
+    val pending = activities.second.sortedBy { sortActive(it) }
+    val image = ImageUtil.createCalendarImage(
+      max(active.size, 1) + max(pending.size, 1),
+      max(active.maxOfOrNull { it.content.length } ?: 0, pending.maxOfOrNull { it.content.length } ?: 0))
     var lineIndex = 1
     fun calcY(offset: Int = 0): Int {
       return DEFAULT_CALENDAR_FONT_SIZE * (lineIndex + offset) + DEFAULT_CALENDAR_LINE_MARGIN * (lineIndex + offset - 1)
@@ -622,10 +714,15 @@ object ActivityUtil {
     ImageUtil.init(image, Color.WHITE)
     ImageUtil.drawText(image, title, DEFAULT_CALENDAR_FONT_SIZE, ImageUtil.TextAlign.CENTER)
     lineIndex++
-    ImageUtil.drawText(image, SimpleDateFormat("yyyy/M/d").format(Calendar.getInstance().time), calcY(), ImageUtil.TextAlign.RIGHT)
+    ImageUtil.drawText(
+      image,
+      SimpleDateFormat("yyyy/M/d").format(Calendar.getInstance().time),
+      calcY(),
+      ImageUtil.TextAlign.RIGHT
+    )
     ImageUtil.drawText(image, "正在进行", calcY())
     lineIndex++
-    fun drawActivity(list: List<Activity>) {
+    fun drawActivity(list: List<Activity>, future: Boolean) {
       if (list.isEmpty()) {
         ImageUtil.drawText(image, "无", calcY())
         lineIndex++
@@ -633,18 +730,26 @@ object ActivityUtil {
         list.forEach {
           val y = calcY()
           val color = ActivityColorMap[it.type.level]!!
-          ImageUtil.drawRoundRect(image, 0, (calcY(-1) + DEFAULT_CALENDAR_LINE_MARGIN * 1.5).toInt(), image.first.width, DEFAULT_CALENDAR_FONT_SIZE + DEFAULT_CALENDAR_LINE_MARGIN / 2, 40, color.second)
+          ImageUtil.drawRoundRect(
+            image,
+            0,
+            (calcY(-1) + DEFAULT_CALENDAR_LINE_MARGIN * 1.5).toInt(),
+            image.first.width,
+            DEFAULT_CALENDAR_FONT_SIZE + DEFAULT_CALENDAR_LINE_MARGIN / 2,
+            40,
+            color.second
+          )
           ImageUtil.drawText(image, it.content, y, color = color.first)
-          ImageUtil.drawText(image, it.time, y, color = color.first, align = ImageUtil.TextAlign.RIGHT)
+          ImageUtil.drawText(image, translateTimeMoreReadable(it.time, future), y, color = color.first, align = ImageUtil.TextAlign.RIGHT)
           lineIndex++
         }
       }
     }
-    drawActivity(active)
+    drawActivity(active, false)
     ImageUtil.drawText(image, "即将开始", calcY())
     lineIndex++
-    drawActivity(pending)
-    val comeFrom = when(server) {
+    drawActivity(pending, true)
+    val comeFrom = when (server) {
       ServerLocale.JP -> AronaNotifyConfig.defaultJPActivitySource.source
       ServerLocale.GLOBAL -> AronaNotifyConfig.defaultENActivitySource.source
     }

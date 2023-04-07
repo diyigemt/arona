@@ -7,13 +7,13 @@ function transformVoicedOrSemiVoiced(char: string): string {
   return char
     .replace(
       voiced,
-      match =>
+      (match) =>
         String.fromCharCode(match.charCodeAt(0) - 1) +
         String.fromCharCode(0x3099)
     )
     .replace(
       semiVoiced,
-      match =>
+      (match) =>
         String.fromCharCode(match.charCodeAt(0) - 1) +
         String.fromCharCode(0x309a)
     );

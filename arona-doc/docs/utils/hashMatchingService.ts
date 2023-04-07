@@ -1,4 +1,4 @@
-import { transformVoicedOrSemiVoiced } from './CJKService';
+import { transformVoicedOrSemiVoiced } from "./CJKService";
 
 function matchElementByHash(
   decodedHash: string,
@@ -6,7 +6,7 @@ function matchElementByHash(
 ): HTMLElement | undefined {
   const transformedHash = transformVoicedOrSemiVoiced(decodedHash);
   const elementList = Array.from(elements).filter(
-    element => transformedHash === element.id
+    (element) => transformedHash === element.id
   );
 
   return elementList.length > 0 ? (elementList[0] as HTMLElement) : undefined;

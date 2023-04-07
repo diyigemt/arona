@@ -38,6 +38,14 @@
         "exports": "always-multiline",
         "functions": "ignore"
       }
-    ]
+    ],
+    "generator-star-spacing": "off",
+    "quotes": ["error", "double", { "avoidEscape": true }],
+    "space-before-function-paren": ["error", "never"],
+    "no-unused-expressions": "off",
+    "object-curly-spacing": ["error", "always"],
+    "@typescript-eslint/no-unused-vars": "off",
+    "arrow-parens": ["error", "always"],
+    "@typescript-eslint/explicit-module-boundary-types": "off"
   }
 }

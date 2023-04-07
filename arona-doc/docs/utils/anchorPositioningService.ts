@@ -1,3 +1,5 @@
+import { matchElementByHash } from './hashMatchingService';
+
 function isInViewport(el: HTMLElement) {
   const rect = el.getBoundingClientRect();
   return (
@@ -20,6 +22,17 @@ function scrollElementIntoView(element: HTMLElement, immediate = true) {
       });
     }
   }, offsetTime);
+}
+
+export function scrollElementIntoViewAfterMounted() {
+  const hash = decodeURIComponent(window.location.hash).slice(1);
+  if (hash) {
+    const elements = document.querySelectorAll("h2, h3, h4, h5, h6");
+    const element = matchElementByHash(hash, elements);
+    if (element) {
+      scrollElementIntoView(element);
+    }
+  }
 }
 
 export { scrollElementIntoView, isInViewport };

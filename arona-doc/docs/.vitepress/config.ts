@@ -1,5 +1,5 @@
 import { defineConfig } from 'vitepress';
-import { NavItem, SidebarItem } from '../config/menu';
+import { NavItem, SidebarItem } from './config/menu';
 import { withPwa } from '@vite-pwa/vitepress';
 
 export default withPwa(
@@ -34,7 +34,7 @@ export default withPwa(
       footer: {
         message: '桂ICP备2022008499号',
         copyright: 'Copyright © 2022-present <a href="https://github.com/diyigemt">第一个mt</a>'
-      }
+      },
     },
 
     pwa: {

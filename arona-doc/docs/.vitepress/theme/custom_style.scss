@@ -55,6 +55,14 @@
   color: var(--vp-c-brand);
 }
 
+.VPSidebarItem.level-1 {
+  padding-left: 10px;
+}
+
+summary {
+  cursor: pointer;
+}
+
 @media (min-width: 960px) {
   .VPNavBarSearch {
     padding-left: 32px;

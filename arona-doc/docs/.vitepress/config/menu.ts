@@ -8,12 +8,18 @@ const MainSideBar: DefaultTheme.Sidebar = [{
   }, {
     text: '声明',
     link: '/guide/announcement',
+  }, {
+    text: '名词',
+    link: '/guide/glossary',
   }],
 }, {
   text: '安装',
   items: [{
     text: '安装mirai-console',
     link: '/install/mirai-console',
+  }, {
+    text: '登录bot',
+    link: '/install/login-bot',
   }, {
     text: '安装chat-command',
     link: '/install/chat-command',

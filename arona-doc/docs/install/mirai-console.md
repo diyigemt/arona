@@ -18,11 +18,9 @@ arona是依赖于mirai-console的插件，在安装arona之前，必须安装mir
 
 其他环境我觉得应该不用我多说，你自己就知道
 
-
-
 在你想装mcl的地方新建目录，把刚才下载好的installer放到目录里
 
-在mcl解压出来的目录下打开控制台(在Windows环境下应该是`shift+右键`, 在Linux环境下, emm 应该不用开吧)
+在目录下打开控制台(在Windows环境下应该是`shift+右键`, 在Linux环境下, emm 应该不用开吧)
 
 ::: code-group
 
@@ -38,7 +36,7 @@ arona是依赖于mirai-console的插件，在安装arona之前，必须安装mir
 
 接下来跟着引导安装即可
 
-
+如果你看不懂它在干什么, 或许你可以查看[帮助界面](../other/help#mcl-installer)
 
 安装完成后在控制台继续运行
 
@@ -60,5 +58,5 @@ arona是依赖于mirai-console的插件，在安装arona之前，必须安装mir
 
 重点是`mirai-console started successfully.`这句话，并且在下一行出现输入光标`>`
 
-mcl安装完成，输入`stop`并回车停止mcl，`mirai-console`的安装已经全部完成
+输入`stop`并回车停止mcl，至此`mirai-console`的安装已经全部完成
 

@@ -4,13 +4,11 @@
 arona是依赖于mirai-console的插件，在安装arona之前，必须安装mirai-console
 :::
 
-方便起见, 以下使用[mcl](../guide/glossary#mirai-console-loader)来安装
-
-当然如果你想自己来也没关系，这里是它的[下载地址](https://github.com/iTXTech/mirai-console-loader/releases)，目前最新的版本是[v2.1.2](https://github.com/iTXTech/mirai-console-loader/releases/tag/v2.1.2)
-
 ## 安装mcl
 
-使用[mcl-installer](https://github.com/iTXTech/mcl-installer)来安装mcl，它的下载地址可以在[这里找到](https://github.com/iTXTech/mcl-installer/releases)，目前最新的版本是[v1.0.7](https://github.com/iTXTech/mcl-installer/releases/tag/v1.0.7)
+方便起见, 使用[mcl-installer](https://github.com/iTXTech/mcl-installer)来安装mcl，它的下载地址可以在[这里找到](https://github.com/iTXTech/mcl-installer/releases)，目前最新的版本是[v1.0.7](https://github.com/iTXTech/mcl-installer/releases/tag/v1.0.7)
+
+当然如果你想自己来也没关系，这里是mcl的[下载地址](https://github.com/iTXTech/mirai-console-loader/releases)，目前最新的版本是[v2.1.2](https://github.com/iTXTech/mirai-console-loader/releases/tag/v2.1.2)
 
 在Windows上部署可以下载[mcl-installer-1.0.7-windows-amd64.exe](https://github.com/iTXTech/mcl-installer/releases/download/v1.0.7/mcl-installer-1.0.7-windows-amd64.exe)
 

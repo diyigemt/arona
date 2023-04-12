@@ -18,6 +18,6 @@ Would you like to download it? (Y/N, default: Y)
 MCL startup script has been updated.
 # 在控制台里用 ./mcl 启动
 Use ".\mcl" to start MCL.
-# 按hu
+# 按回车
 Press Enter to exit.
 ```

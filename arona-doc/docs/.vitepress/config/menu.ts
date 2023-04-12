@@ -14,6 +14,7 @@ const MainSideBar: DefaultTheme.Sidebar = [{
   }],
 }, {
   text: '安装',
+  collapsed: false,
   items: [{
     text: '安装mirai-console',
     link: '/install/mirai-console',
@@ -29,15 +30,43 @@ const MainSideBar: DefaultTheme.Sidebar = [{
   }],
 }, {
   text: '配置',
+  collapsed: false,
   items: [{
-    text: '',
-    link: '/config/'
+    text: '基础配置',
+    link: '/config/base-config'
+  }, {
+    text: '数据库',
+    link: '/config/database'
   }]
 }, {
-  text: '指令',
+  text: '功能',
+  collapsed: false,
+  items: [{
+    text: '主动触发',
+    link: '/command/manual'
+  }, {
+    text: '非主动触发',
+    link: '/command/auto'
+  }, {
+    text: '远端服务',
+    link: '/command/remote'
+  }]
+}, {
+  text: '简版用户手册',
+  collapsed: false,
   items: [{
     text: '',
-    link: '/command/'
+    link: '/manual/'
+  }]
+}, {
+  text: '其他',
+  collapsed: false,
+  items: [{
+    text: '帮助',
+    link: '/other/help'
+  }, {
+    text: '鸣谢',
+    link: '/other/thanks'
   }]
 }];
 
@@ -46,6 +75,7 @@ export const SidebarItem: DefaultTheme.Sidebar = {
   '/install/': MainSideBar,
   '/config/': MainSideBar,
   '/command/': MainSideBar,
+  '/other/': MainSideBar,
 };
 
 export const NavItem: DefaultTheme.NavItem[] = [{

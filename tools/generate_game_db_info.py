@@ -11,7 +11,7 @@ from fetch_student_info_from_ba_game_db import concat_list, concat_two_im, downl
 import re
 # 要生成的目标 日文名
 target = [
-    "ジュンコ",
+    "トキ","シグレ","ツルギ"
     # "ジュンコ(正月)",
     # "ハルナ(正月)",
     # "フウカ(正月)"
@@ -122,19 +122,25 @@ def run(playwright: Playwright):
         btnFilterList[0].click()
         time.sleep(2)
         # 中日切换判断是否有翻译
-        cn_skill = page.query_selector('//*[@id="skill1"]/div/div[1]').text_content()
-        # 关闭信息窗口
-        close_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[1]")
-        close_btn.click()
+        try:
+            cn_skill = page.query_selector('//*[@id="skill1"]/div/div[1]').text_content()
+            # 关闭信息窗口
+            close_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[1]")
+            close_btn.click()
+        except Exception as e:
+            cn_skill = ""
         # 切换回日文
         page.locator("svg").first.click()
         page.locator("#react-select-2-option-0").click()
         btnFilterList[0].click()
         time.sleep(2)
-        jp_skill = page.query_selector('//*[@id="skill1"]/div/div[1]').text_content()
-        # 关闭信息窗口
-        close_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[1]")
-        close_btn.click()
+        try:
+            jp_skill = page.query_selector('//*[@id="skill1"]/div/div[1]').text_content()
+            # 关闭信息窗口
+            close_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[1]")
+            close_btn.click()
+        except Exception as e:
+            jp_skill = "-1"
         # 切换回中文
         page.locator("svg").first.click()
         page.locator("#react-select-2-option-1").click()

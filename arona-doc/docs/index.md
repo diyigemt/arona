@@ -9,7 +9,7 @@ hero:
   text: ""
   tagline: '"是常驻这个「シッテムの箱」的系统管理员和主操作系统, 也是今后协助老师的秘书!"'
   image:
-    src: /logo.png
+    src: /logo.webp
     alt: VitePress
   actions:
     - theme: brand
@@ -26,8 +26,8 @@ import { onMounted } from "vue";
 onMounted(() => {
     const link = document.createElement("link");
     link.rel = "icon";
-    link.type = "image/png";
-    link.href = "/icon.png";
+    link.type = "image/webp";
+    link.href = "/icon.webp";
     document.head.appendChild(link);
 });
 </script>

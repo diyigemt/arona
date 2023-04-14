@@ -4,7 +4,7 @@
 
 [Haythem723](https://github.com/Haythem723)(wikiru、SchaleDB爬取模块)
 
-[巴哈姆特@夜喵貓貓咪喵(asaz5566a)](巴哈姆特@夜喵貓貓咪喵(asaz5566a))(学生攻略)
+[巴哈姆特@夜喵貓貓咪喵(asaz5566a)](https://home.gamer.com.tw/homeindex.php?owner=asaz5566a)(学生攻略)
 
 [碧蓝档案国际服情报站](https://space.bilibili.com/1585224247)(国际服信息来源1)
 

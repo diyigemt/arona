@@ -102,12 +102,12 @@ messageList:
 
 <details>
     <summary>H19-3图文攻略:</summary>
-    <img src="static/main-map.png" />
+    <img src="/image/install/success.webp" alt="" />
 </details>
 
 <details>
     <summary>学生攻略:</summary>
-    <img src="static/student-rank.png" />
+    <img src="/image/install/success.webp" alt="" />
 </details>
 其中`string`内容为1-1至H19-3之间或者学生的名字/黑话(可能收集不全)，如查看主线普通地图5-3的攻略，指令为`/攻略 5-3`；
 
@@ -119,30 +119,30 @@ messageList:
 
 <details>
     <summary>HOD图文攻略:</summary>
-    <img src="static/hod.png" />
+    <img src="/image/install/success.webp" alt="" />
 </details>
 
 <details>
     <summary>日服学生人权:</summary>
-    <img src="static/student-adv.png" />
+    <img src="/image/install/success.webp" alt="" />
 </details>
 由于杂图太多而且不好记名字，因此提供指令`/攻略 杂图`显示所有可用的名字列表
 
 <details>
     <summary>杂图列表:</summary>
-    <img src="static/image-help.png" />
+    <img src="/image/install/success.webp" alt="" />
 </details>
 1.0.9版本后，额外增加了别名覆写功能，在原有基础上用户可自定义简短的别名方便记忆<a id="other-name"> </a>
 
 <details>
     <summary>示例配置:</summary>
-    <img src="static/override-name3.png" />
+    <img src="/image/install/success.webp" alt="" />
 </details>
 
 <details>
     <summary>效果:</summary>
-    <img src="static/override-name1.png" />
-    <img src="static/override-name2.png" />
+    <img src="/image/install/success.webp" alt="" />
+    <img src="/image/install/success.webp" alt="" />
 </details>
 具体配置可看下面的[配置文件详解](#other-name-config)
 
@@ -154,7 +154,7 @@ messageList:
 
 <details>
     <summary>效果:</summary>
-    <img src="static/name-guess.png" />
+    <img src="/image/install/success.webp" alt="" />
 </details>
 
 具体配置可看下面的[配置文件详解](#name-guess-config)
@@ -169,6 +169,6 @@ messageList:
 
 <details>
     <summary>例如:</summary>
-    <img src="static/game-name.png" />
+    <img src="/image/install/success.webp" alt="" />
 </details>
 由于是模糊查询的原因，查询结果可能会涉及多个群友，没事把人家@出来也不好，因此1.0.8后查询结果将不会再@。

@@ -85,7 +85,7 @@ accounts:
 
 你即将看到安装过程最麻烦的一节，做好准备，整个流程大概如下
 
-<img src="" alt="验证流程">
+<img src="/image/install/flow_chart.webp" alt="验证流程">
 
 ::: danger
 
@@ -97,7 +97,7 @@ accounts:
 
 初始化完成触发自动登录后，你应该会看到这个窗口
 
-<img src="" alt=""/>
+<img src="/image/install/slider_captcha.webp" alt="滑动验证"/>
 
 如果你没有配置自动登录，可以使用下面的命令手动执行登录
 
@@ -112,7 +112,7 @@ accounts:
  - [使用浏览器的调试功能完成](#browser)
  - [使用mirai-login-solver-sakura配套的Android apk完成](#sakura)
 
-不论你使用那种方法，确保用来完成滑动验证的设备和运行mcl的设备在同一个局域网内
+无论你使用那种方法，确保用来完成滑动验证的设备和运行mcl的设备在同一个局域网内
 
 说人话就是如果你用Windows开着mcl，那就继续用这台Windows的浏览器来完成滑动验证；
 
@@ -120,55 +120,63 @@ accounts:
 
 ## 使用浏览器的调试功能完成滑动验证<a id="browser" />
 
-如果要使用浏览器完成滑动验证，确保浏览器所在的网络环境和mcl一致
+如果要使用浏览器完成滑动验证，确保浏览器和mcl在同一个局域网内
 
 建议使用现代浏览器(Chrome、FireFox、Edge等)来完成
 
-回到上一步的弹框页面，复制`TextCode`字段的内容，它应该长这样
+回到上一步的弹框页面，复制`url`字段的内容，它应该长这样
 
 ```bash
-https://asdadasdasd
+https://ssl.captcha.qq.com/template/wireless_mqq_captcha.html?style=simple&*************************&clientype=1&apptype=2
 ```
 
 打开浏览器，并按下键盘上的F12打开浏览器自带的开发者工具
 
 切换到`网络`选项卡，如果是英文的，它应该叫`Network`
 
-<img src="" alt="网络"/>
+<img src="/image/install/network.webp" alt="网络"/>
 
 将复制的地址粘贴到浏览器当前页面的地址栏按下回车访问，不出意外你应该能看到下面这个页面
 
-<img src="" alt="浏览器"/>
+<img src="/image/install/slider_do.webp" alt="验证界面"/>
 
 同时开发者工具也会刷出一堆东西，点击下图圈起来的这个按钮清空记录方便接下来的操作，不清空也行，你喜欢就好
 
-<img src="" alt="清空"/>
+<img src="/image/install/network_clear.webp" alt="清空网络"/>
 
-回到浏览器界面，手动完成人机验证，出现以下界面后回到开发者工具界面
+回到浏览器界面，手动完成人机验证后回到开发者工具界面
 
-<img src="" alt="成功"/>
+在开发者工具`网络`一栏的记录中从下往上找到一条叫`cap_union_new_verify`的记录，点它查看详情
 
-在开发者工具`网络`一栏的记录中从下往上找到一条叫`new_verify`的记录，点它查看详情
-
-<img src="" alt="new-verify"/>
+<img src="/image/install/slider_success.webp" alt="验证成功"/>
 
 在右边的界面中选择`预览`，英文应该是`Preview`
 
-找到叫做`token`的字段，复制它后面的值，**不包括单引号**
+找到叫做`token`的字段，复制它后面的值，**不包括引号**
 
-<img src="" alt="token" />
+<img src="/image/install/slider_content.webp" alt="cap_union_new_verify"/>
 
-复制出来的东西应该长这样
+复制出来的东西应该长这样，再强调一遍，**不包括引号**
 
 ```bash
-adasdasd
+t03FHeRLG6F-JmIu7tQon3Bx8BWGJoRYFpS1KEI002qu3vDCfAxpBAh1eSm2LMuXf1WG1TJ9_GIYjUB75KyvTXG2sCgBC1wnjV8zNLMlY4zZFrRefZjOLndX9L5IGP_whcYOGmDUmyxTq0*
 ```
 
-把复制出来的这段东西粘贴回mcl的滑动验证界面，按下确定，完成滑动验证的过程
+把复制出来的这段东西粘贴回mcl的滑动验证界面的`ticket`，按下确定，完成滑动验证的过程
 
-在完成滑动验证后，有几率跳出短信验证的要求，确保bot账号已经绑定了手机号，发送并回填验证码即可
+<img src="/image/install/slider_commit.webp" alt="粘贴回去" />
 
-<img src="" alt="短信验证" />
+在完成滑动验证后，会弹窗设备锁验证或者短信验证，需要bot账号绑定了手机号或者打开设备锁
+
+<img src="/image/install/slider_second_verify.webp" alt="粘贴回去" />
+
+这里选择短信验证，确保bot账号已经绑定了手机号，发送并回填验证码即可
+
+<img src="/image/install/slider_sms.webp" alt="短信验证" />
+
+最后在控制台看到这个，整个bot登录流程结束
+
+<img src="/image/install/success.webp" alt="登录成功"/>
 
 ## 使用mirai-login-solver-sakura配套的Android apk完成滑动验证<a id="sakura" />
 
@@ -178,9 +186,11 @@ adasdasd
 
 首先在mirai-login-solver-sakura的release下载和安装在mcl里插件同一个release下的apk包并安装
 
-回到最开始mcl弹出的滑动验证窗口，选择使用apk解决
+<img src="/image/install/apk.webp" alt="apk包" />
 
-<img src="" alt="使用apk解决">
+回到最开始mcl弹出的滑动验证窗口，选择`use SakuraCaptchaHelper`
+
+<img src="/image/install/slider_captcha.webp" alt="使用apk解决">
 
 接下来的流程引导mirai-login-solver-sakura已经做的足够好了
 
@@ -205,6 +215,8 @@ Aoki的[主仓库地址在这里](https://github.com/MrXiaoM/Aoki)
 mcl安装目录下的`bots`文件夹里保存着bot的快速登录信息
 
 在**完成**一次滑动验证并成功登录后，可以将里面按bot账号命名的文件夹保存下来，
+
+<img src="/image/install/bots.webp" alt="bots文件夹" />
 
 之后在其他mcl环境将bot文件夹放回`bots`文件夹，即可不用滑动验证快速登录bot
 

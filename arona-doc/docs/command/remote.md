@@ -20,7 +20,7 @@ arona将会根据`arona.yml`配置文件中的`remoteCheckInterval`配置项定�
 
 <details>
     <summary>公告示例:</summary>
-    <img src="static/announcment.png" />
+    <img src="/image/install/success.webp" alt="" />
 </details>
 
 基本上是用来通知攻略图片的更新信息的。
@@ -31,7 +31,7 @@ arona将会根据`arona.yml`配置文件中的`remoteCheckInterval`配置项定�
 
 <details>
     <summary>卡池更新示例:</summary>
-    <img src="static/pool_update.png" />
+    <img src="/image/install/success.webp" alt="" />
 </details>
 
 设置成手动更新的原因是怕用户自己已经有这个池子了。

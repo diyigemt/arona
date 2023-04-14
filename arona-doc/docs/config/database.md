@@ -138,7 +138,7 @@
 
 ::: details 步骤2
 
-<img src="/image/config/db-2.JPG" alt="" />
+<img src="/image/config/db-2.webp" alt="" />
 
 :::
 
@@ -146,7 +146,7 @@
 
 ::: details 步骤3
 
-<img src="/image/config/db-3.JPG" alt="" />
+<img src="/image/config/db-3.webp" alt="" />
 
 :::
 
@@ -158,7 +158,7 @@
 
 ::: details 步骤4
 
-<img src="/image/config/db-4.JPG" alt="" />
+<img src="/image/config/db-4.webp" alt="" />
 
 :::
 
@@ -168,7 +168,7 @@
 
 ::: details 步骤5-1
 
-<img src="/image/config/db-5-1.JPG" alt="" />
+<img src="/image/config/db-5-1.webp" alt="" />
 
 :::
 
@@ -176,7 +176,7 @@
 
 ::: details 步骤5-2
 
-<img src="/image/config/db-5-2.JPG" alt="" />
+<img src="/image/config/db-5-2.webp" alt="" />
 
 :::
 
@@ -184,7 +184,7 @@
 
 ::: details 步骤5-3
 
-<img src="/image/config/db-5-3.JPG" alt="" />
+<img src="/image/config/db-5-3.webp" alt="" />
 
 :::
 

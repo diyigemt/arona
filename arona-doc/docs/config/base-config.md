@@ -199,7 +199,7 @@ messageList:
 
 ::: details 太长了
 
-<img src="/image/config/name-guess.png" />
+<img src="/image/config/name-guess.webp" />
 
 :::
 
@@ -241,7 +241,7 @@ override:
 
 ::: details 太长了
 
-<img src="/image/config/override-name2.png" />
+<img src="/image/config/override-name2.webp" />
 
 :::
 
@@ -339,7 +339,7 @@ uid:填入你自己的nga的uid，可以在这里看到
 
 ::: details uid位置
 
-<img src="/image/config/nga-uid.png" />
+<img src="/image/config/nga-uid.webp" />
 
 :::
 
@@ -347,19 +347,19 @@ cid:这个就比较复杂了，首先你需要知道你所使用的浏览器如�
 
 ::: details 步骤1
 
-<img src="/image/config/nga-cid-1.png" />
+<img src="/image/config/nga-cid-1.webp" />
 
 :::
 
 ::: details 步骤2
 
-<img src="/image/config/nga-cid-2.png" />
+<img src="/image/config/nga-cid-2.webp" />
 
 :::
 
 ::: details 步骤3
 
-<img src="/image/config/nga-cid-3.png" />
+<img src="/image/config/nga-cid-3.webp" />
 
 :::
 

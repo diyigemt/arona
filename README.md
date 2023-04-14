@@ -169,7 +169,7 @@ arona是基于mirai-console的插件。
 
 [**Haythem723**](https://github.com/Haythem723)(wikiru、SchaleDB爬取模块)
 
-[巴哈姆特@夜喵貓貓咪喵(asaz5566a)](巴哈姆特@夜喵貓貓咪喵(asaz5566a))(学生攻略)
+[巴哈姆特@夜喵貓貓咪喵(asaz5566a)](https://home.gamer.com.tw/homeindex.php?owner=asaz5566a)(学生攻略)
 
 [超级课程表](https://github.com/StageGuard/SuperCourseTimetableBot)(数据库支持)
 

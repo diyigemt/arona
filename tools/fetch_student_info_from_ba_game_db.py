@@ -1,4 +1,5 @@
 import json
+import re
 from urllib.parse import quote
 import requests
 from playwright.sync_api import Playwright, sync_playwright, Page
@@ -392,6 +393,18 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict):
     furniture = page.query_selector("//*[@id='ba-student-favoured-furniture']")
     furniture.screenshot(path="./image/tmp/furniture.png")
 
+    # 如果有爱用品, 顺带把爱用品的翻译拿到 ba-game-db更新有点慢
+    gear_info_btn = page.query_selector("#ba-student-tab-gear")
+    if gear_info_btn != None and gear_info_btn.is_visible():
+        skill_bounds = re.compile("\d+%")
+
+        gear_info_btn.click()
+        time.sleep(2)
+        gear_desc_el = page.query_selector("#ba-skill-gearnormal-description")
+        gear_desc = gear_desc_el.inner_text()
+        gear_desc = skill_bounds.sub("$value", gear_desc).replace("\n", "\\n")
+        dict['gear_desc'] = gear_desc
+
     # 拼到一起
     save_path = "./image/tmp/schaledb.png"
     base_path = "./image/tmp/"
@@ -410,6 +423,7 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict):
     concat_list(path_list, save_path, margin=0, reshape=True)
     context.close()
     browser.close()
+    return dict
 
 def fetch_data_from_game_db(page: Page, dict, is_no_translate, base_path = "./image/tmp/"):
         # 下载拉满需要的资源图片之类的
@@ -462,9 +476,13 @@ def fetch_data_from_game_db(page: Page, dict, is_no_translate, base_path = "./im
 
         # 替换技能描述文案
         if is_no_translate:
+            # ex
             page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[1]/div/div[1]', "node => node.innerText = '%s'" % dict["ex_name"])
-            page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]/div/div[1]', "node => node.innerText = '%s'" % dict["ns_name"])
-            page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[1]/div/div[1]', "node => node.innerText = '%s'" % dict["bs_name"])
+            # 基本技能 normal skill
+            page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]/div/div[1]', "node => node.innerText = '%s'" % dict["bs_name"])
+            # 强化技能
+            page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[1]/div/div[1]', "node => node.innerText = '%s'" % dict["es_name"])
+            # 子技能
             page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[2]/div/div[1]', "node => node.innerText = '%s'" % dict["ss_name"])
             # 拿到具体数据对应的class
             ex_desc_detail = page.query_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[1]/div/div[3]/span')
@@ -477,16 +495,44 @@ def fetch_data_from_game_db(page: Page, dict, is_no_translate, base_path = "./im
                     offset = offset + 1
                 return s, offset
             ex_desc, offset = replace(dict["ex_desc"], offset)
-            ns_desc, offset = replace(dict["ns_desc"], offset)
             bs_desc, offset = replace(dict["bs_desc"], offset)
+            # 如果有爱用品 那就替换
+            if "gear_desc" in dict:
+                gear_desc, offset = replace(dict["gear_desc"], offset)
+                # favor usage
+                page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]/div/div[4]/div[2]', "node => node.innerHTML = '%s'" % gear_desc)
+            es_desc, offset = replace(dict["es_desc"], offset)
             ss_desc, offset = replace(dict["ss_desc"], offset)
             wp_skill, offset = replace(dict["wp_skill"], offset)
+            # ex
             page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[1]/div/div[3]', "node => node.innerHTML = '%s'" % ex_desc)
-            page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]/div/div[3]', "node => node.innerHTML = '%s'" % ns_desc)
-            page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[1]/div/div[3]', "node => node.innerHTML = '%s'" % bs_desc)
+            # bs
+            page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]/div/div[3]', "node => node.innerHTML = '%s'" % bs_desc)
+            # es
+            page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[1]/div/div[3]', "node => node.innerHTML = '%s'" % es_desc)
+            # ss
             page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[2]/div/div[3]', "node => node.innerHTML = '%s'" % ss_desc)
+            # special weapon
             page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[1]/div/div[4]/div[2]', "node => node.innerHTML = '%s'" % wp_skill)
-
+        # ba-game-db 爱用品更新很慢, 直接强制替换
+        elif "gear_desc" in dict:
+            # 拿到具体数据对应的class
+            ex_desc_detail = page.query_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[1]/div/div[3]/span')
+            detail_class = ex_desc_detail.get_attribute("class")
+            detail_list = page.query_selector_all(".%s" % detail_class)
+            offset = 0
+            def replace(s: str, offset):
+                while s.find("$value") != -1:
+                    s = s.replace("$value", '<span class="%s">%s</span>' % (detail_class, detail_list[offset].text_content()), 1)
+                    offset = offset + 1
+                return s, offset
+            # 算法原因 按顺序替换
+            ex_desc, offset = replace(dict["ex_desc"], offset)
+            bs_desc, offset = replace(dict["bs_desc"], offset)
+            
+            gear_desc, offset = replace(dict["gear_desc"], offset)
+            # favor usage
+            page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]/div/div[4]/div[2]', "node => node.innerHTML = '%s'" % gear_desc)
 
         ex_skill = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[1]")
         ex_skill.screenshot(path="./image/tmp/ex_skill.png")

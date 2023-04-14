@@ -4,53 +4,62 @@ arona是基于mirai-console的qq机器人插件。
 
 作为BA(Blue Archive)的一款群助手，她可以实现以下功能:
 
-<details>
-    <summary>活动日历:</summary>
-    <img src="/image/what-is/activity-calendar.png" />
-</details>
+::: details 活动日历
 
-<details>
-    <summary>活动结束前防侠:</summary>
-    <img src="/image/what-is/activity-notify.png" />
-</details>
+<img src="/image/guide/activity-calendar.webp" alt="" />
 
-<details>
-    <summary>抽卡模拟:</summary>
-    <img src="/image/what-is/activity-notify.png" />
-</details>
+:::
 
-<details>
-    <summary>主线地图图文攻略:</summary>
-    <img src="/image/what-is/activity-notify.png" />
-</details>
+::: details 活动结束前防侠
 
-<details>
-    <summary>学生攻略(主图来源猫佬):</summary>
-    <img src="/image/what-is/activity-notify.png" />
-</details>
+<img src="/image/guide/activity-notify.webp" alt="" />
 
-<details>
-    <summary>其他图片:</summary>
-    <img src="/image/what-is/activity-notify.png" />
-</details>
+:::
 
-<details>
-    <summary>塔罗牌:</summary>
-    <img src="/image/what-is/activity-notify.png" />
-</details>
+::: details 抽卡模拟
 
-<details>
-    <summary>nga图楼推送:</summary>
-    <img src="/image/what-is/activity-notify.png" />
-</details>
+<img src="/image/guide/activity-calendar.webp" alt="" />
 
-<details>
-    <summary>更新检查:</summary>
-    <img src="/image/what-is/activity-notify.png" />
-</details>
+:::
 
-<details>
-    <summary>不停机管理:</summary>
-    <img src="/image/what-is/activity-notify.png" />
-</details>
+::: details 主线地图图文攻略
 
+<img src="/image/guide/activity-calendar.webp" alt="" />
+
+:::
+
+::: details 学生攻略(主图来源猫佬)
+
+<img src="/image/guide/activity-calendar.webp" alt="" />
+
+:::
+
+::: details 其他图片
+
+<img src="/image/guide/activity-calendar.webp" alt="" />
+
+:::
+
+::: details 塔罗牌
+
+<img src="/image/guide/activity-calendar.webp" alt="" />
+
+:::
+
+::: details nga图楼推送
+
+<img src="/image/guide/activity-calendar.webp" alt="" />
+
+:::
+
+::: details 更新检查
+
+<img src="/image/guide/activity-calendar.webp" alt="" />
+
+:::
+
+::: details 不停机管理
+
+<img src="/image/guide/activity-calendar.webp" alt="" />
+
+:::

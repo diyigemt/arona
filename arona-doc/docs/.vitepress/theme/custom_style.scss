@@ -1,11 +1,11 @@
 @font-face {
   font-family: "Game Font";
-  src: url("/font/U-OTF-ShinMGoUpr-Medium.woff");
+  src: url("https://yuuka.cdn.diyigemt.com/image/ba-all-data/assets/ResourceHanRoundedCN-Medium.woff2");
 }
-@font-face {
-  font-family: "Chinese Game Font";
-  src: url("/font/ResourceHanRoundedCN-Medium.woff");
-}
+//@font-face {
+//  font-family: "Chinese Game Font";
+//  src: url("/font/ResourceHanRoundedCN-Medium.woff");
+//}
 :root {
   --arona-c: rgb(0,215,251);
   --plana-c: rgb(219, 59, 108);
@@ -40,10 +40,16 @@
   .VPButton.brand {
     border-color: var(--vp-button-alt-hover-border);
   }
+  --vp-strong-text-color: red;
+}
+
+.vp-doc strong {
+  color: var(--vp-strong-text-color);
 }
 
 .dark {
   --vp-nav-bg-color: #1e1e20;
+  --vp-strong-text-color: #f56c6c;
 }
 
 .VPImage {

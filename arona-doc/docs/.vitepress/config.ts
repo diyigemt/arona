@@ -9,7 +9,6 @@ export default withPwa(
     description: "mirai-arona的配置手册",
 
     lastUpdated: true,
-    cleanUrls: true,
 
     head: [['meta', { name: 'theme-color', content: '#3f88f2' }]],
 

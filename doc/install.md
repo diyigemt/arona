@@ -4,7 +4,7 @@ Arona是依赖于Mirai-Console的一个插件，并不能独立工作，要使�
 
 如果你已经在使用Mirai-Console或对其有一定了解，可以直接看下一节的[Arona安装](#install-2)。
 
-我是懒狗: https://github.com/mamoe/mirai
+mirai-console的安装教程在这里: https://doc.arona.diyigemt.com/
 
 ## Arona安装 <a id="install-2"> </a>
 

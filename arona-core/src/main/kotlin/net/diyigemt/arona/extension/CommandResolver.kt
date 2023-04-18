@@ -50,7 +50,7 @@ private object CommandResolverInterceptor: CommandCallInterceptor {
 }
 
 fun extraCommandName(message: Message): String {
-  val contentToString = message.contentToString().split(" ")
+  val contentToString = message.contentToString().trim().split(" ")
   return contentToString[0]
 }
 

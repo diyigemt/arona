@@ -62,7 +62,7 @@ object ActivityCommand : CompositeCommand(
    private val ACTIVITY_COMMAND = "${CommandManager.commandPrefix}活动"
    @OptIn(ExperimentalCommandDescriptors::class, ConsoleExperimentalApi::class)
    override fun interceptBeforeCall(message: Message, caller: CommandSender): String? {
-     if (message.contentToString() != ACTIVITY_COMMAND) return null
+     if (message.contentToString().trim() != ACTIVITY_COMMAND) return null
      val overrideSubCommand = if (AronaNotifyConfig.defaultActivityCommandServer == ServerLocale.JP) "jp" else "en"
      overrideDefaultCommand(ACTIVITY_COMMAND, overrideSubCommand, caller)
      return "使用默认/活动配置重新执行指令"

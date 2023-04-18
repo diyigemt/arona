@@ -48,79 +48,10 @@ Please note that for various reasons, developers may **stop updating** or **dele
 - If the arona source code is modified and then released, or another project is released by referring to arona's internal implementation, the derivative project must be clearly stated in the first part of the article or at the location where 'arona'-related content first appears from this repository ([arona](https://github.com/diyigemt/arona)).
 - The fact that it is free and open source must not be distorted or hidden.
 
-## 介绍
+## 介绍、安装、配置和指令
 
-arona是基于mirai-console的插件。
+[访问plana在线文档](https://doc.arona.diyigemt.com/)
 
-**本插件依赖的mirai-console版本为2.12.2**
-
-作为BA(Blue Archive)的一款群助手，她可以实现以下功能：
-
-1. 抽卡模拟及数据记录；
-2. 国际服/日服活动推送以及防侠提醒；
-3. 摸头回复。
-
-<details>
-    <summary>活动推送:</summary>
-    <img src="static/activity.png" />
-</details>
-
-<details>
-    <summary>活动结束前防侠:</summary>
-    <img src="static/2.jpg" />
-</details>
-
-<details>
-    <summary>活动日历:</summary>
-    <img src="static/activity.png" />
-</details>
-
-<details>
-    <summary>抽卡模拟:</summary>
-    <img src="static/4.jpg" />
-</details>
-
-<details>
-    <summary>戳一戳:</summary>
-    <img src="static/5.jpg" />
-</details>
-
-<details>
-    <summary>NGA图楼推送:</summary>
-    <img src="static/6.jpg" />
-</details>
-
-<details>
-    <summary>塔罗牌:</summary>
-    <img src="static/7.jpg" />
-</details>
-
-<details>
-    <summary>不停机管理:</summary>
-    <img src="static/8-1.jpg" />
-    <img src="static/8-2.jpg" />
-</details>
-
-<details>
-    <summary>更新检查:</summary>
-    <img src="static/9.jpg" />
-</details>
-
-<details>
-    <summary>主线地图图文攻略:</summary>
-    <img src="static/main-map.png" />
-</details>
-
-<details>
-    <summary>学生攻略:</summary>
-    <img src="static/student-rank.png" />
-</details>
-
-<details>
-    <summary>杂图:</summary>
-    <img src="static/hod.png" />
-    <img src="static/student-adv.png" />
-</details>
 
 ## 更新日志
 
@@ -130,10 +61,6 @@ arona是基于mirai-console的插件。
 2. 修复部分指令没有完全禁止私聊响应的问题 [#20](https://github.com/diyigemt/arona/issues/20)
 
 历史日志：[这里](https://doc.arona.diyigemt.com/other/changelog)
-
-## 安装、配置和指令
-
-[访问plana在线文档](https://doc.arona.diyigemt.com/)
 
 ## 鸣谢
 

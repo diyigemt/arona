@@ -8,6 +8,12 @@
 
 当戳一戳arona时根据`arona-nudge.yml`的配置随机回复一条消息
 
+::: details 效果
+
+<img src="/image/command/nudge.webp" alt="nudge" />
+
+:::
+
 ## 发情回复
 
 当发送的内容中包含 "老公"/"老婆"文字时根据`arona-hentai.yml`的配置随机回复一条消息

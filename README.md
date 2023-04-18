@@ -129,39 +129,11 @@ arona是基于mirai-console的插件。
 1. 修复权限设置不起作用的问题 [#8](https://github.com/diyigemt/arona/issues/8)
 2. 修复部分指令没有完全禁止私聊响应的问题 [#20](https://github.com/diyigemt/arona/issues/20)
 
-2023-03-10 v1.0.14+20230310
+历史日志：[这里](https://doc.arona.diyigemt.com/other/changelog)
 
-1. 添加忽略私聊指令的功能，具体在[这里](./doc/using.md#ignore-message-type)
+## 安装、配置和指令
 
-历史日志：[这里](./doc/update.md)
-
-## 版本迁移指南
-
-本节供从v0.1.1升级到v1.0.0-M1的用户阅读
-
-1. 从release下载最新版本的arona文件替换原有在plugins文件夹中的文件
-2. 下载并解压release中的`default.zip`，运行其中的`数据库迁移.exe`文件，选中已有的`arona.db`数据库文件进行数据库更新(主要是插入与塔罗牌有关是数据，并不会影响已有的数据)**注意**，即使不会影响已保存的数据库数据，仍建议在进行此操作前对数据库文件进行备份
-3. 运行`mirai-console`，使arona在`./config`文件夹下生成新的配置文件
-4. **停止**`mirai-console`
-5. 在`arona-service.yml`文件中配置各模块的开关
-6. 在`arona.yml`文件中配置`managerGroup`管理员组，具有只有具有管理员权限的账号才能对arona进行在线配置
-7. 在`nga.yml`文件中配置爬楼所需要的信息，具体配置过程可参考[nga配置](./doc/using.md#nga-config)
-8. 在启动后的`mirai-console`中配置新指令的执行权限
-
-```shell
-/permission add * net.diyigemt.arona:command.config
-/permission add * net.diyigemt.arona:command.tarot
-```
-
-即使是这样，我也仍然推荐你重新阅读本readme，里面还包含了对新指令的使用列
-
-## 安装
-
-安装方法：[这里](./doc/install.md)
-
-## 配置和指令
-
-配置和指令：[这里](./doc/using.md)
+[访问plana在线文档](https://doc.arona.diyigemt.com/)
 
 ## 鸣谢
 

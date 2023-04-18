@@ -22,7 +22,7 @@
 
 ## 抽卡配置系列
 
-`/抽卡 setpool <number>`  设置当前池子为数据库中主键为指定的[number]的池子，如果你不知道这是什么意思，你可以看看[这节](#setpool-config)
+`/抽卡 setpool <number>`  设置当前池子为数据库中主键为指定的[number]的池子，如果你不知道这是什么意思，你可以看看[这节](../config/database#setpool-config)
 
 `/抽卡 reset` 重置当前池子的抽卡记录
 
@@ -40,9 +40,9 @@
 
 `/抽卡 limit <number>` 设置每日限制次数
 
-`/抽卡 update <number>` 从远端更新池子，具体使用看[这里](#remote-pool-update)
+`/抽卡 update <number>` 从远端更新池子，具体使用看[这里](./remote#remote-pool-update)
 
-`/抽卡 update2 <number> <name>` 从远端更新池子并重命名，具体使用看[这里](#remote-pool-update)
+`/抽卡 update2 <number> <name>` 从远端更新池子并重命名，具体使用看[这里](./remote#remote-pool-update)
 
 `/抽卡 list` 查看最近两个池子的配置
 
@@ -58,7 +58,7 @@
 
 ## 不停机配置系列
 
-其中的string | number可选值可在[这节看到](#service-names)
+其中的string | number可选值可在[这节看到](../config/base-config#service-names)
 
 `/配置 启用 [string | number] ` 根据名字/id启用一个功能模块
 
@@ -100,16 +100,19 @@ messageList:
 
 大概长这样
 
-<details>
-    <summary>H19-3图文攻略:</summary>
-    <img src="/image/install/success.webp" alt="" />
-</details>
+::: details H22-1图文攻略
 
-<details>
-    <summary>学生攻略:</summary>
-    <img src="/image/install/success.webp" alt="" />
-</details>
-其中`string`内容为1-1至H19-3之间或者学生的名字/黑话(可能收集不全)，如查看主线普通地图5-3的攻略，指令为`/攻略 5-3`；
+<img src="/image/guide/chapter-map.webp" alt="chapter-map" />
+
+:::
+
+::: details 学生攻略
+
+<img src="/image/guide/student.webp" alt="student" />
+
+:::
+
+其中`string`内容为1-1至H22-3之间或者学生的名字/黑话(可能收集不全)，如查看主线普通地图5-3的攻略，指令为`/攻略 5-3`；
 
 查看主线困难地图H19-3的攻略，指令为`/攻略 H19-3`；
 
@@ -117,47 +120,56 @@ messageList:
 
 1.0.8版本后，额外增加了其他杂项一图流的攻略，例如
 
-<details>
-    <summary>HOD图文攻略:</summary>
-    <img src="/image/install/success.webp" alt="" />
-</details>
+::: details 国际服活动
 
-<details>
-    <summary>日服学生人权:</summary>
-    <img src="/image/install/success.webp" alt="" />
-</details>
+<img src="/image/guide/active-info.webp" alt="active-info" />
+
+:::
+
 由于杂图太多而且不好记名字，因此提供指令`/攻略 杂图`显示所有可用的名字列表
 
-<details>
-    <summary>杂图列表:</summary>
-    <img src="/image/install/success.webp" alt="" />
-</details>
+::: details 杂图
+
+<img src="/image/command/image-help.webp" alt="image-help" />
+
+:::
+
 1.0.9版本后，额外增加了别名覆写功能，在原有基础上用户可自定义简短的别名方便记忆<a id="other-name"> </a>
 
-<details>
-    <summary>示例配置:</summary>
-    <img src="/image/install/success.webp" alt="" />
-</details>
+示例配置
 
-<details>
-    <summary>效果:</summary>
-    <img src="/image/install/success.webp" alt="" />
-    <img src="/image/install/success.webp" alt="" />
-</details>
+```yaml
+override:
+  - type: IMAGE
+    name: '乐'
+    value: '/test/乐.gif'
+  - type: RAW
+    name: 'HOD'
+    value: '黑白'
+```
+
+::: details 效果
+
+<img src="/image/command/override-name1.webp" alt="override-name1" />
+<img src="/image/config/override-name2.webp" alt="override-name2" />
+
+:::
+
 具体配置可看下面的[配置文件详解](#other-name-config)
 
 1.0.10版本后，额外增加特殊配置文件，位于`./data/net.diyigemt.arona/config/trainer_config.yml`，允许用户在不停止`mirai-console`的情况下修改`/攻略`指令的别名覆写配置。<a id="other-name-runtime"> </a>
 
-具体配置可看下面的[配置文件详解](#other-name-config-2)
+具体配置可看[配置文件详解](../config/base-config#other-name-config-2)
 
 1.0.14版本后，额外增加可通过猜你喜欢自动执行指令的功能<a id="name-guess-using"> </a>
 
-<details>
-    <summary>效果:</summary>
-    <img src="/image/install/success.webp" alt="" />
-</details>
+::: details 效果
 
-具体配置可看下面的[配置文件详解](#name-guess-config)
+<img src="/image/config/name-guess.webp" alt="name-guess" />
+
+:::
+
+具体配置可看[配置文件详解](../config/base-config#name-guess-config)
 
 ## 游戏名记录<a id="game-name"> </a>
 
@@ -167,8 +179,10 @@ messageList:
 
 以上命令也可以通过群私聊机器人调用，此时`谁是`指令将只提供游戏内名称并附上对应qq号。
 
-<details>
-    <summary>例如:</summary>
-    <img src="/image/install/success.webp" alt="" />
-</details>
+::: details 效果
+
+<img src="/image/command/game-name.webp" alt="game-name" />
+
+:::
+
 由于是模糊查询的原因，查询结果可能会涉及多个群友，没事把人家@出来也不好，因此1.0.8后查询结果将不会再@。

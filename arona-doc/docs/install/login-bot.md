@@ -245,3 +245,5 @@ code常见的有235、237、238、45等
 推荐使用经过`fix-protocol-version`插件修复后的协议登录，即`ANDROID_PAD`、`ANDROID_WATCH`、`MACOS`和`IPAD`这几个协议
 
 **不推荐**使用`ANDROID_PHONE`这个协议登录，tx对这个协议的检测最严
+
+如果不论怎么改协议还是遇到这些错误，建议考虑一下是不是bot被tx拉黑了，换个号吧

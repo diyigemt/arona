@@ -18,10 +18,11 @@
 
 arona将会根据`arona.yml`配置文件中的`remoteCheckInterval`配置项定期向远端查询新的公告信息，下面是一个示例：
 
-<details>
-    <summary>公告示例:</summary>
-    <img src="/image/install/success.webp" alt="" />
-</details>
+::: details 公告示例
+
+<img src="/image/command/announcment.webp" alt="announcment" />
+
+:::
 
 基本上是用来通知攻略图片的更新信息的。
 
@@ -29,9 +30,10 @@ arona将会根据`arona.yml`配置文件中的`remoteCheckInterval`配置项定�
 
 arona将会根据`arona.yml`配置文件中的`remoteCheckInterval`配置项定期向远端查询新的卡池，下面是一个示例：
 
-<details>
-    <summary>卡池更新示例:</summary>
-    <img src="/image/install/success.webp" alt="" />
-</details>
+::: details 卡池更新示例
+
+<img src="/image/command/pool-update.webp" alt="pool-update" />
+
+:::
 
 设置成手动更新的原因是怕用户自己已经有这个池子了。

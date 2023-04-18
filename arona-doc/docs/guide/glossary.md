@@ -14,10 +14,10 @@
 
 安装过程中所有步骤都基于mcl进行
 
-## arona
-
-指本插件 超级草莓牛奶arona
-
 ## console
 
 指[mirai-console](#mirai-console)运行后的交互界面
+
+## arona
+
+指本插件 超级草莓牛奶arona

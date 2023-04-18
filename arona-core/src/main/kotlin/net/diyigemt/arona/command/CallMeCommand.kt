@@ -4,27 +4,28 @@ import net.diyigemt.arona.Arona
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.db.name.TeacherName
 import net.diyigemt.arona.db.name.TeacherNameTable
-import net.diyigemt.arona.extension.CommandInterceptor
 import net.diyigemt.arona.service.AronaGroupService
 import net.diyigemt.arona.util.GeneralUtils.queryTeacherNameFromDB
 import net.diyigemt.arona.util.MessageUtil
-import net.mamoe.mirai.console.command.CommandManager
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
-import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.MemberCommandSenderOnMessage
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.User
-import net.mamoe.mirai.message.data.Message
 import org.jetbrains.exposed.sql.and
 
 object CallMeCommand : SimpleCommand(
   Arona,"call_me", "叫我",
   description = "给自己自定义昵称"
-), AronaGroupService, CommandInterceptor {
+), AronaGroupService {
 
   @Handler
-  suspend fun MemberCommandSenderOnMessage.callMe(name: String) {
+  suspend fun MemberCommandSenderOnMessage.callMe(name: String?) {
+    if (name.isNullOrBlank()) {
+      val teacherName = queryTeacherNameFromDB(subject, user)
+      group.sendMessage(MessageUtil.at(user, "怎么了, $teacherName"))
+      return
+    }
     var teacherName = name
     if (teacherName.length > 20) {
       subject.sendMessage(MessageUtil.at(user, "太长了, 爬"))
@@ -57,22 +58,6 @@ object CallMeCommand : SimpleCommand(
   override var enable: Boolean = true
   override fun init() {
     registerService()
-    registerInterceptor()
     register()
   }
-
-  override val level: Int = 1
-  private val CALL_ME_COMMAND = "${CommandManager.commandPrefix}叫我"
-  override fun interceptBeforeCall(message: Message, caller: CommandSender): String? {
-    if (message.contentToString() != CALL_ME_COMMAND) return null
-    if (caller !is MemberCommandSenderOnMessage) return null
-    val group = caller.group
-    val member = caller.user
-    val teacherName = queryTeacherNameFromDB(group, member)
-    Arona.runSuspend {
-      group.sendMessage(MessageUtil.at(member, "怎么了, $teacherName"))
-    }
-    return ""
-  }
-
 }

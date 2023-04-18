@@ -7,8 +7,10 @@ data class Activity(
   var serverLocale: ServerLocale = ServerLocale.JP,
 )
 
-enum class ServerLocale(val serverName: String, val dbName: String) {
-  JP("日服", "JPN"), GLOBAL("国际服", "GLB")
+enum class ServerLocale(val serverName: String, val dbName: String, val commandName: String) {
+  JP("日服", "JPN", "jp"),
+  GLOBAL("国际服", "GLB", "en"),
+  CN("国服", "CN", "cn"),
 }
 
 enum class ActivityType(val level: Int) {

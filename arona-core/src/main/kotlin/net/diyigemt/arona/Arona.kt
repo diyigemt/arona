@@ -73,7 +73,7 @@ object Arona : KotlinPlugin(
     init()
     if (DataBaseProvider.isConnected()) {
       System.setProperty("java.awt.headless", "true")
-      GlobalEventChannel.filter {
+      globalEventChannel().filter {
         it is BotOnlineEvent && it.bot.id == AronaConfig.qq
       }.subscribeOnce<BotOnlineEvent> {
         arona = it.bot
@@ -81,10 +81,10 @@ object Arona : KotlinPlugin(
           sendMessage(deserializeMiraiCode(AronaConfig.onlineMessage))
         }
       }
-      GlobalEventChannel.subscribeAlways<NudgeEvent>(priority = AronaNudgeConfig.priority) {
+      globalEventChannel().subscribeAlways<NudgeEvent> {
         NudgeEventHandler.preHandle(this)
       }
-      GlobalEventChannel.subscribeAlways<GroupMessageEvent> {
+      globalEventChannel().subscribeAlways<GroupMessageEvent> {
         GroupRepeaterHandler.preHandle(this)
         HentaiEventHandler.preHandle(this)
       }

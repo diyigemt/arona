@@ -466,7 +466,7 @@ def fetch_data_from_game_db(page: Page, dict, is_no_translate, base_path = "./im
 
         equipment_resource_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[3]/div/div[2]")
         equipment_resource_btn.click()
-        time.sleep(12)
+        time.sleep(6)
 
         equipment_resource = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[4]")
         equipment_resource.screenshot(path="./image/tmp/equipment_resource.png")

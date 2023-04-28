@@ -11,7 +11,7 @@ from fetch_student_info_from_ba_game_db import concat_list, concat_two_im, downl
 import re
 # 要生成的目标 日文名
 target = [
-    "カホ",
+    "ユズ(メイド)"
     # "ジュンコ(正月)",
     # "ハルナ(正月)",
     # "フウカ(正月)"
@@ -126,11 +126,12 @@ def run(playwright: Playwright):
         # 中日切换判断是否有翻译
         try:
             cn_skill = page.query_selector('//*[@id="skill1"]/div/div[1]').text_content()
+        except Exception as e:
+            cn_skill = ""
+        finally:
             # 关闭信息窗口
             close_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[1]")
             close_btn.click()
-        except Exception as e:
-            cn_skill = ""
         # 切换回日文
         page.locator("svg").first.click()
         page.locator("#react-select-2-option-0").click()
@@ -217,23 +218,23 @@ def get_cn_info_from_gamekee(playwright: Playwright, path: str):
         '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div[1]/div[1]/div/div/table/tbody/',
         '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/div/div[1]/div[1]/div/div/table/tbody/',
     ]
-    ex_name = get_content(page, list(map(lambda x: x + 'tr[1]', prefix)), True)
-    ex_desc = get_content(page, list(map(lambda x: x + 'tr[2]/td[2]', prefix)))
+    ex_name, prefix_index = get_content(page, list(map(lambda x: x + 'tr[1]', prefix)), True)
+    ex_desc, prefix_index = get_content(page, list(map(lambda x: x + 'tr[2]/td[2]', prefix)))
     
     ex_desc = skill_bounds.sub("$value", ex_desc)
     if ex_desc.find("COST：") != -1:
         ex_desc = ex_desc[0:ex_desc.find("COST：")]
 
-    bs_name = get_content(page, list(map(lambda x: x + 'tr[5]', prefix)), True)
-    bs_desc = get_content(page, list(map(lambda x: x + 'tr[6]/td[2]', prefix)))
+    bs_name, prefix_index = get_content(page, list(map(lambda x: x + 'tr[5]', prefix)), True)
+    bs_desc, prefix_index = get_content(page, list(map(lambda x: x + 'tr[6]/td[2]', prefix)))
     bs_desc = skill_bounds.sub("$value", bs_desc)
 
-    es_name = get_content(page, list(map(lambda x: x + 'tr[9]', prefix)), True)
-    es_desc = get_content(page, list(map(lambda x: x + 'tr[10]/td[2]', prefix)))
+    es_name, prefix_index = get_content(page, list(map(lambda x: x + 'tr[9]', prefix)), True)
+    es_desc, prefix_index = get_content(page, list(map(lambda x: x + 'tr[10]/td[2]', prefix)))
     es_desc = skill_bounds.sub("$value", es_desc)
 
-    ss_name = get_content(page, list(map(lambda x: x + 'tr[13]', prefix)), True)
-    ss_desc = get_content(page, list(map(lambda x: x + 'tr[14]/td[2]', prefix)))
+    ss_name, prefix_index = get_content(page, list(map(lambda x: x + 'tr[13]', prefix)), True)
+    ss_desc, prefix_index = get_content(page, list(map(lambda x: x + 'tr[14]/td[2]', prefix)))
     ss_desc = skill_bounds.sub("$value", ss_desc)
 
     wp_prefix = [
@@ -250,12 +251,12 @@ def get_cn_info_from_gamekee(playwright: Playwright, path: str):
     '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[2]/td/div/',
     ]
 
-    wp_name = get_content(page, list(map(lambda x: x + 'div[1]', wp_prefix)))
+    wp_name, prefix_index = get_content(page, list(map(lambda x: x + 'div[1]', wp_prefix)))
     
-    wp_desc_1 = get_content(page, list(map(lambda x: x + 'div[2]', wp_prefix)))
-    wp_desc_2 = get_content(page, list(map(lambda x: x + 'div[3]', wp_prefix)))
+    wp_desc_1, prefix_index = get_content(page, list(map(lambda x: x + 'div[2]', wp_prefix)))
+    wp_desc_2, prefix_index = get_content(page, list(map(lambda x: x + 'div[3]', wp_prefix)))
 
-    wp_skill = get_content(page,
+    wp_skill, prefix_index = get_content(page,
     [
     '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/span/span/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/div[3]/span/span/span/span[2]/span/span/span/span/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[16]/td',
     '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[15]/td',
@@ -270,6 +271,7 @@ def get_cn_info_from_gamekee(playwright: Playwright, path: str):
     '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[15]/td',
     '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div/div[2]/div/div/table/tbody/tr[16]/td',
     '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[16]/td',
+    '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[15]/td',
     ]
     )
     wp_skill = skill_bounds.sub("$value", wp_skill)
@@ -286,11 +288,21 @@ def get_cn_info_from_gamekee(playwright: Playwright, path: str):
     '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div[1]/div[2]/div[2]/div[4]/div/div/table/tbody/',
     '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/div/div[1]/div[2]/div[2]/div[4]/div/div/table/tbody/',
     ]
-    hobby_extend_list = []
-    hobby = get_content(page, list(map(lambda x: x + '/tr[6]/td[2]', desc_prefix)) + hobby_extend_list)
+
     
+    hobby_extend_list = []
+    hobby, prefix_index = get_content(page, list(map(lambda x: x + '/tr[6]/td[2]', desc_prefix)) + hobby_extend_list)
+    
+    # 解决多出来的繁中翻译列
+    desc_suffix = '/tr[9]/td[2]'
+    if prefix_index != -1:
+        for_test = page.query_selector(desc_prefix[prefix_index] + '/tr[11]')
+        if for_test != None:
+            hobby, prefix_index = get_content(page, list(map(lambda x: x + '/tr[7]/td[2]', desc_prefix)) + hobby_extend_list)
+            desc_suffix = '/tr[11]/td[2]'
+
     desc_extend_list = []
-    desc = get_content(page, list(map(lambda x: x + '/tr[9]/td[2]', desc_prefix)) + desc_extend_list)
+    desc, prefix_index = get_content(page, list(map(lambda x: x + desc_suffix, desc_prefix)) + desc_extend_list)
     # 处理换行
     desc_list = desc.split("。")
     desc = desc_list[0] + "\n" + "".join(desc_list[1:])
@@ -315,7 +327,9 @@ def get_cn_info_from_gamekee(playwright: Playwright, path: str):
     return info
 
 def get_content(page, xPaths: str, isSingleLine = False) -> str:
+    index = 0
     for xPath in xPaths:
+        index = index + 1
         el = page.query_selector(xPath)
         if el != None:
             content = el.text_content().replace(".", "").replace(" ", "")
@@ -325,9 +339,9 @@ def get_content(page, xPaths: str, isSingleLine = False) -> str:
                 content = content.replace("\n", "\\n")
             if content.replace("\\n", "") == '':
                 continue
-            return content
+            return content, index - 1
     # print(xPaths)
-    return ""
+    return "", -1
 if __name__ == "__main__":
     with sync_playwright() as playwright:
         run(playwright)

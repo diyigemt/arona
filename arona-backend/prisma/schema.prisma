@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String @id // uuid 唯一标识符
+  version     String @default("") // 当前版本
+  online      Int    @default(0) // 在线时长
+  lastOnline  String @default("") // 上线时间
+  firstOnline String @default("") // 第一次上线时间
+
+  @@map("users")
+}
+
+model Version {
+  id          Int    @id @default(autoincrement()) // 主键
+  name        String @default("") // 版本号
+  description String @default("") // 简短描述
+
+  @@map("version")
+}
+
+model Action {
+  id      Int    @id @default(autoincrement()) // 主键
+  action  String @default("") // 动作类型
+  content String @default("") // 动作内容
+  time    String @default("") // 发布时间
+
+  @@map("action")
+}
+
+model Image {
+  id             Int    @id @default(autoincrement()) // 主键
+  name           String // 查找名称/id
+  path           String // 图片路径
+  hash           String // 图片的hash, 据此判断本地文件是否该更新了
+  recommendScore Int // 模糊搜索优先级
+  type           Int // 图片类型 1:主线地图 2:学生攻略 3:其他杂项
+
+  @@map("image")
+}

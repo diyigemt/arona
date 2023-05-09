@@ -1,5 +1,7 @@
 import * as dotenv from "dotenv";
-dotenv.config();
+dotenv.config({
+  path: process.env.NODE_ENV === "development" ? ".env" : ".env.product",
+});
 import { Logger } from "./utils/logger";
 import http from "http";
 import fs from "fs";

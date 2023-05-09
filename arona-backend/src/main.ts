@@ -1,3 +1,5 @@
+import * as dotenv from "dotenv";
+dotenv.config();
 import { Logger } from "./utils/logger";
 import http from "http";
 import fs from "fs";
@@ -9,6 +11,7 @@ import bodyParser from "body-parser";
 import readline from "readline";
 import CommandParser from "./command";
 import Prisma from "./db";
+import V1Router from "./api/v1/routes";
 
 const reader = readline.createInterface({
   input: process.stdin,
@@ -26,7 +29,8 @@ async function main() {
   const httpPort = 12201;
   const httpsPort = 12200;
   app.use(bodyParser.json());
-  await Prisma.$connect();
+  app.use("/api/v1", V1Router);
+  await Prisma.$connect().then();
   // 初始化结巴分词
   nodejieba.load({
     userDict: "src/dict/student",
@@ -37,7 +41,7 @@ async function main() {
       Logger.info(`Http Server running on http://localhost:${httpPort}`);
     });
   } catch (error: any) {
-    Logger.error(`Http Error occurred: ${error.message}`);
+    Logger.error(`Http Error abort: ${error.message}`);
   }
 
   try {
@@ -63,7 +67,7 @@ async function main() {
       Logger.info(`Https Server running on http://localhost:${httpsPort}`);
     });
   } catch (error: any) {
-    Logger.error(`Https Error occurred: ${error.message}`);
+    Logger.error(`Https Error abort: ${error.message}`);
   }
 }
 

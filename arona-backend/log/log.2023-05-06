@@ -1,0 +1,71 @@
+[2023-05-05T11:33:20.642] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T11:33:20.644] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T11:39:07.280] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T11:39:07.282] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T11:41:09.121] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T11:41:09.125] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T11:41:10.040] [INFO] default - 1
+[2023-05-05T11:41:24.722] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T11:41:24.724] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T11:41:30.563] [INFO] default - 1
+[2023-05-05T11:41:31.824] [INFO] default - 1
+[2023-05-05T11:47:18.181] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T11:47:18.184] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T11:47:31.065] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T11:47:31.068] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T11:47:53.173] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T11:47:53.176] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T11:51:03.927] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T11:51:03.930] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T11:52:25.054] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T11:52:25.057] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T11:53:29.744] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T11:53:29.747] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T11:54:53.415] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T11:54:53.418] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T11:57:00.306] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T11:57:00.309] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T11:57:34.764] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T11:57:34.768] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T11:58:04.407] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T11:58:04.410] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T11:58:21.842] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T11:58:21.844] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T12:04:01.654] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T12:04:01.657] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T12:04:02.428] [ERROR] default - [ '1' ]
+[2023-05-05T12:04:05.017] [ERROR] default - [ 'e' ]
+[2023-05-05T12:04:07.466] [ERROR] default - [ 'exat' ]
+[2023-05-05T12:04:12.408] [ERROR] default - [ 'help' ]
+[2023-05-05T12:04:21.588] [ERROR] default - [ 'program', 'exit' ]
+[2023-05-05T12:04:49.261] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T12:04:49.263] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T12:07:31.994] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T12:07:31.997] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T12:11:03.177] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T12:11:03.179] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T12:20:07.644] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T12:20:07.646] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T12:28:14.853] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T12:28:14.854] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T12:28:35.435] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T12:28:35.436] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T14:03:25.863] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T14:03:25.865] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T14:05:54.094] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T14:05:54.096] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T14:07:51.732] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T14:07:51.733] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T14:08:27.281] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T14:08:27.283] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T14:09:08.710] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T14:09:08.712] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T14:11:43.445] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T14:11:43.447] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T14:12:43.709] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T14:12:43.711] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T14:15:09.590] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T14:15:09.592] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T14:15:13.312] [ERROR] default - Https Error occurred: ENOENT: no such file or directory, open '/etc/letsencrypt/live/arona.diyigemt.com/privkey.pem'
+[2023-05-05T14:15:13.314] [INFO] default - Http Server running on http://localhost:12201
+[2023-05-05T14:15:27.594] [ERROR] default - exit need -s for second validation.

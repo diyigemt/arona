@@ -39,11 +39,19 @@ model Action {
 
 model Image {
   id             Int    @id @default(autoincrement()) // 主键
-  name           String // 查找名称/id
-  path           String // 图片路径
-  hash           String // 图片的hash, 据此判断本地文件是否该更新了
+  name           String @unique // 查找名称 唯一
+  file           Int // 对应File表的id 用于获取文件真实内容
   recommendScore Int // 模糊搜索优先级
   type           Int // 图片类型 1:主线地图 2:学生攻略 3:其他杂项
 
   @@map("image")
+}
+
+model File {
+  id   Int    @id @default(autoincrement()) // 主键
+  path String // 本地文件位置, 相对于 file 目录
+  hash String // 文件hash, 使用这个判断文件是否有更新
+  type Int // 文件类型
+
+  @@map("file")
 }

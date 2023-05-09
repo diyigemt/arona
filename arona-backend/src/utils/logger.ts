@@ -24,5 +24,5 @@ log4js.configure({
   },
 });
 
-export const Logger = log4js.getLogger();
 export const DatabaseLogger = log4js.getLogger("database");
+export const Logger = log4js.getLogger();

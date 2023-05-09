@@ -41,6 +41,8 @@ module.exports = {
     "max-len": ["error", { "code": 120 }],
     "linebreak-style": ["error", "unix"],
     "quotes": ["error", "double"],
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "error",
     "space-before-function-paren": ["warn", {
       "anonymous": "never",
       "named": "never",

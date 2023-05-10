@@ -16,33 +16,37 @@ function adminAccessInterceptor(): (
   return (req, res, next) => {
     const ip = getRequestRemoteIp(req);
     const token = getRequestAdminToken(req);
-    if (typeof token !== "string") {
-      Logger.warn(
-        `unauthorized access: ${req.method}: ${req.path} with ${JSON.stringify(
+    if (process.env.NODE_ENV !== "development") {
+      next();
+    } else {
+      if (typeof token !== "string") {
+        Logger.warn(
+          `unauthorized access: ${req.method}: ${req.path} with ${JSON.stringify(
+            req.method.toLowerCase() === "get" ? req.query : req.body,
+          )} by ${ip}`,
+        );
+        Logger.warn(
+          `failed authorized access: ${req.method}: ${
+            req.path
+          } with ${JSON.stringify(
+            req.method.toLowerCase() === "get" ? req.query : req.body,
+          )} by ${ip}`,
+        );
+        packageRawErrorResponse(res);
+        return;
+      }
+      const encrypt = crypto.createHash("md5").update(token).digest("hex");
+      if (encrypt !== adminTokenEncrypt) {
+        packageRawErrorResponse(res);
+        return;
+      }
+      Logger.info(
+        `admin access: ${req.method}: ${req.path} with ${JSON.stringify(
           req.method.toLowerCase() === "get" ? req.query : req.body,
         )} by ${ip}`,
       );
-      Logger.warn(
-        `failed authorized access: ${req.method}: ${
-          req.path
-        } with ${JSON.stringify(
-          req.method.toLowerCase() === "get" ? req.query : req.body,
-        )} by ${ip}`,
-      );
-      packageRawErrorResponse(res);
-      return;
+      next();
     }
-    const encrypt = crypto.createHash("md5").update(token).digest("hex");
-    if (encrypt !== adminTokenEncrypt) {
-      packageRawErrorResponse(res);
-      return;
-    }
-    Logger.info(
-      `admin access: ${req.method}: ${req.path} with ${JSON.stringify(
-        req.method.toLowerCase() === "get" ? req.query : req.body,
-      )} by ${ip}`,
-    );
-    next();
   };
 }
 

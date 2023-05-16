@@ -5,13 +5,12 @@ from playwright.sync_api import Playwright, sync_playwright
 from PIL import Image
 import codecs
 import json
-from config import cache_file_location
+from config import cache_file_location, cn_translation_location
 import numpy as np
 from fetch_student_info_from_ba_game_db import concat_list, concat_two_im, download_image, fetch_data_from_game_db, fetch_data_from_schaledb, query_remote_name, replace_none_char, test_name_exist
 import re
 # 要生成的目标 日文名
 target = [
-    "レイサ"
     # "ジュンコ(正月)",
     # "ハルナ(正月)",
     # "フウカ(正月)"
@@ -48,12 +47,24 @@ def run(playwright: Playwright):
         page.evaluate("el => el.setAttribute('jpName', '%s')" % replace_none_char(btn.text_content()), btn)
     print("build complete")
 
-    if len(target) == 0:
-        exit(0)
     # 加载dict
     cache_dict = {}
     with codecs.open(cache_file_location, "r", encoding="utf-8") as f:
         cache_dict = json.loads(f.read())
+    
+    # 加载翻译
+    cn_translate_dict = {}
+    with codecs.open(cn_translation_location, "r", encoding="utf-8") as f:
+        cn_translate_dict = json.loads(f.read())
+
+    if len(target) == 0:
+        for file in os.listdir("./image/parse/"):
+            file_name = file.replace(".png", "")
+            for key in cache_dict:
+                raw = cache_dict[key]
+                if raw["cnName"] == file_name:
+                    target.append(key)
+    
     count = 0
     for jpName in target:
         if jpName not in cache_dict:
@@ -75,7 +86,6 @@ def run(playwright: Playwright):
         page.locator("svg").first.click()
         page.locator("#react-select-2-option-1").click()
         time.sleep(3)
-        count = 0
         start_time = time.time()
         end_time = 0
         # 开始下载远端文件
@@ -117,6 +127,9 @@ def run(playwright: Playwright):
             cn_info = {
                 "ex_name": ""
             }
+        # 有时候gamekee太恶心了拿不到, 手动填上
+        if jpName in cn_translate_dict:
+            cn_info.update(cn_translate_dict[jpName])
         # 从shaledb下载 如果有爱用品信息 顺便拿到爱用品
         cn_info = fetch_data_from_schaledb(playwright, loma, cn_info)
 
@@ -195,10 +208,9 @@ def run(playwright: Playwright):
         close_btn.click()
 
 def get_cn_info_from_gamekee(playwright: Playwright, path: str):
-    browser = playwright.chromium.launch(headless=True, slow_mo=100)
+    browser = playwright.chromium.launch(headless=False, slow_mo=100)
     context = browser.new_context(viewport={'width': 1920, 'height': 1080}, device_scale_factor=4.0)
     page = context.new_page()
-
     page.goto(path)
     time.sleep(2)
     page.eval_on_selector_all(".dailog-data-wrapper", "nodes => nodes.forEach(el => el.remove())")

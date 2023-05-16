@@ -353,7 +353,7 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict):
     # 如果没有翻译,使用gamekee替换专武名称和描述
     if is_no_translate:
         page.eval_on_selector('//*[@id="ba-student-weapon-name"]', "node => node.innerText = '%s'" % dict["wp_name"])
-        page.eval_on_selector('//*[@id="ba-weapon-description"]', "node => node.innerText = '%s'" % (dict["wp_desc_1"] + dict["wp_desc_2"]))
+        page.eval_on_selector('//*[@id="ba-weapon-description"]', "node => node.innerText = '%s'" % (dict["wp_desc_1"] + "\\n" + dict["wp_desc_2"]))
 
     weapon_name = page.query_selector("//*[@id='ba-student-page-weapon']/div[1]")
     weapon_name.screenshot(path="./image/tmp/weapon_name.png")
@@ -532,8 +532,11 @@ def fetch_data_from_game_db(page: Page, dict, is_no_translate, base_path = "./im
             
             gear_desc, offset = replace(dict["gear_desc"], offset)
             # favor usage
-            page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]/div/div[4]/div[2]', "node => node.innerHTML = '%s'" % gear_desc)
-
+            # 有时候会出现有翻译但是没爱用品标签的情况, 跳过
+            try:
+                page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]/div/div[4]/div[2]', "node => node.innerHTML = '%s'" % gear_desc)
+            except Exception as e:
+                pass
         ex_skill = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[1]")
         ex_skill.screenshot(path="./image/tmp/ex_skill.png")
         base_skill = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]")

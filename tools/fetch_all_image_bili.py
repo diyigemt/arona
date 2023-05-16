@@ -7,7 +7,7 @@ from tools import draw_image
 
 img_folder = "image/some/"
 debug_index = -1
-cvs = ['cv20560474', 'cv20557188', 'cv17678326', 'cv20550762', 'cv20550621', 'cv20550020']
+cvs = ['cv20550621']
 base_url = "https://www.bilibili.com/read/%s"
 headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"}
 
@@ -27,7 +27,7 @@ if __name__ == "__main__":
                 image = item.select("img")[0]
                 image_url = "https://" + image.attrs["data-src"].replace("//", "").replace("\'", "")
                 outer = item.previous_sibling
-                names = outer.get_text()
+                names = outer.get_text().replace("/", "-")
                 # 意料之外的多余空行
                 if len(names) < 2:
                     names = outer.previous_sibling.get_text()

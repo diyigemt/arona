@@ -170,6 +170,8 @@ def update_image_from_api(folder: str, type: int = 2):
     index = 0
     dict = []
     for file in os.listdir(base_img_folder + folder):
+        if not file.endswith(".png"):
+            continue
         file_name = file.replace(".png", "")
         file_path = base_img_folder + folder + file
         file_path_absolute = folder + file
@@ -238,6 +240,8 @@ def post_image_to_remote(folder: str):
     transport.connect(username="root", pkey=key)
     sftp = paramiko.SFTPClient.from_transport(transport)
     for file in os.listdir(base_img_folder + folder):
+        if not file.endswith(".png"):
+            continue
         file_path = base_img_folder + folder + file
         file_history_path = base_img_folder + "/history" + folder + file
         file_remote_path = folder + file

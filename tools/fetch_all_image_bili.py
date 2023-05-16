@@ -7,7 +7,7 @@ from tools import draw_image
 
 img_folder = "image/some/"
 debug_index = -1
-cvs = ['cv20550621']
+cvs = ['cv20557188', 'cv20550020', 'cv20550621']
 base_url = "https://www.bilibili.com/read/%s"
 headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"}
 

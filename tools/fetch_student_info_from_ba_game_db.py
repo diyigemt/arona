@@ -488,6 +488,7 @@ def fetch_data_from_game_db(page: Page, dict, is_no_translate, base_path = "./im
             ex_desc_detail = page.query_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[1]/div/div[3]/span')
             detail_class = ex_desc_detail.get_attribute("class")
             detail_list = page.query_selector_all(".%s" % detail_class)
+
             offset = 0
             def replace(s: str, offset):
                 while s.find("$value") != -1:
@@ -502,8 +503,8 @@ def fetch_data_from_game_db(page: Page, dict, is_no_translate, base_path = "./im
                 # favor usage
                 page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]/div/div[4]/div[2]', "node => node.innerHTML = '%s'" % gear_desc)
             es_desc, offset = replace(dict["es_desc"], offset)
-            ss_desc, offset = replace(dict["ss_desc"], offset)
             wp_skill, offset = replace(dict["wp_skill"], offset)
+            ss_desc, offset = replace(dict["ss_desc"], offset)
             # ex
             page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[1]/div/div[3]', "node => node.innerHTML = '%s'" % ex_desc)
             # bs

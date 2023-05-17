@@ -225,7 +225,7 @@ def update_image_from_api(folder: str, type: int = 2):
     print(list(map(lambda item: item["name"], dict)))
     confirm_action()
     #提交到后端进行处理
-    post_data("imageUpdate", dict)
+    return dict
 
 def post_image_to_remote(folder: str):
     cdn_path = "https://arona.cdn.diyigemt.com/image"

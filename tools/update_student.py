@@ -1,4 +1,4 @@
-from tools import post_image_to_remote, replace0, update_image_from_api
+from tools import post_data, post_image_to_remote, replace0, update_image_from_api
 from fetch_student_info_from_ba_game_db import test_name_exist, download_image, query_remote_name
 import os
 import cv2
@@ -68,5 +68,7 @@ def process_old():
 if __name__ == '__main__':
     if old:
         process_old()
-    update_image_from_api(base_folder, type=1)
+    image_dict = update_image_from_api(base_folder, type=1)
     post_image_to_remote(base_folder)
+    post_data("imageUpdate", image_dict)
+

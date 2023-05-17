@@ -30,7 +30,7 @@ target = [
 def run(playwright: Playwright):
     with codecs.open("./config/local_file_map.json", "r", encoding="utf-8") as f:
         local_file_path = json.load(f)
-    browser = playwright.chromium.launch(headless=False, slow_mo=100)
+    browser = playwright.chromium.launch(headless=True, slow_mo=100)
     context = browser.new_context(viewport={'width': 1920, 'height': 1080}, device_scale_factor=4.0)
     page = context.new_page()
 
@@ -208,7 +208,7 @@ def run(playwright: Playwright):
         close_btn.click()
 
 def get_cn_info_from_gamekee(playwright: Playwright, path: str):
-    browser = playwright.chromium.launch(headless=False, slow_mo=100)
+    browser = playwright.chromium.launch(headless=True, slow_mo=100)
     context = browser.new_context(viewport={'width': 1920, 'height': 1080}, device_scale_factor=4.0)
     page = context.new_page()
     page.goto(path)

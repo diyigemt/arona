@@ -394,6 +394,8 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict):
     furniture.screenshot(path="./image/tmp/furniture.png")
 
     # 如果有爱用品, 顺带把爱用品的翻译拿到 ba-game-db更新有点慢
+    # for (let i = 0; i < 11; ++i) { $0.value = i; $0.oninput($0); console.log([...document.querySelectorAll(".ba-col-explosion")][7].innerText) }
+    # document.querySelectorAll(".ba-col-explosion")
     gear_info_btn = page.query_selector("#ba-student-tab-gear")
     if gear_info_btn != None and gear_info_btn.is_visible():
         skill_bounds = re.compile("\d+%")
@@ -475,6 +477,8 @@ def fetch_data_from_game_db(page: Page, dict, is_no_translate, base_path = "./im
         skill_btn.click()
 
         # 替换技能描述文案
+        ex_desc_detail = page.query_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[1]/div/div[3]/span')
+        detail_class = ex_desc_detail.get_attribute("class")
         if is_no_translate:
             # ex
             page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[1]/div/div[1]', "node => node.innerText = '%s'" % dict["ex_name"])
@@ -485,8 +489,7 @@ def fetch_data_from_game_db(page: Page, dict, is_no_translate, base_path = "./im
             # 子技能
             page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[2]/div/div[1]', "node => node.innerText = '%s'" % dict["ss_name"])
             # 拿到具体数据对应的class
-            ex_desc_detail = page.query_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[1]/div/div[3]/span')
-            detail_class = ex_desc_detail.get_attribute("class")
+            
             detail_list = page.query_selector_all(".%s" % detail_class)
 
             offset = 0
@@ -517,27 +520,21 @@ def fetch_data_from_game_db(page: Page, dict, is_no_translate, base_path = "./im
             page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[1]/div/div[4]/div[2]', "node => node.innerHTML = '%s'" % wp_skill)
         # ba-game-db 爱用品更新很慢, 直接强制替换
         elif "gear_desc" in dict:
-            # 拿到具体数据对应的class
-            ex_desc_detail = page.query_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[1]/div/div[3]/span')
-            detail_class = ex_desc_detail.get_attribute("class")
-            detail_list = page.query_selector_all(".%s" % detail_class)
-            offset = 0
-            def replace(s: str, offset):
-                while s.find("$value") != -1:
-                    s = s.replace("$value", '<span class="%s">%s</span>' % (detail_class, detail_list[offset].text_content()), 1)
-                    offset = offset + 1
-                return s, offset
-            # 算法原因 按顺序替换
-            ex_desc, offset = replace(dict["ex_desc"], offset)
-            bs_desc, offset = replace(dict["bs_desc"], offset)
-            
-            gear_desc, offset = replace(dict["gear_desc"], offset)
-            # favor usage
+
+            # 拿到爱用品所在的div
+            gear = page.query_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]/div/div[4]/div[2]')
             # 有时候会出现有翻译但是没爱用品标签的情况, 跳过
-            try:
-                page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]/div/div[4]/div[2]', "node => node.innerHTML = '%s'" % gear_desc)
-            except Exception as e:
-                pass
+            if gear != None:
+                detail_list = gear.query_selector_all(".%s" % detail_class)
+                s = dict["gear_desc"]
+                for item in detail_list:
+                    s = s.replace("$value", '<span class="%s">%s</span>' % (detail_class, item.text_content()), 1)
+                # favor usage
+                # 有时候会出现有翻译但是没爱用品标签的情况, 跳过
+                try:
+                    page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]/div/div[4]/div[2]', "node => node.innerHTML = '%s'" % s)
+                except Exception as e:
+                    pass
         ex_skill = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[1]")
         ex_skill.screenshot(path="./image/tmp/ex_skill.png")
         base_skill = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]")

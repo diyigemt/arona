@@ -8,11 +8,8 @@ import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.util.ActivityUtil
 import net.mamoe.mirai.console.command.*
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
-import net.mamoe.mirai.console.command.descriptor.ExperimentalCommandDescriptors
-import net.mamoe.mirai.console.util.ConsoleExperimentalApi
 import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.Contact.Companion.uploadImage
-import net.mamoe.mirai.message.data.Message
 
 object ActivityCommand : SimpleCommand(
   Arona,"active", "活动",
@@ -25,7 +22,6 @@ object ActivityCommand : SimpleCommand(
       when(locale) {
         ServerLocale.JP -> sendJP(subject)
         ServerLocale.GLOBAL -> sendEN(subject)
-        ServerLocale.CN -> sendCN(subject)
       }
     }
     when {

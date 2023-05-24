@@ -265,14 +265,28 @@ def median(data):
     half = len(data) // 2
     return (data[half] + data[~half])/2
 
-def concat_two_im(path_a: str, path_b: str, path: str, type: str = 'horizen', margin = 0):
+def concat_two_im(path_a: str, path_b: str, path: str, type: str = 'horizen', margin = 0, reshape = False):
     im_a = cv2.imdecode(np.fromfile(path_a, dtype=np.uint8), -1)
     im_b = cv2.imdecode(np.fromfile(path_b, dtype=np.uint8), -1)
     row_a, col_a, _ = im_a.shape
     row_b, col_b, _ = im_b.shape
     row = 0
     col = 0
-    if type == 'horizen':
+    isHorzen = type == 'horizen'
+    if reshape:
+        if isHorzen:
+            avg_row = int((row_a + row_b) / 2)
+            rate_a = avg_row / row_a
+            rate_b = avg_row / row_b
+        else:
+            avg_col = int((col_a + col_b) / 2)
+            rate_a = avg_col / col_a
+            rate_b = avg_col / col_b
+        im_a = cv2.resize(im_a, (int(col_a*rate_a), int(row_a*rate_a)))
+        row_a, col_a, _ = im_a.shape
+        im_b = cv2.resize(im_b, (int(col_b*rate_b), int(row_b*rate_b)))
+        row_b, col_b, _ = im_b.shape
+    if isHorzen:
         row = max(row_a, row_b)
         col = col_a + col_b + margin
     else:

@@ -11,6 +11,7 @@ import getpass
 import requests
 import paramiko
 import json
+import numpy as np
 
 from reflash_cdn import purgeFiles
 password_file = "C:\\Users\\%s\\.ssh\\arona-backend-password" % getpass.getuser()
@@ -29,13 +30,17 @@ def draw_image(url: str, name: str, override_path: str = "", source = source_str
     img = response.read()
     with open(tmp_file_path, "wb") as f:
         f.write(img)
-    img = cv2.imread(tmp_file_path)
+    # 一律转换为png
+    img = Image.open(tmp_file_path)
+    img = img.convert("RGBA", colors=255)
+    img.save(tmp_file_path)
+    img = cv2.imdecode(np.fromfile(tmp_file_path, dtype=np.uint8), -1)
     rows, cols, _ = img.shape
-    bg = Image.new('RGB', (cols, int(rows + font_size * 1.5)), color='white')
+    bg = Image.new('RGBA', (cols, int(rows + font_size * 1.5)), color='white')
     draw = ImageDraw.Draw(bg)
     draw.text((0 + 10, rows), "图片来源: " + source, font=fnt, fill=(0,0,0))
     bg.save(tmp_file_path2)
-    bg = cv2.imread(tmp_file_path2)
+    bg = cv2.imdecode(np.fromfile(tmp_file_path2, dtype=np.uint8), -1)
     bg[0:rows, 0:cols] = img
     name = re.sub('[\/:*?"<>|]','',name) # 移除非法字符
     name = re.sub(r"[%s]+" %punctuation, "",name)

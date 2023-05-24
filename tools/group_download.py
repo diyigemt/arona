@@ -1,7 +1,9 @@
 import yaml
 from yaml.loader import SafeLoader
 from tools import draw_image
-from fetch_student_info_from_ba_game_db import concat_list
+from fetch_student_info_from_ba_game_db import concat_list, concat_two_im
+from functools import reduce
+from PIL import Image
 import os
 
 if __name__ == "__main__":
@@ -20,22 +22,45 @@ if __name__ == "__main__":
             name = name + ".png"
         path = item["path"]
         url = item["url"].split("@")[0]
-        if "source" in item:
-            draw_image(url, name, path, source=item["source"])
-        else:
-            draw_image(url, name, path)
-        if "group" in item and item["group"] != "":
-            if item["group"] in concat_group:
-                concat_group[item["group"]].append(path + name)
+        local_path = path + name
+        if url != "":
+            if "source" in item:
+                draw_image(url, name, path, source=item["source"])
             else:
-                concat_group[item["group"]] = [path + name]
+                draw_image(url, name, path)
+        else:
+            if not os.path.exists(local_path):
+                print("%s: url is empty and local path is not exist. skip" % name)
+                count += 1
+                continue
+        if "group" in item and item["group"] != "":
+            group = item["group"]
+            
+            if "type" in item and item["type"] != "": 
+                type = item["type"]
+            else:
+                type = "horizen"
+            if group in concat_group:
+                concat_group[group].append({
+                    "path": local_path,
+                    "type": type
+                })
+            else:
+                concat_group[group] = [{
+                    "path": local_path,
+                    "type": type
+                }]
         count += 1
     if len(concat_group.keys()) != 0:
+        def concat(a, b):
+            concat_two_im(a["path"], b["path"], a["path"], b["type"], margin=20, reshape=True)
+            return { path: a["path"], type: b["type"] }
         print("start concat")
         for key in concat_group.keys():
             print("concat group: %s" % key)
             group = concat_group[key]
-            concat_list(group, group[0], reshape=True)
+            reduce(concat, group)
             group.remove(group[0])
-            for f in group:
+            for f in list(map(lambda x: x["path"], group)):
                 os.remove(f)
+

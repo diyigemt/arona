@@ -3,12 +3,10 @@ image:
     path: './image/some/'
     url: ''
     group: ''
+    type: "horizen" # horizen or vertical
   - name: 'test'
     path: './image/some/'
     url: ''
-  - name: '国际服未来视'
-    path: './image/some/'
-    url: 'https://i0.hdslb.com/bfs/article/b7c5f1cf39bf61d542536ea8516c6eb3d2802abe.png@942w_2129h_progressive.webp'
   - name: 'test'
     path: './image/student_rank/'
     url: ''

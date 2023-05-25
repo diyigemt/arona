@@ -54,7 +54,7 @@ if __name__ == "__main__":
     if len(concat_group.keys()) != 0:
         def concat(a, b):
             concat_two_im(a["path"], b["path"], a["path"], b["type"], margin=20, reshape=True)
-            return { path: a["path"], type: b["type"] }
+            return { "path": a["path"], "type": b["type"] }
         print("start concat")
         for key in concat_group.keys():
             print("concat group: %s" % key)

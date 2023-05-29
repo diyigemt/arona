@@ -11,8 +11,8 @@ from fetch_student_info_from_ba_game_db import concat_list, concat_two_im, downl
 import re
 # 要生成的目标 日文名
 target = [
-    # "ジュンコ(正月)",
-    # "ハルナ(正月)",
+    "ルミ",
+    "ミナ",
     # "フウカ(正月)"
     # "アカネ(バニーガール)","イズミ(水着)"
     # "アイリ","アカネ","アカネ(バニーガール)","アカリ","アコ","アズサ","アズサ(水着)",

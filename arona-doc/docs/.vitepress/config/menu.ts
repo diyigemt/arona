@@ -53,11 +53,7 @@ const MainSideBar: DefaultTheme.Sidebar = [{
   }]
 }, {
   text: '简版用户手册',
-  collapsed: false,
-  items: [{
-    text: '',
-    link: '/manual/'
-  }]
+  link: '/manual/'
 }, {
   text: '其他',
   collapsed: false,
@@ -75,6 +71,7 @@ export const SidebarItem: DefaultTheme.Sidebar = {
   '/install/': MainSideBar,
   '/config/': MainSideBar,
   '/command/': MainSideBar,
+  '/manual/': MainSideBar,
   '/other/': MainSideBar,
 };
 

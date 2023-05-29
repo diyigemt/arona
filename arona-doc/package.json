@@ -1,6 +1,6 @@
 {
   "name": "arona-docs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "private": true,
   "main": "index.js",
@@ -16,7 +16,7 @@
   "author": "diyigemt",
   "license": "ISC",
   "devDependencies": {
-    "@algolia/client-search": "^4.17.0",
+    "@algolia/client-search": "^4.17.1",
     "@rushstack/eslint-patch": "1.2.0",
     "@typescript-eslint/eslint-plugin": "5.53.0",
     "@typescript-eslint/parser": "5.53.0",

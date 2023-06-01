@@ -12,7 +12,6 @@ import re
 # 要生成的目标 日文名
 target = [
     "ルミ",
-    "ミナ",
     # "フウカ(正月)"
     # "アカネ(バニーガール)","イズミ(水着)"
     # "アイリ","アカネ","アカネ(バニーガール)","アカリ","アコ","アズサ","アズサ(水着)",
@@ -114,9 +113,10 @@ def run(playwright: Playwright):
                 local_path = local_path + ".png"
             if not os.path.exists(local_path):
                 count = count + 1
-                print("local file not found, skip: %s, %d/%d" % (cnName, count, 118))
-                continue
-            source_im = cv2.imdecode(np.fromfile(local_path, dtype=np.uint8), -1)
+                print("local file not found, start download from remote: %s" % cnName)
+                source_im = download_image("https://arona.cdn.diyigemt.com/image", path, local_path)
+            else:
+                source_im = cv2.imdecode(np.fromfile(local_path, dtype=np.uint8), -1)
         else:
             source_im = download_image("https://arona.cdn.diyigemt.com/image", path, local_path)
 

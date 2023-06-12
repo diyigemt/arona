@@ -11,7 +11,7 @@ from fetch_student_info_from_ba_game_db import concat_list, concat_two_im, downl
 import re
 # 要生成的目标 日文名
 target = [
-    "ルミ",
+    "ミノリ",
     # "フウカ(正月)"
     # "アカネ(バニーガール)","イズミ(水着)"
     # "アイリ","アカネ","アカネ(バニーガール)","アカリ","アコ","アズサ","アズサ(水着)",
@@ -128,12 +128,12 @@ def run(playwright: Playwright):
                 "ex_name": ""
             }
         
-        # 从shaledb下载 如果有爱用品信息 顺便拿到爱用品
-        cn_info = fetch_data_from_schaledb(playwright, loma, cn_info)
-
         # 有时候gamekee太恶心了拿不到, 手动填上
         if jpName in cn_translate_dict:
             cn_info.update(cn_translate_dict[jpName])
+
+        # 从shaledb下载 如果有爱用品信息 顺便拿到爱用品
+        cn_info = fetch_data_from_schaledb(playwright, loma, cn_info)
 
         # 从gamedb下载
         btnFilterList[0].click()

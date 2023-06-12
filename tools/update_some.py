@@ -8,4 +8,4 @@ base_folder = "/some/"
 if __name__ == '__main__':
     image_dict = update_image_from_api(base_folder, type=3)
     post_image_to_remote(base_folder)
-    post_data("imageUpdate", image_dict)
+    post_data("imageUpdate", image_dict)    

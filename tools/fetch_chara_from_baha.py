@@ -12,7 +12,7 @@ from tools import replace_name
 debug_index = -1
 url = "https://forum.gamer.com.tw/C.php?bsn=38898&snA=698&tnum=34"
 headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36"}
-copy_suffix = ["幼女", "私服", "泳装", "温泉", "自行车装", "正月", "兔女郎"]
+copy_suffix = ["幼女", "私服", "泳装", "温泉", "自行车装", "正月", "兔女郎", "应援团"]
 copy_match = re.compile("\((.*)\)")
 tmp_file_path = "tmp.png"
 tmp_file_path2 = "tmp2.png"

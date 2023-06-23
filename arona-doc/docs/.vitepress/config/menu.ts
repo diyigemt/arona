@@ -87,4 +87,7 @@ export const NavItem: DefaultTheme.NavItem[] = [{
     text: 'Changelog',
     link: '/other/changelog',
   }],
+}, {
+  text: 'api公开计划',
+  link: '/api/index',
 }];

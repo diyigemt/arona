@@ -1,3 +1,4 @@
+import threading
 import cv2
 import os
 import time
@@ -11,7 +12,7 @@ from fetch_student_info_from_ba_game_db import concat_list, concat_two_im, downl
 import re
 # 要生成的目标 日文名
 target = [
-    "ミノリ",
+    "ミユ(水着)", "サキ(水着)", "ミヤコ(水着)"
     # "フウカ(正月)"
     # "アカネ(バニーガール)","イズミ(水着)"
     # "アイリ","アカネ","アカネ(バニーガール)","アカリ","アコ","アズサ","アズサ(水着)",
@@ -25,8 +26,10 @@ target = [
 ]
 # 如果本地有图片
 
+lock = threading.Lock()
+max_thread = min(4, os.cpu_count())
 
-def run(playwright: Playwright):
+def run(playwright: Playwright, arr: list[str]):
     with codecs.open("./config/local_file_map.json", "r", encoding="utf-8") as f:
         local_file_path = json.load(f)
     browser = playwright.chromium.launch(headless=True, slow_mo=100)
@@ -56,16 +59,16 @@ def run(playwright: Playwright):
     with codecs.open(cn_translation_location, "r", encoding="utf-8") as f:
         cn_translate_dict = json.loads(f.read())
 
-    if len(target) == 0:
+    if len(arr) == 0:
         for file in os.listdir("./image/parse/"):
             file_name = file.replace(".png", "")
             for key in cache_dict:
                 raw = cache_dict[key]
                 if raw["cnName"] == file_name:
-                    target.append(key)
+                    arr.append(key)
     
     count = 0
-    for jpName in target:
+    for jpName in arr:
         if jpName not in cache_dict:
             count = count + 1
             print("%s not found in dict" % jpName)
@@ -202,7 +205,7 @@ def run(playwright: Playwright):
         end_time = time.time()
 
         # loacal
-        print("success: %s, %d/%d, spend: %ds" % (cnName, count, len(target), (end_time - start_time)))
+        print("success: %s, %d/%d, spend: %ds" % (cnName, count, len(arr), (end_time - start_time)))
         
         start_time = end_time
         # 关闭信息窗口
@@ -359,6 +362,28 @@ def get_content(page, xPaths: str, isSingleLine = False) -> str:
             return content, index - 1
     # print(xPaths)
     return "", -1
+
+def thread_run(arr):
+   with sync_playwright() as playwright:
+        run(playwright, arr) 
+
+def split_arr(arr, size):
+    s = []
+    for i in range(0, int(len(arr)) + 1, size):
+        c = arr[i:i + size]
+        if c != []:
+            s.append(c)
+    return s
+
 if __name__ == "__main__":
-    with sync_playwright() as playwright:
-        run(playwright)
+    if len(target) < max_thread:
+        split = 1
+    else:
+        split = max_thread
+    splited_arr = split_arr(target, split)
+    threads = [threading.Thread(target=thread_run, args=(arr,)) for arr in splited_arr]
+    print("start with %d threads" % len(threads))
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()

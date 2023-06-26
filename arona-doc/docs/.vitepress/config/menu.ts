@@ -90,4 +90,7 @@ export const NavItem: DefaultTheme.NavItem[] = [{
 }, {
   text: 'api公开计划',
   link: '/api/index',
+}, {
+  text: '最后的公告',
+  link: '/api/announcement',
 }];

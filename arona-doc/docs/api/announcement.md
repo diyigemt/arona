@@ -12,4 +12,4 @@ api也已经公开，希望能帮助到现存的以及后来的ba bot开发者�
 
 最后，感谢各位这一年来的支持，我们下个项目再见。
 
-不到一周下个项目就来了，基于bot数据的简略速查网站[AronaBot](https://arona.diyigemt.com/home)
+不到一周下个项目就来了，基于bot数据的简略速查网站[AronaBot](https://tutorial.arona.diyigemt.com/home)

@@ -48,10 +48,6 @@ object TrainerCommand : SimpleCommand(
   private val overrideList = mutableListOf<TrainerOverride>()
   @Handler
   suspend fun UserCommandSender.trainer(str: String) {
-    if (str == "阿罗娜" || str == "彩奈") {
-      subject.sendMessage("阿罗娜已经被老师攻略啦>_<")
-      return
-    }
     val override = overrideList
       .filter { it.name.contains(str) }
       .firstOrNull { it.name.split(",")

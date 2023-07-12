@@ -35,11 +35,11 @@ object SchaleDBDataSyncService : AronaQuartzService{
   private const val BirthdayJobKey = "Birthday"
 
   private const val CN = "https://schaledb.brightsu.cn/"
-  private const val gitHub = "https://lonqie.github.io/SchaleDB/"
+  private const val gitHub = "https://schale.gg/"
   private const val common = "data/common.min.json"
   private const val student = "data/cn/students.min.json"
   private const val localization = "data/cn/localization.json"
-  private const val raid = "data/raids.min.json"
+  private const val raid = "data/cn/raids.min.json"
   private var resString = ""
 
   class SchaleDBDataSyncJob : Job{

@@ -60,7 +60,7 @@ object ImageUtil : InitializedFunction() {
     drawTextAlign(surface, str, 0, y, align, color)
   }
 
-  fun Surface.scale(x: Float, y: Float, color: Int): Surface {
+  fun Surface.scale(x: Float, y: Float, color: Int = 0xFFFFFFFF.toInt()): Surface {
     val width = (this.width * x).toInt()
     val height = (this.height * y).toInt()
     val after = Surface.makeRasterN32Premul(width, height)

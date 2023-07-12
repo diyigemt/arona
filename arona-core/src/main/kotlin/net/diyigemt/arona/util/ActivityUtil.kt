@@ -13,6 +13,7 @@ import net.diyigemt.arona.util.TimeUtil.translateTimeMoreReadable
 import net.diyigemt.arona.util.scbaleDB.SchaleDBUtil
 import org.jsoup.Jsoup
 import java.awt.Color
+import java.io.ByteArrayInputStream
 import java.io.File
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -45,12 +46,12 @@ object ActivityUtil {
   const val ServerMaintenanceStartTimeJP = "10:00"
   const val ServerMaintenanceEndTimeEN = "15:00"
   const val ServerMaintenanceEndTimeJP = "16:00"
-  private val ActivityColorMap: Map<Int, Pair<Color, Color>> = mapOf(
-    1 to (Color.WHITE to Color(255, 140, 0)),
-    2 to (Color.WHITE to Color(138, 43, 226)),
-    3 to (Color.WHITE to Color(16, 126, 247)),
-    4 to (Color.WHITE to Color(245, 108, 108)),
-    5 to (Color.WHITE to Color(103, 194, 58))
+  private val ActivityColorMap: Map<Int, Pair<Int, Int>> = mapOf(
+    1 to (0xFFFFFFFF.toInt() to 0xFFFF8C00.toInt()),
+    2 to (0xFFFFFFFF.toInt() to 0xFF8A2BE2.toInt()),
+    3 to (0xFFFFFFFF.toInt() to 0xFF107EF7.toInt()),
+    4 to (0xFFFFFFFF.toInt() to 0xFFF56C6C.toInt()),
+    5 to (0xFFFFFFFF.toInt() to 0xFF67C23A.toInt())
   )
 
   // 从b_wiki获取数据
@@ -78,39 +79,14 @@ object ActivityUtil {
     GameKeeUtil.getEventData(ServerLocale.GLOBAL)
 
   fun fetchENActivity(): Pair<List<Activity>, List<Activity>> {
-    val list = mutableListOf(
-      ActivityUtil::fetchENActivityFromSchaleDB,
-      ActivityUtil::fetchENActivityFromBiliBili,
-      ActivityUtil::fetchENActivityFromGameKee
-    )
-    val targetFunction = when (AronaNotifyConfig.defaultENActivitySource) {
-      ActivityENSource.SCHALE_DB -> ActivityUtil::fetchENActivityFromSchaleDB
-      ActivityENSource.BILIBILI -> ActivityUtil::fetchENActivityFromBiliBili
-      ActivityENSource.GAME_KEE -> ActivityUtil::fetchENActivityFromGameKee
-    }
-    return doFetch(list, targetFunction).let {
+    return fetchENActivityFromGameKee().let {
       // 加入生日信息
       it.first to it.second.toMutableList().also { a -> a.addAll(SchaleDBUtil.getENBirthdayData()) }
     }
   }
 
   fun fetchJPActivity(): Pair<List<Activity>, List<Activity>> {
-    val list = mutableListOf(
-      ActivityUtil::fetchJPActivityFromCN,
-      ActivityUtil::fetchJPActivityFromJP,
-      ActivityUtil::fetchJPActivityFromGameKee,
-      ActivityUtil::fetchJPActivityFromSchaleDB
-    )
-    val targetFunction = when (AronaNotifyConfig.defaultJPActivitySource) {
-      ActivityJPSource.B_WIKI -> ActivityUtil::fetchJPActivityFromCN
-      ActivityJPSource.WIKI_RU -> ActivityUtil::fetchJPActivityFromJP
-      ActivityJPSource.GAME_KEE -> ActivityUtil::fetchJPActivityFromGameKee
-      ActivityJPSource.SCHALE_DB -> ActivityUtil::fetchJPActivityFromSchaleDB
-    }
-    return doFetch(list, targetFunction).let {
-      // 加入生日信息
-      it.first to it.second.toMutableList().also { a -> a.addAll(SchaleDBUtil.getJPBirthdayData()) }
-    }
+    return fetchJPActivityFromGameKee().let { it.first to it.second.toMutableList().also { a -> a.addAll(SchaleDBUtil.getJPBirthdayData()) } }
   }
 
   private fun doFetch(
@@ -616,12 +592,7 @@ object ActivityUtil {
       serverLocale = ServerLocale.JP,
     )
     if (type0 == ActivityType.NULL) {
-      activity = when (from) {
-        ActivityJPSource.B_WIKI -> extraActivityJPTypeFromCN(activity)
-        ActivityJPSource.WIKI_RU -> extraActivityJPTypeFromJPAndTranslate(activity)
-        ActivityJPSource.GAME_KEE -> extraActivityTypeFromGameKee(activity, ServerLocale.JP)
-        ActivityJPSource.SCHALE_DB -> extraActivityJPTypeFromSchaleDB(activity)
-      }
+      activity = extraActivityJPTypeFromCN(activity)
     } else {
       activity.type = type0
     }
@@ -654,11 +625,7 @@ object ActivityUtil {
       serverLocale = ServerLocale.GLOBAL,
     )
     if (type0 == ActivityType.NULL) {
-      activity = when (from) {
-        ActivityENSource.SCHALE_DB -> activity
-        ActivityENSource.BILIBILI -> activity
-        ActivityENSource.GAME_KEE -> extraActivityTypeFromGameKee(activity, ServerLocale.GLOBAL)
-      }
+      activity = extraActivityTypeFromGameKee(activity, ServerLocale.GLOBAL)
     } else {
       activity.type = type0
     }
@@ -711,7 +678,7 @@ object ActivityUtil {
     fun calcY(offset: Int = 0): Int {
       return DEFAULT_CALENDAR_FONT_SIZE * (lineIndex + offset) + DEFAULT_CALENDAR_LINE_MARGIN * (lineIndex + offset - 1)
     }
-    ImageUtil.init(image, Color.WHITE)
+    ImageUtil.init(image, 0xFFFFFFFF.toInt())
     ImageUtil.drawText(image, title, DEFAULT_CALENDAR_FONT_SIZE, ImageUtil.TextAlign.CENTER)
     lineIndex++
     ImageUtil.drawText(
@@ -734,7 +701,7 @@ object ActivityUtil {
             image,
             0,
             (calcY(-1) + DEFAULT_CALENDAR_LINE_MARGIN * 1.5).toInt(),
-            image.first.width,
+            image.width,
             DEFAULT_CALENDAR_FONT_SIZE + DEFAULT_CALENDAR_LINE_MARGIN / 2,
             40,
             color.second
@@ -749,13 +716,11 @@ object ActivityUtil {
     ImageUtil.drawText(image, "即将开始", calcY())
     lineIndex++
     drawActivity(pending, true)
-    val comeFrom = when (server) {
-      ServerLocale.JP -> AronaNotifyConfig.defaultJPActivitySource.source
-      ServerLocale.GLOBAL -> AronaNotifyConfig.defaultENActivitySource.source
-    }
-    ImageUtil.drawText(image, "数据来源: $comeFrom", calcY())
+    ImageUtil.drawText(image, "数据来源: https://ba.gamekee.com/", calcY())
     val imageFile = File(Arona.dataFolder.absolutePath + "/activity-${server.serverName}.png")
-    ImageIO.write(image.first.scale(DEFAULT_IMAGE_SCALE), "png", imageFile)
+    image.scale(DEFAULT_IMAGE_SCALE, DEFAULT_IMAGE_SCALE).makeImageSnapshot().also {
+      ImageIO.write(ImageIO.read(ByteArrayInputStream(it.encodeToData()?.bytes)), "png", imageFile)
+    }
     return imageFile
   }
 

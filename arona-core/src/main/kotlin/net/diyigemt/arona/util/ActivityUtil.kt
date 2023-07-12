@@ -129,7 +129,7 @@ object ActivityUtil {
     if (result.isSuccess && (data.first.isNotEmpty() || data.second.isNotEmpty())) return data
     for (function in list) {
       result = runCatching {
-        function.call()
+        function.invoke()
       }
       data = result.getOrDefault(listOf<Activity>() to listOf())
       if (data.first.isNotEmpty() || data.second.isNotEmpty()) break

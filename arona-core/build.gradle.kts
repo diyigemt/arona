@@ -42,6 +42,9 @@ dependencies {
   // https://mvnrepository.com/artifact/com.github.taptap/pinyin-plus
   implementation("com.github.taptap:pinyin-plus:1.0")
   implementation("net.mamoe.yamlkt:yamlkt-jvm:0.10.2")
+  val skijaVersion = "0.109.2"
+  implementation("io.github.humbleui:skija-windows-x64:${skijaVersion}")
+  implementation("io.github.humbleui:skija-linux-x64:${skijaVersion}")
 }
 
 tasks.test {

@@ -1,4 +1,4 @@
-[*.{kt, kts}]
+[*.{kt,kts}]
 max_line_length = 120
 tab_width = 2
 ij_continuation_indent_size = 2

@@ -72,7 +72,6 @@ object Arona : KotlinPlugin(
   override fun onEnable() {
     init()
     if (DataBaseProvider.isConnected()) {
-      System.setProperty("java.awt.headless", "true")
       globalEventChannel().filter {
         it is BotOnlineEvent && it.bot.id == AronaConfig.qq
       }.subscribeOnce<BotOnlineEvent> {

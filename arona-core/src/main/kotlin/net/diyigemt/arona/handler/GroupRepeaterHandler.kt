@@ -6,25 +6,25 @@ import net.mamoe.mirai.event.events.GroupMessageEvent
 
 // 复读
 object GroupRepeaterHandler: AronaEventHandler<GroupMessageEvent>, AronaGroupService {
-  private var last: String = ""
-  private var lastSender: Long = 0
-  private var count: Int = 0
+  private val map = mutableMapOf<Long, Triple<String, Long, Int>>() // 群 -> 上次消息, 上次发送者, 次数
   override suspend fun handle(event: GroupMessageEvent) {
     val now = event.message.serializeToMiraiCode()
     if (now.startsWith("/")) return
     val senderId = event.sender.id
-    if (now == last && senderId != lastSender) {
-      count++
+    val group = event.group.id
+    val last = map[group]
+    if (last == null) {
+      map[group] = Triple(now, senderId, 1)
+      return
+    }
+    if (now == last.first && senderId != last.second) {
+      val count = last.third + 1
       if (count >= AronaRepeatConfig.times) {
         event.subject.sendMessage(event.message)
-        count = 0
-        last = now
-        lastSender = 0
+        map[group] = Triple(now, 0, 0)
       }
     } else {
-      last = now
-      lastSender = senderId
-      count = 1
+      map[group] = Triple(now, senderId, 1)
     }
   }
 

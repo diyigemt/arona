@@ -19,6 +19,7 @@ repositories {
   mavenCentral()
   maven("https://jitpack.io")
   maven("https://maven.aliyun.com/repository/public") // 阿里云国内代理仓库
+  maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
 }
 
 dependencies {
@@ -42,9 +43,10 @@ dependencies {
   // https://mvnrepository.com/artifact/com.github.taptap/pinyin-plus
   implementation("com.github.taptap:pinyin-plus:1.0")
   implementation("net.mamoe.yamlkt:yamlkt-jvm:0.10.2")
-  val skijaVersion = "0.109.2"
-  implementation("io.github.humbleui:skija-windows-x64:${skijaVersion}")
-  implementation("io.github.humbleui:skija-linux-x64:${skijaVersion}")
+  val skikoVersion = "0.7.68"
+  implementation("org.jetbrains.skiko:skiko-awt-runtime-windows-x64:$skikoVersion")
+  implementation("org.jetbrains.skiko:skiko-awt-runtime-linux-x64:$skikoVersion")
+//  implementation("org.jetbrains.skiko:skiko-awt-runtime-x64:$skikoVersion")
 }
 
 tasks.test {

@@ -2,7 +2,6 @@ package net.diyigemt.arona.util
 
 import kotlinx.serialization.json.*
 import net.diyigemt.arona.Arona
-import net.diyigemt.arona.config.AronaNotifyConfig
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.entity.ActivityType
 import net.diyigemt.arona.entity.ServerLocale
@@ -12,7 +11,6 @@ import net.diyigemt.arona.util.TimeUtil.calcDiffDayAndHour
 import net.diyigemt.arona.util.TimeUtil.translateTimeMoreReadable
 import net.diyigemt.arona.util.scbaleDB.SchaleDBUtil
 import org.jsoup.Jsoup
-import java.awt.Color
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.text.SimpleDateFormat
@@ -678,7 +676,7 @@ object ActivityUtil {
     fun calcY(offset: Int = 0): Int {
       return DEFAULT_CALENDAR_FONT_SIZE * (lineIndex + offset) + DEFAULT_CALENDAR_LINE_MARGIN * (lineIndex + offset - 1)
     }
-    ImageUtil.init(image, 0xFFFFFFFF.toInt())
+    ImageUtil.init(image.first, 0xFFFFFFFF.toInt())
     ImageUtil.drawText(image, title, DEFAULT_CALENDAR_FONT_SIZE, ImageUtil.TextAlign.CENTER)
     lineIndex++
     ImageUtil.drawText(
@@ -698,10 +696,10 @@ object ActivityUtil {
           val y = calcY()
           val color = ActivityColorMap[it.type.level]!!
           ImageUtil.drawRoundRect(
-            image,
+            image.first,
             0,
             (calcY(-1) + DEFAULT_CALENDAR_LINE_MARGIN * 1.5).toInt(),
-            image.width,
+            image.first.width,
             DEFAULT_CALENDAR_FONT_SIZE + DEFAULT_CALENDAR_LINE_MARGIN / 2,
             40,
             color.second
@@ -718,7 +716,7 @@ object ActivityUtil {
     drawActivity(pending, true)
     ImageUtil.drawText(image, "数据来源: https://ba.gamekee.com/", calcY())
     val imageFile = File(Arona.dataFolder.absolutePath + "/activity-${server.serverName}.png")
-    image.scale(DEFAULT_IMAGE_SCALE, DEFAULT_IMAGE_SCALE).makeImageSnapshot().also {
+    image.first.scale(DEFAULT_IMAGE_SCALE, DEFAULT_IMAGE_SCALE).makeImageSnapshot().also {
       ImageIO.write(ImageIO.read(ByteArrayInputStream(it.encodeToData()?.bytes)), "png", imageFile)
     }
     return imageFile

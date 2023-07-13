@@ -1,6 +1,4 @@
 package net.diyigemt.arona.util
-import io.github.humbleui.skija.*
-import io.github.humbleui.types.RRect
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.entity.*
 import net.diyigemt.arona.interfaces.InitializedFunction
@@ -8,6 +6,7 @@ import net.diyigemt.arona.util.ActivityUtil.DEFAULT_CALENDAR_FONT_SIZE
 import net.diyigemt.arona.util.ActivityUtil.DEFAULT_CALENDAR_LINE_MARGIN
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.jetbrains.skia.*
 import java.io.File
 import javax.imageio.ImageIO
 import kotlin.math.max
@@ -19,10 +18,10 @@ object ImageUtil : InitializedFunction() {
   private const val FontFolder: String = "/font"
   private var font: Font = Font()
 
-  fun createCalendarImage(eventLength: Int, contentMaxLength: Int, titleLength: Int = 20, fontSize: Float = DEFAULT_CALENDAR_FONT_SIZE.toFloat()): Surface {
+  fun createCalendarImage(eventLength: Int, contentMaxLength: Int, titleLength: Int = 20, fontSize: Float = DEFAULT_CALENDAR_FONT_SIZE.toFloat()): Pair<Surface, Font> {
     val width = fontSize * (max(contentMaxLength, titleLength) + 20) * 0.8
     val height = (eventLength + 4) * (fontSize + DEFAULT_CALENDAR_LINE_MARGIN) + 2 * DEFAULT_CALENDAR_LINE_MARGIN
-    return Surface.makeRasterN32Premul(width.toInt(), height.toInt())
+    return Surface.makeRasterN32Premul(width.toInt(), height.toInt()) to font.makeWithSize(fontSize)
   }
 
   fun init(surface: Surface, color: Int = 0xFFFFFFFF.toInt()) {
@@ -34,14 +33,16 @@ object ImageUtil : InitializedFunction() {
   }
 
   private fun drawTextAlign(
-    surface: Surface,
+    group: Pair<Surface, Font>,
     str: String,
     x: Int,
     y: Int,
     align: TextAlign = TextAlign.LEFT,
     color: Int = 0xFF000000.toInt(),
   ) {
+    val surface = group.first
     val canvas = surface.canvas
+    val font = group.second
     val width = font.measureTextWidth(str)
     when (align) {
       TextAlign.LEFT -> canvas.drawString(str, (x + DEFAULT_PADDING).toFloat(), y.toFloat(), font, Paint(color))
@@ -51,13 +52,13 @@ object ImageUtil : InitializedFunction() {
   }
 
   fun drawText(
-    surface: Surface,
+    group: Pair<Surface, Font>,
     str: String,
     y: Int,
     align: TextAlign = TextAlign.LEFT,
     color: Int = 0xFF000000.toInt(),
   ) {
-    drawTextAlign(surface, str, 0, y, align, color)
+    drawTextAlign(group, str, 0, y, align, color)
   }
 
   fun Surface.scale(x: Float, y: Float, color: Int = 0xFFFFFFFF.toInt()): Surface {
@@ -87,8 +88,8 @@ object ImageUtil : InitializedFunction() {
         }
         val tf = Typeface.makeFromFile(fontFile.path)
         font = Font(tf).also {
-          it.edging = FontEdging.ANTI_ALIAS
-          it.hinting = FontHinting.NORMAL
+          it.edging = FontEdging.SUBPIXEL_ANTI_ALIAS
+          it.hinting = FontHinting.FULL
         }
         Arona.info("中文字体初始化成功")
       }.onFailure {

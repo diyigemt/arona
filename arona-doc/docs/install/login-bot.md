@@ -189,6 +189,7 @@ legacy: true
 {
     "8.9.63": {
         "base_url": "http://127.0.0.1:12780",
+        "type": "fuqiuluo/unidbg-fetch-qsign",
         "key": "114514"
     }
 }

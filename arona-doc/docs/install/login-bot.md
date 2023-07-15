@@ -24,7 +24,7 @@
 
 ## 安装必要的插件
 
-截至2023-4-11，能让bot顺利登录的插件一共有4个
+截至2023-07-14，能让bot顺利登录的插件一共有4个
 
 [mirai-device-generator](https://github.com/cssxsh/mirai-device-generator)
 
@@ -36,7 +36,7 @@
 
 分别去release下载最新的后缀名为`.mirai2.jar`的文件放到`plugins`文件夹里即可
 
-部分插件也有通过mcl安装的方法，具体见它们各自的readme
+部分插件也有通过mcl安装的方法，但是有可能会与接下来的操作**冲突**，所以**不推荐**使用mcl安装
 
 其中`KawaiiMiku`和`fix-protocol-version`最新版本互相冲突，需要在以下两种组合中安装其中一个
 
@@ -55,7 +55,7 @@
 
 ### 前置
 
-自从2023/06/24日后传统验证方法被大规模封禁，需要第三方签名服务才能正常登录，为安全起见，`mirai`本身并不提供协议实现，而是通过支持第三方签名协议，以支持登录。
+自从2023-06-24日后传统验证方法被大规模封禁，需要第三方签名服务才能正常登录，为安全起见，`mirai`本身并不提供协议实现，而是通过支持第三方签名协议，以支持登录。
 
 因此，需要先在本地部署签名服务器，或者去网上找别人部署好公开的服务。
 
@@ -63,12 +63,12 @@
 
 ### 部署unidbg-fetch-qsign签名服务
 
-目前(2023/07/14)[unidbg-fetch-qsign](https://github.com/fuqiuluo/unidbg-fetch-qsign)是唯一可行的签名服务，因此接下来进行部署。
+目前(2023-07-14)[unidbg-fetch-qsign](https://github.com/fuqiuluo/unidbg-fetch-qsign)是唯一可行的签名服务，因此接下来进行部署。
 
 1.  在[release](https://github.com/fuqiuluo/unidbg-fetch-qsign/releases)下载最新的压缩包(v1.1.4)；
 
 
-2.  将压缩包解压到任何一个你喜欢的位置；
+2.  将压缩包解压到任何一个你喜欢的位置，建议放到`console`安装的根目录下，与`plugins`、`config`等文件夹同级；
 
 
 3.  编辑`txlib\8.9.63`下的`config.json`，将`server.host`改为`127.0.0.1`，将`server.host`改为`12780`，将`auto_register`改为`true`，改好的应该是这个样子：
@@ -139,25 +139,123 @@ bin/unidbg-fetch-qsign --basePath=txlib/8.9.63
 
 ### 配置`KawaiiMiku`和`fix-protocol-version`
 
+将[安装必要的插件](#安装必要的插件)中下载的jar包放入`plugins`文件夹，启动一次console，让它们生成自己的配置文件，`console`启动成功后即可退出。
+
+在[RomiChan/protocol-versions](https://github.com/RomiChan/protocol-versions/)下载版本为`8.9.63`的`android_phone.json`文件，
+为了防止更新导致的版本变更，这里放一个直连:[android_phone.json](https://raw.githubusercontent.com/RomiChan/protocol-versions/7d151b65d9891a44e6675de6496da9ae6f929b06/android_phone.json)<a id="android_phone"></a>
+
+将下载好的`android_phone.json`放到`console`安装的根目录下，与`plugins`、`config`等文件夹同级。
+
+接下来根据[安装必要的插件](#安装必要的插件)中选择的组合不同有不同的配置方法
+
+::: warning
+
+需要在`console`停止的情况下进行
+
+:::
+
+1. 选择安装`KawaiiMiku@最新版`和`fix-protocol-version@1.8.3`
+
+编辑位于`config/top.mrxiaom.mirai.kawaii`下的`config.yml`，修改其中的`service-url`，`service-key`和`legacy`这三个字段的内容
+
+`service-url`为`unidbg-fetch-qsign`配置中`server.host`与`server.port`的拼接，这里改为`http://127.0.0.1:12780`，如果选择网上公开的签名服务，这里填写它提供的地址
+
+`service-key`为`unidbg-fetch-qsign`配置中`key`的内容，这里保持不变，如果选择网上公开的签名服务，这里填写它提供的key
+
+`legacy`改为`true`
+
+这是修改好的示例
+
+```yaml
+# [重启生效] unidbg-fetch-qsign 服务地址，可不带/结尾
+service-url: 'http://127.0.0.1:12780'
+# [重启生效] unidbg-fetch-qsign 服务密钥，在签名服务的 config.json 内
+service-key: 114514
+...
+...
+...
+# 是否使用旧版本 (1.1.0 或之前) 的签名服务
+legacy: true
+...
+...
+...
+```
+
+2. 选择安装`fix-protocol-version@最新版`
+
+编辑位于`console`安装根目录的`KFCFactory.json`文件，修改为以下内容
+
+```json
+{
+    "8.9.63": {
+        "base_url": "http://127.0.0.1:12780",
+        "key": "114514"
+    }
+}
+```
+
+`base_url`为`unidbg-fetch-qsign`配置中`server.host`与`server.port`的拼接，这里改为`http://127.0.0.1:12780`，如果选择网上公开的签名服务，这里填写它提供的地址
+
+`key`为`unidbg-fetch-qsign`配置中`key`的内容，这里保持不变，如果选择网上公开的签名服务，这里填写它提供的key
+
+### 启动console登录bot账号
+
+经过以上步骤，此时`console`的目录结构大致为
+
+```
+|* 
+  |- bots
+    |- 114514 (机器人配置文件夹，以QQ号命名)
+    | |- device.json ( [设备信息文件] )
+  |- config (插件配置文件夹)
+    |- top.mrxiaom.mirai.kawaii (没有选择安装KawaiiMiku就没有这个文件夹)
+    | |- config.yml ( [插件配置文件] )
+  |- data
+  |- plugins (插件文件夹)
+  |- unidbg-fetch-qsign-1.1.4 (签名服务主目录)
+    |- bin (签名服务主脚本)
+    |- lib (签名服务依赖)
+    |- txlib (腾讯加密算法库)
+    | |- 8.9.58 (这些是不同QQ版本的不同算法库和配置，目录结构相同)
+    | |- 8.9.63
+    | | |- libfekit.so
+    | | |- libQSec.so
+    | | |- config.json
+    | | |- dtconfig.json
+    | |- 8.9.68
+  |- KFCFactory.json (没有选择安装fix-protocol-version就没有这个文件)
+  |- android_phone.json
+  |- mcl
+```
+
+配置完毕后，正常启动console，启动成功后，检查控制台输出中的
+
+```bash
+2023-07-14 10:42:23 I/fix-protocol-version: 当前各协议版本日期: 
+ANDROID_PHONE  8.9.63.11390  2023-05-26T10:46:18+08:00
+ANDROID_PAD    8.9.63.11390  2023-05-26T10:46:18+08:00
+ANDROID_WATCH  2.0.8         2019-06-03T20:25:31+08:00
+IPAD           8.9.33.614    2021-12-31T11:36:26+08:00
+MACOS          6.8.2.21241   2022-03-14T11:11:35+08:00
+```
+
+检查`ANDROID_PHONE`的值是否为`8.9.63.11390`，如果不是，需要返回[下载android_phone.json](#android_phone)的步骤，检查`android_phone.json`是否存在及其位置是否正确
+
 ::: danger
 
 验证链接是有时效性的，建议先往下看完再回过头开始
 
 :::
 
-在mcl安装目录下打开控制台窗口，输入`./mcl`启动mirai-console，等待它初始化完成
+在控制台中输入以下命令登录bot账号，请自行将`botqq号`和`bot密码`替换成对应值
 
-初始化完成触发自动登录后，你应该会看到这个窗口
-
-<img src="/image/install/slider_captcha.webp" alt="滑动验证"/>
-
-如果你没有配置自动登录，可以使用下面的命令手动执行登录
-
-```bash
-/login q号 密码 协议类型
+```
+/login botqq号 bot密码 ANDROID_PHONE
 ```
 
-协议类型指[这里介绍的内容](#protocol)
+如果没有意外，你应该会看到这个窗口
+
+<img src="/image/install/slider_captcha.webp" alt="滑动验证"/>
 
 你有两个选择来完成滑动验证码认证：
 
@@ -170,15 +268,13 @@ bin/unidbg-fetch-qsign --basePath=txlib/8.9.63
 
 如果你打算用Android apk，那就连上你家wifi
 
-
-
 ### 使用浏览器的调试功能完成滑动验证<a id="browser" />
 
 如果要使用浏览器完成滑动验证，确保浏览器和mcl在同一个局域网内
 
 建议使用现代浏览器(Chrome、FireFox、Edge等)来完成
 
-回到上一步的弹框页面，复制`url`字段的内容，它应该长这样
+回到上一步的弹框页面，复制`url`字段的内容，它大概长这样
 
 ```bash
 https://ssl.captcha.qq.com/template/wireless_mqq_captcha.html?style=simple&*************************&clientype=1&apptype=2
@@ -220,18 +316,6 @@ t03FHeRLG6F-JmIu7tQon3Bx8BWGJoRYFpS1KEI002qu3vDCfAxpBAh1eSm2LMuXf1WG1TJ9_GIYjUB7
 
 <img src="/image/install/slider_commit.webp" alt="粘贴回去" />
 
-在完成滑动验证后，会弹窗设备锁验证或者短信验证，需要bot账号绑定了手机号或者打开设备锁
-
-<img src="/image/install/slider_second_verify.webp" alt="粘贴回去" />
-
-这里选择短信验证，确保bot账号已经绑定了手机号，发送并回填验证码即可
-
-<img src="/image/install/slider_sms.webp" alt="短信验证" />
-
-最后在控制台看到这个，整个bot登录流程结束
-
-<img src="/image/install/success.webp" alt="登录成功"/>
-
 ### 使用mirai-login-solver-sakura配套的Android apk完成滑动验证<a id="sakura" />
 
 这个方法需要你有一台Android机并且与mcl**处于同一个局域网下**，对于大部分家庭环境就是运行mcl的台式机插的网线和Android机连接的wifi都是同一个路由
@@ -247,6 +331,30 @@ t03FHeRLG6F-JmIu7tQon3Bx8BWGJoRYFpS1KEI002qu3vDCfAxpBAh1eSm2LMuXf1WG1TJ9_GIYjUB7
 <img src="/image/install/slider_captcha.webp" alt="使用apk解决">
 
 接下来的流程引导mirai-login-solver-sakura已经做的足够好了
+
+### 滑动验证后
+
+在完成滑动验证后，大概率会弹窗设备锁验证或者短信验证，需要bot账号绑定了手机号或者打开设备锁
+
+<img src="/image/install/slider_second_verify.webp" alt="粘贴回去" />
+
+这里选择短信验证，确保bot账号已经绑定了手机号，发送并回填验证码即可
+
+<img src="/image/install/slider_sms.webp" alt="短信验证" />
+
+最后在控制台看到这个，整个bot登录流程结束
+
+<img src="/image/install/success.webp" alt="登录成功"/>
+
+## 登录成功后注意事项
+
+`unidbg-fetch-qsign`仍然有报告内存泄漏的情况出现，使用时需要密切观察是否有内存泄漏的情况发生，如果内存使用量一直在上涨，可以选择重启认证服务
+
+::: info
+
+在第一次使用`unidbg-fetch-qsign`登录后的**0到3小时内**，服务器会大概率将账号踢下线，此时需要真实设备登录并进行人脸解锁，之后不会再踢下线
+
+:::
 
 ## 配置mirai-console的自动登录
 
@@ -283,6 +391,12 @@ accounts:
 
 对于arona来说，如果不使用ANDROID_PHONE协议登录，将无法使用戳一戳功能
 
+::: warning
+
+2023/07/15更新:目前只有ANDROID_PHONE协议能正常登录，所以你只能选择ANDROID_PHONE协议
+
+:::
+
 ## bots文件夹
 
 mcl安装目录下的`bots`文件夹里保存着bot的快速登录信息
@@ -303,7 +417,9 @@ mcl安装目录下的`bots`文件夹里保存着bot的快速登录信息
 
 ## 将bot部署在远程服务器上
 
+同本地登录流程，不同的是，需要将本地的bots文件夹复制到mcl安装目录，这样可以跳过滑动验证流程直接登录，防止因为本地验证滑动验证的IP地址与服务器IP地址不一致导致禁止登录。
 
+另外，为了能使`mcl`和`unidbg-fetch-qsign`能够在退出ssh后继续运行，建议使用`tmux`，`screen`等软件将进程挂在后台
 
 ## 登录过程中遇到的错误
 
@@ -323,10 +439,20 @@ net.mamoe.mirai.network.WrongPasswordException:
 
 code常见的有235、237、238、45等
 
-出现这种情况时，**需要**将`bots`文件夹下当前bot账号对应的文件夹删除，再走一遍滑动验证的流程
+如果出现235、237、238，可以尝试将将`bots`文件夹下当前bot账号对应的文件夹中的`cache`和`log`文件夹删除，只保留`device.json`这个文件再尝试登录。
+
+如果出现code=45，**需要**将`bots`文件夹下当前bot账号对应的文件夹删除，再走一遍滑动验证的流程
 
 推荐使用经过`fix-protocol-version`插件修复后的协议登录，即`ANDROID_PHONE`、`ANDROID_PAD`这两个协议
 
 **不推荐**使用`ANDROID_WATCH`等协议登录，目前没有任何替代方案
 
 如果不论怎么改协议还是遇到这些错误，建议考虑一下是不是bot被tx拉黑了，换个号吧
+
+::: warning
+
+2023/07/15更新:目前只有ANDROID_PHONE协议能正常登录，所以你只能选择ANDROID_PHONE协议，如果出现code=45，删除`device.json`文件再次登录试试
+
+或者换个号吧
+
+:::

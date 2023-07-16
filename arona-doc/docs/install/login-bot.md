@@ -65,7 +65,7 @@
 
 目前(2023-07-14)[unidbg-fetch-qsign](https://github.com/fuqiuluo/unidbg-fetch-qsign)是唯一可行的签名服务，因此接下来进行部署。
 
-1.  在[release](https://github.com/fuqiuluo/unidbg-fetch-qsign/releases)下载最新的压缩包(v1.1.4)；
+1.  在[release](https://github.com/fuqiuluo/unidbg-fetch-qsign/releases)下载最新的压缩包(目前是v1.1.5(2023-07-15))；
 
 
 2.  将压缩包解压到任何一个你喜欢的位置，建议放到`console`安装的根目录下，与`plugins`、`config`等文件夹同级；
@@ -96,7 +96,7 @@
 
 如果你知道`server.host`和`server.host`代表什么，你也可以将它们改成你喜欢的值。
 
-4.  在解压出来的目录下执行下面的指令
+4.  在解压出来的目录(unidbg-fetch-qsign-xxx)里执行下面的指令
 
 ::: code-group
 
@@ -213,7 +213,7 @@ legacy: true
     | |- config.yml ( [插件配置文件] )
   |- data
   |- plugins (插件文件夹)
-  |- unidbg-fetch-qsign-1.1.4 (签名服务主目录)
+  |- unidbg-fetch-qsign-1.1.5 (签名服务主目录,目前(2023-07-16)版本是1.1.5)
     |- bin (签名服务主脚本)
     |- lib (签名服务依赖)
     |- txlib (腾讯加密算法库)

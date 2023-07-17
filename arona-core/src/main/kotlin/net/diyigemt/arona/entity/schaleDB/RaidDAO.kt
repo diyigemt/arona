@@ -41,7 +41,7 @@ data class RaidDAO(
         net.diyigemt.arona.db.data.schaledb.Raid.insert {
           it[Id] = item.Id
           it[IsReleased] = item.IsReleased.first()
-          it[NameCn] = item.NameCn
+          it[NameCn] = item.NameCn ?: "peroro-sama"
           it[CurrentJPN] = ""
           it[CurrentGLB] = ""
         }
@@ -62,7 +62,7 @@ data class RaidDAO(
     for (item in query){
       val id = item.getOrNull(net.diyigemt.arona.db.data.schaledb.Raid.Id)!!
       val isReleased = item.getOrNull(net.diyigemt.arona.db.data.schaledb.Raid.IsReleased)!!
-      val nameCN = item.getOrNull(net.diyigemt.arona.db.data.schaledb.Raid.NameCn)!!
+      val nameCN = item.getOrNull(net.diyigemt.arona.db.data.schaledb.Raid.NameCn)?: "peroro-sama"
       dao.Raid = dao.Raid.plus(Raid(Id = id, IsReleased = mutableListOf(isReleased, isReleased), NameCn = nameCN))
     }
 

@@ -16,7 +16,7 @@ object ImageUtil : InitializedFunction() {
   private const val DEFAULT_PADDING: Int = 10
   private const val FONT_NAME = "SourceHanSansCN-Normal.otf"
   private const val FontFolder: String = "/font"
-  private var font: Font = Font()
+  private lateinit var font: Font
 
   fun createCalendarImage(eventLength: Int, contentMaxLength: Int, titleLength: Int = 20, fontSize: Float = DEFAULT_CALENDAR_FONT_SIZE.toFloat()): Pair<Surface, Font> {
     val width = fontSize * (max(contentMaxLength, titleLength) + 20) * 0.8
@@ -93,7 +93,7 @@ object ImageUtil : InitializedFunction() {
         }
         Arona.info("中文字体初始化成功")
       }.onFailure {
-        font = Font()
+        font = Font(Typeface.makeDefault())
         Arona.warning("字体注册失败, 使用默认字体, 可能会导致中文乱码")
       }
     }

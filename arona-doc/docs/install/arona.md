@@ -11,7 +11,26 @@
 
 2. 在[releases](https://github.com/diyigemt/arona/releases)下载最新版本的jar包并放入mirai-console的`plugins`目录下
 
-3. 启动mirai-console，等到显示如下字样后退出：
+
+3. 编辑`mcl`目录下的`config.json`文件，在`maven_repo`下加入一行`https://maven.pkg.jetbrains.space/public/p/compose/dev`
+
+修改后的文件内容大致如下
+
+```json
+{
+...
+  "mirai_repo": "https://repo.mirai.mamoe.net/keep/mcl",
+  "maven_repo": [
+    "https://maven.aliyun.com/repository/public",
+    "https://maven.pkg.jetbrains.space/public/p/compose/dev"
+  ],
+...
+}
+```
+
+注意`https://maven.aliyun.com/repository/public`后面要加一个英文逗号`,`
+
+4. 启动mirai-console，等到显示如下字样后退出：
 
  ```bash
  yyyy-MM-dd HH:mm:ss I/arona: arona loaded
@@ -26,9 +45,9 @@
 
 当然由于网络原因可能并没有最后这四项，不过并不影响使用。
 
-4. 在[releases](https://github.com/diyigemt/arona/releases)下载最新版本的`arona.db`的数据库文件，替换掉`data/net.diyigemt.arona/arona.db`
+5. 在[releases](https://github.com/diyigemt/arona/releases)下载最新版本的`arona.db`的数据库文件，替换掉`data/net.diyigemt.arona/arona.db`
 
-5. 在`config/net.diyigemt.arona/`文件夹下根据自己的喜好编辑arona的配置文件，具体内容将会在下一节解释
+6. 在`config/net.diyigemt.arona/`文件夹下根据自己的喜好编辑arona的配置文件，具体内容将会在下一节解释
 
 ## 初始化
 

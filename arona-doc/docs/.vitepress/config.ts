@@ -22,6 +22,9 @@ export default withPwa(
     themeConfig: {
       nav: NavItem,
       sidebar: SidebarItem,
+      search: {
+        provider: 'local',
+      },
       socialLinks: [
         { icon: 'github', link: 'https://github.com/diyigemt/arona' },
         {

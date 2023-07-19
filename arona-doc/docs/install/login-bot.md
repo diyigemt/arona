@@ -38,7 +38,7 @@
 
 部分插件也有通过mcl安装的方法，但是有可能会与接下来的操作**冲突**，所以**不推荐**使用mcl安装
 
-其中`KawaiiMiku`和`fix-protocol-version`最新版本互相冲突，需要在以下两种组合中安装其中一个
+其中`KawaiiMiku`和`fix-protocol-version`最新版本互相**冲突**，需要在以下两种组合中安装**其中一个**
 
 1.  [KawaiiMiku@最新版](https://github.com/MrXiaoM/KawaiiMiku/releases)和[fix-protocol-version@1.8.3](https://github.com/cssxsh/fix-protocol-version/releases/tag/v1.8.3)
 2.  只安装[fix-protocol-version@最新版](https://github.com/cssxsh/fix-protocol-version/releases)
@@ -133,13 +133,13 @@ bin/unidbg-fetch-qsign --basePath=txlib/8.9.63
 
 ::: warning
 
-在无桌面环境的服务器上部署时，建议使用`tmux`或`screen`等软件将服务挂在后台运行，因为除了登录需要签名服务外，**其他任何时候**都可能需要验证签名，因此签名服务需要常开。
+在无桌面环境的服务器上部署时，建议使用`tmux`或`screen`等软件将服务挂在后台运行，因为除了登录需要签名服务外，**其他任何时候**都可能需要验证签名，因此签名服务需要**常开**。
 
 :::
 
 ### 配置`KawaiiMiku`和`fix-protocol-version`
 
-将[安装必要的插件](#安装必要的插件)中下载的jar包放入`plugins`文件夹，启动一次console，让它们生成自己的配置文件，`console`启动成功后即可退出。
+将[安装必要的插件](#安装必要的插件)中下载的jar包放入`plugins`文件夹，**启动**一次console，让它们生成自己的配置文件，`console`启动成功后即可退出。
 
 在[RomiChan/protocol-versions](https://github.com/RomiChan/protocol-versions/)下载版本为`8.9.63`的`android_phone.json`文件，
 为了防止更新导致的版本变更，这里放一个直连:[android_phone.json](https://raw.githubusercontent.com/RomiChan/protocol-versions/7d151b65d9891a44e6675de6496da9ae6f929b06/android_phone.json)<a id="android_phone"></a>
@@ -245,6 +245,8 @@ MACOS          6.8.2.21241   2022-03-14T11:11:35+08:00
 ::: danger
 
 验证链接是有时效性的，建议先往下看完再回过头开始
+
+在登录Bot之前，需要**再次确认**签名服务是否正常运行，在Bot运行周期内**任何时候**都可能需要签名服务
 
 :::
 

@@ -24,7 +24,8 @@ object NGAPushConfig: AutoSavePluginConfig("nga") {
     mutableMapOf(
       "42382305" to "xiwang399",
       "40785736" to "安kuzuha",
-      "64124793" to "星泠鑫"
+      "64124793" to "星泠鑫",
+      "60347121" to "Haremsupervisor"
     )
   )
 

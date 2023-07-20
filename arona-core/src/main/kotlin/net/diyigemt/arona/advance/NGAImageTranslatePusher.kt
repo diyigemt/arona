@@ -34,18 +34,22 @@ object NGAImageTranslatePusher : AronaQuartzService {
 
   class TranslatePusherJob : Job {
     override fun execute(context: JobExecutionContext?) {
-      val fetchNGA = fetchNGA().also {
-        if (it.isEmpty()) {
+      val fetchNGA = fetchNGA().let {
+        if (it == null) {
           Arona.warning("arona获取nga图楼信息失败,请检查配置文件是否有误")
           return
         }
+        it
       }
       val cache = NGAPushConfig.cache
       val isNew = cache.isEmpty()
       val pending = fetchNGA.filter {
         !cache.any { c -> c.second == it.postId }
       }.also {
-        if (it.isEmpty()) return
+        if (it.isEmpty()) {
+          Arona.info("arona获取nga图楼信息: 新图列表为空")
+          return
+        }
       }
       updateCache(cache, pending)
       val init = context?.mergedJobDataMap?.getBooleanValue(ImageTranslateCheckInitKey) ?: false
@@ -90,8 +94,7 @@ object NGAImageTranslatePusher : AronaQuartzService {
     val postId: String
   )
 
-  private fun fetchNGA(): List<NGAFloor> {
-    val res = mutableListOf<NGAFloor>()
+  private fun fetchNGA(): List<NGAFloor>? {
     val random = Calendar.getInstance().time.time - Random().nextInt(25) + 5
     cookies["lastvisit"] = random.toString()
     cookies["lastpath"] = "/read.php?tid=${cookies["ngaPassportUid"]}"
@@ -102,7 +105,8 @@ object NGAImageTranslatePusher : AronaQuartzService {
       .get()
       .body()
     val mainContent = body.getElementsByClass("forumbox")
-    if (mainContent.size < 2) return res
+    if (mainContent.size < 2) return null
+    val res = mutableListOf<NGAFloor>()
     mainContent.removeAt(0)
     mainContent.forEach { it ->
       val user =

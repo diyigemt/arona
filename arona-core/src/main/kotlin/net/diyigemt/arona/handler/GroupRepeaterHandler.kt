@@ -22,6 +22,8 @@ object GroupRepeaterHandler: AronaEventHandler<GroupMessageEvent>, AronaGroupSer
       if (count >= AronaRepeatConfig.times) {
         event.subject.sendMessage(event.message)
         map[group] = Triple(now, 0, 0)
+      } else {
+        map[group] = Triple(now, senderId, count)
       }
     } else {
       map[group] = Triple(now, senderId, 1)

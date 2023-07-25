@@ -733,5 +733,20 @@
         "cnName": "泳装白子",
         "loma": "Shiroko_Swimsuit",
         "gamekee": "https://ba.gamekee.com/161196.html"
+    },
+    "コハル(水着)": {
+        "cnName": "泳装小春",
+        "loma": "Koharu_Swimsuit",
+        "gamekee": "https://ba.gamekee.com/595927.html"
+    },
+    "ウイ(水着)": {
+        "cnName": "泳装忧",
+        "loma": "Ui_Swimsuit",
+        "gamekee": "https://ba.gamekee.com/595933.html"
+    },
+    "ヒナタ(水着)": {
+        "cnName": "泳装日向",
+        "loma": "Hinata_Swimsuit",
+        "gamekee": "https://ba.gamekee.com/595935.html"
     }
 }

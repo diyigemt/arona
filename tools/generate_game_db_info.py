@@ -12,7 +12,7 @@ from fetch_student_info_from_ba_game_db import concat_list, concat_two_im, downl
 import re
 # 要生成的目标 日文名
 target = [
-    "ミユ(水着)", "サキ(水着)", "ミヤコ(水着)"
+    "シロコ(水着)",
     # "フウカ(正月)"
     # "アカネ(バニーガール)","イズミ(水着)"
     # "アイリ","アカネ","アカネ(バニーガール)","アカリ","アコ","アズサ","アズサ(水着)",
@@ -27,7 +27,8 @@ target = [
 # 如果本地有图片
 
 lock = threading.Lock()
-max_thread = min(4, os.cpu_count())
+# max_thread = min(4, os.cpu_count())
+max_thread = 1
 
 def run(playwright: Playwright, arr: list[str]):
     with codecs.open("./config/local_file_map.json", "r", encoding="utf-8") as f:
@@ -381,7 +382,10 @@ if __name__ == "__main__":
     else:
         split = max_thread
     splited_arr = split_arr(target, split)
-    threads = [threading.Thread(target=thread_run, args=(arr,)) for arr in splited_arr]
+    if len(splited_arr) == 0:
+        threads = [threading.Thread(target=thread_run, args=([],))]
+    else:
+        threads = [threading.Thread(target=thread_run, args=(arr,)) for arr in splited_arr]
     print("start with %d threads" % len(threads))
     for t in threads:
         t.start()

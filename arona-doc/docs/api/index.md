@@ -13,10 +13,13 @@
    - [bilibili](https://space.bilibili.com/6690298)
    - [nga](https://nga.178.com/nuke.php?func=ucp&uid=42164110)
 3. 使用本 API 是你个人的行为，产生的任何问题都与我无关
+4. 在使用过程中如果出现图片无法发出的情况，可以去[腾讯文档的表格](https://docs.qq.com/sheet/DVGNTT3hCVUJKVHZP?tab=BB08J2)反馈
 
 ## 攻略系列
 
-### 主线攻略
+### 主线·学生·活动等攻略
+
+实现效果可看[功能介绍](/command/manual#%E5%AD%A6%E7%94%9F%E4%B8%8E%E4%B8%BB%E7%BA%BF%E5%9C%B0%E5%9B%BE%E6%94%BB%E7%95%A5%E7%B3%BB%E5%88%97)
 
 ```shell
 GET https://arona.diyigemt.com/api/v1/image

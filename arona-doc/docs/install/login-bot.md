@@ -40,7 +40,7 @@
 
 其中`KawaiiMiku`和`fix-protocol-version`最新版本互相**冲突**，需要在以下两种组合中安装**其中一个**
 
-1.  [KawaiiMiku@最新版](https://github.com/MrXiaoM/KawaiiMiku/releases)和[fix-protocol-version@1.8.3](https://github.com/cssxsh/fix-protocol-version/releases/tag/v1.8.3)
+1.  [KawaiiMiku@最新版](https://github.com/MrXiaoM/KawaiiMiku/releases)和[fix-protocol-version@1.8.3](https://github.com/cssxsh/fix-protocol-version/releases/tag/v1.8.3) **不推荐这个组合**
 2.  只安装[fix-protocol-version@最新版](https://github.com/cssxsh/fix-protocol-version/releases)
 
 ## 登录bot账号
@@ -62,6 +62,12 @@
 签名服务器跑起来至少需要512MB的内存空间，如果有条件建议自己部署，因为整个签名过程会被签名服务获取，使用公开的签名服务器**可能会**导致账号泄露。
 
 ### 部署unidbg-fetch-qsign签名服务
+
+::: warning
+
+在进行此步骤之前，请确保已经安装Java11或以上的版本
+
+:::
 
 目前(2023-07-14)[unidbg-fetch-qsign](https://github.com/fuqiuluo/unidbg-fetch-qsign)是唯一可行的签名服务，因此接下来进行部署。
 

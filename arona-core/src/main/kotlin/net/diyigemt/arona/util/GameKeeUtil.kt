@@ -32,10 +32,12 @@ object GameKeeUtil {
     val method = when(server){
       ServerLocale.GLOBAL -> ActivityUtil::insertEnActivity
       ServerLocale.JP -> ActivityUtil::insertJpActivity
+      ServerLocale.CN -> ActivityUtil::insertCnActivity
     }
     val source = when(server){
       ServerLocale.GLOBAL -> ActivityUtil.ActivityENSource.GAME_KEE
       ServerLocale.JP -> ActivityUtil.ActivityJPSource.GAME_KEE
+      ServerLocale.CN -> ActivityUtil.ActivityCNSource.GAME_KEE
     }
 
     for(i in json.data){

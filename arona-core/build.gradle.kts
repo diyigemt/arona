@@ -43,9 +43,10 @@ dependencies {
   // https://mvnrepository.com/artifact/com.github.taptap/pinyin-plus
   implementation("com.github.taptap:pinyin-plus:1.0")
   implementation("net.mamoe.yamlkt:yamlkt-jvm:0.10.2")
-  val skikoVersion = "0.7.68"
+  val skikoVersion = "0.7.72"
   implementation("org.jetbrains.skiko:skiko-awt-runtime-windows-x64:$skikoVersion")
   implementation("org.jetbrains.skiko:skiko-awt-runtime-linux-x64:$skikoVersion")
+  implementation("org.jetbrains.skiko:skiko-awt-runtime-linux-arm64:$skikoVersion")
 //  implementation("org.jetbrains.skiko:skiko-awt-runtime-x64:$skikoVersion")
 }
 

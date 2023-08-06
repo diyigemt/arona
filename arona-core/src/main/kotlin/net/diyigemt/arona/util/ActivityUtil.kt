@@ -39,7 +39,7 @@ object ActivityUtil {
   private const val WikiruPage = "イベント一覧"
   const val DEFAULT_CALENDAR_FONT_SIZE = 144
   const val DEFAULT_CALENDAR_LINE_MARGIN = 30
-  const val DEFAULT_IMAGE_SCALE = 0.2F
+  const val DEFAULT_IMAGE_SCALE = 0.15F
   const val ServerMaintenanceStartTimeEN = "11:00"
   const val ServerMaintenanceStartTimeJP = "10:00"
   const val ServerMaintenanceEndTimeEN = "15:00"
@@ -73,11 +73,19 @@ object ActivityUtil {
 
   private fun fetchENActivityFromSchaleDB(): Pair<List<Activity>, List<Activity>> = SchaleDBUtil.getGlobalEventData()
 
-  private fun fetchENActivityFromGameKee(): Pair<List<Activity>, List<Activity>> =
-    GameKeeUtil.getEventData(ServerLocale.GLOBAL)
+  private fun fetchENActivityFromGameKee() = GameKeeUtil.getEventData(ServerLocale.GLOBAL)
+
+  private fun fetchCNActivityFromGameKee() = GameKeeUtil.getEventData(ServerLocale.CN)
 
   fun fetchENActivity(): Pair<List<Activity>, List<Activity>> {
     return fetchENActivityFromGameKee().let {
+      // 加入生日信息
+      it.first to it.second.toMutableList().also { a -> a.addAll(SchaleDBUtil.getENBirthdayData()) }
+    }
+  }
+
+  fun fetchCNActivity(): Pair<List<Activity>, List<Activity>> {
+    return fetchCNActivityFromGameKee().let {
       // 加入生日信息
       it.first to it.second.toMutableList().also { a -> a.addAll(SchaleDBUtil.getENBirthdayData()) }
     }
@@ -533,7 +541,7 @@ object ActivityUtil {
   }
 
   private fun extraActivityJPTypeFromCN(activity: Activity): Activity {
-    return activity
+    return extraActivityTypeFromGameKee(activity, ServerLocale.JP)
   }
 
   private fun extraActivityTypeFromGameKee(activity: Activity, server: ServerLocale): Activity {
@@ -630,6 +638,39 @@ object ActivityUtil {
     doInsert0(now, parseStart, parseEnd, active, pending, activity)
   }
 
+  /**
+   * 插入国服活动并对活动进行分类
+   * @param now 当前时间
+   * @param parseStart 活动开始时间
+   * @param parseEnd 活动结束时间
+   * @param active 正在进行的活动列表
+   * @param pending 即将开始的活动列表
+   * @param contentSource 活动内容
+   * @param type0 已知的活动类型(如果已经得知可以直接填，未知请在本方法里注册方法解析出来)
+   */
+  fun insertCnActivity(
+    now: Date,
+    parseStart: Date,
+    parseEnd: Date,
+    active: MutableList<Activity>,
+    pending: MutableList<Activity>,
+    contentSource: String,
+    from: ActivityCNSource = ActivityCNSource.GAME_KEE,
+    type0: ActivityType = ActivityType.NULL
+  ) {
+    var activity = Activity(
+      contentSource,
+      TimeUtil.calcTime(parseStart, true),
+      serverLocale = ServerLocale.CN,
+    )
+    if (type0 == ActivityType.NULL) {
+      activity = extraActivityTypeFromGameKee(activity, ServerLocale.CN)
+    } else {
+      activity.type = type0
+    }
+    doInsert0(now, parseStart, parseEnd, active, pending, activity)
+  }
+
 
   /**
    * 插入活动并对活动进行分类
@@ -654,8 +695,6 @@ object ActivityUtil {
       active.add(activity)
     }
   }
-
-  private fun locale(type: ActivityType?): ServerLocale = if (type == null) ServerLocale.JP else ServerLocale.GLOBAL
 
   private fun sortActive(active: Activity): Int {
     val diff = calcDiffDayAndHour(active.time)
@@ -716,8 +755,8 @@ object ActivityUtil {
     drawActivity(pending, true)
     ImageUtil.drawText(image, "数据来源: https://ba.gamekee.com/", calcY())
     val imageFile = File(Arona.dataFolder.absolutePath + "/activity-${server.serverName}.png")
-    image.first.scale(DEFAULT_IMAGE_SCALE, DEFAULT_IMAGE_SCALE).makeImageSnapshot().also {
-      ImageIO.write(ImageIO.read(ByteArrayInputStream(it.encodeToData()?.bytes)), "png", imageFile)
+    image.first.scale(DEFAULT_IMAGE_SCALE, DEFAULT_IMAGE_SCALE).also {
+      ImageIO.write(it, "png", imageFile)
     }
     return imageFile
   }
@@ -726,12 +765,17 @@ object ActivityUtil {
     B_WIKI("https://wiki.biligame.com/bluearchive/"),
     WIKI_RU("https://bluearchive.wikiru.jp/"),
     GAME_KEE("https://ba.gamekee.com/"),
-    SCHALE_DB("https://lonqie.github.io/SchaleDB/")
+    SCHALE_DB("https://schale.gg/")
   }
 
   enum class ActivityENSource(val source: String) {
-    SCHALE_DB("https://lonqie.github.io/SchaleDB/"),
+    SCHALE_DB("https://schale.gg/"),
     BILIBILI("https://space.bilibili.com/1585224247"),
     GAME_KEE("https://ba.gamekee.com/")
+  }
+
+  enum class ActivityCNSource(val source: String) {
+    GAME_KEE("https://ba.gamekee.com/"),
+    SCHALE_DB("https://schale.gg/"),
   }
 }

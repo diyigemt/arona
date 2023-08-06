@@ -22,6 +22,7 @@ object ActivityCommand : SimpleCommand(
       when(locale) {
         ServerLocale.JP -> sendJP(subject)
         ServerLocale.GLOBAL -> sendEN(subject)
+        ServerLocale.CN -> sendCN(subject)
       }
     }
     when {
@@ -49,7 +50,8 @@ object ActivityCommand : SimpleCommand(
   }
 
   private suspend fun sendCN(subject: Contact) {
-    subject.sendMessage("国服还没开呢,别急")
+    val cnActivity = ActivityUtil.fetchCNActivity()
+    send(subject, cnActivity, ServerLocale.CN)
   }
 
   private suspend fun send(subject: Contact, activities: Pair<List<Activity>, List<Activity>>, serverLocale: ServerLocale = ServerLocale.JP) {

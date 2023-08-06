@@ -35,10 +35,12 @@ object SchaleDBUtil {
     val function = when(type) {
       ServerLocale.JP -> ActivityUtil::insertJpActivity
       ServerLocale.GLOBAL -> ActivityUtil::insertEnActivity
+      ServerLocale.CN -> ActivityUtil::insertCnActivity
     }
     val source = when(type) {
       ServerLocale.JP -> ActivityUtil.ActivityJPSource.SCHALE_DB
       ServerLocale.GLOBAL -> ActivityUtil.ActivityENSource.SCHALE_DB
+      ServerLocale.CN -> ActivityUtil.ActivityCNSource.SCHALE_DB
     }
     //Characters
     for (item in commonItem.regions[type.ordinal].current_gacha) {
@@ -122,21 +124,23 @@ object SchaleDBUtil {
     val function = when(locale) {
       ServerLocale.JP -> ActivityUtil::insertJpActivity
       ServerLocale.GLOBAL -> ActivityUtil::insertEnActivity
+      ServerLocale.CN -> ActivityUtil::insertCnActivity
     }
     val source = when(locale) {
       ServerLocale.JP -> ActivityUtil.ActivityJPSource.SCHALE_DB
       ServerLocale.GLOBAL -> ActivityUtil.ActivityENSource.SCHALE_DB
+      ServerLocale.CN -> ActivityUtil.ActivityCNSource.SCHALE_DB
     }
     if (birthdayList.isEmpty()) SchaleDBDataSyncService.BirthdayJob().getBirthdayList()
     val now = Calendar.getInstance().time
-    for (item in birthdayList){
+    birthdayList.filter { !it.name.contains("(") }.forEach {
       function.call(
         now,
-        Date.from(item.date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()),
-        Date.from(item.date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()),
+        Date.from(it.date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()),
+        Date.from(it.date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()),
         mutableListOf<Activity>(),
         list,
-        item.name + "的生日",
+        it.name + "的生日",
         source,
         ActivityType.BIRTHDAY
       )

@@ -166,6 +166,7 @@ data class CommonDAO(
       val terrain = when(type){
         ServerLocale.GLOBAL -> item.getOrNull(Raid.CurrentGLB)!!
         ServerLocale.JP -> item.getOrNull(Raid.CurrentJPN)!!
+        ServerLocale.CN -> item.getOrNull(Raid.CurrentGLB)!!
       }
       dao.regions[serverType].current_raid = dao.regions[serverType].current_raid.plus(CurrentRaid(value, terrain, start, end))
     }

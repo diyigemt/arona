@@ -30,6 +30,12 @@ object AronaNotifyConfig: AutoSavePluginConfig("arona-notify") {
   @ValueDescription("国际服防侠提醒开头文字")
   val notifyStringEN: String by value("arona的防侠预警(国际服)")
 
-  @ValueDescription("\"/活动\"指令的默认目标服务器,可选值为 \"JP\"和\"GLOBAL\"")
+  @ValueDescription("启用国服防侠提醒")
+  val enableCN: Boolean by value(true)
+
+  @ValueDescription("国服防侠提醒开头文字")
+  val notifyStringCN: String by value("arona的防侠预警(国服)")
+
+  @ValueDescription("\"/活动\"指令的默认目标服务器,可选值为 \"JP\"、\"GLOBAL\"和\"CN\"")
   val defaultActivityCommandServer: ServerLocale by value(ServerLocale.JP)
 }

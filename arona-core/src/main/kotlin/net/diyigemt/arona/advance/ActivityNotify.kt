@@ -25,6 +25,7 @@ object ActivityNotify: AronaQuartzService {
   private const val ActivityNotifyDataInitKey = "init"
   private const val ActivityNotifyOneHour = "ActivityNotifyOneHour"
   private const val ActivityKey = "activity"
+  private const val NotifyStringKey = "notifyString"
   private const val MaintenanceKey = "maintenance"
   private const val DropActivityTime = 22
   private const val DropEndTime = 24 + 3 - DropActivityTime
@@ -32,26 +33,33 @@ object ActivityNotify: AronaQuartzService {
 
   class ActivityNotifyJob: Job {
     override fun execute(context: JobExecutionContext?) {
-      val jp: Pair<List<Activity>, List<Activity>> = ActivityUtil.fetchJPActivity()
+      val jp = ActivityUtil.fetchJPActivity()
       val en = ActivityUtil.fetchENActivity()
+      val cn = ActivityUtil.fetchCNActivity()
       val alertListJP = mutableListOf<Activity>()
       val alertListEN = mutableListOf<Activity>()
+      val alertListCN = mutableListOf<Activity>()
       val filterJP = jp.first
         .filter {
           filterActive(it, alertListJP)
         } to jp.second
         .filter {
           filterPending(it)
-        }
+        }.also { insertAlert(alertListJP, ServerLocale.JP) }
       val filterEN = en.first
         .filter {
           filterActive(it, alertListEN)
         } to en.second
         .filter {
           filterPending(it)
-        }
-      insertAlert(alertListJP)
-      insertAlert(alertListEN)
+        }.also { insertAlert(alertListEN, ServerLocale.GLOBAL) }
+      val filterCN = cn.first
+        .filter {
+          filterActive(it, alertListCN)
+        } to cn.second
+        .filter {
+          filterPending(it)
+        }.also { insertAlert(alertListCN, ServerLocale.CN) }
       // 初始化不显示信息
       val init = context?.mergedJobDataMap?.getBoolean(ActivityNotifyDataInitKey) ?: false
       if (init) return
@@ -63,6 +71,10 @@ object ActivityNotify: AronaQuartzService {
         if (AronaNotifyConfig.enableEN) {
           val enMessage = ActivityUtil.createActivityImage(filterEN, ServerLocale.GLOBAL)
           sendMessage(enMessage, AronaNotifyConfig.notifyStringEN)
+        }
+        if (AronaNotifyConfig.enableCN) {
+          val enMessage = ActivityUtil.createActivityImage(filterCN, ServerLocale.CN)
+          sendMessage(enMessage, AronaNotifyConfig.notifyStringCN)
         }
       }
     }
@@ -78,21 +90,24 @@ object ActivityNotify: AronaQuartzService {
       }
     }
 
-    private fun doInsert(activity: List<Activity>, h: Int, extraKey: String = "") {
+    private fun doInsert(activity: List<Activity>, h: Int, locale: ServerLocale, extraKey: String = "") {
       val now = Calendar.getInstance()
       now.set(Calendar.HOUR_OF_DAY, h)
       now.set(Calendar.MINUTE, 0)
       now.set(Calendar.MILLISECOND, 0)
-      val serverJp = isJPServer(activity)
       QuartzProvider.createSingleTask(
         ActivityNotifyOneHourJob::class.java,
         now.time,
-        "${ActivityNotifyOneHour}-${if (serverJp) "jp" else "en"}-${h}-${extraKey}",
+        "${ActivityNotifyOneHour}-${locale.commandName}-${h}-${extraKey}",
         ActivityNotifyOneHour,
-        mapOf(ActivityKey to activity)
+        mapOf(ActivityKey to activity, NotifyStringKey to when(locale) {
+          ServerLocale.JP -> AronaNotifyConfig.notifyStringJP
+          ServerLocale.GLOBAL -> AronaNotifyConfig.notifyStringEN
+          ServerLocale.CN -> AronaNotifyConfig.notifyStringCN
+        })
       )
     }
-    private fun insertAlert(activity: MutableList<Activity>) {
+    private fun insertAlert(activity: MutableList<Activity>, locale: ServerLocale) {
       if (activity.isEmpty()) return
       val instance = Calendar.getInstance()
       val dropActivities = activity.filter { isMidnightEndActivity(it) }
@@ -101,26 +116,19 @@ object ActivityNotify: AronaQuartzService {
       val nowH = instance.get(Calendar.HOUR_OF_DAY)
       if (activity.isNotEmpty()) {
         activity.groupBy { calcDiffDayAndHour(it.time).first }.forEach { (h, u) ->
-          doInsert(u, nowH + h - 1, h.toString())
+          doInsert(u, nowH + h - 1, locale, h.toString())
         }
       }
       // 双倍掉落提醒
       if (dropActivities.isNotEmpty()) {
-        doInsert(dropActivities, DropActivityTime)
+        doInsert(dropActivities, DropActivityTime, locale)
       }
-    }
-
-    private fun insertMaintenanceAlert(activity: Activity, h: Int) {
-      doInsert(listOf(activity), Calendar.getInstance().get(Calendar.HOUR_OF_DAY) + h - 1, extraKey = MaintenanceKey)
     }
 
     private fun filterPending(activity: Activity): Boolean {
       val extra = calcDiffDayAndHour(activity.time)
       val h = extra.first
       val d = extra.second
-      if ((d == 0) && isMaintenanceActivity(activity)) {
-        insertMaintenanceAlert(activity, h)
-      }
       return doFilter(d, h)
     }
 
@@ -147,7 +155,6 @@ object ActivityNotify: AronaQuartzService {
       val ac = context?.mergedJobDataMap?.get(ActivityKey) ?: return
       ac as List<Activity>
       if (ac.isEmpty()) return
-      val server = isJPServer(ac)
       val activity = ac.toMutableList()
       val maintenance: Activity? = activity
         .filter { isMaintenanceActivity(it) }
@@ -163,12 +170,15 @@ object ActivityNotify: AronaQuartzService {
       if (maintenance != null) {
         Arona.sendMessage("距离${serverName}维护还有1小时")
       }
+      val notifyPrefix = context.mergedJobDataMap?.get(NotifyStringKey) ?: "${serverName}防侠提醒"
       // 只有维护信息时
       if (activity.isEmpty()) return
       val activityString = activity
         .map { at -> "${at.content}\n" }
         .reduceOrNull { prv, cur -> prv + cur }
-      val serverString = MiraiCode.deserializeMiraiCode(if (server) AronaNotifyConfig.notifyStringJP else AronaNotifyConfig.notifyStringEN)
+      val serverString = if (context.mergedJobDataMap?.get(NotifyStringKey) != null) {
+        MiraiCode.deserializeMiraiCode(notifyPrefix as String)
+      } else notifyPrefix
       val endTime = if (isMidnightEndActivity(activity[0])) {
         DropEndTime
       } else {
@@ -189,10 +199,6 @@ object ActivityNotify: AronaQuartzService {
   private fun isMidnightEndActivity(activity: Activity): Boolean = activity.type in (ActivityType.N2_3 .. ActivityType.JOINT_EXERCISES)
 
   private fun isMaintenanceActivity(activity: Activity): Boolean = activity.type == ActivityType.MAINTENANCE
-
-  private fun isJPServer(activity: List<Activity>) = isJPServer(activity[0])
-
-  private fun isJPServer(activity: Activity) = activity.serverLocale == ServerLocale.JP
 
   override fun init() {
     registerService()

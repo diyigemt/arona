@@ -7,6 +7,10 @@ import net.diyigemt.arona.util.ActivityUtil.DEFAULT_CALENDAR_LINE_MARGIN
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jetbrains.skia.*
+import java.awt.Color
+import java.awt.Image
+import java.awt.image.BufferedImage
+import java.io.ByteArrayInputStream
 import java.io.File
 import javax.imageio.ImageIO
 import kotlin.math.max
@@ -61,16 +65,21 @@ object ImageUtil : InitializedFunction() {
     drawTextAlign(group, str, 0, y, align, color)
   }
 
-  fun Surface.scale(x: Float, y: Float, color: Int = 0xFFFFFFFF.toInt()): Surface {
+  fun Surface.scale(x: Float, y: Float, color: Int = 0xFFFFFFFF.toInt()): BufferedImage {
     val width = (this.width * x).toInt()
     val height = (this.height * y).toInt()
-    val after = Surface.makeRasterN32Premul(width, height)
-    after.canvas.clear(color)
-    after.canvas.scale(x, y).drawImage(this.makeImageSnapshot(), 0f, 0f)
+    val bf = ImageIO.read(ByteArrayInputStream(this.makeImageSnapshot().encodeToData()?.bytes))
+    val scale = bf.getScaledInstance(width, height, Image.SCALE_SMOOTH)
+    val after = BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR)
+    after.graphics.drawImage(scale, 0, 0, Color.WHITE, null)
+
     return after
   }
 
-  private fun Paint(color: Int) = Paint().also { it.color = color }
+  private fun Paint(color: Int) = Paint().also {
+    it.color = color
+    it.isAntiAlias = true
+  }
 
   enum class TextAlign {
     LEFT, RIGHT, CENTER
@@ -80,23 +89,42 @@ object ImageUtil : InitializedFunction() {
     // 下载字体
     Arona.runSuspend {
       kotlin.runCatching {
-        File(Arona.dataFolderPath(FontFolder)).also { it.mkdirs() }
+        File(Arona.dataFolderPath(FontFolder)).apply { mkdirs() }
         val path = "$FontFolder/$FONT_NAME"
         val fontFile = Arona.dataFolderFile(path)
         if (!fontFile.exists()) {
           NetworkUtil.downloadFileFile(path, fontFile)
         }
         val tf = Typeface.makeFromFile(fontFile.path)
-        font = Font(tf).also {
-          it.edging = FontEdging.SUBPIXEL_ANTI_ALIAS
-          it.hinting = FontHinting.FULL
+        font = Font(tf, size = DEFAULT_CALENDAR_FONT_SIZE.toFloat()).apply {
+          edging = FontEdging.SUBPIXEL_ANTI_ALIAS
+          hinting = FontHinting.FULL
         }
         Arona.info("中文字体初始化成功")
       }.onFailure {
-        font = Font(Typeface.makeDefault())
+        font = Font(
+          FontUtils.matchFamiliesStyle(arrayOf("Arial", "Noto Serif SC", "黑体"), FontStyle.BOLD),
+          size = DEFAULT_CALENDAR_FONT_SIZE.toFloat()
+        ).apply {
+          edging = FontEdging.SUBPIXEL_ANTI_ALIAS
+          hinting = FontHinting.FULL
+        }
         Arona.warning("字体注册失败, 使用默认字体, 可能会导致中文乱码")
       }
     }
   }
 }
 
+fun FontMgr.makeFamilies(): Map<String, FontStyleSet> {
+  val count = familiesCount
+  if (count == 0) return emptyMap()
+  val families: MutableMap<String, FontStyleSet> = HashMap()
+
+  for (index in 0 until count) {
+    val name = getFamilyName(index)
+    val styles = makeStyleSet(index) ?: throw NoSuchElementException("${this}: ${index}.${name}")
+    families[name] = styles
+  }
+
+  return families
+}

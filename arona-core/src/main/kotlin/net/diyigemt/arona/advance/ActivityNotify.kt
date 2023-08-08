@@ -66,21 +66,21 @@ object ActivityNotify: AronaQuartzService {
       if (AronaNotifyConfig.enableEveryDay) {
         if (AronaNotifyConfig.enableJP) {
           val jpMessage = ActivityUtil.createActivityImage(filterJP)
-          sendMessage(jpMessage, AronaNotifyConfig.notifyStringJP)
+          sendMessage(jpMessage, AronaNotifyConfig.notifyStringJP, AronaNotifyConfig.enableJPGroup)
         }
         if (AronaNotifyConfig.enableEN) {
           val enMessage = ActivityUtil.createActivityImage(filterEN, ServerLocale.GLOBAL)
-          sendMessage(enMessage, AronaNotifyConfig.notifyStringEN)
+          sendMessage(enMessage, AronaNotifyConfig.notifyStringEN, AronaNotifyConfig.enableENGroup)
         }
         if (AronaNotifyConfig.enableCN) {
           val enMessage = ActivityUtil.createActivityImage(filterCN, ServerLocale.CN)
-          sendMessage(enMessage, AronaNotifyConfig.notifyStringCN)
+          sendMessage(enMessage, AronaNotifyConfig.notifyStringCN, AronaNotifyConfig.enableCNGroup)
         }
       }
     }
 
-    private fun sendMessage(imageFile: File, source: String) {
-      Arona.sendMessageWithFile() { group ->
+    private fun sendMessage(imageFile: File, source: String, targetGroup: List<Long>) {
+      Arona.sendFilterGroupMessageWithFile(targetGroup) { group ->
         val image = group.uploadImage(imageFile, "png")
         MessageUtil.deserializeMiraiCodeAndBuild(source, group) {
           it.add("\n")

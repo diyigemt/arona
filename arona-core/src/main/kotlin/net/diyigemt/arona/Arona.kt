@@ -165,6 +165,20 @@ object Arona : KotlinPlugin(
     }
   }
 
+  fun sendFilterGroupMessageWithFile(groups: List<Long>?, block: suspend (group: Contact) -> MessageChain) {
+    if (groups.isNullOrEmpty()) {
+      sendMessageWithFile(block)
+    } else {
+      runWithArona {
+        groups.forEach { group0 ->
+          val group = it.groups[group0] ?: return@forEach
+          val message = block(group)
+          group.sendMessage(message)
+        }
+      }
+    }
+  }
+
   fun sendMessage(message: MessageChain) {
     runWithArona {
       AronaConfig.groups.forEach { group0 ->

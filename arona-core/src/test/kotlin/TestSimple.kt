@@ -194,4 +194,11 @@ class TestSimple {
     }
   }
 
+  @Test
+  fun testIntersect() {
+    val listA = listOf(1, 2, 3)
+    val listB = listOf(3, 4, 5)
+    println(listB.intersect(listA))
+  }
+
 }

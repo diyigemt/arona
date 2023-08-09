@@ -34,10 +34,12 @@ import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.contact.NormalMember
 import net.mamoe.mirai.contact.UserOrBot
-import net.mamoe.mirai.event.*
+import net.mamoe.mirai.event.Event
+import net.mamoe.mirai.event.EventChannel
 import net.mamoe.mirai.event.events.BotOnlineEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
 import net.mamoe.mirai.event.events.NudgeEvent
+import net.mamoe.mirai.event.globalEventChannel
 import net.mamoe.mirai.message.code.MiraiCode.deserializeMiraiCode
 import net.mamoe.mirai.message.data.MessageChain
 import net.mamoe.mirai.utils.info
@@ -170,11 +172,13 @@ object Arona : KotlinPlugin(
       sendMessageWithFile(block)
     } else {
       runWithArona {
-        groups.forEach { group0 ->
-          val group = it.groups[group0] ?: return@forEach
-          val message = block(group)
-          group.sendMessage(message)
-        }
+        groups
+          .intersect(AronaConfig.groups.toSet())
+          .forEach { group0 ->
+            val group = it.groups[group0] ?: return@forEach
+            val message = block(group)
+            group.sendMessage(message)
+          }
       }
     }
   }

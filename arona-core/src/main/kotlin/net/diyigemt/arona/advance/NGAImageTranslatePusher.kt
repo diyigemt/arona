@@ -25,7 +25,7 @@ object NGAImageTranslatePusher : AronaQuartzService {
     "lastvisit" to "",
     "lastpath" to ""
   )
-  private const val ImageRegex = "\\[img][.]/([\\w/-]+[.](jpg|png|JPG|PNG))\\[/img]"
+  private const val ImageRegex = "\\[img][.]/([\\w/-]+)[.](jpg|png|JPG|PNG)([.](medium|large|small|thumb|thumb_s|thumb_ss)[.](jpg|png|JPG|PNG))?\\[/img]"
   private const val maxCache: Int = 3
   override var jobKey: JobKey? = null
   override val id: Int = 13

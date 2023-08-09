@@ -41,6 +41,7 @@ import net.mamoe.mirai.event.events.GroupMessageEvent
 import net.mamoe.mirai.event.events.NudgeEvent
 import net.mamoe.mirai.event.globalEventChannel
 import net.mamoe.mirai.message.code.MiraiCode.deserializeMiraiCode
+import net.mamoe.mirai.message.data.Message
 import net.mamoe.mirai.message.data.MessageChain
 import net.mamoe.mirai.utils.info
 import java.io.File
@@ -157,19 +158,24 @@ object Arona : KotlinPlugin(
     }
   }
 
-  fun sendMessageWithFile(block: suspend (group: Contact) -> MessageChain) {
+  /**
+   * 发送带文件的消息
+   * @param delay 每个群的延迟时间, 单位为秒
+   */
+  fun sendMessageWithFile(delay: Int = 0, block: suspend (group: Contact) -> Message) {
     runWithArona {
       AronaConfig.groups.forEach { group0 ->
         val group = it.groups[group0] ?: return@forEach
         val message = block(group)
         group.sendMessage(message)
+        Thread.sleep(delay * 1000L)
       }
     }
   }
 
   fun sendFilterGroupMessageWithFile(groups: List<Long>?, block: suspend (group: Contact) -> MessageChain) {
     if (groups.isNullOrEmpty()) {
-      sendMessageWithFile(block)
+      sendMessageWithFile(0, block)
     } else {
       runWithArona {
         groups

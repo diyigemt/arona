@@ -1,11 +1,13 @@
 package net.diyigemt.arona.advance
 
-import kotlinx.coroutines.runBlocking
 import net.diyigemt.arona.Arona
 import net.diyigemt.arona.config.NGAPushConfig
 import net.diyigemt.arona.quartz.QuartzProvider
 import net.diyigemt.arona.service.AronaQuartzService
+import net.mamoe.mirai.message.data.ForwardMessageBuilder
 import net.mamoe.mirai.message.data.MessageChainBuilder
+import net.mamoe.mirai.message.data.PlainText
+import net.mamoe.mirai.message.data.buildForwardMessage
 import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
 import okhttp3.*
 import org.jsoup.Jsoup
@@ -25,7 +27,8 @@ object NGAImageTranslatePusher : AronaQuartzService {
     "lastvisit" to "",
     "lastpath" to ""
   )
-  private const val ImageRegex = "\\[img][.]/([\\w/-]+)[.](jpg|png|JPG|PNG)([.](medium|large|small|thumb|thumb_s|thumb_ss)[.](jpg|png|JPG|PNG))?\\[/img]"
+  private const val ImageRegex =
+    "\\[img][.]/([\\w/-]+)[.](jpg|png|JPG|PNG)([.](medium|large|small|thumb|thumb_s|thumb_ss)[.](jpg|png|JPG|PNG))?\\[/img]"
   private const val maxCache: Int = 3
   override var jobKey: JobKey? = null
   override val id: Int = 13
@@ -51,26 +54,41 @@ object NGAImageTranslatePusher : AronaQuartzService {
           return
         }
       }
-      updateCache(cache, pending)
+      updateCache(pending)
       val init = context?.mergedJobDataMap?.getBooleanValue(ImageTranslateCheckInitKey) ?: false
       if (init && isNew) {
         return
       }
       pending.map { floor ->
-        Arona.sendMessageWithFile {
-          val builder = MessageChainBuilder()
-          val userName = NGAPushConfig.watch[floor.uid]
-          builder.add("$userName(${floor.uid}):\n")
-          builder.add("${floor.content}\n")
-          runBlocking {
-            floor.images.forEach { href ->
-              val i = fetchImageFromNGA(href)?.toExternalResource() ?: return@forEach
-              val image = it.uploadImage(i)
-              builder.add(image)
-              i.close()
-            }
+        val imageExternalResource = floor.images.mapNotNull {
+          fetchImageFromNGA(it)?.use { stream ->
+            stream.readAllBytes()
           }
-          builder.build()
+        }
+        val userName = NGAPushConfig.watch[floor.uid]
+        Arona.sendMessageWithFile(NGAPushConfig.sendInterval) { group ->
+          if (NGAPushConfig.forwardThreshold != 0 && NGAPushConfig.forwardThreshold <= floor.images.size) {
+            val builder = ForwardMessageBuilder(group)
+            builder.add(Arona.arona!!, PlainText("$userName(${floor.uid}):\n${floor.content}\n"))
+            imageExternalResource.forEach { bytes ->
+              bytes.toExternalResource().use { resource ->
+                val image = group.uploadImage(resource)
+                builder.add(Arona.arona!!, image)
+              }
+            }
+            builder.build()
+          } else {
+            val builder = MessageChainBuilder()
+            builder.add("$userName(${floor.uid}):\n")
+            builder.add("${floor.content}\n")
+            imageExternalResource.forEach { bytes ->
+              bytes.toExternalResource().use { resource ->
+                val image = group.uploadImage(resource)
+                builder.add(image)
+              }
+            }
+            builder.build()
+          }
         }
         // 降低发送频率
         Thread.sleep(2000)
@@ -78,11 +96,11 @@ object NGAImageTranslatePusher : AronaQuartzService {
     }
   }
 
-  private fun updateCache(cache: MutableList<Pair<Int, String>>, now: List<NGAFloor>) {
+  private fun updateCache(now: List<NGAFloor>) {
     val nowDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
-    cache.removeIf { nowDay - it.first >= maxCache }
+    NGAPushConfig.cache.removeIf { nowDay - it.first >= maxCache }
     now.forEach {
-      cache.add(nowDay to it.postId)
+      NGAPushConfig.cache.add(nowDay to it.postId)
     }
   }
 
@@ -125,7 +143,7 @@ object NGAImageTranslatePusher : AronaQuartzService {
           mr.groups.size >= 2
         }
         .map { mr ->
-          mr.groupValues[1]
+          "${mr.groupValues[1]}.${mr.groupValues[2]}"
         }.forEach { mr ->
           imgSrc.add(mr)
         }

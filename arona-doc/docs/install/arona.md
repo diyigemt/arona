@@ -103,3 +103,28 @@ arona一共提供了如下的指令：
 /permission add * net.diyigemt.arona:command.game_name
 /permission add * net.diyigemt.arona:command.game_name_search
 ```
+
+如果你想更精确的控制指令的具体权限，需要修改上边指令中`*`的对应内容，可以参考[mirai官方文档](https://docs.mirai.mamoe.net/console/Permissions.html#%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%A1%A8%E7%A4%BA)，在此只给出简短示例
+
+我想让所有人都能使用`trainer`(/攻略)指令
+
+```shell
+/permission add * net.diyigemt.arona:command.trainer
+```
+
+我想只给群`114513`的群友使用`game_name`(/游戏名)指令
+
+```shell
+/permission add g114513 net.diyigemt.arona:command.game_name
+```
+
+我想让除了群`114514`以外的群友都能使用`trainer`(/攻略)指令
+
+```shell
+/permission add g* net.diyigemt.arona:command.trainer
+/permission remove g114514 net.diyigemt.arona:command.trainer
+```
+
+你是不是以为是上边那两条指令？很遗憾，`mirai-console`不支持这么细粒度的控制，你只能一个个把允许的群使用`/permission add g<群号> net.diyigemt.arona:command.game_name`添加好
+
+特别的，为了简化权限控制(毕竟一上来还得配权限挺麻烦的，自己组包开mc服的服主应该有同感)，除了`mirai-console`自带的权限控制外，`arona`自己还有一套简单的权限控制逻辑，就和[初始化](#初始化)开头说的一样。

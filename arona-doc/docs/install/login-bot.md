@@ -40,7 +40,7 @@
 
 其中`KawaiiMiku`和`fix-protocol-version`最新版本互相**冲突**，需要在以下两种组合中安装**其中一个**
 
-1.  [KawaiiMiku@最新版](https://github.com/MrXiaoM/KawaiiMiku/releases)和[fix-protocol-version@1.8.3](https://github.com/cssxsh/fix-protocol-version/releases/tag/v1.8.3) **不推荐这个组合**
+1.  [KawaiiMiku@最新版](https://github.com/MrXiaoM/KawaiiMiku/releases)和[fix-protocol-version@1.8.3](https://github.com/cssxsh/fix-protocol-version/releases/tag/v1.8.3) **作者已经停止维护，不推荐这个组合**
 2.  只安装[fix-protocol-version@最新版](https://github.com/cssxsh/fix-protocol-version/releases)
 
 ## 登录bot账号
@@ -65,7 +65,7 @@
 
 ::: warning
 
-在进行此步骤之前，请确保已经安装Java11或以上的版本
+在进行此步骤之前，请确保已经安装Java11或以上的版本，并且将java安装目录下的`bin`文件夹添加到系统路径中
 
 :::
 

@@ -1,5 +1,20 @@
 # 更新日志
 
+## v1.1.1
+2023-08-09
+
+1. 修复没有依赖aarch64的问题 [#34](https://github.com/diyigemt/arona/issues/34)
+2. 修复与[mirai-skia-plugin@1.3.2](https://github.com/cssxsh/mirai-skia-plugin)冲突的问题 [#35](https://github.com/diyigemt/arona/issues/35)
+3. `/活动`指令支持国服
+4. [每日防侠预警支持分群生效](https://doc.arona.diyigemt.com/config/base-config#arona-notify-yml)
+
+## v1.1.0
+2023-07-13
+
+1. 修复schaledb数据源url变更的问题 [#29](https://github.com/diyigemt/arona/issues/29)
+2. 更改图片生成方式
+3. 删除`/攻略 阿罗娜`的默认返回值
+
 ## v1.0.14
 2023-02-14
 

@@ -14,7 +14,7 @@ yaml文件对格式**十分敏感**，在保存之前**建议**使用在线网�
 
 ## arona.yml
 
-arona总的配置。
+arona的主配置文件。
 
 | 键                       | 属性           | 作用                                   |
 |:------------------------|--------------|--------------------------------------|
@@ -92,22 +92,44 @@ arona总的配置。
 
 除了双倍掉落提醒时间为晚上22点外，防侠提醒会在活动结束前1个小时进行，因为双倍掉落是在晚上3点结束，2点提醒有点阴间。
 
-| 键                            | 属性      | 作用                                                         |
-|------------------------------|---------|------------------------------------------------------------|
-| enableEveryDay               | Boolean | 是否启用每日防侠提醒功能                                               |
-| notifyType                   | String  | 每日提醒类型,可选ALL(提醒所有时段),ONLY_24H(仅提醒24小时内),ONLY_48H(仅提醒48小时内) |
-| everyDayHour                 | Boolean | 每日防侠提醒的时间(同时也是每日数据更新时间)                                    |
-| enableJP                     | Boolean | 是否启用日服防侠提醒                                                 |
-| notifyStringJP               | Int     | 日服防侠提醒开头文字                                                 |
-| enableEN                     | Boolean | 是否启用国际服防侠提醒                                                |
-| notifyStringEN               | Int     | 日服防侠提醒开头文字                                                 |
-| enableCN                     | Boolean | 是否启用国服防侠提醒                                                 |
-| notifyStringCN               | Int     | 国服防侠提醒开头文字                                                 |
-| defaultActivityCommandServer | Enum    | "/活动"指令的默认目标服务器,可选值为 "JP"、"GLOBAL"和"CN"                    |
+| 键                            | 属性          | 作用                                                         |
+|------------------------------|-------------|------------------------------------------------------------|
+| enableEveryDay               | Boolean     | 是否启用每日防侠提醒功能                                               |
+| notifyType                   | String      | 每日提醒类型,可选ALL(提醒所有时段),ONLY_24H(仅提醒24小时内),ONLY_48H(仅提醒48小时内) |
+| everyDayHour                 | Boolean     | 每日防侠提醒的时间(同时也是每日数据更新时间)                                    |
+| enableJP                     | Boolean     | 是否启用日服防侠提醒                                                 |
+| notifyStringJP               | Int         | 日服防侠提醒开头文字                                                 |
+| enableJPGroup                | List\<Long> | 日服防侠通知的群,留空表示通知所有主配置文件`groups`里的群                          |
+| enableEN                     | Boolean     | 是否启用国际服防侠提醒                                                |
+| notifyStringEN               | Int         | 日服防侠提醒开头文字                                                 |
+| enableENGroup                | List\<Long> | 国际服防侠通知的群,留空表示通知所有主配置文件`groups`里的群                         |
+| enableCN                     | Boolean     | 是否启用国服防侠提醒                                                 |
+| notifyStringCN               | Int         | 国服防侠提醒开头文字                                                 |
+| enableCNGroup                | List\<Long> | 国服防侠通知的群,留空表示通知所有主配置文件`groups`里的群                          |
+| defaultActivityCommandServer | Enum        | "/活动"指令的默认目标服务器,可选值为 "JP"、"GLOBAL"和"CN"                    |
 
 例如`defaultActivityCommandServer`配置为`JP`，那么直接执行`/活动`指令也可以得到和执行`/活动 jp`一致的效果<a id="default-activity"> </a>
 
 **不建议**修改`notifyType`和`everyDayHour`的默认配置
+
+这是一个分群生效示例
+
+```yaml
+# 日服防侠通知的群,留空表示通知所有bot加入的群  
+enableJPGroup: 
+  - 114513
+  - 114514
+# 国服防侠通知的群,留空表示通知所有bot加入的群
+enableCNGroup:
+  - 114515
+  - 114516
+```
+
+那么
+
+- 日服防侠预警只会发送到`114513`和`114514`两个群聊
+- 国际服防侠预警会发送到所有bot加入且群号在[主配置文件](#arona.yml)中`groups`的群聊
+- 国服防侠预警只会发送到`114515`和`114516`两个群聊
 
 ## arona-nudge.yml
 

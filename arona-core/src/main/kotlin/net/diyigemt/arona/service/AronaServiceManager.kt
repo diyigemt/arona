@@ -149,7 +149,6 @@ object AronaServiceManager: InitializedFunction() {
     GroupMessageRecorder.init()
     ActivityNotify.init()
     NGAImageTranslatePusher.init()
-    AronaUpdateChecker.init()
 //    TransferCommand.init()
     TarotCommand.init()
     EmergencyStopCommand.init()

@@ -168,9 +168,9 @@ def run(playwright: Playwright, arr: list[str], thread_id: int):
 
         final_db_pah = path_with_thread_id("./image/tmp/final_db.png", thread_id)
 
-        final_db_im = concat_two_im(path_with_thread_id("./image/tmp/game_db.png", thread_id), path_with_thread_id("./image/tmp/schaledb.png", thread_id), base_path + "final_db.png")
+        final_db_im = concat_two_im(path_with_thread_id("./image/tmp/game_db.png", thread_id), path_with_thread_id("./image/tmp/schaledb.png", thread_id), final_db_pah)
 
-        # 和夜喵拼在一起
+        # 和夜喵拼在一起 
 
         source_row, source_col, dimension = source_im.shape
         if dimension == 3:

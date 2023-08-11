@@ -15,221 +15,6 @@ from config import cache_file_location, name_map_dict_file_location
 headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"}
 font_size = 28
 fnt = ImageFont.truetype('C:\Windows\Fonts\msyh.ttc', font_size)
-def run(playwright: Playwright):
-    # fetch_data_from_schaledb("Yuuka_Track")
-    # 开始截图
-    browser = playwright.chromium.launch(headless=True, slow_mo=100)
-    context = browser.new_context(viewport={'width': 1920, 'height': 1080}, device_scale_factor=4.0)
-    page = context.new_page()
-
-    # 加载已缓存的信息
-    student_dict = {}
-    with codecs.open(cache_file_location, "r", encoding="utf-8") as f:
-        student_dict = json.load(f)
-    
-    # 拿到成长资源截图
-    page.goto("https://ba.game-db.tw/")
-
-    # 切换语言
-    page.locator("svg").click()
-    page.locator("#react-select-2-option-0").click()
-    page.get_by_text("一覧表").click()
-    # 拿到按钮的名称用于对应
-    target_class = page.get_by_text("ユウカ（体操服）").get_attribute("class")
-    jpNameBtnList = page.query_selector_all(".%s" % target_class)
-    for btn in jpNameBtnList:
-        page.evaluate("el => el.setAttribute('jpName', '%s')" % replace_none_char(btn.text_content()), btn)
-    # 切换回中文
-    page.locator("svg").click()
-    page.locator("#react-select-2-option-1").click()
-    time.sleep(3)
-
-    count = 0
-    start_time = time.time()
-    end_time = 0
-    # target_list = ["日奈", "阿露", "真白", "椿"]
-    # target_list = ["爱莉", "枫香", "花子", "玲美", "凌音", "晴", "朱莉", "志美子", "喜美"]
-    target_list = ["喜美", "椿", "真白"]
-    local_file_name = {
-        # "爱莉": "爱莉.png",
-        # "枫香": "风华_枫香_煮饭婆.png",
-        # "花子": "花子.png",
-        # "玲美": "玲美.png",
-        # "晴": "晴.png",
-        # "凌音": "凌音.png",
-        # "朱莉": "朱莉.png",
-        # "志美子": "志美子_图书妹.png",
-        "喜美": "喜美_好美.png",
-        "椿": "椿_狗盾.png",
-        "真白": "麻白.png"
-    }
-    for name in jpNameBtnList:
-        # if count != 98:
-        #     count = count + 1
-        #     continue
-        jpName = name.get_attribute("jpName")
-        info = student_dict[jpName]
-        if info["cnName"] not in target_list:
-            continue
-        # 下载远端图片
-        # remote
-        # remote = query_remote_name(info["cnName"])
-        # path = str(remote["path"])
-        # png_name = path.replace("/student_rank/", "")
-        # name_list = png_name.replace(".png", "").split("_")
-        # first_name = name_list[0]
-        # if not test_name_exist(first_name):
-        #     name_list.remove(first_name)
-        #     first_name = name_list[0]
-        #     png_name = "_".join(name_list) + ".png"
-        # local_path = "./image/parse/%s" % png_name
-        # local
-        local_path = "./image/parse/%s" % local_file_name[info["cnName"]]
-
-        # remote
-        # if os.path.exists(local_path):
-        #     count = count + 1
-        #     print("skip: %s, %d/%d" % (info["cnName"], count, 118))
-        #     end_time = time.time()
-        #     start_time = end_time
-        #     continue
-        # 从远端下载原图
-
-        # remote
-        # source_im = download_image("https://arona.cdn.diyigemt.com/image", path, local_path)
-
-        # local
-        source_im = cv2.imdecode(np.fromfile(local_path, dtype=np.uint8), -1)
-
-        # 从shaledb下载
-        fetch_data_from_schaledb(playwright, info["loma"])
-        name.click()
-        time.sleep(2)
-        # 下载拉满需要的资源图片之类的
-        skill_resource_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[1]/div[2]/div[2]")
-        skill_resource_btn.click()
-
-        # 拿到资源列表的class判断是8行资源还是7行
-        target_class = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[4]").get_attribute("class")
-        resource_size = len(page.query_selector_all(".%s" % target_class))
-
-        skill_resource_1 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[4]")
-        skill_resource_1.screenshot(path="./image/tmp/skill_resource_1.png")
-        skill_resource_2 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[5]")
-        skill_resource_2.screenshot(path="./image/tmp/skill_resource_2.png")
-        skill_resource_3 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[6]")
-        skill_resource_3.screenshot(path="./image/tmp/skill_resource_3.png")
-        skill_resource_4 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[7]")
-        skill_resource_4.screenshot(path="./image/tmp/skill_resource_4.png")
-        if resource_size == 8:
-            skill_resource_5 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[8]")
-            skill_resource_5.screenshot(path="./image/tmp/skill_resource_5.png")
-            resource_1 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[9]")
-            resource_1.screenshot(path="./image/tmp/resource_1.png")
-            resource_2 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[10]")
-            resource_2.screenshot(path="./image/tmp/resource_2.png")
-            resource_3 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[11]")
-            resource_3.screenshot(path="./image/tmp/resource_3.png")
-        else:
-            resource_1 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[8]")
-            resource_1.screenshot(path="./image/tmp/resource_1.png")
-            resource_2 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[9]")
-            resource_2.screenshot(path="./image/tmp/resource_2.png")
-            resource_3 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[10]")
-            resource_3.screenshot(path="./image/tmp/resource_3.png")
-
-        equipment_resource_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[3]/div/div[2]")
-        equipment_resource_btn.click()
-        equipment_resource = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[4]")
-        equipment_resource.screenshot(path="./image/tmp/equipment_resource.png")
-
-        skill_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[1]/div/div[2]")
-        skill_btn.click()
-
-        ex_skill = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[1]")
-        ex_skill.screenshot(path="./image/tmp/ex_skill.png")
-        base_skill = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]")
-        base_skill.screenshot(path="./image/tmp/base_skill.png")
-        enhance_skill = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[1]")
-        enhance_skill.screenshot(path="./image/tmp/enhance_skill.png")
-        sub_skill = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[2]")
-        sub_skill.screenshot(path="./image/tmp/sub_skill.png")
-
-        # 拼接技能成长材料
-        skill_resource_save_path = "./image/tmp/skill_resource.png"
-        base_path = "./image/tmp/"
-        path_list = []
-        path_list.append(base_path + "skill_resource_1.png")
-        path_list.append(base_path + "skill_resource_2.png")
-        path_list.append(base_path + "skill_resource_3.png")
-        path_list.append(base_path + "skill_resource_4.png")
-        if resource_size == 8:
-            path_list.append(base_path + "skill_resource_5.png")
-        path_list.append(base_path + "resource_1.png")
-        path_list.append(base_path + "resource_2.png")
-        path_list.append(base_path + "resource_3.png")
-
-        concat_list(path_list, skill_resource_save_path, -3)
-
-        # 将技能材料和装备材料拼在一起
-        skill_resource_equipment = "./image/tmp/skill_resource_equipment.png"
-        concat_two_im(skill_resource_save_path, base_path + "equipment_resource.png", skill_resource_equipment)
-
-        # 将技能描述拼在一起
-
-        concat_two_im(base_path + "ex_skill.png", base_path + "base_skill.png", base_path + "skill_desc_1.png")
-        concat_two_im(base_path + "enhance_skill.png", base_path + "sub_skill.png", base_path + "skill_desc_2.png")
-        concat_two_im(base_path + "skill_desc_1.png", base_path + "skill_desc_2.png", base_path + "skill_desc.png", type="vertical")
-
-        # 把技能描述和材料拼在一起
-
-        concat_two_im(skill_resource_equipment, base_path + "skill_desc.png", base_path + "game_db.png", type="vertical")
-
-        # 和schaledb的拼在一起
-
-        final_db_im = concat_two_im(base_path + "game_db.png", base_path + "schaledb.png", base_path + "final_db.png")
-
-        # 和夜喵拼在一起
-
-        source_row, source_col, dimension = source_im.shape
-        if dimension == 3:
-            source_im = cv2.cvtColor(source_im, cv2.COLOR_BGR2BGRA)
-
-        final_db_row, final_db_col, _ = final_db_im.shape
-        if final_db_col > source_col:
-            pp = base_path + "final_db.png"
-            im = Image.open(pp)
-            (x, y) = im.size
-            rate = source_col / final_db_col
-            resize = im.resize((int(x * rate), int(y * rate)), Image.Resampling.LANCZOS)
-            resize.save(pp)
-            final_db_im = cv2.imdecode(np.fromfile(pp, dtype=np.uint8), -1)
-            final_db_row, final_db_col, _ = final_db_im.shape
-        col = final_db_col + 10
-        row = source_row + final_db_row + 10
-        im = Image.new('RGBA', (col, row), color='white')
-        im.save(local_path)
-        im = cv2.imdecode(np.fromfile(local_path, dtype=np.uint8), -1)
-        im[0: source_row, 0: source_col] = source_im
-        im[source_row + 10: source_row + 10 + final_db_row, 10: final_db_col + 10] = final_db_im
-        # im = cv2.cvtColor(im, cv2.COLOR_BGRA2BGR)
-        cv2.imencode(".png", im)[1].tofile(local_path)
-        count = count + 1
-        end_time = time.time()
-
-        # remote
-        # print("success: %s, %d/%d, spend: %ds" % (first_name, count, 118, (end_time - start_time)))
-        
-        # loacal
-        print("success: %s, %d/%d, spend: %ds" % (info["cnName"], count, 118, (end_time - start_time)))
-        
-        start_time = end_time
-        # 关闭信息窗口
-        close_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[1]")
-        close_btn.click()
-
-    context.close()
-    browser.close()
 
 def concat_list(paths: list[str], save_path, margin = 0, reshape = False):
     im_list = list(map(lambda path: cv2.imdecode(np.fromfile(path, dtype=np.uint8), -1), paths))
@@ -304,7 +89,10 @@ def concat_two_im(path_a: str, path_b: str, path: str, type: str = 'horizen', ma
     cv2.imencode(".png", im)[1].tofile(path)
     return im
 
-def fetch_data_from_schaledb(pl: Playwright, name, dict):
+def path_with_thread_id(base: str, thread_id: int):
+    return "%s-%d.png" % (base, thread_id)
+
+def fetch_data_from_schaledb(pl: Playwright, name, dict, thread_id: int):
     browser = pl.chromium.launch(headless=True, slow_mo=100)
     context = browser.new_context(viewport={'width': 1920, 'height': 1080}, device_scale_factor=4.0)
     page = context.new_page()
@@ -354,7 +142,7 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict):
     page.evaluate("el => el.remove()", page.query_selector("#ba-background"))
 
     # 立绘
-    page.query_selector("#ba-student-img").screenshot(path="./image/tmp/stu.png")
+    page.query_selector("#ba-student-img").screenshot(path=path_with_thread_id("./image/tmp/stu.png", thread_id))
 
     weapon_btn = page.query_selector("#ba-student-tab-weapon")
     weapon_btn.click()
@@ -370,10 +158,10 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict):
         page.eval_on_selector('//*[@id="ba-weapon-description"]', "node => node.innerText = '%s'" % (dict["wp_desc_1"] + "\\n" + dict["wp_desc_2"]))
 
     weapon_name = page.query_selector("//*[@id='ba-student-page-weapon']/div[1]")
-    weapon_name.screenshot(path="./image/tmp/weapon_name.png")
+    weapon_name.screenshot(path=path_with_thread_id("./image/tmp/weapon_name.png", thread_id))
     
     weapon_img = page.query_selector("//*[@id='ba-student-page-weapon']/div[2]")
-    weapon_img.screenshot(path="./image/tmp/weapon_img.png")
+    weapon_img.screenshot(path=path_with_thread_id("./image/tmp/weapon_img.png", thread_id))
 
     base_info_btn = page.query_selector("#ba-student-tab-profile")
     base_info_btn.click()
@@ -391,21 +179,21 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict):
         page.eval_on_selector('//*[@id="ba-student-profile-text"]', "node => node.innerHTML = '%s'" % desc.replace("\n", "\\n"))
 
     name_card = page.query_selector("//*[@id='ba-student-page-profile']/div[1]")
-    name_card.screenshot(path="./image/tmp/name_card.png")
+    name_card.screenshot(path=path_with_thread_id("./image/tmp/name_card.png", thread_id))
     base_card = page.query_selector("//*[@id='ba-student-page-profile']/table/tbody")
-    base_card.screenshot(path="./image/tmp/base_card.png")
+    base_card.screenshot(path=path_with_thread_id("./image/tmp/base_card.png", thread_id))
     live2d_bannder = page.query_selector("//*[@id='ba-student-page-profile']/div[2]/h5")
-    live2d_bannder.screenshot(path="./image/tmp/live2d_banner.png")
+    live2d_bannder.screenshot(path=path_with_thread_id("./image/tmp/live2d_banner.png", thread_id))
     live2d = page.query_selector("//*[@id='ba-student-page-profile']/div[3]/div")
-    live2d.screenshot(path="./image/tmp/live2d.png")
+    live2d.screenshot(path=path_with_thread_id("./image/tmp/live2d.png", thread_id))
     gift_banner = page.query_selector("//*[@id='ba-student-page-profile']/div[4]/h5")
-    gift_banner.screenshot(path="./image/tmp/gift_banner.png")
+    gift_banner.screenshot(path=path_with_thread_id("./image/tmp/gift_banner.png", thread_id))
     gift = page.query_selector("//*[@id='ba-student-favoured-items']")
-    gift.screenshot(path="./image/tmp/gift.png")
+    gift.screenshot(path=path_with_thread_id("./image/tmp/gift.png", thread_id))
     furniture_banner = page.query_selector("//*[@id='ba-student-page-profile']/div[6]/h5")
-    furniture_banner.screenshot(path="./image/tmp/furniture_banner.png")
+    furniture_banner.screenshot(path=path_with_thread_id("./image/tmp/furniture_banner.png", thread_id))
     furniture = page.query_selector("//*[@id='ba-student-favoured-furniture']")
-    furniture.screenshot(path="./image/tmp/furniture.png")
+    furniture.screenshot(path=path_with_thread_id("./image/tmp/furniture.png", thread_id))
 
     # 如果有爱用品, 顺带把爱用品的翻译拿到 ba-game-db更新有点慢
     # for (let i = 0; i < 11; ++i) { $0.value = i; $0.oninput($0); console.log([...document.querySelectorAll(".ba-col-explosion")][7].innerText) }
@@ -422,26 +210,25 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict):
         dict['gear_desc'] = gear_desc
 
     # 拼到一起
-    save_path = "./image/tmp/schaledb.png"
-    base_path = "./image/tmp/"
+    save_path = path_with_thread_id("./image/tmp/schaledb.png", thread_id)
     path_list = []
-    path_list.append(base_path + "name_card.png")
-    path_list.append(base_path + "base_card.png")
-    path_list.append(base_path + "weapon_name.png")
-    path_list.append(base_path + "weapon_img.png")
-    path_list.append(base_path + "live2d_banner.png")
-    path_list.append(base_path + "live2d.png")
-    path_list.append(base_path + "gift_banner.png")
-    path_list.append(base_path + "gift.png")
-    path_list.append(base_path + "furniture_banner.png")
-    path_list.append(base_path + "furniture.png")
+    path_list.append(path_with_thread_id("./image/tmp/name_card.png", thread_id))
+    path_list.append(path_with_thread_id("./image/tmp/base_card.png", thread_id))
+    path_list.append(path_with_thread_id("./image/tmp/weapon_name.png", thread_id))
+    path_list.append(path_with_thread_id("./image/tmp/weapon_img.png", thread_id))
+    path_list.append(path_with_thread_id("./image/tmp/live2d_banner.png", thread_id))
+    path_list.append(path_with_thread_id("./image/tmp/live2d.png", thread_id))
+    path_list.append(path_with_thread_id("./image/tmp/gift_banner.png", thread_id))
+    path_list.append(path_with_thread_id("./image/tmp/gift.png", thread_id))
+    path_list.append(path_with_thread_id("./image/tmp/furniture_banner.png", thread_id))
+    path_list.append(path_with_thread_id("./image/tmp/furniture.png", thread_id))
 
     concat_list(path_list, save_path, margin=0, reshape=True)
     context.close()
     browser.close()
     return dict
 
-def fetch_data_from_game_db(page: Page, dict, is_no_translate, base_path = "./image/tmp/"):
+def fetch_data_from_game_db(page: Page, dict, is_no_translate, base_path = "./image/tmp/", thread_id = 0):
         # 下载拉满需要的资源图片之类的
         skill_resource_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[1]/div[2]/div[2]")
         if skill_resource_btn == None:
@@ -456,36 +243,36 @@ def fetch_data_from_game_db(page: Page, dict, is_no_translate, base_path = "./im
         resource_size = len(page.query_selector_all(".%s" % target_class))
 
         skill_resource_1 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[4]")
-        skill_resource_1.screenshot(path="./image/tmp/skill_resource_1.png")
+        skill_resource_1.screenshot(path=path_with_thread_id("./image/tmp/skill_resource_1.png", thread_id))
         skill_resource_2 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[5]")
-        skill_resource_2.screenshot(path="./image/tmp/skill_resource_2.png")
+        skill_resource_2.screenshot(path=path_with_thread_id("./image/tmp/skill_resource_2.png", thread_id))
         skill_resource_3 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[6]")
-        skill_resource_3.screenshot(path="./image/tmp/skill_resource_3.png")
+        skill_resource_3.screenshot(path=path_with_thread_id("./image/tmp/skill_resource_3.png", thread_id))
         skill_resource_4 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[7]")
-        skill_resource_4.screenshot(path="./image/tmp/skill_resource_4.png")
+        skill_resource_4.screenshot(path=path_with_thread_id("./image/tmp/skill_resource_4.png", thread_id))
         if resource_size == 8:
             skill_resource_5 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[8]")
-            skill_resource_5.screenshot(path="./image/tmp/skill_resource_5.png")
+            skill_resource_5.screenshot(path=path_with_thread_id("./image/tmp/skill_resource_5.png", thread_id))
             resource_1 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[9]")
-            resource_1.screenshot(path="./image/tmp/resource_1.png")
+            resource_1.screenshot(path=path_with_thread_id("./image/tmp/resource_1.png", thread_id))
             resource_2 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[10]")
-            resource_2.screenshot(path="./image/tmp/resource_2.png")
+            resource_2.screenshot(path=path_with_thread_id("./image/tmp/resource_2.png", thread_id))
             resource_3 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[11]")
-            resource_3.screenshot(path="./image/tmp/resource_3.png")
+            resource_3.screenshot(path=path_with_thread_id("./image/tmp/resource_3.png", thread_id))
         else:
             resource_1 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[8]")
-            resource_1.screenshot(path="./image/tmp/resource_1.png")
+            resource_1.screenshot(path=path_with_thread_id("./image/tmp/resource_1.png", thread_id))
             resource_2 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[9]")
-            resource_2.screenshot(path="./image/tmp/resource_2.png")
+            resource_2.screenshot(path=path_with_thread_id("./image/tmp/resource_2.png", thread_id))
             resource_3 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[10]")
-            resource_3.screenshot(path="./image/tmp/resource_3.png")
+            resource_3.screenshot(path=path_with_thread_id("./image/tmp/resource_3.png", thread_id))
 
         equipment_resource_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[3]/div/div[2]")
         equipment_resource_btn.click()
         time.sleep(6)
 
         equipment_resource = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[4]")
-        equipment_resource.screenshot(path="./image/tmp/equipment_resource.png")
+        equipment_resource.screenshot(path=path_with_thread_id("./image/tmp/equipment_resource.png", thread_id))
 
         skill_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[1]/div/div[2]")
         skill_btn.click()
@@ -550,42 +337,42 @@ def fetch_data_from_game_db(page: Page, dict, is_no_translate, base_path = "./im
                 except Exception as e:
                     pass
         ex_skill = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[1]")
-        ex_skill.screenshot(path="./image/tmp/ex_skill.png")
+        ex_skill.screenshot(path=path_with_thread_id("./image/tmp/ex_skill.png", thread_id))
         base_skill = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]")
-        base_skill.screenshot(path="./image/tmp/base_skill.png")
+        base_skill.screenshot(path=path_with_thread_id("./image/tmp/base_skill.png", thread_id))
         enhance_skill = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[1]")
-        enhance_skill.screenshot(path="./image/tmp/enhance_skill.png")
+        enhance_skill.screenshot(path=path_with_thread_id("./image/tmp/enhance_skill.png", thread_id))
         sub_skill = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[2]")
-        sub_skill.screenshot(path="./image/tmp/sub_skill.png")
+        sub_skill.screenshot(path=path_with_thread_id("./image/tmp/sub_skill.png", thread_id))
 
         # 拼接技能成长材料
-        skill_resource_save_path = "./image/tmp/skill_resource.png"
+        skill_resource_save_path = path_with_thread_id("./image/tmp/skill_resource.png", thread_id)
         path_list = []
-        path_list.append(base_path + "skill_resource_1.png")
-        path_list.append(base_path + "skill_resource_2.png")
-        path_list.append(base_path + "skill_resource_3.png")
-        path_list.append(base_path + "skill_resource_4.png")
+        path_list.append(path_with_thread_id("./image/tmp/skill_resource_1.png", thread_id))
+        path_list.append(path_with_thread_id("./image/tmp/skill_resource_2.png", thread_id))
+        path_list.append(path_with_thread_id("./image/tmp/skill_resource_3.png", thread_id))
+        path_list.append(path_with_thread_id("./image/tmp/skill_resource_4.png", thread_id))
         if resource_size == 8:
-            path_list.append(base_path + "skill_resource_5.png")
-        path_list.append(base_path + "resource_1.png")
-        path_list.append(base_path + "resource_2.png")
-        path_list.append(base_path + "resource_3.png")
+            path_list.append(path_with_thread_id("./image/tmp/skill_resource_5.png", thread_id))
+        path_list.append(path_with_thread_id("./image/tmp/resource_1.png", thread_id))
+        path_list.append(path_with_thread_id("./image/tmp/resource_2.png", thread_id))
+        path_list.append(path_with_thread_id("./image/tmp/resource_3.png", thread_id))
 
         concat_list(path_list, skill_resource_save_path, -3)
 
         # 将技能材料和装备材料拼在一起
-        skill_resource_equipment = "./image/tmp/skill_resource_equipment.png"
-        concat_two_im(skill_resource_save_path, base_path + "equipment_resource.png", skill_resource_equipment)
+        skill_resource_equipment = path_with_thread_id("./image/tmp/skill_resource_equipment.png", thread_id)
+        concat_two_im(skill_resource_save_path, path_with_thread_id("./image/tmp/equipment_resource.png", thread_id), skill_resource_equipment)
 
         # 将技能描述拼在一起
 
-        concat_two_im(base_path + "ex_skill.png", base_path + "base_skill.png", base_path + "skill_desc_1.png")
-        concat_two_im(base_path + "enhance_skill.png", base_path + "sub_skill.png", base_path + "skill_desc_2.png")
-        concat_two_im(base_path + "skill_desc_1.png", base_path + "skill_desc_2.png", base_path + "skill_desc.png", type="vertical")
+        concat_two_im(path_with_thread_id("./image/tmp/ex_skill.png", thread_id), path_with_thread_id("./image/tmp/base_skill.png", thread_id), path_with_thread_id("./image/tmp/skill_desc_1.png", thread_id))
+        concat_two_im(path_with_thread_id("./image/tmp/enhance_skill.png", thread_id), path_with_thread_id("./image/tmp/sub_skill.png", thread_id), path_with_thread_id("./image/tmp/skill_desc_2.png", thread_id))
+        concat_two_im(path_with_thread_id("./image/tmp/skill_desc_1.png", thread_id), path_with_thread_id("./image/tmp/skill_desc_2.png", thread_id), path_with_thread_id("./image/tmp/skill_desc.png", thread_id), type="vertical")
 
         # 把技能描述和材料拼在一起
 
-        concat_two_im(skill_resource_equipment, base_path + "skill_desc.png", base_path + "game_db.png", type="vertical")
+        concat_two_im(skill_resource_equipment, path_with_thread_id("./image/tmp/skill_desc.png", thread_id), path=path_with_thread_id("./image/tmp/game_db.png", thread_id), type="vertical")
 
 def parse_ba_game_db_image(source_im, resource_im, skill_im, path):
     source_rows, source_cols, _ = source_im.shape
@@ -663,7 +450,3 @@ def query_remote_name(name):
 
 def replace_none_char(name: str) -> str:
     return name.replace("（", "(").replace("）", ")")
-
-if __name__ == "__main__":
-    with sync_playwright() as playwright:
-        run(playwright)

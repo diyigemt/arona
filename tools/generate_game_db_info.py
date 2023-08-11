@@ -8,11 +8,11 @@ import codecs
 import json
 from config import cache_file_location, cn_translation_location
 import numpy as np
-from fetch_student_info_from_ba_game_db import concat_list, concat_two_im, download_image, fetch_data_from_game_db, fetch_data_from_schaledb, query_remote_name, replace_none_char, test_name_exist
+from fetch_student_info_from_ba_game_db import concat_list, concat_two_im, download_image, fetch_data_from_game_db, fetch_data_from_schaledb, path_with_thread_id, query_remote_name, replace_none_char, test_name_exist
 import re
 # 要生成的目标 日文名
 target = [
-    "ハナコ(水着)",
+    # "ハナコ(水着)",
     # "フウカ(正月)"
     # "アカネ(バニーガール)","イズミ(水着)"
     # "アイリ","アカネ","アカネ(バニーガール)","アカリ","アコ","アズサ","アズサ(水着)",
@@ -27,16 +27,20 @@ target = [
 # 如果本地有图片
 
 lock = threading.Lock()
-# max_thread = min(4, os.cpu_count())
-max_thread = 1
+max_thread = min(4, os.cpu_count())
+# max_thread = 1
 
-def run(playwright: Playwright, arr: list[str]):
+# 加载dict
+cache_dict = {}
+with codecs.open(cache_file_location, "r", encoding="utf-8") as f:
+    cache_dict = json.loads(f.read())
+
+def run(playwright: Playwright, arr: list[str], thread_id: int):
     with codecs.open("./config/local_file_map.json", "r", encoding="utf-8") as f:
         local_file_path = json.load(f)
     browser = playwright.chromium.launch(headless=True, slow_mo=100)
     context = browser.new_context(viewport={'width': 1920, 'height': 1080}, device_scale_factor=4.0)
     page = context.new_page()
-
     # 拿到成长资源截图
     page.goto("https://ba.game-db.tw/")
     page.locator("svg").first.click()
@@ -50,24 +54,11 @@ def run(playwright: Playwright, arr: list[str]):
         page.evaluate("el => el.setAttribute('jpName', '%s')" % replace_none_char(btn.text_content()), btn)
     print("build complete")
 
-    # 加载dict
-    cache_dict = {}
-    with codecs.open(cache_file_location, "r", encoding="utf-8") as f:
-        cache_dict = json.loads(f.read())
-    
     # 加载翻译
     cn_translate_dict = {}
     with codecs.open(cn_translation_location, "r", encoding="utf-8") as f:
         cn_translate_dict = json.loads(f.read())
 
-    if len(arr) == 0:
-        for file in os.listdir("./image/parse/"):
-            file_name = file.replace(".png", "")
-            for key in cache_dict:
-                raw = cache_dict[key]
-                if raw["cnName"] == file_name:
-                    arr.append(key)
-    
     count = 0
     for jpName in arr:
         if jpName not in cache_dict:
@@ -137,7 +128,7 @@ def run(playwright: Playwright, arr: list[str]):
             cn_info.update(cn_translate_dict[jpName])
 
         # 从shaledb下载 如果有爱用品信息 顺便拿到爱用品
-        cn_info = fetch_data_from_schaledb(playwright, loma, cn_info)
+        cn_info = fetch_data_from_schaledb(playwright, loma, cn_info, thread_id)
 
         # 从gamedb下载
         btnFilterList[0].click()
@@ -171,11 +162,13 @@ def run(playwright: Playwright, arr: list[str]):
         time.sleep(2)
         base_path = "./image/tmp/"
         # 下载拉满需要的资源图片之类的
-        fetch_data_from_game_db(page, cn_info, cn_skill == jp_skill and cn_info["ex_name"] != "")
+        fetch_data_from_game_db(page, cn_info, cn_skill == jp_skill and cn_info["ex_name"] != "", thread_id=thread_id)
 
         # 和schaledb的拼在一起
 
-        final_db_im = concat_two_im(base_path + "game_db.png", base_path + "schaledb.png", base_path + "final_db.png")
+        final_db_pah = path_with_thread_id("./image/tmp/final_db.png", thread_id)
+
+        final_db_im = concat_two_im(path_with_thread_id("./image/tmp/game_db.png", thread_id), path_with_thread_id("./image/tmp/schaledb.png", thread_id), base_path + "final_db.png")
 
         # 和夜喵拼在一起
 
@@ -185,13 +178,12 @@ def run(playwright: Playwright, arr: list[str]):
 
         final_db_row, final_db_col, _ = final_db_im.shape
         if final_db_col > source_col:
-            pp = base_path + "final_db.png"
-            im = Image.open(pp)
+            im = Image.open(final_db_pah)
             (x, y) = im.size
             rate = source_col / final_db_col
             resize = im.resize((int(x * rate), int(y * rate)), Image.Resampling.LANCZOS)
-            resize.save(pp)
-            final_db_im = cv2.imdecode(np.fromfile(pp, dtype=np.uint8), -1)
+            resize.save(final_db_pah)
+            final_db_im = cv2.imdecode(np.fromfile(final_db_pah, dtype=np.uint8), -1)
             final_db_row, final_db_col, _ = final_db_im.shape
         col = final_db_col + 10
         row = source_row + final_db_row + 10
@@ -376,9 +368,9 @@ def get_content(page, xPaths: str, isSingleLine = False) -> str:
     # print(xPaths)
     return "", -1
 
-def thread_run(arr):
+def thread_run(arr, id):
    with sync_playwright() as playwright:
-        run(playwright, arr) 
+        run(playwright, arr, id) 
 
 def split_arr(arr, size):
     s = []
@@ -389,16 +381,19 @@ def split_arr(arr, size):
     return s
 
 if __name__ == "__main__":
-    # if len(target) < max_thread:
-    #     split = 1
-    # else:
-    #     split = max_thread
-    # splited_arr = split_arr(target, split)
-    # if len(splited_arr) == 0:
-    #     threads = [threading.Thread(target=thread_run, args=([],))]
-    # else:
-    #     threads = [threading.Thread(target=thread_run, args=(arr,)) for arr in splited_arr]
-    threads = [threading.Thread(target=thread_run, args=(target,))]
+    if len(target) == 0:
+        for file in os.listdir("./image/parse/"):
+            file_name = file.replace(".png", "")
+            for key in cache_dict:
+                raw = cache_dict[key]
+                if raw["cnName"] == file_name:
+                    target.append(key)
+    
+    splited_arr = split_arr(target, 1)
+    if len(splited_arr) == 0:
+        threads = [threading.Thread(target=thread_run, args=([],))]
+    else:
+        threads = [threading.Thread(target=thread_run, args=(arr,index,)) for index, arr in enumerate(splited_arr)]
     print("start with %d threads" % len(threads))
     for t in threads:
         t.start()

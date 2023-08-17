@@ -25,16 +25,17 @@ object ActivityCommand : SimpleCommand(
         ServerLocale.CN -> sendCN(subject)
       }
     }
+    val preMatch = ServerLocale.values().firstOrNull { it.commandName == source || it.serverName == source }
     when {
       source.isNullOrBlank() -> sendByLocale(AronaNotifyConfig.defaultActivityCommandServer)
-      !ServerLocale.values().map { it.commandName }.contains(source) -> {
+      preMatch == null -> {
         subject.sendMessage("参数不匹配, 是否想要执行:\n" +
-          "/活动 jp # 查询日服活动\n" +
-          "/活动 cn # 查询国服活动\n" +
-          "/活动 en # 查询国际服活动")
+          "/活动 日服 # 查询日服活动\n" +
+          "/活动 国服 # 查询国服活动\n" +
+          "/活动 国际服 # 查询国际服活动")
       }
       else -> {
-        sendByLocale(ServerLocale.values().first { it.commandName == source })
+        sendByLocale(preMatch)
       }
     }
   }

@@ -352,14 +352,22 @@ yyyy-MM-dd HH:mm:ss I/ba-activity-pusher: 序列化别名配置时失败
 
 NGA图楼推送配置，具体配置方法可以看[下面](#nga-config)
 
-| 键             | 属性                      | 作用                                                             |
-|---------------|-------------------------|----------------------------------------------------------------|
-| uid           | String                  | 你自己的nga uid                                                    |
-| cid           | String                  | 你自己的nga cid                                                    |
-| checkInterval | Int                     | 扫描周期，单位min                                                     |
-| source        | MAIN / SUB              | 配置nga数据来源，可选MAIN或SUB，防止nga炸了，main是ngabbs，sub是178.现在应该只有178能用了。 |
-| watch         | Map<Int, String>        | 监听的nga cid(无须修改)                                               |
-| cache         | List<Pair<Int, String>> | 已经推送过的楼层缓存(无须修改)                                               |
+| 键                | 属性                      | 作用                                                             |
+|------------------|-------------------------|----------------------------------------------------------------|
+| uid              | String                  | 你自己的nga uid                                                    |
+| cid              | String                  | 你自己的nga cid                                                    |
+| checkInterval    | Int                     | 扫描周期，单位min                                                     |
+| source           | MAIN / SUB              | 配置nga数据来源，可选MAIN或SUB，防止nga炸了，main是ngabbs，sub是178.现在应该只有178能用了。 |
+| watch            | Map<Int, String>        | 监听的nga cid(无须修改)                                               |
+| cache            | List<Pair<Int, String>> | 已经推送过的楼层缓存(无须修改)                                               |
+| forwardThreshold | Int                     | 合并转发阈值                                                         |
+| sendInterval     | Int                     | 多群发送时发送间隔, 单位为: 秒                                              |
+
+`watch`: 监听的cid和对应的昵称，虽然内置了几个，但是如果有多的你可以自己加上
+
+`forwardThreshold`: 0: 不合并转发， 不为零: 当图片数量大于等于该值时使用合并转发发送。特别的，如果想始终使用合并转发，将该值改为负数或者1就行
+
+`sendInterval`: 当[arona主配置文件](#arona-yml)`groups`中有多个值时，每个群发送的时间间隔，可能对风控有一些帮助？
 
 ## NGA模块配置方法<a id="nga-config"> </a>
 

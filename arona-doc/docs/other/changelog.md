@@ -1,5 +1,13 @@
 # 更新日志
 
+## v1.1.2
+2023-08-17
+
+1. nga图楼多群转发增加可配的间隔 [#37](https://github.com/diyigemt/arona/issues/37)
+2. 更新nga图楼转发匹配 [#38](https://github.com/diyigemt/arona/issues/38)
+3. nga图楼转发提供[合并转发开关](https://doc.arona.diyigemt.com/config/base-config#nga-yml)
+4. `/活动`指令重新支持 `/活动 日服|国际服|国服`
+
 ## v1.1.1
 2023-08-09
 

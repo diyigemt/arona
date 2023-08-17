@@ -82,7 +82,7 @@ export const NavItem: DefaultTheme.NavItem[] = [{
   text: '简介',
   link: '/guide/what-is',
 }, {
-  text: '1.1.1',
+  text: '1.1.2',
   items: [{
     text: 'Changelog',
     link: '/other/changelog',

@@ -10,6 +10,8 @@ from config import cache_file_location, cn_translation_location
 import numpy as np
 from fetch_student_info_from_ba_game_db import concat_list, concat_two_im, download_image, fetch_data_from_game_db, fetch_data_from_schaledb, path_with_thread_id, query_remote_name, replace_none_char, test_name_exist
 import re
+
+from tools import draw_image_source
 # 要生成的目标 日文名
 target = [
     # "ハナコ(水着)",
@@ -25,6 +27,12 @@ target = [
 # "ヒナ","ヒナ(水着)","ヒナタ","ヒビキ","ヒビキ(応援団)","ヒフミ","ヒフミ(水着)","ヒマリ","ヒヨリ","フィーナ","フウカ","フブキ","ホシノ","ホシノ(水着)","マキ","マシロ","マシロ(水着)","マリー","マリー(体操服)","マリナ","ミサキ","ミチル","ミドリ","ミモリ","ミヤコ","ミユ","ムツキ","ムツキ(正月)","モエ","モモイ","ユウカ","ユウカ(体操服)","ユズ","ヨシミ","ワカモ","ワカモ(水着)"
 ]
 # 如果本地有图片
+
+sources_map = {
+    "gamekee": "部分技能翻译,角色翻译来源: https://ba.gamekee.com/",
+    "gamedb": "部分技能翻译,技能数据来源: https://ba.game-db.tw/",
+    "schaledb": "部分学生信息,技能数据来源: http://schale.gg/",
+}
 
 lock = threading.Lock()
 max_thread = min(4, os.cpu_count())
@@ -194,6 +202,10 @@ def run(playwright: Playwright, arr: list[str], thread_id: int):
         im[source_row + 10: source_row + 10 + final_db_row, 10: final_db_col + 10] = final_db_im
         # im = cv2.cvtColor(im, cv2.COLOR_BGRA2BGR)
         cv2.imencode(".png", im)[1].tofile(local_path)
+        # 加上出处
+        for key in sources_map:
+            im = draw_image_source(local_path, sources_map[key])
+            cv2.imencode(".png", im)[1].tofile(local_path)
         count = count + 1
         end_time = time.time()
 

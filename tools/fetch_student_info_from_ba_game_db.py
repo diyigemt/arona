@@ -371,8 +371,9 @@ def fetch_data_from_game_db(page: Page, dict, is_no_translate, base_path = "./im
         concat_two_im(path_with_thread_id("./image/tmp/skill_desc_1.png", thread_id), path_with_thread_id("./image/tmp/skill_desc_2.png", thread_id), path_with_thread_id("./image/tmp/skill_desc.png", thread_id), type="vertical")
 
         # 把技能描述和材料拼在一起
-
-        concat_two_im(skill_resource_equipment, path_with_thread_id("./image/tmp/skill_desc.png", thread_id), path=path_with_thread_id("./image/tmp/game_db.png", thread_id), type="vertical")
+        final_path = path_with_thread_id("./image/tmp/game_db.png", thread_id)
+        concat_two_im(skill_resource_equipment, path_with_thread_id("./image/tmp/skill_desc.png", thread_id), path=final_path, type="vertical")
+        return final_path
 
 def parse_ba_game_db_image(source_im, resource_im, skill_im, path):
     source_rows, source_cols, _ = source_im.shape

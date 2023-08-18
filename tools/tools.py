@@ -23,6 +23,20 @@ img_folder = "image/student_rank/"
 source_str = "巴哈姆特@夜喵貓貓咪喵(asaz5566a)"
 font_size = 28
 fnt = ImageFont.truetype('C:\Windows\Fonts\msyh.ttc', font_size)
+def draw_image_source(path: str, source: str):
+    # 一律转换为png
+    img = Image.open(path)
+    img = img.convert("RGBA", colors=255)
+    img.save(path)
+    img = cv2.imdecode(np.fromfile(path, dtype=np.uint8), -1)
+    rows, cols, _ = img.shape
+    bg = Image.new('RGBA', (cols, int(rows + font_size * 1.5)), color='white')
+    draw = ImageDraw.Draw(bg)
+    draw.text((0 + 10, rows), source, font=fnt, fill=(0,0,0))
+    bg.save(path)
+    bg = cv2.imdecode(np.fromfile(path, dtype=np.uint8), -1)
+    bg[0:rows, 0:cols] = img
+    return bg
 ## 获取图片并在图片上添加图片来源
 def draw_image(url: str, name: str, override_path: str = "", source = source_str):
     request = urllib.request.Request(url=url,headers=headers)
@@ -30,18 +44,7 @@ def draw_image(url: str, name: str, override_path: str = "", source = source_str
     img = response.read()
     with open(tmp_file_path, "wb") as f:
         f.write(img)
-    # 一律转换为png
-    img = Image.open(tmp_file_path)
-    img = img.convert("RGBA", colors=255)
-    img.save(tmp_file_path)
-    img = cv2.imdecode(np.fromfile(tmp_file_path, dtype=np.uint8), -1)
-    rows, cols, _ = img.shape
-    bg = Image.new('RGBA', (cols, int(rows + font_size * 1.5)), color='white')
-    draw = ImageDraw.Draw(bg)
-    draw.text((0 + 10, rows), "图片来源: " + source, font=fnt, fill=(0,0,0))
-    bg.save(tmp_file_path2)
-    bg = cv2.imdecode(np.fromfile(tmp_file_path2, dtype=np.uint8), -1)
-    bg[0:rows, 0:cols] = img
+    bg = draw_image_source(tmp_file_path, "图片来源: " + source)
     name = re.sub('[\/:*?"<>|]','',name) # 移除非法字符
     name = re.sub(r"[%s]+" %punctuation, "",name)
     final_path = img_folder + name

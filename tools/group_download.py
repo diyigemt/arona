@@ -6,6 +6,11 @@ from functools import reduce
 from PIL import Image
 import os
 
+source_map = {
+    "1": "巴哈姆特@夜喵貓貓咪喵(asaz5566a)",
+    "2": "bilbilibili@朝夕desu(4607471)"
+}
+
 if __name__ == "__main__":
     source = {}
     with open(r"./config/group_download.yml", "r", encoding="UTF-8") as f:
@@ -25,7 +30,10 @@ if __name__ == "__main__":
         local_path = path + name
         if url != "":
             if "source" in item:
-                draw_image(url, name, path, source=item["source"])
+                source = item["source"]
+                if source in source_map:
+                    source = source_map[source]
+                draw_image(url, name, path, source=source)
             else:
                 draw_image(url, name, path)
         else:

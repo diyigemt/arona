@@ -71,4 +71,3 @@ if __name__ == '__main__':
     image_dict = update_image_from_api(base_folder, type=1)
     post_image_to_remote(base_folder)
     post_data("imageUpdate", image_dict)
-

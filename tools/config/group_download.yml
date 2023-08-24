@@ -3,10 +3,13 @@ image:
     path: './image/some/'
     url: ''
     group: ''
-    type: "horizen" # horizen or vertical
+    type: "vertical" # horizen or vertical
+    source: '1'
   - name: 'test'
     path: './image/some/'
     url: ''
+    source: '1'
   - name: 'test'
     path: './image/student_rank/'
     url: ''
+    source: '1'

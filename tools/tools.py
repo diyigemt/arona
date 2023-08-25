@@ -23,19 +23,23 @@ img_folder = "image/student_rank/"
 source_str = "巴哈姆特@夜喵貓貓咪喵(asaz5566a)"
 font_size = 28
 fnt = ImageFont.truetype('C:\Windows\Fonts\msyh.ttc', font_size)
-def draw_image_source(path: str, source: str):
+# offset 几行字的偏移量默认是1
+def draw_image_source(path: str, source: str, offset = 1):
     # 一律转换为png
     img = Image.open(path)
     img = img.convert("RGBA", colors=255)
-    img.save(path)
-    img = cv2.imdecode(np.fromfile(path, dtype=np.uint8), -1)
-    rows, cols, _ = img.shape
-    bg = Image.new('RGBA', (cols, int(rows + font_size * 1.5)), color='white')
+    cols = img.width
+    rows = img.height
+    if offset >= 1:
+        mr = int(rows + font_size * offset * 1.5)
+        bg = Image.new('RGBA', (cols, mr), color='white')
+    else:
+        bg = Image.new('RGBA', (cols, rows), color='white')
+    bg.paste(img, (0,0))
     draw = ImageDraw.Draw(bg)
-    draw.text((0 + 10, rows), source, font=fnt, fill=(0,0,0))
+    draw.text((0 + 10, rows + (offset - 1) * font_size * 1.5), source, font=fnt, fill=(0,0,0))
     bg.save(path)
     bg = cv2.imdecode(np.fromfile(path, dtype=np.uint8), -1)
-    bg[0:rows, 0:cols] = img
     return bg
 ## 获取图片并在图片上添加图片来源
 def draw_image(url: str, name: str, override_path: str = "", source = source_str):

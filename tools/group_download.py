@@ -1,14 +1,14 @@
-import yaml
-from yaml.loader import SafeLoader
-from tools import draw_image
-from fetch_student_info_from_ba_game_db import concat_list, concat_two_im
-from functools import reduce
-from PIL import Image
 import os
+import yaml
+from functools import reduce
+from yaml.loader import SafeLoader
+from tools import draw_image, draw_image_source
+from fetch_student_info_from_ba_game_db import concat_list, concat_two_im
 
 source_map = {
     "1": "巴哈姆特@夜喵貓貓咪喵(asaz5566a)",
-    "2": "bilbilibili@朝夕desu(4607471)"
+    "2": "bilbilibili@朝夕desu(4607471)",
+    "3": "bilbilibili@y千代(49533273)",
 }
 
 if __name__ == "__main__":
@@ -71,4 +71,3 @@ if __name__ == "__main__":
             group.remove(group[0])
             for f in list(map(lambda x: x["path"], group)):
                 os.remove(f)
-

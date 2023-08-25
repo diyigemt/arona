@@ -195,11 +195,11 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict, thread_id: int):
     furniture = page.query_selector("//*[@id='ba-student-favoured-furniture']")
     furniture.screenshot(path=path_with_thread_id("./image/tmp/furniture.png", thread_id))
 
-    # 如果有爱用品, 顺带把爱用品的翻译拿到 ba-game-db更新有点慢
+    # 如果有爱用品, 顺带把爱用品的翻译拿到(本地翻译优先) ba-game-db更新有点慢
     # for (let i = 0; i < 11; ++i) { $0.value = i; $0.oninput($0); console.log([...document.querySelectorAll(".ba-col-explosion")][7].innerText) }
     # document.querySelectorAll(".ba-col-explosion")
     gear_info_btn = page.query_selector("#ba-student-tab-gear")
-    if gear_info_btn != None and gear_info_btn.is_visible():
+    if gear_info_btn != None and gear_info_btn.is_visible() and "gear_desc" not in dict:
         skill_bounds = re.compile("\d+%")
 
         gear_info_btn.click()

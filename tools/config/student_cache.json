@@ -125,7 +125,7 @@
         "gamekee": "https://ba.gamekee.com/67656.html"
     },
     "ウタハ(応援団)": {
-        "cnName": "啦啦队歌原",
+        "cnName": "应援团歌原",
         "loma": "Utaha_Cheerleader",
         "gamekee": "https://ba.gamekee.com/168189.html"
     },
@@ -310,7 +310,7 @@
         "gamekee": "https://ba.gamekee.com/68284.html"
     },
     "チセ(水着)": {
-        "cnName": "泳装知世",
+        "cnName": "泳装千世",
         "loma": "Chise_Swimsuit",
         "gamekee": "https://ba.gamekee.com/162817.html"
     },
@@ -445,7 +445,7 @@
         "gamekee": "https://ba.gamekee.com/59934.html"
     },
     "ヒナ(水着)": {
-        "cnName": "泳装阳奈",
+        "cnName": "泳装日奈",
         "loma": "Hina_Swimsuit",
         "gamekee": "https://ba.gamekee.com/83729.html"
     },
@@ -460,7 +460,7 @@
         "gamekee": "https://ba.gamekee.com/67657.html"
     },
     "ヒビキ(応援団)": {
-        "cnName": "拉拉响",
+        "cnName": "应援团响",
         "loma": "Hibiki_Cheerleader",
         "gamekee": "https://ba.gamekee.com/168196.html"
     },
@@ -758,5 +758,15 @@
         "cnName": "泳装三森",
         "loma": "Mimori_Swimsuit",
         "gamekee": "https://ba.gamekee.com/164191.html"
+    },
+    "モミジ": {
+        "cnName": "红叶",
+        "loma": "Momiji",
+        "gamekee": "https://ba.gamekee.com/161228.html"
+    },
+    "メル": {
+        "cnName": "梅露",
+        "loma": "Meru",
+        "gamekee": "https://ba.gamekee.com/161230.html"
     }
 }

@@ -1,15 +1,15 @@
 package net.diyigemt.arona.advance
 
 import net.diyigemt.arona.Arona
+import net.diyigemt.arona.Arona.save
 import net.diyigemt.arona.config.NGAPushConfig
 import net.diyigemt.arona.quartz.QuartzProvider
 import net.diyigemt.arona.service.AronaQuartzService
+import net.diyigemt.arona.util.NetworkUtil
 import net.mamoe.mirai.message.data.ForwardMessageBuilder
 import net.mamoe.mirai.message.data.MessageChainBuilder
 import net.mamoe.mirai.message.data.PlainText
-import net.mamoe.mirai.message.data.buildForwardMessage
 import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
-import okhttp3.*
 import org.jsoup.Jsoup
 import org.quartz.Job
 import org.quartz.JobExecutionContext
@@ -67,6 +67,11 @@ object NGAImageTranslatePusher : AronaQuartzService {
         }
         val userName = NGAPushConfig.watch[floor.uid]
         Arona.sendMessageWithFile(NGAPushConfig.sendInterval) { group ->
+          // 过滤应该发送的uid
+          val filterUid = NGAPushConfig.groupMap[group.id]
+          if (filterUid != null && filterUid.contains(floor.uid)) {
+            return@sendMessageWithFile null
+          }
           if (NGAPushConfig.forwardThreshold != 0 && NGAPushConfig.forwardThreshold <= floor.images.size) {
             val builder = ForwardMessageBuilder(group)
             builder.add(Arona.arona!!, PlainText("$userName(${floor.uid}):\n${floor.content}\n"))
@@ -102,6 +107,7 @@ object NGAImageTranslatePusher : AronaQuartzService {
     now.forEach {
       NGAPushConfig.cache.add(nowDay to it.postId)
     }
+    NGAPushConfig.save()
   }
 
   private data class NGAFloor(
@@ -116,10 +122,9 @@ object NGAImageTranslatePusher : AronaQuartzService {
     val random = Calendar.getInstance().time.time - Random().nextInt(25) + 5
     cookies["lastvisit"] = random.toString()
     cookies["lastpath"] = "/read.php?tid=${cookies["ngaPassportUid"]}"
-    val body = Jsoup.connect("https://${NGAPushConfig.source.url}/read.php?tid=30843163")
-      .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
-      .ignoreContentType(true)
-      .cookies(cookies)
+    val body = NetworkUtil.request(
+      Jsoup.connect("https://${NGAPushConfig.source.url}/read.php?tid=30843163")
+    ).cookies(cookies)
       .get()
       .body()
     val mainContent = body.getElementsByClass("forumbox")
@@ -160,38 +165,11 @@ object NGAImageTranslatePusher : AronaQuartzService {
   }
 
   private fun fetchImageFromNGA(href: String): InputStream? {
-    val builder = OkHttpClient.Builder()
-    builder.cookieJar(CookieJarImp())
-    val client = builder.build()
-    val request = Request.Builder()
-      .url("${ImageSrcBaseAddress}${href}")
-      .addHeader(
-        "user-agent",
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36"
-      )
-      .get()
-      .build()
-    val response = client.newCall(request).execute()
-    if (response.isSuccessful) {
-      return response.body?.byteStream()
-    }
-    return null
-  }
-
-  private class CookieJarImp : CookieJar {
-    override fun loadForRequest(url: HttpUrl): List<Cookie> {
-      return cookies.entries.map {
-        val builder = Cookie.Builder()
-        return@map builder
-          .name(it.key)
-          .value(it.value)
-          .domain(NGAPushConfig.source.url)
-          .path("/")
-          .build()
-      }
-    }
-
-    override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {}
+    return NetworkUtil.request(
+      Jsoup
+        .connect("${ImageSrcBaseAddress}${href}")
+        .cookies(cookies)
+    ).response().bodyStream()
   }
 
   enum class NGASource(val url: String) {

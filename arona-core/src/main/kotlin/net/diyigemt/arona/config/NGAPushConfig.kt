@@ -35,6 +35,9 @@ object NGAPushConfig: AutoSavePluginConfig("nga") {
     )
   )
 
+  @ValueDescription("分群发送, 配置方法看文档")
+  val groupMap: Map<Long, String> by value(mapOf())
+
   @ValueDescription("已发送的缓存")
   val cache: MutableList<Pair<Int, String>> by value()
 

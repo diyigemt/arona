@@ -15,14 +15,11 @@ import java.util.*
 object GameKeeUtil {
   private const val url = "https://ba.gamekee.com/v1/activity/query"
   fun getEventData(server: ServerLocale) : Pair<MutableList<Activity>, MutableList<Activity>>{
-    val res = Jsoup.connect(url)
-      .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36")
-      .ignoreContentType(true)
+    val res = NetworkUtil.request(Jsoup.connect(url))
       .header("game-alias", "ba")
       .data("active_at", ((Calendar.getInstance().timeInMillis) / 1000).toString())
       .get()
       .text()
-
     return analyze(Gson().fromJson(res, GameKeeDAO::class.java), server)
   }
 

@@ -162,13 +162,15 @@ object Arona : KotlinPlugin(
    * 发送带文件的消息
    * @param delay 每个群的延迟时间, 单位为秒
    */
-  fun sendMessageWithFile(delay: Int = 0, block: suspend (group: Contact) -> Message) {
+  fun sendMessageWithFile(delay: Int = 0, block: suspend (group: Contact) -> Message?) {
     runWithArona {
       AronaConfig.groups.forEach { group0 ->
         val group = it.groups[group0] ?: return@forEach
         val message = block(group)
-        group.sendMessage(message)
-        Thread.sleep(delay * 1000L)
+        if (message != null) {
+          group.sendMessage(message)
+          Thread.sleep(delay * 1000L)
+        }
       }
     }
   }

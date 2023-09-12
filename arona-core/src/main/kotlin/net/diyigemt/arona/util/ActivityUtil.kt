@@ -698,7 +698,7 @@ object ActivityUtil {
 
   private fun sortActive(active: Activity): Int {
     val diff = calcDiffDayAndHour(active.time)
-    return diff.first * 24 + diff.second
+    return diff.second * 24 + diff.first
   }
 
   fun createActivityImage(

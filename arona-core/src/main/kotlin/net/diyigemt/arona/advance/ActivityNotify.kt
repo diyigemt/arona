@@ -115,7 +115,7 @@ object ActivityNotify: AronaQuartzService {
       // 非双倍掉落提醒
       val nowH = instance.get(Calendar.HOUR_OF_DAY)
       if (activity.isNotEmpty()) {
-        activity.groupBy { calcDiffDayAndHour(it.time).first }.forEach { (h, u) ->
+        activity.groupBy { calcDiffDayAndHour(it.time).second }.forEach { (h, u) ->
           doInsert(u, nowH + h - 1, locale, h.toString())
         }
       }
@@ -127,15 +127,15 @@ object ActivityNotify: AronaQuartzService {
 
     private fun filterPending(activity: Activity): Boolean {
       val extra = calcDiffDayAndHour(activity.time)
-      val h = extra.first
-      val d = extra.second
+      val d = extra.first
+      val h = extra.second
       return doFilter(d, h)
     }
 
     private fun filterActive(activity: Activity, list: MutableList<Activity>): Boolean {
       val extra = calcDiffDayAndHour(activity.time)
-      val h = extra.first
-      val d = extra.second
+      val d = extra.first
+      val h = extra.second
       if (d == 0) {
         list.add(activity)
       }

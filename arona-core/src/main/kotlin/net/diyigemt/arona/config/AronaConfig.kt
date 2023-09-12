@@ -49,4 +49,10 @@ object AronaConfig: AutoSavePluginConfig("arona") {
   @ValueDescription("是否忽略私聊指令, NONE: \"不忽略\";ONLY_SERVICE_GROUP: \"忽略不在groups群里的群友\";ALL: \"忽略所有\"")
   val tempMessageIgnoreType: TempMessageIgnoreType by value(TempMessageIgnoreType.NONE)
 
+  @ValueDescription("内置流量网络代理, 比如活动获取/和后端通信, 海外用户可能需要")
+  val proxyHost: String by value()
+
+  @ValueDescription("内置流量网络代理, 比如活动获取/和后端通信, 海外用户可能需要")
+  val proxyPort: Int by value()
+
 }

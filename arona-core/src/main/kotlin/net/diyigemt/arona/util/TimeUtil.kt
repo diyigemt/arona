@@ -41,6 +41,10 @@ object TimeUtil {
     return timeString
   }
 
+  /**
+   * 将MM月dd日 HH:mm解析出剩余的day和hour
+   * day to hour
+   */
   fun calcDiffDayAndHour(timeString: String): Pair<Int, Int> {
     val result = buildNowAndTime(timeString)
     val calendar = result.first

@@ -31,12 +31,11 @@ object NGAPushConfig: AutoSavePluginConfig("nga") {
       "42382305" to "xiwang399",
       "40785736" to "安kuzuha",
       "64124793" to "星泠鑫",
-      "60347121" to "Haremsupervisor"
     )
   )
 
   @ValueDescription("分群发送, 配置方法看文档")
-  val groupMap: Map<Long, String> by value(mapOf())
+  val groupUidFilterMap: Map<Long, List<String>> by value(mapOf())
 
   @ValueDescription("已发送的缓存")
   val cache: MutableList<Pair<Int, String>> by value()

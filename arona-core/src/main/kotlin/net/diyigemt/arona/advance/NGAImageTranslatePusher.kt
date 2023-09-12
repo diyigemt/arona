@@ -68,7 +68,7 @@ object NGAImageTranslatePusher : AronaQuartzService {
         val userName = NGAPushConfig.watch[floor.uid]
         Arona.sendMessageWithFile(NGAPushConfig.sendInterval) { group ->
           // 过滤应该发送的uid
-          val filterUid = NGAPushConfig.groupMap[group.id]
+          val filterUid = NGAPushConfig.groupUidFilterMap[group.id]
           if (filterUid != null && filterUid.contains(floor.uid)) {
             return@sendMessageWithFile null
           }

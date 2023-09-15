@@ -158,6 +158,21 @@ object Arona : KotlinPlugin(
     }
   }
 
+  fun sendFilterGroupMessage(message: String, groups: List<Long>?) {
+    if (groups.isNullOrEmpty()) {
+      sendMessage(message)
+    } else {
+      runWithArona {
+        groups
+          .intersect(AronaConfig.groups.toSet())
+          .forEach { group0 ->
+            val group = it.groups[group0] ?: return@forEach
+            group.sendMessage(message)
+          }
+      }
+    }
+  }
+
   /**
    * 发送带文件的消息
    * @param delay 每个群的延迟时间, 单位为秒

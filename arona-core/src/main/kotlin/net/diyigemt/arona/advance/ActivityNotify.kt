@@ -18,9 +18,8 @@ import org.quartz.JobExecutionContext
 import org.quartz.JobKey
 import java.io.File
 import java.util.*
-import kotlin.math.max
 
-object ActivityNotify: AronaQuartzService {
+object ActivityNotify : AronaQuartzService {
   private const val ActivityNotifyJobKey = "ActivityNotify"
   private const val ActivityNotifyDataInitKey = "init"
   private const val ActivityNotifyOneHour = "ActivityNotifyOneHour"
@@ -31,7 +30,7 @@ object ActivityNotify: AronaQuartzService {
   private const val DropEndTime = 24 + 3 - DropActivityTime
   override var jobKey: JobKey? = null
 
-  class ActivityNotifyJob: Job {
+  class ActivityNotifyJob : Job {
     override fun execute(context: JobExecutionContext?) {
       val jp = ActivityUtil.fetchJPActivity()
       val en = ActivityUtil.fetchENActivity()
@@ -100,13 +99,16 @@ object ActivityNotify: AronaQuartzService {
         now.time,
         "${ActivityNotifyOneHour}-${locale.commandName}-${h}-${extraKey}",
         ActivityNotifyOneHour,
-        mapOf(ActivityKey to activity, NotifyStringKey to when(locale) {
-          ServerLocale.JP -> AronaNotifyConfig.notifyStringJP
-          ServerLocale.GLOBAL -> AronaNotifyConfig.notifyStringEN
-          ServerLocale.CN -> AronaNotifyConfig.notifyStringCN
-        })
+        mapOf(
+          ActivityKey to activity, NotifyStringKey to when (locale) {
+            ServerLocale.JP -> AronaNotifyConfig.notifyStringJP
+            ServerLocale.GLOBAL -> AronaNotifyConfig.notifyStringEN
+            ServerLocale.CN -> AronaNotifyConfig.notifyStringCN
+          }
+        )
       )
     }
+
     private fun insertAlert(activity: MutableList<Activity>, locale: ServerLocale) {
       if (activity.isEmpty()) return
       val instance = Calendar.getInstance()
@@ -142,15 +144,16 @@ object ActivityNotify: AronaQuartzService {
       return doFilter(d, h)
     }
 
-    private fun doFilter(d: Int, h: Int): Boolean = when(AronaNotifyConfig.notifyType) {
+    private fun doFilter(d: Int, h: Int): Boolean = when (AronaNotifyConfig.notifyType) {
       NotifyType.ALL -> true
       NotifyType.ONLY_24H -> d * 24 + h < 24
       NotifyType.ONLY_48H -> d * 24 + h < 48
     }
 
   }
+
   @Suppress("UNCHECKED_CAST")
-  class ActivityNotifyOneHourJob: InterruptableJob {
+  class ActivityNotifyOneHourJob : InterruptableJob {
     override fun execute(context: JobExecutionContext?) {
       val ac = context?.mergedJobDataMap?.get(ActivityKey) ?: return
       ac as List<Activity>
@@ -166,9 +169,15 @@ object ActivityNotify: AronaQuartzService {
             return@let null
           }
         }
-      val serverName = ac[0].serverLocale.serverName
+      val server = ac[0].serverLocale
+      val targetGroup = when (server) {
+        ServerLocale.JP -> AronaNotifyConfig.enableJPGroup
+        ServerLocale.GLOBAL -> AronaNotifyConfig.enableENGroup
+        ServerLocale.CN -> AronaNotifyConfig.enableCNGroup
+      }
+      val serverName = server.serverName
       if (maintenance != null) {
-        Arona.sendMessage("距离${serverName}维护还有1小时")
+        Arona.sendFilterGroupMessage("距离${serverName}维护还有1小时", targetGroup)
       }
       val notifyPrefix = context.mergedJobDataMap?.get(NotifyStringKey) ?: "${serverName}防侠提醒"
       // 只有维护信息时
@@ -184,9 +193,10 @@ object ActivityNotify: AronaQuartzService {
       } else {
         1
       }
-      Arona.sendMessage("${serverString}\n" +
-        "$activityString" +
-        "将会在${endTime}小时后结束"
+      Arona.sendFilterGroupMessage(
+        "${serverString}\n" +
+          "$activityString" +
+          "将会在${endTime}小时后结束", targetGroup
       )
     }
 
@@ -196,7 +206,8 @@ object ActivityNotify: AronaQuartzService {
   }
 
   // 判断是不是双倍掉落(一般在3点结束,其实总力战也是,所以放一起了)
-  private fun isMidnightEndActivity(activity: Activity): Boolean = activity.type in (ActivityType.N2_3 .. ActivityType.JOINT_EXERCISES)
+  private fun isMidnightEndActivity(activity: Activity): Boolean =
+    activity.type in (ActivityType.N2_3..ActivityType.JOINT_EXERCISES)
 
   private fun isMaintenanceActivity(activity: Activity): Boolean = activity.type == ActivityType.MAINTENANCE
 

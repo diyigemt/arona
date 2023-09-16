@@ -105,12 +105,13 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict, thread_id: int):
         close_btn = model.query_selector(".btn-close")
         if close_btn != None:
             close_btn.click()
-    
-    # 换成日服
-    setting_btn = page.query_selector("#ba-navbar-regionselector")
+    setting_btn = page.query_selector("#ba-navbar-settings")
     setting_btn.click()
-    region_btn = page.query_selector("#ba-navbar-regionselector-0")
+    # 换成日服
+    region_btn = page.query_selector("#ba-navbar-regionselector")
     region_btn.click()
+    region_btn_jp = page.query_selector("#ba-navbar-regionselector-0")
+    region_btn_jp.click()
     time.sleep(2)
     # 中文与日语切换确定是否有中文翻译, 如果有就不采用gamekee的机翻
     language_btn = page.query_selector("#ba-navbar-languageselector")

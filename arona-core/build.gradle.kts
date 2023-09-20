@@ -1,15 +1,14 @@
 plugins {
   val kotlinVersion = "1.7.10"
-  val miraiVersion = "2.12.2"
+  val miraiVersion = "2.13.4"
   kotlin("jvm") version kotlinVersion
   kotlin("plugin.serialization") version kotlinVersion
 
   id("net.mamoe.mirai-console") version miraiVersion
 }
 
-group = "net.diyigemt.arona"
-version = "1.1.3"
-val miraiVersion = "2.11.1"
+group = "net.diyigemt"
+version = "1.1.4-RC"
 val exposedVersion = "0.38.2"
 val sqliteVersion = "3.36.0.3"
 val quartzVersion = "2.3.2"

@@ -48,7 +48,15 @@ import java.io.File
 import kotlin.io.path.absolutePathString
 
 object Arona : KotlinPlugin(
-  JvmPluginDescription.loadFromResource()
+  JvmPluginDescription(
+    id = "net.diyigemt.arona",
+    name = "blue-archive-arona",
+    version = "1.1.4-RC"
+  ) {
+    author("diyigemt")
+    info("是常驻这个「シッテムの箱」的系统管理员和主操作系统, 也是今后协助老师的秘书!")
+    dependsOn("net.mamoe.mirai.console.chat-command", "[0.5.0, 2.0.0)")
+  }
 ) {
   var arona: Bot? = null
     set(value) {

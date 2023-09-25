@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "net.diyigemt"
-version = "1.1.4-RC"
+version = "1.1.4-RC2"
 val exposedVersion = "0.38.2"
 val sqliteVersion = "3.36.0.3"
 val quartzVersion = "2.3.2"

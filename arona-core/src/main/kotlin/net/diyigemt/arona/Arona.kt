@@ -51,7 +51,7 @@ object Arona : KotlinPlugin(
   JvmPluginDescription(
     id = "net.diyigemt.arona",
     name = "blue-archive-arona",
-    version = "1.1.4-RC"
+    version = "1.1.4-RC2"
   ) {
     author("diyigemt")
     info("是常驻这个「シッテムの箱」的系统管理员和主操作系统, 也是今后协助老师的秘书!")

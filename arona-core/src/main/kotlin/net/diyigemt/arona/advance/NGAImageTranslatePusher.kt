@@ -169,7 +169,7 @@ object NGAImageTranslatePusher : AronaQuartzService {
       Jsoup
         .connect("${ImageSrcBaseAddress}${href}")
         .cookies(cookies)
-    ).response().bodyStream()
+    ).execute().bodyStream()
   }
 
   enum class NGASource(val url: String) {

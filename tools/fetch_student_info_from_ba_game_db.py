@@ -96,7 +96,7 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict, thread_id: int):
     browser = pl.chromium.launch(headless=True, slow_mo=100)
     context = browser.new_context(viewport={'width': 1920, 'height': 1080}, device_scale_factor=4.0)
     page = context.new_page()
-    page.goto("https://lonqie.github.io/SchaleDB/?chara=%s" % name)
+    page.goto("https://schale.gg/?chara=%s" % name)
     page.wait_for_load_state()
 
     # 关闭change-log窗口

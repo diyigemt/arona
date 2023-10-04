@@ -48,7 +48,7 @@ body:
   - type: textarea
     id: version-others
     attributes:
-      label: 其他插件及版本版本
+      label: 其他插件及版本
       description: |
         填写plugins文件夹中的其他插件名称+版本
       placeholder: |
@@ -60,9 +60,8 @@ body:
       label: 系统日志
       description: |
         请提供全面的相关日志. 请不要截图.
-        使用三个反引号 "```" (英文输入法下tab键上方) 来包裹日志可以更美观
         如果日志过大, 可以在 `补充信息` 上传文件.
-      render: 'text'
+      render: 'shell'
     validations:
       required: false
 

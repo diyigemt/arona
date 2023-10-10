@@ -27,6 +27,9 @@ const MainSideBar: DefaultTheme.Sidebar = [{
   }, {
     text: '安装arona',
     link: '/install/arona',
+  }, {
+    text: '疑难解答',
+    link: '/install/qa',
   }],
 }, {
   text: '配置',
@@ -82,7 +85,7 @@ export const NavItem: DefaultTheme.NavItem[] = [{
   text: '简介',
   link: '/guide/what-is',
 }, {
-  text: '1.1.3',
+  text: '1.1.4-RC2',
   items: [{
     text: 'Changelog',
     link: '/other/changelog',

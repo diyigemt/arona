@@ -1,5 +1,16 @@
 # 更新日志
 
+## v1.1.3
+2023-09-18
+
+1. 修复防侠没有推送的问题 [#39](https://github.com/diyigemt/arona/issues/39)
+2. 添加内置代理方便海外使用 [#45](https://github.com/diyigemt/arona/issues/45)
+3. nga转发添加分群过滤uid功能
+
+`nga.yml`: 新增配置参数，允许海外用户设置回国代理
+
+`groupUidFilterMap`: 分群过滤器，具体配置访问文档：https://doc.arona.diyigemt.com/config/base-config#nga-yml
+
 ## v1.1.2
 2023-08-17
 

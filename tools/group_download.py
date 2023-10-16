@@ -1,3 +1,4 @@
+import json
 import os
 import yaml
 from functools import reduce
@@ -15,6 +16,13 @@ if __name__ == "__main__":
     source = {}
     with open(r"./config/group_download.yml", "r", encoding="UTF-8") as f:
         source = yaml.load(f, SafeLoader)
+    student_name_list = []
+    with open(r"./config/student_cache.json", "r", encoding="UTF-8") as f:
+        student_names = json.loads("".join(f.readlines()))
+        for item in student_names:
+            obj = student_names[item]
+            student_name = obj["cnName"]
+            student_name_list.append(student_name)
     count = 1
     images = list(
         filter(lambda item: item['name'] != 'test', list(source['image'])))
@@ -28,6 +36,9 @@ if __name__ == "__main__":
         path = item["path"]
         url = item["url"].split("@")[0]
         local_path = path + name
+        if str(path).find("student_rank") != -1:
+            if item["name"] not in student_name_list:
+                print(f"student {name} not in student_cache.json")
         if url != "":
             if "source" in item:
                 source = item["source"]

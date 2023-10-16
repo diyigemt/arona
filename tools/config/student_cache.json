@@ -385,7 +385,7 @@
         "gamekee": "https://ba.gamekee.com/150174.html"
     },
     "ノノミ": {
-        "cnName": "富婆",
+        "cnName": "野乃美",
         "loma": "Nonomi",
         "gamekee": "https://ba.gamekee.com/68803.html"
     },
@@ -788,5 +788,10 @@
         "cnName": "霞",
         "loma": "Kasumi",
         "gamekee": "https://ba.gamekee.com/169361.html"
+    },
+    "シグレ(温泉)": {
+        "cnName": "温泉时雨",
+        "loma": "Shigure_HotSpring",
+        "gamekee": "https://ba.gamekee.com/161204.html"
     }
 }

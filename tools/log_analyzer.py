@@ -13,7 +13,7 @@ def split_arr(arr, size):
         if c != []:
             s.append(c)
     return s
-ignore_prefix = ["@", "/", "#", "$", "%", "&", "*", "(", "（", ")", "）", "+", "-", "."]
+ignore_prefix = ["@", "/", "#", "$", "%", "&", "*", "(", "（", ")", "）", "+", "-", ".", "!", "！"]
 def analysis(files: list[str], index: int):
     conn = sqlite3.connect("./db/" + str(index) + ".db")
     cursor = conn.cursor()

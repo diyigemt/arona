@@ -315,6 +315,7 @@ def get_cn_info_from_gamekee(playwright: Playwright, path: str):
     '//*[@id="wiki-body"]/div/div/div[3]/div/div/div[1]/div[1]/div[4]/div/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/div[3]/span/span/span/span[2]/span/span/span/span/div[1]/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[16]/td',
     '//*[@id="wiki-body"]/div/div/div[3]/div/div/div[1]/div[1]/div[4]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div[1]/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[16]/td',
     '//*[@id="wiki-body"]/div/div/div[3]/div/div/div[1]/div[1]/div[4]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[15]/td',
+    '//*[@id="wiki-body"]/div/div/div[3]/div/div/div[1]/div[1]/div[4]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[16]/td',
     ]
     )
     wp_skill = skill_bounds.sub("$value", wp_skill)
@@ -346,16 +347,15 @@ def get_cn_info_from_gamekee(playwright: Playwright, path: str):
     hobby_extend_list = []
     hobby, prefix_index = get_content(page, list(map(lambda x: x + '/tr[6]/td[2]', desc_prefix)) + hobby_extend_list)
     
-    # 解决多出来的繁中翻译列
-    desc_suffix = '/tr[9]/td[2]'
-    if prefix_index != -1:
-        for_test = page.query_selector(desc_prefix[prefix_index] + '/tr[11]')
-        if for_test != None:
-            hobby, prefix_index = get_content(page, list(map(lambda x: x + '/tr[7]/td[2]', desc_prefix)) + hobby_extend_list)
-            desc_suffix = '/tr[11]/td[2]'
-        for_test = page.query_selector(desc_prefix[prefix_index] + '/tr[10]')
-        if for_test != None:
-            desc_suffix = '/tr[10]/td[2]'
+    if page.query_selector(desc_prefix[prefix_index] + '/tr[11]') != None:
+        hobby, prefix_index = get_content(page, list(map(lambda x: x + '/tr[7]/td[2]', desc_prefix)) + hobby_extend_list)
+        desc_suffix = '/tr[11]/td[2]'
+    elif page.query_selector(desc_prefix[prefix_index] + '/tr[10]') != None:
+        hobby, prefix_index = get_content(page, list(map(lambda x: x + '/tr[6]/td[2]', desc_prefix)) + hobby_extend_list)
+        desc_suffix = '/tr[10]/td[2]'
+    else:
+        # 解决多出来的繁中翻译列
+        desc_suffix = '/tr[9]/td[2]'
 
     desc_extend_list = []
     desc, prefix_index = get_content(page, list(map(lambda x: x + desc_suffix, desc_prefix)) + desc_extend_list)

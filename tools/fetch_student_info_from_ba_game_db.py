@@ -129,8 +129,9 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict, thread_id: int):
     setting_btn.click()
     language_btn = page.query_selector("#ba-navbar-languageselector")
     language_btn.click()
-    language_cn_btn = page.query_selector("#ba-navbar-languageselector-cn")
-    language_cn_btn.click()
+    # 切换成民译
+    language_zh_btn = page.query_selector("#ba-navbar-languageselector-zh")
+    language_zh_btn.click()
     time.sleep(2)
     setting_btn.click()
 

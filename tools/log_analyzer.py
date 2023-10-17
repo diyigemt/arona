@@ -13,7 +13,7 @@ def split_arr(arr, size):
         if c != []:
             s.append(c)
     return s
-ignore_prefix = ["@", "/", "#", "$", "%", "&", "*", "(", "（", ")", "）", "+", "-", ".", "!", "！"]
+ignore_prefix = ["@", "/", "#", "$", "%", "&", "*", "(", "（", ")", "）", "+", "-", ".", "!", "！", "，", "[", ",", "的"]
 def analysis(files: list[str], index: int):
     conn = sqlite3.connect("./db/" + str(index) + ".db")
     cursor = conn.cursor()
@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS "Summary" (
                     continue
                 if level == "[INFO]":
                     key = splits[7]
+                    user = splits[9]
                 else:
                     key = splits[9]
                     user = splits[11]
@@ -55,7 +56,6 @@ CREATE TABLE IF NOT EXISTS "Summary" (
                 date = time[1:11]
                 date_time = time[12:-5]
                 time = "%s %s" % (date, date_time)
-                user = splits[9]
                 try:
                     sql = "INSERT INTO `Summary`(`user`,`key`,`time`) VALUES ('%s','%s','%s')" % (user, key, time)
                     cursor.execute(sql)

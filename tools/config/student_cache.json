@@ -793,5 +793,20 @@
         "cnName": "温泉时雨",
         "loma": "Shigure_HotSpring",
         "gamekee": "https://ba.gamekee.com/161204.html"
+    },
+    "御坂美琴": {
+        "cnName": "御坂美琴",
+        "loma": "Misaka_Mikoto",
+        "gamekee": "https://ba.gamekee.com/603133.html"
+    },
+    "食蜂操祈": {
+        "cnName": "Shokuhou_Misaki",
+        "loma": "Kasumi",
+        "gamekee": "https://ba.gamekee.com/603139.html"
+    },
+    "佐天涙子": {
+        "cnName": "佐天涙子",
+        "loma": "Saten_Ruiko",
+        "gamekee": "https://ba.gamekee.com/603140.html"
     }
 }

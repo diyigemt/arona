@@ -48,7 +48,8 @@ if __name__ == "__main__":
     print("some: %s" %", ".join(list(map(lambda tu: tu[0], some_list))))
     print("student: %s" % ", ".join(list(map(lambda tu: tu[0], student_list))))
     print("chapter: %s" % ", ".join(list(map(lambda tu: tu[0], chapter_list))))
-    confirm_action()
+    if not confirm_action():
+        exit(0)
     for item in some_list + student_list + chapter_list:
         pool.add_task(client.upload_file, Bucket, item[1], item[2])
     pool.wait_completion()

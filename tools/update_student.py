@@ -1,17 +1,18 @@
-from tools import post_data, post_image_to_remote, replace0, update_image_from_api
+from tools import confirm_action, post_data, post_image_to_remote, replace0, update_image_from_api
 from fetch_student_info_from_ba_game_db import test_name_exist, download_image, query_remote_name
 import os
 import cv2
 import numpy as np
 from PIL import Image
 base_folder = "/student_rank/"
-old = False
 # 更新学生
 # tencentcloud-sdk-python-common==3.0.754
 
 # 将夜喵的图和wiki图整合
 def process_old():
     file_list = os.listdir("./image" + base_folder)
+    total = len(file_list)
+    count = 0
     for file in file_list:
         file_name = file.replace(".png", "")
         file_path = "./image" + base_folder + file
@@ -62,11 +63,12 @@ def process_old():
             source_im[0:rows,0:cols] = replace_im
             cv2.imencode(".png", source_im)[1].tofile(file_path)
             os.remove(local_path)
-            print("student: %s process success" % stu_name)
+            count += 1
+            print("student: %s process success [%d/%d]" % (stu_name, count, total))
 
 
 if __name__ == '__main__':
-    if old:
+    if confirm_action("update old?"):
         process_old()
     image_dict = update_image_from_api(base_folder, type=1)
     post_image_to_remote(base_folder)

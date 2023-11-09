@@ -37,7 +37,8 @@ if __name__ == "__main__":
         for file in files:
             action_list.append((file, root.replace("\\", "/") + "/" + file, base_path + "/" + file))
     print("list: %s" % ", ".join(list(map(lambda tu: tu[0], action_list))))
-    confirm_action()
+    if not confirm_action():
+        exit(0)
     for item in action_list:
         pool.add_task(client.upload_file, Bucket, item[2], item[1])
     pool.wait_completion()

@@ -38,7 +38,7 @@ if __name__ == "__main__":
         local_path = path + name
         if str(path).find("student_rank") != -1:
             if item["name"] not in student_name_list:
-                print(f"student {name} not in student_cache.json")
+                print(f"student {item['name']} not in student_cache.json")
         if url != "":
             if "source" in item:
                 source = item["source"]

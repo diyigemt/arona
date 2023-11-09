@@ -235,7 +235,8 @@ def update_image_from_api(folder: str, type: int = 2):
         return
     #信息收集完成
     print(list(map(lambda item: item["name"], dict)))
-    confirm_action()
+    if not confirm_action():
+        exit(0)
     #提交到后端进行处理
     return dict
 
@@ -291,10 +292,10 @@ def test_name_exist(name):
     result = json.loads(resp.content.decode())
     return len(result["data"]) == 1
 
-def confirm_action():
-    if str(input("process update? [Y/N]:")).lower() != "y":
-        print("abort")
-        exit(0)
+def confirm_action(info = "process update?") -> bool:
+    if str(input(f"{info} [Y/N]:")).lower() != "y":
+        return False
+    return True
 
 replace_name = {
     "沙耶": "/老鼠/鼠鼠",

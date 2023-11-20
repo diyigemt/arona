@@ -11,6 +11,7 @@ import net.diyigemt.arona.util.TimeUtil.calcDiffDayAndHour
 import net.diyigemt.arona.util.TimeUtil.translateTimeMoreReadable
 import net.diyigemt.arona.util.scbaleDB.SchaleDBUtil
 import org.jsoup.Jsoup
+import java.awt.Color
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.text.SimpleDateFormat
@@ -44,12 +45,12 @@ object ActivityUtil {
   const val ServerMaintenanceStartTimeJP = "10:00"
   const val ServerMaintenanceEndTimeEN = "15:00"
   const val ServerMaintenanceEndTimeJP = "16:00"
-  private val ActivityColorMap: Map<Int, Pair<Int, Int>> = mapOf(
-    1 to (0xFFFFFFFF.toInt() to 0xFFFF8C00.toInt()),
-    2 to (0xFFFFFFFF.toInt() to 0xFF8A2BE2.toInt()),
-    3 to (0xFFFFFFFF.toInt() to 0xFF107EF7.toInt()),
-    4 to (0xFFFFFFFF.toInt() to 0xFFF56C6C.toInt()),
-    5 to (0xFFFFFFFF.toInt() to 0xFF67C23A.toInt())
+  private val ActivityColorMap: Map<Int, Pair<Color, Color>> = mapOf(
+    1 to (Color.WHITE to Color(255, 140, 0)),
+    2 to (Color.WHITE to Color(138, 43, 226)),
+    3 to (Color.WHITE to Color(16, 126, 247)),
+    4 to (Color.WHITE to Color(245, 108, 108)),
+    5 to (Color.WHITE to Color(103, 194, 58))
   )
 
   // 从b_wiki获取数据
@@ -715,7 +716,7 @@ object ActivityUtil {
     fun calcY(offset: Int = 0): Int {
       return DEFAULT_CALENDAR_FONT_SIZE * (lineIndex + offset) + DEFAULT_CALENDAR_LINE_MARGIN * (lineIndex + offset - 1)
     }
-    ImageUtil.init(image.first, 0xFFFFFFFF.toInt())
+    ImageUtil.init(image, Color.WHITE)
     ImageUtil.drawText(image, title, DEFAULT_CALENDAR_FONT_SIZE, ImageUtil.TextAlign.CENTER)
     lineIndex++
     ImageUtil.drawText(
@@ -735,7 +736,7 @@ object ActivityUtil {
           val y = calcY()
           val color = ActivityColorMap[it.type.level]!!
           ImageUtil.drawRoundRect(
-            image.first,
+            image,
             0,
             (calcY(-1) + DEFAULT_CALENDAR_LINE_MARGIN * 1.5).toInt(),
             image.first.width,
@@ -755,9 +756,7 @@ object ActivityUtil {
     drawActivity(pending, true)
     ImageUtil.drawText(image, "数据来源: https://ba.gamekee.com/", calcY())
     val imageFile = File(Arona.dataFolder.absolutePath + "/activity-${server.serverName}.png")
-    image.first.scale(DEFAULT_IMAGE_SCALE, DEFAULT_IMAGE_SCALE).also {
-      ImageIO.write(it, "png", imageFile)
-    }
+    ImageIO.write(image.first.scale(DEFAULT_IMAGE_SCALE), "png", imageFile)
     return imageFile
   }
 

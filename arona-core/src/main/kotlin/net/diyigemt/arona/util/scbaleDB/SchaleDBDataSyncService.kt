@@ -59,16 +59,19 @@ object SchaleDBDataSyncService : AronaQuartzService{
   }
 
   class BirthdayJob : Job{
+
+    private val formatter = DateTimeFormatter.ofPattern("yyyy/M/d")
     override fun execute(context: JobExecutionContext?) = getBirthdayList()
 
     fun getBirthdayList() {
-      val formatter = DateTimeFormatter.ofPattern("yyyy/M/d")
       SchaleDBUtil.birthdayList.clear()
       SchaleDBUtil.studentItem.forEach {
-        val date = LocalDate.parse(LocalDate.now().year.toString() + "/" + it.BirthDay, formatter)
-        if (date.isAfter(LocalDate.now()) && date.isBefore(LocalDate.now().plusWeeks(1))){
-          SchaleDBUtil.birthdayList.add(Birthday(it.Name, date))
-        }
+        runCatching {
+          val date = LocalDate.parse(LocalDate.now().year.toString() + "/" + it.BirthDay, formatter)
+          if (date.isAfter(LocalDate.now()) && date.isBefore(LocalDate.now().plusWeeks(1))){
+            SchaleDBUtil.birthdayList.add(Birthday(it.Name, date))
+          }
+        }.onFailure {  }
       }
     }
   }

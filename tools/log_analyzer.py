@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS "Summary" (
         with codecs.open(file_path, "r", encoding="utf-8") as f:
             lines = f.readlines()
             for line in lines:
-                if line.find('GET: /api/v1/image with {"name":"') == -1:
+                if line.find('GET: /api/v2/image with {"name":"') == -1:
                     continue
                 splits = line.split(" ")
                 level = splits[1]

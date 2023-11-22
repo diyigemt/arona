@@ -435,7 +435,7 @@ def test_name_exist(name):
     header = {
         "Content-Type": "application/json"
     }
-    resp = requests.get("https://arona.diyigemt.com/api/v1/image?name=%s" % name, headers=header)
+    resp = requests.get("https://arona.diyigemt.com/api/v2/image?name=%s" % name, headers=header)
     result = json.loads(resp.content.decode())
     return len(result["data"]) == 1
 
@@ -443,7 +443,7 @@ def query_remote_name(name):
     header = {
         "Content-Type": "application/json"
     }
-    resp = requests.get("https://arona.diyigemt.com/api/v1/image?name=%s" % name, headers=header)
+    resp = requests.get("https://arona.diyigemt.com/api/v2/image?name=%s" % name, headers=header)
     result = json.loads(resp.content.decode())
     if len(result["data"]) > 1:
         return query_remote_name(result["data"][0]["name"])

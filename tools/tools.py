@@ -178,6 +178,12 @@ def get_password() -> str:
         pw = str(f.read())
     return pw
 
+type_str_map = {
+    1: "student",
+    2: "map",
+    3: "other"
+}
+
 def update_image_from_api(folder: str, type: int = 2):
     index = 0
     dict = []
@@ -186,12 +192,13 @@ def update_image_from_api(folder: str, type: int = 2):
             continue
         file_name = file.replace(".png", "")
         file_path = base_img_folder + folder + file
+        file_compress_for_guild_path = base_img_folder + "/s" + folder + file
         file_path_absolute = folder + file
         
         file_names = list(map(lambda n: replace0(n), file_name.split("_")))
         # webp压缩
         # im.save(file_path, format="webp", quality=95, method=6)
-        # 将大于4.5M的图片进行压缩
+        # 将大于5.5M的图片进行压缩
         while os.path.getsize(file_path) / 1024 / 1024 > 5.5:
             im = Image.open(file_path)
             (x, y) = im.size
@@ -201,6 +208,13 @@ def update_image_from_api(folder: str, type: int = 2):
         hash = ""
         with open(file_path, "rb") as f:
             hash = hashlib.md5(f.read()).digest().hex()
+        # 将大于4M的图片压缩供频道发送
+        shutil.copy(file_path, file_compress_for_guild_path)
+        while os.path.getsize(file_compress_for_guild_path) / 1024 / 1024 > 3.8:
+            im = Image.open(file_compress_for_guild_path)
+            (x, y) = im.size
+            resize = im.resize((int(x * 0.95), int(y * 0.95)), Image.Resampling.LANCZOS)
+            resize.save(file_compress_for_guild_path)
         # 插入主记录
         main_name = file_names[0]
         # 判断是否新增
@@ -213,11 +227,15 @@ def update_image_from_api(folder: str, type: int = 2):
                 else:
                     file_names.remove(main_name)
                     main_name = file_names[0]
+        region = "jp"
+        if main_name.find("国服") != -1:
+            region = "cn"
         dict.append({
             "name": main_name,
             "path": file_path_absolute,
             "hash": hash,
-            "type": type
+            "type": type_str_map[type],
+            "region": region
         })
         # 如果有别名
         if len(file_names) > 1:
@@ -227,7 +245,8 @@ def update_image_from_api(folder: str, type: int = 2):
                     "name": a,
                     "path": file_path_absolute,
                     "hash": hash,
-                    "type": type
+                    "type": type_str_map[type],
+                    "region": region
                 })
         index += 1
     if len(dict) == 0:
@@ -258,9 +277,13 @@ def post_image_to_remote(folder: str):
         file_path = base_img_folder + folder + file
         file_history_path = base_img_folder + "/history" + folder + file
         file_remote_path = folder + file
-        remove_path = "/srv/arona-backend/image%s" % (file_remote_path)
-        sftp.put(file_path, remove_path)
+        file_compress_for_guild_path = base_img_folder + "/s" + folder + file
+        remote_guild_path = "/srv/arona-backend/image/s%s" % (file_remote_path)
+        remote_path = "/srv/arona-backend/image%s" % (file_remote_path)
+        sftp.put(file_path, remote_path)
+        sftp.put(file_compress_for_guild_path, remote_guild_path)
         purgePath.append(cdn_path + file_remote_path)
+        purgePath.append(cdn_path + "/s" + file_remote_path)
         shutil.move(file_path, file_history_path)
         index += 1
     if index == 0:
@@ -276,7 +299,7 @@ def post_data(action: str, data: any, printResp: bool = True):
         "token": get_password(),
         "Content-Type": "application/json"
     }
-    resp = requests.post("https://arona.diyigemt.com/api/v1/admin/action", json={
+    resp = requests.post("https://arona.diyigemt.com/api/v2/admin/action", json={
         "action": action,
         "data": data
     }, headers=header)
@@ -288,7 +311,7 @@ def test_name_exist(name):
     header = {
         "Content-Type": "application/json"
     }
-    resp = requests.get("https://arona.diyigemt.com/api/v1/image?name=%s" % name, headers=header)
+    resp = requests.get("https://arona.diyigemt.com/api/v2/image?name=%s" % name, headers=header)
     result = json.loads(resp.content.decode())
     return len(result["data"]) == 1
 

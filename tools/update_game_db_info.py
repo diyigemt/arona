@@ -67,7 +67,7 @@ def run(playwright: Playwright):
         end_time = 0
         # 开始下载远端文件
         remote = query_remote_name(info["cnName"])
-        path = str(remote["path"])
+        path = str(remote["content"])
         png_name = path.replace("/student_rank/", "")
         name_list = png_name.replace(".png", "").split("_")
         first_name = name_list[0]

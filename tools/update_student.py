@@ -41,7 +41,7 @@ def process_old():
             if not remote:
                 print("error at: %s" % stu_name)
                 exit(-1)
-            path = str(remote["path"])
+            path = str(remote["content"])
             png_name = path.replace("/student_rank/", "")
             local_path = "./image/parse/%s" % png_name
             source_im = download_image("https://arona.cdn.diyigemt.com/image", path, local_path)

@@ -138,7 +138,7 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict, thread_id: int):
     cn_hobby = page.query_selector('//*[@id="ba-student-profile-hobbies"]').text_content()
 
     # gamekee就是一坨答辩
-    is_no_translate = jp_hobby == cn_hobby and dict["ex_name"] != ""
+    is_no_translate = jp_hobby == cn_hobby and (dict["ex_name"] != "" or dict["desc"] != "")
 
     # 删掉背景
     page.evaluate("el => el.remove()", page.query_selector("#ba-background"))

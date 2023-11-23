@@ -1,3 +1,9 @@
+## 新项目引流
+
+关注 [arona-reborn](https://github.com/diyigemt/arona-reborn) 喵，关注 [arona-reborn](https://github.com/diyigemt/arona-reborn) 谢谢喵
+
+另外创了一个即时反馈QQ群: 577899701，不想进也没关系，其他渠道正常接受反馈
+
 ## bot攻略数据公开计划
 
 由于tx疯狂打压mirai系bot的生存空间，看不到活着的希望，于是决定公开，希望能帮助到其他类型的bot

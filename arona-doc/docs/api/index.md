@@ -4,6 +4,14 @@
 
 具体效果可以看站里的[功能介绍](/command/manual#%E5%AD%A6%E7%94%9F%E4%B8%8E%E4%B8%BB%E7%BA%BF%E5%9C%B0%E5%9B%BE%E6%94%BB%E7%95%A5%E7%B3%BB%E5%88%97)
 
+## 2023-11-23更新
+
+由于之前用 node 写的后端扛不住了，所以新写了一个，新后端的api基址已经改为 https://arona.diyigemt.com/api/v2
+
+并且返回格式也进行了更改，目前的情况是对 v1 的接口做了个兼容，将会在3个月后，即 **2024-02-23** 停止 v1 api 的运行
+
+v1 的文档放访问这里: [v1文档](/api/api-v1)
+
 ## 前言
 
 1. 所有图片均来源于网络，在非wiki处收集来的图片已经打上出处，希望各位使用时不要将出处抹去
@@ -13,7 +21,29 @@
    - [bilibili](https://space.bilibili.com/6690298)
    - [nga](https://nga.178.com/nuke.php?func=ucp&uid=42164110)
 3. 使用本 API 是你个人的行为，产生的任何问题都与我无关
-4. 在使用过程中如果出现图片无法发出的情况，可以去[腾讯文档的表格](https://docs.qq.com/sheet/DVGNTT3hCVUJKVHZP?tab=BB08J2)反馈
+4. 在使用过程中如果出现图片错漏/无法发出等情况，可以去[腾讯文档的表格](https://docs.qq.com/sheet/DVGNTT3hCVUJKVHZP?tab=BB08J2)反馈
+
+api 基址为 https://arona.diyigemt.com/api/v2
+
+所有接口返回值使用统一数据结构进行包装，结构如下
+
+| 参数名     | 数据类型   | 是否必须 | 说明            |
+|---------|--------|------|---------------|
+| code    | Int    | 是    | 处理结果代码        |
+| message | String | 是    | 处理结果描述        |
+| data    | T      | 否    | 具体结果, 数据结构不确定 |
+
+例如:
+
+```json
+{
+  "code": 200,
+  "message": "OK",
+  "data": null
+}
+```
+
+当`code`为 200 时，`message`固定为"OK"。其他情况下，不同接口定义略有不同。
 
 ## 攻略系列
 
@@ -21,8 +51,10 @@
 
 实现效果可看[功能介绍](/command/manual#%E5%AD%A6%E7%94%9F%E4%B8%8E%E4%B8%BB%E7%BA%BF%E5%9C%B0%E5%9B%BE%E6%94%BB%E7%95%A5%E7%B3%BB%E5%88%97)
 
+请求
+
 ```shell
-GET https://arona.diyigemt.com/api/v1/image
+GET https://arona.diyigemt.com/api/v2/image
 ```
 
 请求参数
@@ -33,97 +65,106 @@ GET https://arona.diyigemt.com/api/v1/image
 
 返回值
 
-| 参数名     | 数据类型         | 说明                                                         |
-|---------|--------------|------------------------------------------------------------|
-| status  | int          | 101: 请求错误(没name)/模糊搜索结果, 200: 请求成功                         |
-| data    | ResultList[] | 结果集                                                        |
-| message | string       | name is empty: 没name, fuse search: 模糊搜索结果, wrong name: 真没有 |
+| 参数名     | 数据类型                 | 说明  |
+|---------|----------------------|-----|
+| code    | Int                  |     |
+| data    | ResultList[] \| NULL | 结果集 |
+| message | String               |     |
 
 ResultList
 
-| 参数名  | 数据类型   | 说明                            |
-|------|--------|-------------------------------|
-| id   | int    | id                            |
-| name | string | 查询名称                          |
-| path | string | 图片路径/拼音                       |
-| hash | string | 图片md5结果                       |
-| type | int    | 图片类型, 1: 学生攻略, 2: 主线地图, 3: 杂图 |
+| 参数名     | 数据类型   | 说明        |
+|---------|--------|-----------|
+| name    | Int    | 对应名称      |
+| hash    | String | 图片md5结果   |
+| content | String | 图片路径/结果文本 |
+| type    | String | 结果类型      |
 
-当`name`没有精确对应结果时, 接口会返回模糊查询结果, 此时`data`有两种可能, list或者null
-- 为null表明连模糊查询结果都没有
-- 为list时, list的length只可能为4
+其中`type`字段目前有两种类型
 
-可以通过data存在与否以及list的len判断结果类型
+1. file: 此时`content`中的内容为图片的`cdn`地址
+2. plain: 此时`content`中的内容为纯文本，字面意思
 
-当为精确匹配时, data为list且其len必为1, 此时可通过item的`hash`判断是否有更新, 并通过`path`获取文件地址
+特别的，对于`file`类型的结果，其最终地址为
+
+```kotlin
+"https://arona.cdn.diyigemt.com/image${it.content}"
+"https://arona.cdn.diyigemt.com/image/s${it.content}"
+```
+
+包含`/s/`的路径中的图片大小必定小于`4M`，可以满足QQ频道图片的大小限制
+
+当`name`没有精确对应结果时, 接口会返回模糊查询结果, 此时`data`有两种可能,`list`或者`null`
+- 为`null`表明连模糊查询结果都没有
+- 为`list`时,`list`的`len`为 1 <= `len` <= 4
+
+可以通过`data`存在与否以及`list`的`len`判断结果类型
+
+当为精确匹配时,`data`为`list`且其`len`必为1, 此时可通过`item`的`hash`判断是否有更新, 并通过`path`获取文件地址
 
 精确匹配查询示例
 
 ```bash
-GET https://arona.diyigemt.com/api/v1/image?name=国际服未来视
+GET https://arona.diyigemt.com/api/v2/image?name=国际服未来视
 ```
 
 精确匹配返回示例
 
 ```json
 {
-  "status": 200,
+  "code": 200,
+  "message": "OK",
   "data": [
     {
       "name": "国际服未来视",
-      "path": "/some/国际服未来视.png",
-      "hash": "46f118f546424b96193c117dc2dc0470",
-      "type": 3
+      "hash": "2cf82b1c84a498aca82121ed10ce7748",
+      "content": "/some/国际服未来视.png",
+      "type": "file"
     }
-  ],
-  "message": ""
+  ]
 }
 ```
 
-此时文件地址为 `https://arona.cdn.diyigemt.com/image/some/国际服未来视.png`
+此时文件地址为 `https://arona.cdn.diyigemt.com/image/some/国际服未来视.png` 和 `https://arona.cdn.diyigemt.com/image/s/some/国际服未来视.png`
 
 模糊查询结果示例
 
 ```bash
-GET https://arona.diyigemt.com/api/v1/image?name=国际服
+GET https://arona.diyigemt.com/api/v2/image?name=国际服
 ```
 
 模糊查询返回示例
 
 ```json
 {
-  "status": 101,
+  "code": 200,
+  "message": "OK",
   "data": [
     {
-      "id": 493,
-      "name": "国际服竞技场",
-      "path": "guojifujingjichang",
-      "hash": "2fce6f88fbc106751c02a0224ea77edc",
-      "type": 0
+      "name": "国际服人权",
+      "hash": "",
+      "content": "",
+      "type": "null"
     },
     {
-      "id": 559,
-      "name": "国际服室内鸡",
-      "path": "guojifushineiji",
-      "hash": "ecd2298b56753f11ad09ba966823d3b9",
-      "type": 0
+      "name": "国际服未来视",
+      "hash": "",
+      "content": "",
+      "type": "null"
     },
     {
-      "id": 713,
-      "name": "国际服室外鸡",
-      "path": "guojifushiwaiji",
-      "hash": "5562ee2b52ac57d5ff2c5c2f7d681ffe",
-      "type": 0
+      "name": "国际服火力演习",
+      "hash": "",
+      "content": "",
+      "type": "null"
     },
     {
-      "id": 734,
-      "name": "国际服室内GOZ",
-      "path": "guojifushineiGOZ",
-      "hash": "a7c7e8c5c983aef47120483811599fc0",
-      "type": 0
+      "name": "国际服室外寿司",
+      "hash": "",
+      "content": "",
+      "type": "null"
     }
-  ],
-  "message": "fuse search"
+  ]
 }
 ```
 
@@ -141,123 +182,29 @@ GET https://arona.diyigemt.com/api/v1/image?name=国际服
 
 由于cdn不是白嫖的, **希望**各位开发者善用`hash`字段
 
-理想的情况是, 获取请求结果->检查hash是否变更, 如果变更则下载新资源, 否则继续使用旧资源
+理想的情况是, 获取请求结果->检查`hash`是否变更, 如果变更则下载新资源, 否则继续使用旧资源
 
 `hash`采用**md5**进行计算, 可以使用数据库缓存上次请求的结果, 也可以每次都计算一次
 
 ### 默认情况
 
-| name    | 说明              |
-|---------|-----------------|
-| 国际服未来视  | 猫佬的未来视          |
-| 国际服总力   | 始终指向国际服当期总力     |
-| 国际服火力演习 | 始终指向国际服当期火力演习   |
-| 国际服活动   | 始终指向国际服当期活动     |
-| 日服总力    | 始终指向日服当期总力      |
-| 日服火力演习  | 始终指向日服当期火力演习    |
-| 日服活动    | 始终指向日服当期活动      |
-| 杂图      | 指向所有不好记的名称的图片汇总 |
+| name            | 说明              |
+|-----------------|-----------------|
+| 国服未来视           | 朝夕的未来视          |
+| 国服活动            | 始终指向国服当期活动      |
+| 国际服未来视          | 猫佬的未来视          |
+| 国际服总力           | 始终指向国际服当期总力     |
+| 国际服火力演习         | 始终指向国际服当期火力演习   |
+| 国际服活动           | 始终指向国际服当期活动     |
+| 日服总力            | 始终指向日服当期总力      |
+| 日服大决战           | 始终指向日服当期大决战     |
+| 日服火力演习          | 始终指向日服当期火力演习    |
+| 日服活动            | 始终指向日服当期活动      |
+| 杂图              | 指向所有不好记的名称的图片汇总 |
+| 11-3/H11-3等主线代码 | 指向主线攻略图片        |
 
 ::: warning
 
 再次强调, 所有图片都是人工整理, 难免会有错漏和更新不及时的情况, 请见谅
 
 :::
-
-## action系列
-
-机器人特供的, 可以不用
-
-```bash
-GET https://arona.diyigemt.com/api/v1/action?read=
-```
-
-请求参数
-
-| 参数名  | 数据类型   | 是否必须 | 说明    |
-|------|--------|------|-------|
-| read | string | 是    | 已读的id |
-
-为列表`join`的形式, 最长为10个, 如:`read=1,2,3`
-
-当`read`为空字串时, 返回最近三天内的记录
-
-返回值
-
-
-| 参数名     | 数据类型         | 说明                          |
-|---------|--------------|-----------------------------|
-| status  | int          | 101: 请求错误(没read), 200: 请求成功 |
-| data    | ResultList[] | 结果集                         |
-| message | string       |                             |
-
-ResultList
-
-| 参数名     | 数据类型   | 说明                       |
-|---------|--------|--------------------------|
-| id      | int    | id                       |
-| action  | string | 类型                       |
-| content | string | json序列化结果                |
-| time    | string | 发布时间 yyyy-MM-dd HH:mm:ss |
-
-### announcement
-
-当`action`为`announcement`时, 该动作为一条公告, 此时content为纯字符串
-
-### pool update
-
-当`action`为`poolUpdate`时, 该动作为卡池更新, 此时content为ResultList的json序列化结果
-
-| 参数名       | 数据类型   | 说明   |
-|-----------|--------|------|
-| name      | string | 卡池名称 |
-| character | Item[] | 卡池内容 |
-
-Item
-
-| 参数名   | 数据类型   | 说明             |
-|-------|--------|----------------|
-| name  | string | 角色名称           |
-| star  | int    | 星级 1,2,3       |
-| limit | int    | 是否限定 0: 否 1: 是 |
-
-请求示例
-
-```bash
-GET https://arona.diyigemt.com/api/v1/action?read=
-```
-
-返回示例
-
-```json
-{
-  "status": 200,
-  "data": [
-    {
-      "id": 111,
-      "action": "announcement",
-      "content": "过年了过年了https://kivo.wiki/",
-      "time": "2023-06-21 12:14:46"
-    },
-    {
-      "id": 112,
-      "action": "poolUpdate",
-      "content": "{\"name\":\"泳装不知道第几期池\",\"character\":[{\"name\":\"宫子(泳装)\",\"star\":3,\"limit\":0},{\"name\":\"咲(泳装)\",\"star\":3,\"limit\":0}]}",
-      "time": "2023-06-21 14:38:19"
-    },
-    {
-      "id": 113,
-      "action": "announcement",
-      "content": "新攻略内容：国服角色简评",
-      "time": "2023-06-21 18:10:34"
-    },
-    {
-      "id": 114,
-      "action": "announcement",
-      "content": "把猫佬最新的评分更新了,有错的图片吱一声",
-      "time": "2023-06-22 22:34:56"
-    }
-  ],
-  "message": ""
-}
-```

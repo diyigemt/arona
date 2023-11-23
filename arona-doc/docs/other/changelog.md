@@ -1,5 +1,13 @@
 # 更新日志
 
+## v1.1.4
+2023-11-20
+
+1. 添加对mirai 2.16.0的支持
+2. 修复部分图楼图片获取失败的问题
+3. 回滚活动图片生成方式，尝试修复 [#56](https://github.com/diyigemt/arona/issues/56) [#57](https://github.com/diyigemt/arona/issues/57)
+4. 修复数据同步失败的问题 [#49](https://github.com/diyigemt/arona/issues/49) [#52](https://github.com/diyigemt/arona/issues/52)
+
 ## v1.1.3
 2023-09-18
 

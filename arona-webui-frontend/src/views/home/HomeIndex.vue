@@ -19,24 +19,24 @@
       </div>
     </div>
   </div>
-  <!--  <div class="menu">-->
-  <!--    <div class="filter">-->
-  <!--      <el-space class="menu-content" wrap>-->
-  <!--        <ShadowCard class="button-card kivotos" role="button" tabindex="0" @click="routerJump('/')">-->
-  <!--          <div>基沃托斯</div>-->
-  <!--        </ShadowCard>-->
-  <!--        <ShadowCard class="button-card arona" role="button" tabindex="1" @click="routerJump('/config')">-->
-  <!--          <div>设置</div>-->
-  <!--        </ShadowCard>-->
-  <!--        <ShadowCard class="button-card" style="opacity: 0; user-select: none; pointer-events: none">-->
-  <!--          <div>管理</div>-->
-  <!--        </ShadowCard>-->
-  <!--        <ShadowCard class="button-card setting" role="button" tabindex="2" @click="routerJump('/admin')">-->
-  <!--          <div>管理</div>-->
-  <!--        </ShadowCard>-->
-  <!--      </el-space>-->
-  <!--    </div>-->
-  <!--  </div>-->
+    <div class="menu">
+      <div class="filter">
+        <el-space class="menu-content" wrap>
+          <ShadowCard class="button-card kivotos" role="button" tabindex="0" @click="routerJump('/')">
+            <div>基沃托斯</div>
+          </ShadowCard>
+          <ShadowCard class="button-card arona" role="button" tabindex="1" @click="routerJump('/config')">
+            <div>设置</div>
+          </ShadowCard>
+          <ShadowCard class="button-card" style="opacity: 0; user-select: none; pointer-events: none">
+            <div>管理</div>
+          </ShadowCard>
+          <ShadowCard class="button-card setting" role="button" tabindex="2" @click="routerJump('/admin')">
+            <div>管理</div>
+          </ShadowCard>
+        </el-space>
+      </div>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -103,6 +103,11 @@ const chatStyleStatic = {
 const VoiceResourceUrl = "https://yuuka.cdn.diyigemt.com/image/home_page/voice/";
 const SpineResourceUrl = "https://yuuka.cdn.diyigemt.com/image/home_page/spine/";
 const ImageResourceUrl = "https://yuuka.cdn.diyigemt.com/image/home_page/image/";
+const PlanaHome = ["UIWorkPlanaSit",
+  "UIWorkPlanaCabinet",
+  "UIWorkPlanaUmbrella",
+  "UIWorkCoexist_PlanaWatchSky",
+  "UIWorkCoexist_PlanaSitPeek"];
 
 function initBackground(el: HTMLElement) {
   const backgroundStyle = getComputedStyle(el);
@@ -113,6 +118,7 @@ function initBackground(el: HTMLElement) {
   standardRate = backgroundWidth / standardWidth;
   middleOffset = (backgroundHeight - viewHeight) / 2;
   const animationConfig = randomArrayItem(PlanaPageAnimationConfig);
+  const appearArona = PlanaHome.indexOf(animationConfig.name) == -1;
   // const animationConfig = PlanaPageAnimationConfig[8];
   const interactionPoint = animationConfig.interaction;
   const disappearMaskPaths = animationConfig.masks.map((it) => it.path);
@@ -126,35 +132,35 @@ function initBackground(el: HTMLElement) {
   const randomExitVoice = randomArrayItem(exitVoiceList);
   randomInVoice.forEach((voice) => {
     sound.add(voice.voice, {
-      url: `${VoiceResourceUrl}${voice.voice}.mp3`,
+      url: `${ VoiceResourceUrl }${ voice.voice }.mp3`,
       preload: true,
     });
   });
   randomExitVoice.forEach((voice) => {
     sound.add(voice.voice, {
-      url: `${VoiceResourceUrl}${voice.voice}.mp3`,
+      url: `${ VoiceResourceUrl }${ voice.voice }.mp3`,
     });
   });
   sound.add("mute", {
-    url: `${VoiceResourceUrl}Mute.mp3`,
+    url: `${ VoiceResourceUrl }Mute.mp3`,
     preload: true,
   });
   sound.add("sensei-arona", {
-    url: `${VoiceResourceUrl}Arona_Default_TTS.mp3`,
+    url: `${ VoiceResourceUrl }Arona_Default_TTS.mp3`,
   });
   sound.add("sensei-plana", {
-    url: `${VoiceResourceUrl}NP0035_Default_TTS.mp3`,
+    url: `${ VoiceResourceUrl }NP0035_Default_TTS.mp3`,
   });
   randomTalkVoiceList.flat().forEach((voice) => {
     sound.add(voice.voice, {
-      url: `${VoiceResourceUrl}${voice.voice}.mp3`,
+      url: `${ VoiceResourceUrl }${ voice.voice }.mp3`,
     });
   });
   aronaWorkVoiceList.forEach((voice) => {
     voice.voice.forEach((name) => {
       const fName = name.indexOf("CALLNAME") !== -1 ? "Arona_Default_TTS" : name;
       sound.add(fName, {
-        url: `${VoiceResourceUrl}${fName}.mp3`,
+        url: `${ VoiceResourceUrl }${ fName }.mp3`,
       });
     });
   });
@@ -162,27 +168,28 @@ function initBackground(el: HTMLElement) {
     voice.voice.forEach((name) => {
       const fName = name.indexOf("CALLNAME") !== -1 ? "NP0035_Default_TTS" : name;
       sound.add(fName, {
-        url: `${VoiceResourceUrl}${fName}.mp3`,
+        url: `${ VoiceResourceUrl }${ fName }.mp3`,
       });
     });
   });
-  const app = new Application({ width: backgroundWidth, height: backgroundHeight });
+  const app = new Application({width: backgroundWidth, height: backgroundHeight});
   (window as any).__PIXI_APP__ = app;
-  app.view.style.transform = `translateY(${-middleOffset}px) scale(${superResolutionBack})`;
+  app.view.style.transform = `translateY(${ -middleOffset }px) scale(${ superResolutionBack })`;
   app.view.style.transformOrigin = "0";
   el.appendChild(app.view);
   app.stage.sortableChildren = true;
   // app.loader.add("space", `${SpineResourceUrl}${animationConfig.space}`);
-  app.loader.add("space", `${SpineResourceUrl}${animationConfig.space}`);
+  app.loader.add("space", `${ SpineResourceUrl }${ animationConfig.space }`);
   disappearMaskPaths.forEach((it, index) => {
-    app.loader.add(`disappearMask-${index}`, `${ImageResourceUrl}${it}`);
+    app.loader.add(`disappearMask-${ index }`, `${ ImageResourceUrl }${ it }`);
   });
-  app.loader.add("arona", `${SpineResourceUrl}arona_spr.skel`);
-  app.loader.add("aronaMask", `${ImageResourceUrl}FX_TEX_Arona_Stand.png`);
-  app.loader.add("plana", `${SpineResourceUrl}NP0035_spr.skel`);
-  app.loader.add("planaMask", `${ImageResourceUrl}FX_TEX_Plana_Stand.png`);
+  app.loader.add("arona", `${ SpineResourceUrl }arona_spr.skel`);
+  app.loader.add("aronaMask", `${ ImageResourceUrl }FX_TEX_Arona_Stand.png`);
+  app.loader.add("plana", `${ SpineResourceUrl }NP0035_spr.skel`);
+  app.loader.add("planaMask", `${ ImageResourceUrl }FX_TEX_Plana_Stand.png`);
   app.stage.interactive = true;
   (window as any).__PIXI_APP = app;
+
   function checkHitBound(target: Point, bound: [Point, Point]) {
     return (
       target.x >= bound[0].x * standardRate &&
@@ -191,6 +198,7 @@ function initBackground(el: HTMLElement) {
       target.y <= bound[1].y * standardRate
     );
   }
+
   function playListVoice(list: VoiceGroup, cb?: () => void, stereo = 0, index = 0) {
     let _pause = false;
     sound.play(list[index].voice, {
@@ -212,9 +220,11 @@ function initBackground(el: HTMLElement) {
       _pause = true;
     };
   }
+
   function stopListVoice(list: VoiceGroup) {
     list.forEach((voice) => sound.stop(voice.voice));
   }
+
   function playIdleVoice() {
     // clearChatDialog();
     const pickResult = pickRandomArrayItemAndPutBack(randomTalkVoiceList);
@@ -225,6 +235,7 @@ function initBackground(el: HTMLElement) {
       randomTalkVoiceIntervalHandler.stop = playListVoice(nextVoice, playIdleVoice);
     }, 10000);
   }
+
   app.loader.load((_: Loader, resources: Dict<LoaderResource>) => {
     const backgroundResource = Reflect.get(resources, "space");
     const backgroundSpine = loadSpace(backgroundResource, app.stage);
@@ -245,56 +256,37 @@ function initBackground(el: HTMLElement) {
       },
     });
     const disappearMasks = loadMask(
-      disappearMaskPaths.map((_0, index) => Reflect.get(resources, `disappearMask-${index}`)),
+      disappearMaskPaths.map((_0, index) => Reflect.get(resources, `disappearMask-${ index }`)),
       app.stage,
       animationConfig.masks,
       animationConfig.masks.map((it) => it.path.indexOf("Arona") !== -1),
     );
-    const randomPosition = randomInt(0, 2);
-    const stereo = randomPosition ? 0.8 : -0.8;
-    const { waifu: arona, container: aronaContainer } = loadWaifuSpine(
-      Reflect.get(resources, "arona"),
+    const resourceKey = appearArona ? "arona" : "plana";
+    const positionKey = appearArona ? 0 : 1;
+    const {waifu, container} = loadWaifuSpine(
+      Reflect.get(resources, resourceKey),
       app.stage,
-      WaifuAppearConfig.arona.position[randomPosition],
+      Reflect.get(WaifuAppearConfig, resourceKey).position[positionKey]
     );
-    const { waifu: plana, container: planaContainer } = loadWaifuSpine(
-      Reflect.get(resources, "plana"),
-      app.stage,
-      WaifuAppearConfig.plana.position[randomPosition],
-    );
-    const aronaAppearEmitter = loadEmitter(
-      aronaContainer,
-      [{ scale: 3, offset: { x: 0, y: 0 }, config: AronaEmitterConfig }],
+    const AppearEmitterConfig = appearArona ? AronaEmitterConfig : PlanaEmitterConfig;
+    const AppearEmitter = loadEmitter(
+      container,
+      [{scale: 3, offset: {x: 0, y: 0}, config: AppearEmitterConfig}],
       false,
     )[0];
-    const planaAppearEmitter = loadEmitter(
-      planaContainer,
-      [{ scale: 3, offset: { x: 0, y: 0 }, config: PlanaEmitterConfig }],
-      false,
-    )[0];
-    const appearEmitters = [aronaAppearEmitter, planaAppearEmitter];
-
-    const aronaMask = loadMask(
-      [Reflect.get(resources, "aronaMask")],
-      aronaContainer,
-      [WaifuAppearConfig.arona.mask],
+    const MaskKey = appearArona ? "aronaMask" : "planaMask";
+    const Mask = loadMask(
+      [Reflect.get(resources, MaskKey)],
+      container,
+      [Reflect.get(WaifuAppearConfig, resourceKey).mask],
       [true],
       false,
     )[0];
-    const planaMask = loadMask(
-      [Reflect.get(resources, "planaMask")],
-      planaContainer,
-      [WaifuAppearConfig.plana.mask],
-      [false],
-      false,
-    )[0];
-    const appearMasks = [aronaMask, planaMask];
 
     const emitters = loadEmitter(app.stage, animationConfig.emitters);
 
-    // const arona = loadArona(aronaResource, aronaContainer);
-    const aronaWorkVoiceLock = ref(false);
-    const planaWorkVoiceLock = ref(false);
+    const WorkVoiceLock = ref(false);
+    const workVoice = appearArona ? aronaWorkVoiceList : planaWorkVoiceList;
     function playWorkVoice(
       list: { AnimationName: string; textJP: string; voice: string[] }[],
       voiceLock: Ref<boolean>,
@@ -311,7 +303,7 @@ function initBackground(el: HTMLElement) {
       new Promise<void>((resolve) => {
         const text = pickResult.textJP;
         playListVoice(
-          pickResult.voice.map((it) => ({ AnimationName: "", textJP: "", voice: it })),
+          pickResult.voice.map((it) => ({AnimationName: "", textJP: "", voice: it})),
           resolve,
           stereo,
         );
@@ -331,12 +323,11 @@ function initBackground(el: HTMLElement) {
         }, 2500);
       });
     }
-    aronaContainer.addListener("pointerdown", () => {
-      playWorkVoice(aronaWorkVoiceList, aronaWorkVoiceLock, arona, undefined, stereo);
+
+    container.addListener("pointerdown", () => {
+      playWorkVoice(workVoice, WorkVoiceLock, waifu, undefined, 1);
     });
-    planaContainer.addListener("pointerdown", () => {
-      playWorkVoice(planaWorkVoiceList, planaWorkVoiceLock, plana, undefined, -stereo);
-    });
+
     // let list: any[] = [];
     function handleClick(event: InteractionEvent) {
       const target = event.data.global;
@@ -398,12 +389,10 @@ function initBackground(el: HTMLElement) {
         });
         tl.then(() => {
           hideMasks(disappearMasks);
-          showMasks(appearMasks);
-          aronaContainer.visible = true;
-          arona.visible = true;
-          planaContainer.visible = true;
-          plana.visible = true;
-          startEmitters(appearEmitters);
+          showMasks([Mask]);
+          container.visible = true;
+          waifu.visible = true;
+          startEmitters([AppearEmitter]);
           // updateChatStyleStatic(HomePageDialogConfig.x, HomePageDialogConfig.y);
           // updateChatDialog("", "left", {
           //   x: HomePageDialogConfig.x,
@@ -414,27 +403,16 @@ function initBackground(el: HTMLElement) {
           //     playWorkVoice();
           //   });
           // });
-          playWorkVoice(aronaWorkVoiceList, aronaWorkVoiceLock, arona, undefined, stereo);
-          playWorkVoice(planaWorkVoiceList, planaWorkVoiceLock, plana, undefined, -stereo);
+          playWorkVoice(workVoice, WorkVoiceLock, waifu, undefined, 1);
           const tl2 = gsap.timeline();
           tl2
-            .to(aronaMask, {
+            .to(Mask, {
               alpha: 0,
               duration: 1,
             })
-            .to(
-              planaMask,
-              {
-                alpha: 0,
-                duration: 1,
-              },
-              "<",
-            )
             .then(() => {
-              aronaMask.visible = false;
-              planaMask.visible = false;
-              aronaContainer.interactive = true;
-              planaContainer.interactive = true;
+              Mask.visible = false;
+              container.interactive = true;
             });
         });
       }, 600);
@@ -446,8 +424,10 @@ function initBackground(el: HTMLElement) {
   });
   return app;
 }
+
 const AronaColor = [63 / 255, 203 / 255, 255 / 255];
 const PlanaColor = [252 / 255, 172 / 255, 252 / 255];
+
 function loadMask(
   resources: LoaderResource[],
   app: Container,
@@ -460,7 +440,7 @@ function loadMask(
     const sprite = Sprite.from(resource.texture!);
     sprite.alpha = 0.8;
     sprite.filters = [
-      new AdvancedBloomFilter({ bloomScale: 1.5, brightness: 1.5 }),
+      new AdvancedBloomFilter({bloomScale: 1.5, brightness: 1.5}),
       new ColorOverlayFilter(arona[index] ? AronaColor : PlanaColor, 1),
     ];
     sprite.scale.set(baseScaleRate * config[index].scale);
@@ -471,6 +451,7 @@ function loadMask(
     return sprite;
   });
 }
+
 function loadSpace(resource: LoaderResource, app: Container) {
   const backgroundSpine = new Spine(resource.spineData!);
   const sourceWidth = backgroundSpine.width;
@@ -484,6 +465,7 @@ function loadSpace(resource: LoaderResource, app: Container) {
   app.addChild(backgroundSpine);
   return backgroundSpine;
 }
+
 function loadWaifuSpine(resource: LoaderResource, app: Container, init: Point) {
   const container = new Container();
   container.sortableChildren = true;
@@ -501,12 +483,13 @@ function loadWaifuSpine(resource: LoaderResource, app: Container, init: Point) {
     container,
   };
 }
+
 function loadEmitter(app: Container, configs: EmitterConfig[], loadOffset = true) {
   const baseScaleRate = loadOffset ? standardRate : 1;
   return configs.map((config) => {
     const sourceParticleContainer = new Container();
     sourceParticleContainer.visible = false;
-    sourceParticleContainer.filters = [new AdvancedBloomFilter({ bloomScale: 3, brightness: 1.5 })];
+    sourceParticleContainer.filters = [new AdvancedBloomFilter({bloomScale: 3, brightness: 1.5})];
     sourceParticleContainer.position.set(baseScaleRate * config.offset.x, baseScaleRate * config.offset.y);
     sourceParticleContainer.scale.set(baseScaleRate * config.scale);
     sourceParticleContainer.zIndex = 10;
@@ -520,20 +503,24 @@ function loadEmitter(app: Container, configs: EmitterConfig[], loadOffset = true
     };
   });
 }
+
 function showMasks(masks: (Sprite | Container)[]) {
   // eslint-disable-next-line no-return-assign
   masks.forEach((it) => (it.visible = true));
 }
+
 function hideMasks(masks: (Sprite | Container)[]) {
   // eslint-disable-next-line no-return-assign
   masks.forEach((it) => (it.visible = false));
 }
+
 function startEmitters(items: { emitter: Emitter; sourceParticleContainer: Container<DisplayObject> }[]) {
   items.forEach((it) => {
     it.sourceParticleContainer.visible = true;
     it.emitter.emit = true;
   });
 }
+
 function clearBackgroundAnimation(background: Spine, length: number) {
   let len = Number(length - 1);
   while (len >= 0) {
@@ -548,6 +535,7 @@ function clearBackgroundAnimation(background: Spine, length: number) {
     }
   }, 100);
 }
+
 function clearChatDialog() {
   const timeline = gsap.timeline();
   timeline.to(chatDialogOuter.value!, {
@@ -558,6 +546,7 @@ function clearChatDialog() {
     },
   });
 }
+
 function updateChatDialog(text: string, type?: string, position?: { x: number; y: number }) {
   chatStyle.chat = text;
   if (text) {
@@ -591,17 +580,22 @@ function updateChatDialog(text: string, type?: string, position?: { x: number; y
     }
   });
 }
+
 function updateChatStyleStatic(x: number, y: number) {
   chatStyleStatic.x = x * standardRate;
   chatStyleStatic.y = y * standardRate;
 }
+
 function styleToPxNumber(str: string) {
   return Number(str.replace("px", ""));
 }
+
 const router = useRouter();
+
 function routerJump(path: string) {
   router.push(path);
 }
+
 onMounted(() => {
   mainApp = initBackground(backgroundContainer.value!);
 });
@@ -625,18 +619,22 @@ div {
   font-family: "Game Font", sans-serif;
   font-size: 1.2rem;
 }
+
 .background {
   position: relative;
   overflow: hidden;
   user-select: none;
   width: 100%;
   height: 100%;
+
   .chat-dialog-outer {
     position: absolute;
     opacity: 0;
     z-index: 99;
   }
+
   $chat-dialog-color: rgba(255, 255, 255, 0.8);
+
   .chat-dialog {
     --half-height: 6px;
     --arrow-offset: 40px;
@@ -647,31 +645,38 @@ div {
     padding: 0.5em 2em;
     position: relative;
     border-radius: var(--half-height);
+
     &:after {
       content: "";
       position: absolute;
       border: 0.5em solid transparent;
     }
   }
+
   $chat-triangle-pos: 40px;
+
   .chat-dialog-right:after {
     border-bottom-color: $chat-dialog-color;
     border-left-color: $chat-dialog-color;
     right: var(--arrow-offset);
     top: -1em;
   }
+
   .chat-dialog-left:after {
     border-bottom-color: $chat-dialog-color;
     border-right-color: $chat-dialog-color;
     left: var(--arrow-offset);
     top: -1em;
   }
+
   .chat-fade-in {
     animation: chat-fade-in 1s;
   }
+
   .chat-fade-out {
     animation: chat-fade-out 1s;
   }
+
   @keyframes chat-fade-in {
     0% {
       opacity: 0;
@@ -696,9 +701,11 @@ $button-card-size: 200px;
   top: 20%;
   right: 10%;
   transform: skewX(-10deg);
+
   .filter {
     position: relative;
     overflow: hidden;
+
     .menu-content {
       max-width: calc(2 * #{$button-card-size} + 2 * 8px);
       position: relative;
@@ -706,6 +713,7 @@ $button-card-size: 200px;
     }
   }
 }
+
 .button-card {
   cursor: pointer;
   width: $button-card-size;
@@ -714,28 +722,31 @@ $button-card-size: 200px;
   border-radius: 6px;
   background: url("/image/poli-light.png") rgba(164, 216, 237, 0.3) no-repeat 0 40%;
 }
+
 .kivotos {
   background: linear-gradient(
       340deg,
       rgba(240, 240, 240, 0.1) 0%,
       rgba(240, 240, 240, 0.1) 30%,
       rgba(240, 240, 240, 1) 70%
-    ),
-    url("/image/poli-light.png"), url("/image/BG_View_Kivotos.jpg");
+  ),
+  url("/image/poli-light.png"), url("/image/BG_View_Kivotos.jpg");
   background-repeat: no-repeat;
   background-position: 100% 100%, 20% 20%, 35% 75%;
   background-size: auto, auto, 300% 300%;
 }
+
 .setting {
   background: linear-gradient(340deg, rgba(240, 240, 240, 0.1) 0%, rgba(240, 240, 240, 0.1) 30%, rgb(240, 240, 240) 70%),
-    url("/image/poli-light.png"), url("/image/BG_CS_PR_05.jpg");
+  url("/image/poli-light.png"), url("/image/BG_CS_PR_05.jpg");
   background-repeat: no-repeat;
   background-position: 100% 100%, 20% 20%, 50%;
   background-size: auto, auto, 200% 150%;
 }
+
 .arona {
   background: linear-gradient(340deg, rgba(240, 240, 240, 0.1) 0%, rgba(240, 240, 240, 0.1) 30%, rgb(240, 240, 240) 70%),
-    url("/image/poli-light.png"), url("/image/BG_CS_PR_03.jpg");
+  url("/image/poli-light.png"), url("/image/BG_CS_PR_03.jpg");
   background-repeat: no-repeat;
   background-position: 100% 100%, 20% 20%, 50%;
   background-size: auto, auto, 200% 200%;

@@ -9,7 +9,6 @@
     "build": "vue-tsc --noEmit --skipLibCheck && vite build",
     "lint": "eslint src",
     "preview": "vite preview",
-    "prepare": "husky install",
     "mock": "nodemon --exec ts-node mock/index.ts --watch src/ --watch mock/ -e ts"
   },
   "dependencies": {
@@ -67,7 +66,6 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-vue": "^8.3.0",
     "express-fileupload": "^1.4.0",
-    "husky": "^7.0.4",
     "lint-staged": "^12.3.2",
     "markdown-it-link-attributes": "^4.0.0",
     "markdown-it-prism": "^2.2.2",

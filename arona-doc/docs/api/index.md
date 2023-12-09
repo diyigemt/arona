@@ -94,7 +94,7 @@ ResultList
 
 包含`/s/`的路径中的图片大小必定小于`4M`，可以满足QQ频道图片的大小限制
 
-当`name`没有精确对应结果时, 接口会返回模糊查询结果, 此时`data`有两种可能,`list`或者`null`
+当`name`没有精确对应结果时, 接口会返回模糊查询结果, 此时`code`必定为101, `data`有两种可能,`list`或者`null`
 - 为`null`表明连模糊查询结果都没有
 - 为`list`时,`list`的`len`为 1 <= `len` <= 4
 
@@ -137,7 +137,7 @@ GET https://arona.diyigemt.com/api/v2/image?name=国际服
 
 ```json
 {
-  "code": 200,
+  "code": 101,
   "message": "OK",
   "data": [
     {

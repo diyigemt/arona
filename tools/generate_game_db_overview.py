@@ -3,7 +3,7 @@ from playwright.sync_api import Playwright, sync_playwright
 
 def run(playwright: Playwright):
     browser = playwright.chromium.launch(headless=True, slow_mo=100)
-    context = browser.new_context(viewport={'width': 1920, 'height': 1650}, device_scale_factor=2.0)
+    context = browser.new_context(viewport={'width': 1920, 'height': 1850}, device_scale_factor=2.0)
     page = context.new_page()
 
     # 拿到成长资源截图

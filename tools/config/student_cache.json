@@ -675,7 +675,7 @@
         "gamekee": "https://ba.gamekee.com/586470.html"
     },
     "カホ": {
-        "cnName": "果惠",
+        "cnName": "果穗",
         "loma": "Kaho",
         "gamekee": "https://ba.gamekee.com/588062.html"
     },
@@ -823,5 +823,10 @@
         "cnName": "莲华",
         "loma": "Renge",
         "gamekee": "https://ba.gamekee.com/605892.html"
+    },
+    "エイミ(水着)": {
+        "cnName": "泳装艾米",
+        "loma": "Eimi_Swimsuit",
+        "gamekee": "https://ba.gamekee.com/607106.html"
     }
 }

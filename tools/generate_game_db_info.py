@@ -24,7 +24,7 @@ sources_map = {
 }
 
 lock = threading.Lock()
-max_thread = min(4, os.cpu_count())
+max_thread = 1
 # max_thread = 1
 
 # 加载dict
@@ -212,7 +212,10 @@ def get_cn_info_from_gamekee(playwright: Playwright, path: str):
     browser = playwright.chromium.launch(headless=True, slow_mo=100)
     context = browser.new_context(viewport={'width': 1920, 'height': 1080}, device_scale_factor=4.0)
     page = context.new_page()
-    page.goto(path)
+    try:
+        page.goto(path)
+    except Exception as e:
+        pass
     time.sleep(2)
     page.eval_on_selector_all(".dailog-data-wrapper", "nodes => nodes.forEach(el => el.remove())")
     page.eval_on_selector_all(".back-item", "nodes => nodes.forEach(el => el.remove())")
@@ -347,6 +350,7 @@ def get_cn_info_from_gamekee(playwright: Playwright, path: str):
     '//*[@id="wiki-body"]/div/div/div[3]/div/div/div[1]/div[1]/div[4]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/div/div[1]/div[2]/div/div[5]/div/div/table/tbody/',
     '//*[@id="wiki-body"]/div/div/div[3]/div/div/div[1]/div[1]/div[4]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/div/div[1]/div[2]/div[2]/div[4]/div/div/table/tbody/',
     '//*[@id="wiki-body"]/div/div/div[3]/div/div/div[1]/div[1]/div[4]/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[2]/div[2]/div[4]/div/div/table/tbody/',
+    '//*[@id="wiki-body"]/div/div/div[3]/div/div/div[1]/div[1]/div[4]/div/span/span/div/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/div[3]/span/span/span/span[2]/span/span/span/div[1]/div[2]/div[2]/div[4]/div/div/table/tbody/',
     ]
 
     

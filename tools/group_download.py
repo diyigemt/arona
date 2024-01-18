@@ -10,6 +10,7 @@ source_map = {
     "1": "巴哈姆特@夜喵貓貓咪喵(asaz5566a)",
     "2": "bilbilibili@朝夕desu(4607471)",
     "3": "bilbilibili@y千代(49533273)",
+    "4": "bilbilibili@蔚蓝档案(3493265644980448)",
 }
 
 if __name__ == "__main__":

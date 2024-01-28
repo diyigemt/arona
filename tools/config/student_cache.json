@@ -828,5 +828,20 @@
         "cnName": "泳装艾米",
         "loma": "Eimi_Swimsuit",
         "gamekee": "https://ba.gamekee.com/607106.html"
+    },
+    "イブキ": {
+        "cnName": "伊吹",
+        "loma": "Ibuki",
+        "gamekee": "https://www.gamekee.com/ba/611643.html"
+    },
+    "マコト": {
+        "cnName": "真琴",
+        "loma": "Makoto",
+        "gamekee": "https://www.gamekee.com/ba/611604.html"
+    },
+    "アコ(ドレス)": {
+        "cnName": "礼服亚子",
+        "loma": "Ako_Dress",
+        "gamekee": "https://www.gamekee.com/ba/611610.html"
     }
 }

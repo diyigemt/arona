@@ -104,7 +104,10 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict, thread_id: int):
     if model != None:
         close_btn = model.query_selector(".btn-close")
         if close_btn != None:
-            close_btn.click()
+            try:
+                close_btn.click()
+            except Exception as _:
+                pass
     setting_btn = page.query_selector("#ba-navbar-settings")
     setting_btn.click()
     # 换成日服

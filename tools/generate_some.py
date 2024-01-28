@@ -49,8 +49,10 @@ if __name__ == '__main__':
     quick_usage_list = []
     other_list = []
     battle_list = []
-    someList = post_data("imageDBQuery", {
-        "type": 3
+    someList = post_data("imageQueryTable", {
+        "type": "other",
+        "page": 0,
+        "limit": 1000
     }, printResp=False).text
     someImageList = json.loads(someList)["data"]
     for image in someImageList:

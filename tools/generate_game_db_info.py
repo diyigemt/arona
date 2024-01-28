@@ -24,8 +24,7 @@ sources_map = {
 }
 
 lock = threading.Lock()
-max_thread = 1
-# max_thread = 1
+max_thread = min(os.cpu_count(), 4)
 
 # 加载dict
 cache_dict = {}

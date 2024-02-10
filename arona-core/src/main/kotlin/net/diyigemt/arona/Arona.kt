@@ -9,6 +9,7 @@
 package net.diyigemt.arona
 
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import net.diyigemt.arona.config.*
 import net.diyigemt.arona.db.DataBaseProvider
@@ -20,11 +21,17 @@ import net.diyigemt.arona.handler.NudgeEventHandler
 import net.diyigemt.arona.interfaces.InitializedFunction
 import net.diyigemt.arona.quartz.QuartzProvider
 import net.diyigemt.arona.remote.RemoteServiceManager
+import net.diyigemt.arona.service.AronaService
 import net.diyigemt.arona.service.AronaServiceManager
 import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.ImageUtil
 import net.diyigemt.arona.util.NetworkUtil
 import net.mamoe.mirai.Bot
+import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
+import net.mamoe.mirai.console.command.CompositeCommand
+import net.mamoe.mirai.console.command.MemberCommandSenderOnMessage
+import net.mamoe.mirai.console.command.SimpleCommand
+import net.mamoe.mirai.console.command.UserCommandSender
 import net.mamoe.mirai.console.command.descriptor.ExperimentalCommandDescriptors
 import net.mamoe.mirai.console.extension.PluginComponentStorage
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
@@ -36,10 +43,12 @@ import net.mamoe.mirai.contact.NormalMember
 import net.mamoe.mirai.contact.UserOrBot
 import net.mamoe.mirai.event.Event
 import net.mamoe.mirai.event.EventChannel
+import net.mamoe.mirai.event.events.BotInvitedJoinGroupRequestEvent
 import net.mamoe.mirai.event.events.BotOnlineEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
 import net.mamoe.mirai.event.events.NudgeEvent
 import net.mamoe.mirai.event.globalEventChannel
+import net.mamoe.mirai.event.subscribeAlways
 import net.mamoe.mirai.message.code.MiraiCode.deserializeMiraiCode
 import net.mamoe.mirai.message.data.Message
 import net.mamoe.mirai.message.data.MessageChain
@@ -98,8 +107,16 @@ object Arona : KotlinPlugin(
         GroupRepeaterHandler.preHandle(this)
         HentaiEventHandler.preHandle(this)
       }
+      globalEventChannel().subscribeAlways<BotInvitedJoinGroupRequestEvent> {
+        if (this.invitorId in AronaConfig.managerGroup) {
+          delay((2000L .. 3500L).random())
+          this.accept()
+          AronaConfig.groups.add(this.groupId)
+        }
+      }
       logger.info { "arona loaded" }
     } else error("arona database init failed, arona will not start")
+    AddGroupCommand.register()
   }
 
   @OptIn(ExperimentalCommandDescriptors::class, ConsoleExperimentalApi::class)
@@ -301,4 +318,30 @@ object Arona : KotlinPlugin(
 
   fun error(message: () -> String?) = logger.error(message())
 
+}
+
+object AddGroupCommand : CompositeCommand(
+  Arona,"add_group", "arona",
+  description = "把该群加入arona的groups里"
+) {
+
+  @SubCommand("add")
+  suspend fun MemberCommandSenderOnMessage.addArona() {
+    if (user.id !in AronaConfig.managerGroup) {
+      sendMessage("无权执行")
+      return
+    }
+    sendMessage("添加成功")
+    AronaConfig.groups.add(subject.id)
+  }
+
+  @SubCommand("remove")
+  suspend fun MemberCommandSenderOnMessage.removeArona() {
+    if (user.id !in AronaConfig.managerGroup) {
+      sendMessage("无权执行")
+      return
+    }
+    sendMessage("移除成功")
+    AronaConfig.groups.remove(subject.id)
+  }
 }

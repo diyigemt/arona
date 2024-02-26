@@ -853,5 +853,20 @@
         "cnName": "礼服亚子",
         "loma": "Ako_Dress",
         "gamekee": "https://www.gamekee.com/ba/611610.html"
+    },
+    "ヒナ(ドレス)": {
+        "cnName": "礼服日奈",
+        "loma": "Hina_Dress",
+        "gamekee": "https://www.gamekee.com/ba/611753.html"
+    },
+    "カヨコ(ドレス)": {
+        "cnName": "礼服佳代子",
+        "loma": "Kayoko_Dress",
+        "gamekee": "https://www.gamekee.com/ba/614736.html"
+    },
+    "アル(ドレス)": {
+        "cnName": "礼服阿露",
+        "loma": "Aru_Dress",
+        "gamekee": "https://www.gamekee.com/ba/614734.html"
     }
 }

@@ -10,7 +10,7 @@ import numpy as np
 from PIL import Image
 from config import cache_file_location, cn_translation_location
 from playwright.sync_api import Playwright, sync_playwright
-from fetch_student_info_from_ba_game_db import concat_list, concat_two_im, download_image, fetch_data_from_game_db, fetch_data_from_schaledb, path_with_thread_id, query_remote_name, replace_none_char, test_name_exist
+from fetch_student_info_from_ba_game_db import concat_list, concat_two_im, download_image, fetch_data_from_game_db, fetch_data_from_schaledb, fetch_skill_data_from_schaledb, path_with_thread_id, query_remote_name, replace_none_char, test_name_exist
 
 from tools import draw_image_source
 # 要生成的目标 日文名
@@ -158,13 +158,17 @@ def run(playwright: Playwright, arr: list[str], thread_id: int):
         time.sleep(2)
         base_path = "./image/tmp/"
         # 下载拉满需要的资源图片之类的
-        fetch_data_from_game_db(page, cn_info, cn_skill == jp_skill and cn_info["ex_name"] != "", thread_id=thread_id)
+        skill_resource_equipment_path = fetch_data_from_game_db(page, cn_info, cn_skill == jp_skill and cn_info["ex_name"] != "", thread_id=thread_id)
+
+        # 从schaledb获取技能描述图片
+        skill_path = fetch_skill_data_from_schaledb(playwright, loma, thread_id)
+        concat_two_im(skill_resource_equipment_path, skill_path, skill_resource_equipment_path, type="vertical", reshape=True, reshapeType="l")
 
         # 和schaledb的拼在一起
 
         final_db_pah = path_with_thread_id("./image/tmp/final_db.png", thread_id)
 
-        final_db_im = concat_two_im(path_with_thread_id("./image/tmp/game_db.png", thread_id), path_with_thread_id("./image/tmp/schaledb.png", thread_id), final_db_pah)
+        final_db_im = concat_two_im(skill_resource_equipment_path, path_with_thread_id("./image/tmp/schaledb.png", thread_id), final_db_pah)
 
         # 和夜喵拼在一起 
 

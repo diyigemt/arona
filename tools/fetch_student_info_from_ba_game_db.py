@@ -330,7 +330,7 @@ def fetch_skill_data_from_schaledb(pl: Playwright, name, thread_id: int):
         res = {}
         for i in range:
             slider.evaluate("it => {it.value = %d; it.oninput();}" % (i))
-            res[i] = list(map(lambda x: x.evaluate("it => it.innerText"), body.query_selector_all(attack_class)))
+            res[i] = list(map(lambda x: str(x.evaluate("it => it.innerText")).replace("\n",""), body.query_selector_all(attack_class)))
         # 替换并截图
         for idx, it in enumerate(body.query_selector_all(attack_class)):
             it.evaluate("it => it.innerText = '%s'" % "/".join(list(map(lambda x: res[x][idx], range))))

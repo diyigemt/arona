@@ -186,7 +186,7 @@ def run(playwright: Playwright, arr: list[str], thread_id: int):
             final_db_im = cv2.imdecode(np.fromfile(final_db_pah, dtype=np.uint8), -1)
             final_db_row, final_db_col, _ = final_db_im.shape
         col = final_db_col + 10
-        row = source_row + final_db_row + 10
+        row = source_row + final_db_row + 40
         im = Image.new('RGBA', (col, row), color='white')
         im.save(local_path)
         im = cv2.imdecode(np.fromfile(local_path, dtype=np.uint8), -1)

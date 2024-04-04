@@ -108,7 +108,7 @@ def path_with_thread_id(base: str, thread_id: int):
     return "%s-%d.png" % (base, thread_id)
 
 def fetch_data_from_schaledb(pl: Playwright, name, dict, thread_id: int):
-    browser = pl.chromium.launch(headless=True, slow_mo=100)
+    browser = pl.chromium.launch(proxy={"server":"http://127.0.0.1:7890"},headless=True, slow_mo=100)
     context = browser.new_context(viewport={'width': 1920, 'height': 1080}, device_scale_factor=4.0)
     page = context.new_page()
     page.goto("https://schale.gg/?chara=%s" % name)
@@ -333,7 +333,7 @@ def fetch_skill_data_from_schaledb(pl: Playwright, name, thread_id: int):
             res[i] = list(map(lambda x: str(x.evaluate("it => it.innerText")).replace("\n",""), body.query_selector_all(attack_class)))
         # 替换并截图
         for idx, it in enumerate(body.query_selector_all(attack_class)):
-            it.evaluate("it => it.innerText = '%s'" % "/".join(list(map(lambda x: res[x][idx], range))))
+            it.evaluate("it => it.innerText = '%s'" % "/".join(list(map(lambda x: res[x][idx] if res[x][idx] != "" else "-", range))))
             it.evaluate("it => it.style.wordBreak = 'break-all'")
             it.evaluate("it => it.parentElement.style.whiteSpace = 'normal'")
         # # 删掉技能图标
@@ -468,88 +468,88 @@ def fetch_data_from_game_db(page: Page, dict, is_no_translate, base_path = "./im
             resource_3 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[10]")
             resource_3.screenshot(path=path_with_thread_id("./image/tmp/resource_3.png", thread_id))
 
-        equipment_resource_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[3]/div/div[2]")
-        equipment_resource_btn.click()
-        time.sleep(6)
+        # equipment_resource_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[3]/div/div[2]")
+        # equipment_resource_btn.click()
+        # time.sleep(6)
 
-        equipment_resource = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[4]")
-        equipment_resource.screenshot(path=path_with_thread_id("./image/tmp/equipment_resource.png", thread_id))
+        # equipment_resource = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[4]")
+        # equipment_resource.screenshot(path=path_with_thread_id("./image/tmp/equipment_resource.png", thread_id))
 
-        skill_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[1]/div/div[2]")
-        skill_btn.click()
+        # skill_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[1]/div/div[2]")
+        # skill_btn.click()
 
-        # 替换技能描述文案
-        try:
-            ex_desc_detail = page.query_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[1]/div/div[3]/span')
-            detail_class = ex_desc_detail.get_attribute("class")
-            if is_no_translate:
-                # ex
-                page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[1]/div/div[1]', "node => node.innerText = '%s'" % dict["ex_name"])
-                # 基本技能 normal skill
-                page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]/div/div[1]', "node => node.innerText = '%s'" % dict["bs_name"])
-                # 强化技能
-                page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[1]/div/div[1]', "node => node.innerText = '%s'" % dict["es_name"])
-                # 子技能
-                page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[2]/div/div[1]', "node => node.innerText = '%s'" % dict["ss_name"])
-                # 拿到具体数据对应的class
+        # # 替换技能描述文案
+        # try:
+        #     ex_desc_detail = page.query_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[1]/div/div[3]/span')
+        #     detail_class = ex_desc_detail.get_attribute("class")
+        #     if is_no_translate:
+        #         # ex
+        #         page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[1]/div/div[1]', "node => node.innerText = '%s'" % dict["ex_name"])
+        #         # 基本技能 normal skill
+        #         page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]/div/div[1]', "node => node.innerText = '%s'" % dict["bs_name"])
+        #         # 强化技能
+        #         page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[1]/div/div[1]', "node => node.innerText = '%s'" % dict["es_name"])
+        #         # 子技能
+        #         page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[2]/div/div[1]', "node => node.innerText = '%s'" % dict["ss_name"])
+        #         # 拿到具体数据对应的class
                 
-                detail_list = page.query_selector_all(".%s" % detail_class)
+        #         detail_list = page.query_selector_all(".%s" % detail_class)
 
-                offset = 0
-                def replace(s: str, offset):
-                    while s.find("$value") != -1:
-                        s = s.replace("$value", '<span class="%s">%s</span>' % (detail_class, detail_list[offset].text_content()), 1)
-                        offset = offset + 1
-                    return s, offset
-                ex_desc, offset = replace(dict["ex_desc"], offset)
-                bs_desc, offset = replace(dict["bs_desc"], offset)
-                # 如果有爱用品 那就替换
-                if "gear_desc" in dict:
-                    gear_desc, offset = replace(dict["gear_desc"], offset)
-                    # favor usage
-                    page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]/div/div[4]/div[2]', "node => node.innerHTML = '%s'" % gear_desc)
-                es_desc, offset = replace(dict["es_desc"], offset)
-                wp_skill, offset = replace(dict["wp_skill"], offset)
-                ss_desc, offset = replace(dict["ss_desc"], offset)
-                # ex
-                page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[1]/div/div[3]', "node => node.innerHTML = '%s'" % ex_desc)
-                # bs
-                page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]/div/div[3]', "node => node.innerHTML = '%s'" % bs_desc)
-                # es
-                page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[1]/div/div[3]', "node => node.innerHTML = '%s'" % es_desc)
-                # ss
-                page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[2]/div/div[3]', "node => node.innerHTML = '%s'" % ss_desc)
-                # special weapon
-                page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[1]/div/div[4]/div[2]', "node => node.innerHTML = '%s'" % wp_skill)
-            # ba-game-db 爱用品更新很慢, 直接强制替换
-            elif "gear_desc" in dict:
+        #         offset = 0
+        #         def replace(s: str, offset):
+        #             while s.find("$value") != -1:
+        #                 s = s.replace("$value", '<span class="%s">%s</span>' % (detail_class, detail_list[offset].text_content()), 1)
+        #                 offset = offset + 1
+        #             return s, offset
+        #         ex_desc, offset = replace(dict["ex_desc"], offset)
+        #         bs_desc, offset = replace(dict["bs_desc"], offset)
+        #         # 如果有爱用品 那就替换
+        #         if "gear_desc" in dict:
+        #             gear_desc, offset = replace(dict["gear_desc"], offset)
+        #             # favor usage
+        #             page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]/div/div[4]/div[2]', "node => node.innerHTML = '%s'" % gear_desc)
+        #         es_desc, offset = replace(dict["es_desc"], offset)
+        #         wp_skill, offset = replace(dict["wp_skill"], offset)
+        #         ss_desc, offset = replace(dict["ss_desc"], offset)
+        #         # ex
+        #         page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[1]/div/div[3]', "node => node.innerHTML = '%s'" % ex_desc)
+        #         # bs
+        #         page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]/div/div[3]', "node => node.innerHTML = '%s'" % bs_desc)
+        #         # es
+        #         page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[1]/div/div[3]', "node => node.innerHTML = '%s'" % es_desc)
+        #         # ss
+        #         page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[2]/div/div[3]', "node => node.innerHTML = '%s'" % ss_desc)
+        #         # special weapon
+        #         page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[1]/div/div[4]/div[2]', "node => node.innerHTML = '%s'" % wp_skill)
+        #     # ba-game-db 爱用品更新很慢, 直接强制替换
+        #     elif "gear_desc" in dict:
 
-                # 拿到爱用品所在的div
-                gear = page.query_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]/div/div[4]/div[2]')
-                # 有时候会出现有翻译但是没爱用品标签的情况, 跳过
-                if gear != None:
-                    detail_list = gear.query_selector_all(".%s" % detail_class)
-                    s = dict["gear_desc"]
-                    for item in detail_list:
-                        s = s.replace("$value", '<span class="%s">%s</span>' % (detail_class, item.text_content()), 1)
-                    # favor usage
-                    # 有时候会出现有翻译但是没爱用品标签的情况, 跳过
-                    try:
-                        page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]/div/div[4]/div[2]', "node => node.innerHTML = '%s'" % s)
-                    except Exception as e:
-                        pass
-            ex_skill = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[1]")
-            ex_skill.screenshot(path=path_with_thread_id("./image/tmp/ex_skill.png", thread_id))
-            base_skill = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]")
-            base_skill.screenshot(path=path_with_thread_id("./image/tmp/base_skill.png", thread_id))
-            enhance_skill = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[1]")
-            enhance_skill.screenshot(path=path_with_thread_id("./image/tmp/enhance_skill.png", thread_id))
-            sub_skill = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[2]")
-            sub_skill.screenshot(path=path_with_thread_id("./image/tmp/sub_skill.png", thread_id))
-        except Exception as _:
-            print("error in replace skill desc.")
-            pass
-        # 拼接技能成长材料
+        #         # 拿到爱用品所在的div
+        #         gear = page.query_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]/div/div[4]/div[2]')
+        #         # 有时候会出现有翻译但是没爱用品标签的情况, 跳过
+        #         if gear != None:
+        #             detail_list = gear.query_selector_all(".%s" % detail_class)
+        #             s = dict["gear_desc"]
+        #             for item in detail_list:
+        #                 s = s.replace("$value", '<span class="%s">%s</span>' % (detail_class, item.text_content()), 1)
+        #             # favor usage
+        #             # 有时候会出现有翻译但是没爱用品标签的情况, 跳过
+        #             try:
+        #                 page.eval_on_selector('//*[@id="root"]/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]/div/div[4]/div[2]', "node => node.innerHTML = '%s'" % s)
+        #             except Exception as e:
+        #                 pass
+        #     ex_skill = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[1]")
+        #     ex_skill.screenshot(path=path_with_thread_id("./image/tmp/ex_skill.png", thread_id))
+        #     base_skill = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]")
+        #     base_skill.screenshot(path=path_with_thread_id("./image/tmp/base_skill.png", thread_id))
+        #     enhance_skill = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[1]")
+        #     enhance_skill.screenshot(path=path_with_thread_id("./image/tmp/enhance_skill.png", thread_id))
+        #     sub_skill = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[2]")
+        #     sub_skill.screenshot(path=path_with_thread_id("./image/tmp/sub_skill.png", thread_id))
+        # except Exception as _:
+        #     print("error in replace skill desc.")
+        #     pass
+        # # 拼接技能成长材料
         skill_resource_save_path = path_with_thread_id("./image/tmp/skill_resource.png", thread_id)
         path_list = []
         path_list.append(path_with_thread_id("./image/tmp/skill_resource_1.png", thread_id))
@@ -570,13 +570,13 @@ def fetch_data_from_game_db(page: Page, dict, is_no_translate, base_path = "./im
 
         # 将技能描述拼在一起
 
-        concat_two_im(path_with_thread_id("./image/tmp/ex_skill.png", thread_id), path_with_thread_id("./image/tmp/base_skill.png", thread_id), path_with_thread_id("./image/tmp/skill_desc_1.png", thread_id))
-        concat_two_im(path_with_thread_id("./image/tmp/enhance_skill.png", thread_id), path_with_thread_id("./image/tmp/sub_skill.png", thread_id), path_with_thread_id("./image/tmp/skill_desc_2.png", thread_id))
-        concat_two_im(path_with_thread_id("./image/tmp/skill_desc_1.png", thread_id), path_with_thread_id("./image/tmp/skill_desc_2.png", thread_id), path_with_thread_id("./image/tmp/skill_desc.png", thread_id), type="vertical")
+        # concat_two_im(path_with_thread_id("./image/tmp/ex_skill.png", thread_id), path_with_thread_id("./image/tmp/base_skill.png", thread_id), path_with_thread_id("./image/tmp/skill_desc_1.png", thread_id))
+        # concat_two_im(path_with_thread_id("./image/tmp/enhance_skill.png", thread_id), path_with_thread_id("./image/tmp/sub_skill.png", thread_id), path_with_thread_id("./image/tmp/skill_desc_2.png", thread_id))
+        # concat_two_im(path_with_thread_id("./image/tmp/skill_desc_1.png", thread_id), path_with_thread_id("./image/tmp/skill_desc_2.png", thread_id), path_with_thread_id("./image/tmp/skill_desc.png", thread_id), type="vertical")
 
-        # 把技能描述和材料拼在一起
-        final_path = path_with_thread_id("./image/tmp/game_db.png", thread_id)
-        concat_two_im(skill_resource_equipment, path_with_thread_id("./image/tmp/skill_desc.png", thread_id), path=final_path, type="vertical")
+        # # 把技能描述和材料拼在一起
+        # final_path = path_with_thread_id("./image/tmp/game_db.png", thread_id)
+        # concat_two_im(skill_resource_equipment, path_with_thread_id("./image/tmp/skill_desc.png", thread_id), path=final_path, type="vertical")
         return skill_resource_equipment
 
 def parse_ba_game_db_image(source_im, resource_im, skill_im, path):
@@ -645,7 +645,7 @@ def query_remote_name(name):
     header = {
         "Content-Type": "application/json"
     }
-    resp = requests.get("https://arona.diyigemt.com/api/v2/image?name=%s" % name, headers=header)
+    resp = requests.get(proxies={},url="https://arona.diyigemt.com/api/v2/image?name=%s" % name, headers=header)
     result = json.loads(resp.content.decode())
     if len(result["data"]) > 1:
         return query_remote_name(result["data"][0]["name"])

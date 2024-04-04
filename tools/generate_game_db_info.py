@@ -34,7 +34,7 @@ with codecs.open(cache_file_location, "r", encoding="utf-8") as f:
 def run(playwright: Playwright, arr: list[str], thread_id: int):
     with codecs.open("./config/local_file_map.json", "r", encoding="utf-8") as f:
         local_file_path = json.load(f)
-    browser = playwright.chromium.launch(headless=True, slow_mo=100)
+    browser = playwright.chromium.launch(proxy={"server":"http://127.0.0.1:7890"},headless=True, slow_mo=100)
     context = browser.new_context(viewport={'width': 1920, 'height': 1080}, device_scale_factor=4.0)
     page = context.new_page()
     # 拿到成长资源截图
@@ -137,7 +137,8 @@ def run(playwright: Playwright, arr: list[str], thread_id: int):
         finally:
             # 关闭信息窗口
             close_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[1]")
-            close_btn.click()
+            if close_btn != None:
+                close_btn.click()
         # 切换回日文
         page.locator("svg").first.click()
         page.locator("#react-select-2-option-0").click()
@@ -150,12 +151,15 @@ def run(playwright: Playwright, arr: list[str], thread_id: int):
             close_btn.click()
         except Exception as e:
             jp_skill = "-1"
-        # 切换回中文
-        page.locator("svg").first.click()
-        page.locator("#react-select-2-option-1").click()
-        time.sleep(2)
-        btnFilterList[0].click()
-        time.sleep(2)
+        try:
+            # 切换回中文
+            page.locator("svg").first.click()
+            page.locator("#react-select-2-option-1").click()
+            time.sleep(2)
+            btnFilterList[0].click()
+            time.sleep(2)
+        except Exception as e:
+            pass
         base_path = "./image/tmp/"
         # 下载拉满需要的资源图片之类的
         skill_resource_equipment_path = fetch_data_from_game_db(page, cn_info, cn_skill == jp_skill and cn_info["ex_name"] != "", thread_id=thread_id)

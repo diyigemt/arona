@@ -12,6 +12,7 @@ import requests
 import paramiko
 import json
 import numpy as np
+import uuid
 
 from reflash_cdn import purgeFiles
 password_file = "C:\\Users\\%s\\.ssh\\arona-backend-password" % getpass.getuser()
@@ -46,9 +47,11 @@ def draw_image(url: str, name: str, override_path: str = "", source = source_str
     request = urllib.request.Request(url=url,headers=headers)
     response = urllib.request.urlopen(request)
     img = response.read()
-    with open(tmp_file_path, "wb") as f:
+    tmp_file_path_random = f"./image/tmp/{str(uuid.uuid4())}.png"
+    with open(tmp_file_path_random, "wb") as f:
         f.write(img)
-    bg = draw_image_source(tmp_file_path, "图片来源: " + source)
+    bg = draw_image_source(tmp_file_path_random, "图片来源: " + source)
+    os.remove(tmp_file_path_random)
     name = re.sub('[\/:*?"<>|]','',name) # 移除非法字符
     name = re.sub(r"[%s]+" %punctuation, "",name)
     final_path = img_folder + name
@@ -313,7 +316,7 @@ def test_name_exist(name):
     }
     resp = requests.get("https://arona.diyigemt.com/api/v2/image?name=%s" % name, headers=header)
     result = json.loads(resp.content.decode())
-    return len(result["data"]) == 1
+    return result != None and result["data"] != None and len(result["data"]) == 1
 
 def confirm_action(info = "process update?") -> bool:
     if str(input(f"{info} [Y/N]:")).lower() != "y":

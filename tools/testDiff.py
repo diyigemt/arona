@@ -7,7 +7,10 @@ from playwright.sync_api import Playwright, sync_playwright
 from fetch_student_info_from_ba_game_db import concat_list, concat_two_im, fetch_skill_data_from_schaledb
 
 def run(playwright: Playwright):
-    fetch_skill_data_from_schaledb(playwright,"Akari_NewYear",1)
+    fetch_skill_data_from_schaledb(playwright,"Hatsune_Miku",0)
+    fetch_skill_data_from_schaledb(playwright,"Misaka_Mikoto",1)
+    fetch_skill_data_from_schaledb(playwright,"Shokuhou_Misaki",2)
+    fetch_skill_data_from_schaledb(playwright,"Saten_Ruiko",3)
     return
     browser = playwright.chromium.launch(headless=True, slow_mo=100)
     context = browser.new_context(viewport={'width': 1920, 'height': 1080}, device_scale_factor=4.0)

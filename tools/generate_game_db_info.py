@@ -230,47 +230,47 @@ def get_cn_info_from_gamekee(playwright: Playwright, path: str):
     skill_bounds = re.compile("[\d.]+[%％秒]?[∼～~][\d.]+[%％秒]?")
 
     info = {}
-    prefix = [
-        '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/span/span/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/div[3]/span/span/span/span[2]/span/span/span/span/div[1]/div[1]/div/div/table/tbody/',
-        '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/',
-        '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/span/div/div/span/div/span/div/div/span/div/span/div/div/div/span/div/span/div/div/div[3]/span/div/span/div/div[1]/div[1]/div/div/table/tbody/',
-        '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div[2]/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/',
-        '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/div[1]/span/div/span/div/div/span/div/span/div/div/div/span/div/span/div/div/div[3]/span/div/span/div/div[1]/div[1]/div/div/table/tbody/',
-        '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/',
-        '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/div/div[1]/div[1]/div/div/table/tbody/',
-        '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div[1]/div[1]/div/div/table/tbody/',
-        '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/div/div[1]/div[1]/div/div/table/tbody/',
-        '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div[1]/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/div[3]/span/span/span/span[2]/span/span/span/span/div[1]/div[1]/div/div/table/tbody/',
-        '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/',
-        '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/div[3]/span/span/span/span[2]/span/span/span/span/div[1]/div[1]/div/div/table/tbody/',
-        '//*[@id="wiki-body"]/div/div/div[3]/div[1]/div/div[2]/div[1]/div[4]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/',
-        '//*[@id="wiki-body"]/div/div/div[3]/div[1]/div/div[2]/div[1]/div[4]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div[1]/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/',
-        '//*[@id="wiki-body"]/div/div/div[3]/div[1]/div/div[2]/div[1]/div[4]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/div/div[1]/div[1]/div/div/table/tbody/',
-        '//*[@id="wiki-body"]/div/div/div[3]/div[1]/div/div[2]/div[1]/div[4]/div/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/div[3]/span/span/span/span[2]/span/span/span/span/div[1]/div[1]/div[1]/div/div/table/tbody/',
-        '//*[@id="wiki-body"]/div/div/div[3]/div[1]/div/div[2]/div[1]/div[4]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/div/div[1]/div[1]/div/div/table/tbody/',
-        '//*[@id="wiki-body"]/div/div/div[3]/div/div/div[1]/div[1]/div[4]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/',
-        '//*[@id="wiki-body"]/div/div/div[3]/div/div/div[1]/div[1]/div[4]/div/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/div[3]/span/span/span/span[2]/span/span/span/span/div[1]/div[1]/div[1]/div/div/table/tbody/',
-        '//*[@id="wiki-body"]/div/div/div[3]/div/div/div[1]/div[1]/div[4]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div[1]/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/',
-        '//*[@id="wiki-body"]/div/div/div[3]/div/div/div[1]/div[1]/div[4]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/div/div[1]/div[1]/div/div/table/tbody/',
-    ]
-    ex_name, prefix_index = get_content(page, list(map(lambda x: x + 'tr[1]', prefix)), True)
-    ex_desc, prefix_index = get_content(page, list(map(lambda x: x + 'tr[2]/td[2]', prefix)))
+    # prefix = [
+    #     '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/span/span/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/div[3]/span/span/span/span[2]/span/span/span/span/div[1]/div[1]/div/div/table/tbody/',
+    #     '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/',
+    #     '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/span/div/div/span/div/span/div/div/span/div/span/div/div/div/span/div/span/div/div/div[3]/span/div/span/div/div[1]/div[1]/div/div/table/tbody/',
+    #     '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div[2]/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/',
+    #     '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div/span/div[1]/span/div/span/div/div/span/div/span/div/div/div/span/div/span/div/div/div[3]/span/div/span/div/div[1]/div[1]/div/div/table/tbody/',
+    #     '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/',
+    #     '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/div/div[1]/div[1]/div/div/table/tbody/',
+    #     '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div[1]/div[1]/div/div/table/tbody/',
+    #     '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/div/div[1]/div[1]/div/div/table/tbody/',
+    #     '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/div[1]/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/div[3]/span/span/span/span[2]/span/span/span/span/div[1]/div[1]/div/div/table/tbody/',
+    #     '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/',
+    #     '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/div[3]/span/span/span/span[2]/span/span/span/span/div[1]/div[1]/div/div/table/tbody/',
+    #     '//*[@id="wiki-body"]/div/div/div[3]/div[1]/div/div[2]/div[1]/div[4]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/',
+    #     '//*[@id="wiki-body"]/div/div/div[3]/div[1]/div/div[2]/div[1]/div[4]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div[1]/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/',
+    #     '//*[@id="wiki-body"]/div/div/div[3]/div[1]/div/div[2]/div[1]/div[4]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/div/div[1]/div[1]/div/div/table/tbody/',
+    #     '//*[@id="wiki-body"]/div/div/div[3]/div[1]/div/div[2]/div[1]/div[4]/div/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/div[3]/span/span/span/span[2]/span/span/span/span/div[1]/div[1]/div[1]/div/div/table/tbody/',
+    #     '//*[@id="wiki-body"]/div/div/div[3]/div[1]/div/div[2]/div[1]/div[4]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/div/div[1]/div[1]/div/div/table/tbody/',
+    #     '//*[@id="wiki-body"]/div/div/div[3]/div/div/div[1]/div[1]/div[4]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/',
+    #     '//*[@id="wiki-body"]/div/div/div[3]/div/div/div[1]/div[1]/div[4]/div/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/span/div[3]/span/span/span/span[2]/span/span/span/span/div[1]/div[1]/div[1]/div/div/table/tbody/',
+    #     '//*[@id="wiki-body"]/div/div/div[3]/div/div/div[1]/div[1]/div[4]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div[1]/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/span/div/div[1]/div[1]/div/div/table/tbody/',
+    #     '//*[@id="wiki-body"]/div/div/div[3]/div/div/div[1]/div[1]/div[4]/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div/span/span/div/span/span[2]/span/span/span/span/span/div/div/div[3]/span/span/div/span/span[2]/span/span/span/div/div[1]/div[1]/div/div/table/tbody/',
+    # ]
+    # ex_name, prefix_index = get_content(page, list(map(lambda x: x + 'tr[1]', prefix)), True)
+    # ex_desc, prefix_index = get_content(page, list(map(lambda x: x + 'tr[2]/td[2]', prefix)))
     
-    ex_desc = skill_bounds.sub("$value", ex_desc)
-    if ex_desc.find("COST：") != -1:
-        ex_desc = ex_desc[0:ex_desc.find("COST：")]
+    # ex_desc = skill_bounds.sub("$value", ex_desc)
+    # if ex_desc.find("COST：") != -1:
+    #     ex_desc = ex_desc[0:ex_desc.find("COST：")]
 
-    bs_name, prefix_index = get_content(page, list(map(lambda x: x + 'tr[5]', prefix)), True)
-    bs_desc, prefix_index = get_content(page, list(map(lambda x: x + 'tr[6]/td[2]', prefix)))
-    bs_desc = skill_bounds.sub("$value", bs_desc)
+    # bs_name, prefix_index = get_content(page, list(map(lambda x: x + 'tr[5]', prefix)), True)
+    # bs_desc, prefix_index = get_content(page, list(map(lambda x: x + 'tr[6]/td[2]', prefix)))
+    # bs_desc = skill_bounds.sub("$value", bs_desc)
 
-    es_name, prefix_index = get_content(page, list(map(lambda x: x + 'tr[9]', prefix)), True)
-    es_desc, prefix_index = get_content(page, list(map(lambda x: x + 'tr[10]/td[2]', prefix)))
-    es_desc = skill_bounds.sub("$value", es_desc)
+    # es_name, prefix_index = get_content(page, list(map(lambda x: x + 'tr[9]', prefix)), True)
+    # es_desc, prefix_index = get_content(page, list(map(lambda x: x + 'tr[10]/td[2]', prefix)))
+    # es_desc = skill_bounds.sub("$value", es_desc)
 
-    ss_name, prefix_index = get_content(page, list(map(lambda x: x + 'tr[13]', prefix)), True)
-    ss_desc, prefix_index = get_content(page, list(map(lambda x: x + 'tr[14]/td[2]', prefix)))
-    ss_desc = skill_bounds.sub("$value", ss_desc)
+    # ss_name, prefix_index = get_content(page, list(map(lambda x: x + 'tr[13]', prefix)), True)
+    # ss_desc, prefix_index = get_content(page, list(map(lambda x: x + 'tr[14]/td[2]', prefix)))
+    # ss_desc = skill_bounds.sub("$value", ss_desc)
 
     wp_prefix = [
     '//*[@id="app"]/div[1]/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/div[3]/div/span/span/span/span/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/span/span/span/span[2]/span/span/span/span/span/div[3]/span/span/span/span[2]/span/span/span/span/div[1]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[2]/td/div/',
@@ -380,14 +380,14 @@ def get_cn_info_from_gamekee(playwright: Playwright, path: str):
     desc_list = desc.split("。")
     desc = desc_list[0] + "\n" + "".join(desc_list[1:])
 
-    info["ex_name"] = ex_name
-    info["ex_desc"] = ex_desc
-    info["bs_name"] = bs_name
-    info["bs_desc"] = bs_desc
-    info["es_name"] = es_name
-    info["es_desc"] = es_desc
-    info["ss_name"] = ss_name
-    info["ss_desc"] = ss_desc
+    # info["ex_name"] = ex_name
+    # info["ex_desc"] = ex_desc
+    # info["bs_name"] = bs_name
+    # info["bs_desc"] = bs_desc
+    # info["es_name"] = es_name
+    # info["es_desc"] = es_desc
+    # info["ss_name"] = ss_name
+    # info["ss_desc"] = ss_desc
     info["wp_name"] = wp_name
     info["wp_desc_1"] = wp_desc_1
     info["wp_desc_2"] = wp_desc_2

@@ -77,6 +77,7 @@ if __name__ == "__main__":
                 name_suffix = name_suffix.replace("/", "_")
                 file_name = "%s_%s" % (name_prefix, name_suffix)
                 # 下载图片
+                image_url = image_url.split("@")[0]
                 path, hash = draw_image(image_url, "%s.png" % file_name)
                 # 将数据插入数据库中
                 insert_into_db(file_name, hash, img_folder, cursor, connection)

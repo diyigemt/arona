@@ -162,7 +162,7 @@ def run(playwright: Playwright, arr: list[str], thread_id: int):
             pass
         base_path = "./image/tmp/"
         # 下载拉满需要的资源图片之类的
-        skill_resource_equipment_path = fetch_data_from_game_db(page, cn_info, cn_skill == jp_skill and cn_info["ex_name"] != "", thread_id=thread_id)
+        skill_resource_equipment_path = fetch_data_from_game_db(page, cn_info, cn_skill == jp_skill and (("ex_name" in cn_info) and cn_info["ex_name"] != ""), thread_id=thread_id)
 
         # 从schaledb获取技能描述图片
         skill_path = fetch_skill_data_from_schaledb(playwright, loma, thread_id)

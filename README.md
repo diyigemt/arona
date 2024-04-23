@@ -2,7 +2,7 @@
 
 关注 [arona-reborn](https://github.com/diyigemt/arona-reborn) 喵，关注 [arona-reborn](https://github.com/diyigemt/arona-reborn) 谢谢喵
 
-另外创了一个即时反馈QQ群: 193909917，不想进也没关系，其他渠道正常接受反馈
+另外创了一个即时反馈QQ群: 577899701，不想进也没关系，其他渠道正常接受反馈
 
 ## bot攻略数据公开计划
 

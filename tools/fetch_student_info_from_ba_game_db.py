@@ -156,7 +156,7 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict, thread_id: int):
     cn_hobby = page.query_selector('//*[@id="ba-student-profile-hobbies"]').text_content()
 
     # gamekee就是一坨答辩
-    is_no_translate = jp_hobby == cn_hobby and (dict["ex_name"] != "" or dict["desc"] != "")
+    is_no_translate = jp_hobby == cn_hobby and (("ex_name" in dict) and dict["ex_name"] != "" or (("desc" in dict) and dict["desc"] != ""))
 
     # 删掉背景
     page.evaluate("el => el.remove()", page.query_selector("#ba-background"))
@@ -468,12 +468,12 @@ def fetch_data_from_game_db(page: Page, dict, is_no_translate, base_path = "./im
             resource_3 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[10]")
             resource_3.screenshot(path=path_with_thread_id("./image/tmp/resource_3.png", thread_id))
 
-        # equipment_resource_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[3]/div/div[2]")
-        # equipment_resource_btn.click()
-        # time.sleep(6)
+        equipment_resource_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[3]/div/div[2]")
+        equipment_resource_btn.click()
+        time.sleep(6)
 
-        # equipment_resource = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[4]")
-        # equipment_resource.screenshot(path=path_with_thread_id("./image/tmp/equipment_resource.png", thread_id))
+        equipment_resource = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[4]")
+        equipment_resource.screenshot(path=path_with_thread_id("./image/tmp/equipment_resource.png", thread_id))
 
         # skill_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[1]/div/div[2]")
         # skill_btn.click()

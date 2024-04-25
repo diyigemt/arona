@@ -883,5 +883,20 @@
         "cnName": "导游椿",
         "loma": "Tsubaki_Guide",
         "gamekee": "https://www.gamekee.com/ba/618557.html"
+    },
+    "カズサ(バンド)": {
+        "cnName": "乐队和纱",
+        "loma": "Kazusa_Band",
+        "gamekee": "https://www.gamekee.com/ba/620843.html"
+    },
+    "ヨシミ(バンド)": {
+        "cnName": "乐队好美",
+        "loma": "Yoshimi_Band",
+        "gamekee": "https://www.gamekee.com/ba/620883.html"
+    },
+    "アイリ(バンド)": {
+        "cnName": "乐队爱莉",
+        "loma": "Airi_Band",
+        "gamekee": "https://www.gamekee.com/ba/620813.html"
     }
 }

@@ -836,7 +836,7 @@
     },
     "コタマ(キャンプ)": {
         "cnName": "露营小玉",
-        "loma": "Kotama_Camping",
+        "loma": "Kotama_Camp",
         "gamekee": "https://ba.gamekee.com/609145.html"
     },
     "イブキ": {
@@ -913,5 +913,25 @@
         "cnName": "女仆绿",
         "loma": "Midori_Maid",
         "gamekee": "https://www.gamekee.com/ba/590231.html"
+    },
+    "セリカ(水着)": {
+        "cnName": "泳装茜香",
+        "loma": "Serika_Swimsuit",
+        "gamekee": "https://www.gamekee.com/ba/161197.html"
+    },
+    "キリノ(水着)": {
+        "cnName": "泳装桐乃",
+        "loma": "Kirino_Swimsuit",
+        "gamekee": "https://www.gamekee.com/ba/617236.html"
+    },
+    "フブキ(水着)": {
+        "cnName": "泳装吹雪",
+        "loma": "Fubuki_Swimsuit",
+        "gamekee": "https://www.gamekee.com/ba/617235.html"
+    },
+    "カンナ(水着)": {
+        "cnName": "泳装叶渚",
+        "loma": "Kanna_Swimsuit",
+        "gamekee": "https://www.gamekee.com/ba/616810.html"
     }
 }

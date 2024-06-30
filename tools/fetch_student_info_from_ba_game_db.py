@@ -162,7 +162,7 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict, thread_id: int):
     page.evaluate("el => el.remove()", page.query_selector("#ba-background"))
 
     # 立绘
-    page.query_selector("#ba-student-img").screenshot(path=path_with_thread_id("./image/tmp/stu.png", thread_id))
+    # page.query_selector("#ba-student-img").screenshot(path=path_with_thread_id("./image/tmp/stu.png", thread_id))
 
     weapon_btn = page.query_selector("#ba-student-tab-weapon")
     weapon_btn.click()

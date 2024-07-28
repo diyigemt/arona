@@ -14,7 +14,7 @@ from fetch_student_info_from_ba_game_db import concat_list, concat_two_im, downl
 
 from tools import draw_image_source
 # 要生成的目标 日文名
-target = []
+target = ["ホシノ(臨戦)"]
 # 如果本地有图片
 
 sources_map = {
@@ -64,10 +64,11 @@ def run(playwright: Playwright, arr: list[str], thread_id: int):
         info = cache_dict[jpName]
         cnName = info["cnName"]
         loma = info["loma"]
+        offset = info["offset"] if "offset" in info else 0
         print("start: %s" % cnName)
         # 找到页面上的对应按钮
         btnFilterList = list(filter(lambda btn: btn.get_attribute("jpName") == jpName, jpNameBtnList))
-        if len(btnFilterList) != 1:
+        if len(btnFilterList) == 0:
             count = count + 1
             print("%s not found in btn" % jpName)
             continue
@@ -127,7 +128,7 @@ def run(playwright: Playwright, arr: list[str], thread_id: int):
         cn_info = fetch_data_from_schaledb(playwright, loma, cn_info, thread_id)
 
         # 从gamedb下载
-        btnFilterList[0].click()
+        btnFilterList[offset].click()
         time.sleep(2)
         # 中日切换判断是否有翻译
         try:
@@ -142,7 +143,7 @@ def run(playwright: Playwright, arr: list[str], thread_id: int):
         # 切换回日文
         page.locator("svg").first.click()
         page.locator("#react-select-2-option-0").click()
-        btnFilterList[0].click()
+        btnFilterList[offset].click()
         time.sleep(2)
         try:
             jp_skill = page.query_selector('//*[@id="skill1"]/div/div[1]').text_content()
@@ -156,7 +157,7 @@ def run(playwright: Playwright, arr: list[str], thread_id: int):
             page.locator("svg").first.click()
             page.locator("#react-select-2-option-1").click()
             time.sleep(2)
-            btnFilterList[0].click()
+            btnFilterList[offset].click()
             time.sleep(2)
         except Exception as e:
             pass

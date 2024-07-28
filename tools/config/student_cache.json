@@ -938,5 +938,21 @@
         "cnName": "泳装萌惠",
         "loma": "Moe_Swimsuit",
         "gamekee": "https://www.gamekee.com/ba/164332.html"
+    },
+    "シロコ＊テラー": {
+        "cnName": "色彩白子",
+        "loma": "Shiroko_Terror",
+        "gamekee": "https://www.gamekee.com/ba/162557.html"
+    },
+    "ホシノ(臨戦)": {
+        "cnName": "临战星野",
+        "loma": "Hoshino_Battle_Tank",
+        "gamekee": "https://www.gamekee.com/ba/621572.html",
+        "offset": 0
+    },
+    "アツコ(水着)": {
+        "cnName": "泳装亚津子",
+        "loma": "Atsuko_Swimsuit",
+        "gamekee": "https://www.gamekee.com/ba/618996.html"
     }
 }

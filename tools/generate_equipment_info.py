@@ -37,10 +37,10 @@ def run(playwright: Playwright):
 
             # 名字
             equipment_desc = page.query_selector('//*[@id="ba-item-details-container"]/div[1]/div')
-            equipment_desc.screenshot(path="./image/tmp/equipment_desc.png")
+            equipment_desc.screenshot(path="./image/tmp/equipment_desc.png", type="png")
             # 属性
             equipment_skill = page.query_selector('//*[@id="ba-item-details-container"]/div[2]/div[1]')
-            equipment_skill.screenshot(path="./image/tmp/equipment_skill.png")
+            equipment_skill.screenshot(path="./image/tmp/equipment_skill.png", type="png")
 
             # 拼接
             save_path = "./image/parse/%s.png" % id

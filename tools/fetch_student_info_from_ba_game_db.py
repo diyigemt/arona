@@ -58,8 +58,18 @@ def concat_two_im(path_a: str, path_b: str, path: str, type: str = 'horizen', ma
     """
     im_a = cv2.imdecode(np.fromfile(path_a, dtype=np.uint8), -1)
     im_b = cv2.imdecode(np.fromfile(path_b, dtype=np.uint8), -1)
-    row_a, col_a, _ = im_a.shape
-    row_b, col_b, _ = im_b.shape
+    row_a, col_a, sa = im_a.shape
+    row_b, col_b, sb = im_b.shape
+    if sa == 3:
+        tmp_im = Image.open(path_a)
+        tmp_im = tmp_im.convert("RGBA")
+        tmp_im.save(path_a)
+        im_a = cv2.imdecode(np.fromfile(path_a, dtype=np.uint8), -1)
+    if sb == 3:
+        tmp_im = Image.open(path_b)
+        tmp_im = tmp_im.convert("RGBA")
+        tmp_im.save(path_b)
+        im_b = cv2.imdecode(np.fromfile(path_b, dtype=np.uint8), -1)
     row = 0
     col = 0
     isHorzen = type == 'horizen'
@@ -108,8 +118,15 @@ def path_with_thread_id(base: str, thread_id: int):
     return "%s-%d.png" % (base, thread_id)
 
 def fetch_data_from_schaledb(pl: Playwright, name, dict, thread_id: int):
-    browser = pl.chromium.launch(proxy={"server":"http://127.0.0.1:7890"},headless=True, slow_mo=100)
+    browser = pl.chromium.launch(
+        proxy={"server":"http://127.0.0.1:7890"},
+        headless=True,
+        chromium_sandbox=False,
+        args=[r"--disk-cache-dir=D:\tmp\playwright"],
+        slow_mo=100
+        )
     context = browser.new_context(viewport={'width': 1920, 'height': 1080}, device_scale_factor=4.0)
+    context.set_extra_http_headers({"Cache-Control": "max-age=3600"})
     page = context.new_page()
     page.goto("https://schale.gg/?chara=%s" % name)
     page.wait_for_load_state()
@@ -131,38 +148,39 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict, thread_id: int):
     region_btn_jp = page.query_selector("#ba-navbar-regionselector-0")
     region_btn_jp.click()
     time.sleep(2)
-    # 中文与日语切换确定是否有中文翻译, 如果有就不采用gamekee的机翻
-    language_btn = page.query_selector("#ba-navbar-languageselector")
-    language_btn.click()
-    language_jp_btn = page.query_selector("#ba-navbar-languageselector-jp")
-    language_jp_btn.click()
-    time.sleep(2)
-    setting_btn.click()
+    # # 中文与日语切换确定是否有中文翻译, 如果有就不采用gamekee的机翻
+    # language_btn = page.query_selector("#ba-navbar-languageselector")
+    # language_btn.click()
+    # language_jp_btn = page.query_selector("#ba-navbar-languageselector-jp")
+    # language_jp_btn.click()
+    # time.sleep(2)
+    # setting_btn.click()
     
-    base_info_btn = page.query_selector("#ba-student-tab-profile")
-    base_info_btn.click()
+    # base_info_btn = page.query_selector("#ba-student-tab-profile")
+    # base_info_btn.click()
 
-    jp_hobby = page.query_selector('//*[@id="ba-student-profile-hobbies"]').text_content()
+    # jp_hobby = page.query_selector('//*[@id="ba-student-profile-hobbies"]').text_content()
+    # setting_btn.click()
 
-    setting_btn.click()
+    # 切换成民译
     language_btn = page.query_selector("#ba-navbar-languageselector")
     language_btn.click()
-    # 切换成民译
     language_zh_btn = page.query_selector("#ba-navbar-languageselector-zh")
     language_zh_btn.click()
     time.sleep(2)
-    setting_btn.click()
+    # setting_btn.click()
 
     cn_hobby = page.query_selector('//*[@id="ba-student-profile-hobbies"]').text_content()
 
     # gamekee就是一坨答辩
-    is_no_translate = jp_hobby == cn_hobby and (("ex_name" in dict) and dict["ex_name"] != "" or (("desc" in dict) and dict["desc"] != ""))
+    # is_no_translate = jp_hobby == cn_hobby and (("ex_name" in dict) and dict["ex_name"] != "" or (("desc" in dict) and dict["desc"] != ""))
+    is_no_translate = False
 
     # 删掉背景
     page.evaluate("el => el.remove()", page.query_selector("#ba-background"))
 
     # 立绘
-    # page.query_selector("#ba-student-img").screenshot(path=path_with_thread_id("./image/tmp/stu.png", thread_id))
+    # page.query_selector("#ba-student-img").screenshot(path=path_with_thread_id("./image/tmp/stu.png", thread_id), type="png")
 
     weapon_btn = page.query_selector("#ba-student-tab-weapon")
     weapon_btn.click()
@@ -178,10 +196,10 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict, thread_id: int):
         page.eval_on_selector('//*[@id="ba-weapon-description"]', "node => node.innerText = '%s'" % (dict["wp_desc_1"] + "\\n" + dict["wp_desc_2"]))
 
     weapon_name = page.query_selector("//*[@id='ba-student-page-weapon']/div[1]")
-    weapon_name.screenshot(path=path_with_thread_id("./image/tmp/weapon_name.png", thread_id))
+    weapon_name.screenshot(path=path_with_thread_id("./image/tmp/weapon_name.png", thread_id), type="png")
     
     weapon_img = page.query_selector("//*[@id='ba-student-page-weapon']/div[2]")
-    weapon_img.screenshot(path=path_with_thread_id("./image/tmp/weapon_img.png", thread_id))
+    weapon_img.screenshot(path=path_with_thread_id("./image/tmp/weapon_img.png", thread_id), type="png")
 
     base_info_btn = page.query_selector("#ba-student-tab-profile")
     base_info_btn.click()
@@ -199,21 +217,21 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict, thread_id: int):
         page.eval_on_selector('//*[@id="ba-student-profile-text"]', "node => node.innerHTML = '%s'" % desc.replace("\n", "\\n"))
 
     name_card = page.query_selector("//*[@id='ba-student-page-profile']/div[1]")
-    name_card.screenshot(path=path_with_thread_id("./image/tmp/name_card.png", thread_id))
+    name_card.screenshot(path=path_with_thread_id("./image/tmp/name_card.png", thread_id), type="png")
     base_card = page.query_selector("//*[@id='ba-student-page-profile']/table/tbody")
-    base_card.screenshot(path=path_with_thread_id("./image/tmp/base_card.png", thread_id))
+    base_card.screenshot(path=path_with_thread_id("./image/tmp/base_card.png", thread_id), type="png")
     live2d_bannder = page.query_selector("//*[@id='ba-student-page-profile']/div[2]/h5")
-    live2d_bannder.screenshot(path=path_with_thread_id("./image/tmp/live2d_banner.png", thread_id))
+    live2d_bannder.screenshot(path=path_with_thread_id("./image/tmp/live2d_banner.png", thread_id), type="png")
     live2d = page.query_selector("//*[@id='ba-student-page-profile']/div[3]/div")
-    live2d.screenshot(path=path_with_thread_id("./image/tmp/live2d.png", thread_id))
+    live2d.screenshot(path=path_with_thread_id("./image/tmp/live2d.png", thread_id), type="png")
     gift_banner = page.query_selector("//*[@id='ba-student-page-profile']/div[4]/h5")
-    gift_banner.screenshot(path=path_with_thread_id("./image/tmp/gift_banner.png", thread_id))
+    gift_banner.screenshot(path=path_with_thread_id("./image/tmp/gift_banner.png", thread_id), type="png")
     gift = page.query_selector("//*[@id='ba-student-favoured-items']")
-    gift.screenshot(path=path_with_thread_id("./image/tmp/gift.png", thread_id))
+    gift.screenshot(path=path_with_thread_id("./image/tmp/gift.png", thread_id), type="png")
     furniture_banner = page.query_selector("//*[@id='ba-student-page-profile']/div[6]/h5")
-    furniture_banner.screenshot(path=path_with_thread_id("./image/tmp/furniture_banner.png", thread_id))
+    furniture_banner.screenshot(path=path_with_thread_id("./image/tmp/furniture_banner.png", thread_id), type="png")
     furniture = page.query_selector("//*[@id='ba-student-favoured-furniture']")
-    furniture.screenshot(path=path_with_thread_id("./image/tmp/furniture.png", thread_id))
+    furniture.screenshot(path=path_with_thread_id("./image/tmp/furniture.png", thread_id), type="png")
 
     # 如果有爱用品, 顺带把爱用品的翻译拿到(本地翻译优先) ba-game-db更新有点慢
     # for (let i = 0; i < 11; ++i) { $0.value = i; $0.oninput($0); console.log([...document.querySelectorAll(".ba-col-explosion")][7].innerText) }
@@ -252,8 +270,15 @@ def fetch_skill_data_from_schaledb(pl: Playwright, name, thread_id: int):
     """
     从schaledb获取技能截图
     """
-    browser = pl.chromium.launch(headless=True, slow_mo=100)
+    browser = pl.chromium.launch(
+        proxy={"server":"http://127.0.0.1:7890"},
+        headless=True,
+        chromium_sandbox=False,
+        args=[r"--disk-cache-dir=D:\tmp\playwright"],
+        slow_mo=100
+        )
     context = browser.new_context(viewport={'width': 1920, 'height': 1080}, device_scale_factor=4.0)
+    context.set_extra_http_headers({"Cache-Control": "max-age=3600"})
     page = context.new_page()
     page.goto("https://schale.gg/?chara=%s" % name)
     page.wait_for_load_state()
@@ -323,7 +348,7 @@ def fetch_skill_data_from_schaledb(pl: Playwright, name, thread_id: int):
     if autoattack != None and autoattack.is_visible():
         # 分割线
         autoattack.evaluate("it => {const tmp = it.children[0].children[0];tmp.classList.add('pt-2');tmp.style.borderTop = '2px solid'}")
-        autoattack.screenshot(path=autoattack_path)
+        autoattack.screenshot(path=autoattack_path, type="png")
         has_autoattack = True
 
     def capture_skill_body(slider, body, range: range, name: str):
@@ -340,7 +365,7 @@ def fetch_skill_data_from_schaledb(pl: Playwright, name, thread_id: int):
         # page.evaluate("document.querySelectorAll('.skill-icon').forEach(it => it.remove())")
         body.evaluate('it => it.querySelectorAll(".ba-info-pill-s").forEach(s => s.style.backgroundColor = "var(--col-theme-background)")')
         if name != "":
-            body.screenshot(path=name)
+            body.screenshot(path=name, type="png")
 
     # 获取Ex
     ex_path = path_with_thread_id("./image/tmp/body-ex.png", thread_id)
@@ -361,7 +386,7 @@ def fetch_skill_data_from_schaledb(pl: Playwright, name, thread_id: int):
     normal_body.evaluate('it => {const lMap = {0:4,1:3,2:5};for (let index = 0; index < 3; index++) {const el = document.createElement("div");el.classList.add("w-100");el.classList.add("p-2");el.classList.add("tttt");for (let i = 0; i < lMap[index]; i++) {const tmp = it.children[0];tmp.remove();el.appendChild(tmp);}if(index===0){el.children[0].classList.add("pt-2");el.children[0].style.borderTop="2px solid"};it.appendChild(el);}}')
     path_l = [bs_path,ns_path,ss_path]
     for idx, it in enumerate(normal_body.query_selector_all(".tttt")):
-        it.screenshot(path=path_l[idx])
+        it.screenshot(path=path_l[idx], type="png")
 
     # 爱用品(如果有)
     gear_path = path_with_thread_id("./image/tmp/gear.png", thread_id)
@@ -377,6 +402,9 @@ def fetch_skill_data_from_schaledb(pl: Playwright, name, thread_id: int):
         capture_skill_body(page.query_selector('//*[@id="ba-gear-skillpreview-range"]'), gear_body, range(1, 11), gear_path)
         has_gear = True
         # 不知道为什么下边总是有1px的横线
+        tmp_im = Image.open(gear_path)
+        tmp_im = tmp_im.convert("RGBA")
+        tmp_im.save(gear_path)
         gear_im = cv2.imdecode(np.fromfile(gear_path, dtype=np.uint8), -1)
         row, col, _ = gear_im.shape
         im = Image.new('RGBA', (col, row-10), color='white')
@@ -406,7 +434,7 @@ def fetch_skill_data_from_schaledb(pl: Playwright, name, thread_id: int):
     # # 删掉图标
     # page.query_selector('//*[@id="ba-weapon-page-3star"]/div[2]/div').evaluate("it => it.remove()")
     weapon_body2 = page.query_selector('//*[@id="ba-weapon-page-3star"]/div[2]')
-    weapon_body2.screenshot(path=weapon2_path)
+    weapon_body2.screenshot(path=weapon2_path, type="png")
 
     # 拼接所有图片
     line1_path = path_with_thread_id("./image/tmp/line-1.png", thread_id)
@@ -444,36 +472,36 @@ def fetch_data_from_game_db(page: Page, dict, is_no_translate, base_path = "./im
         resource_size = len(page.query_selector_all(".%s" % target_class))
 
         skill_resource_1 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[4]")
-        skill_resource_1.screenshot(path=path_with_thread_id("./image/tmp/skill_resource_1.png", thread_id))
+        skill_resource_1.screenshot(path=path_with_thread_id("./image/tmp/skill_resource_1.png", thread_id), type="png")
         skill_resource_2 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[5]")
-        skill_resource_2.screenshot(path=path_with_thread_id("./image/tmp/skill_resource_2.png", thread_id))
+        skill_resource_2.screenshot(path=path_with_thread_id("./image/tmp/skill_resource_2.png", thread_id), type="png")
         skill_resource_3 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[6]")
-        skill_resource_3.screenshot(path=path_with_thread_id("./image/tmp/skill_resource_3.png", thread_id))
+        skill_resource_3.screenshot(path=path_with_thread_id("./image/tmp/skill_resource_3.png", thread_id), type="png")
         skill_resource_4 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[7]")
-        skill_resource_4.screenshot(path=path_with_thread_id("./image/tmp/skill_resource_4.png", thread_id))
+        skill_resource_4.screenshot(path=path_with_thread_id("./image/tmp/skill_resource_4.png", thread_id), type="png")
         if resource_size == 8:
             skill_resource_5 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[8]")
-            skill_resource_5.screenshot(path=path_with_thread_id("./image/tmp/skill_resource_5.png", thread_id))
+            skill_resource_5.screenshot(path=path_with_thread_id("./image/tmp/skill_resource_5.png", thread_id), type="png")
             resource_1 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[9]")
-            resource_1.screenshot(path=path_with_thread_id("./image/tmp/resource_1.png", thread_id))
+            resource_1.screenshot(path=path_with_thread_id("./image/tmp/resource_1.png", thread_id), type="png")
             resource_2 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[10]")
-            resource_2.screenshot(path=path_with_thread_id("./image/tmp/resource_2.png", thread_id))
+            resource_2.screenshot(path=path_with_thread_id("./image/tmp/resource_2.png", thread_id), type="png")
             resource_3 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[11]")
-            resource_3.screenshot(path=path_with_thread_id("./image/tmp/resource_3.png", thread_id))
+            resource_3.screenshot(path=path_with_thread_id("./image/tmp/resource_3.png", thread_id), type="png")
         else:
             resource_1 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[8]")
-            resource_1.screenshot(path=path_with_thread_id("./image/tmp/resource_1.png", thread_id))
+            resource_1.screenshot(path=path_with_thread_id("./image/tmp/resource_1.png", thread_id), type="png")
             resource_2 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[9]")
-            resource_2.screenshot(path=path_with_thread_id("./image/tmp/resource_2.png", thread_id))
+            resource_2.screenshot(path=path_with_thread_id("./image/tmp/resource_2.png", thread_id), type="png")
             resource_3 = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[10]")
-            resource_3.screenshot(path=path_with_thread_id("./image/tmp/resource_3.png", thread_id))
+            resource_3.screenshot(path=path_with_thread_id("./image/tmp/resource_3.png", thread_id), type="png")
 
         equipment_resource_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[3]/div/div[2]")
         equipment_resource_btn.click()
         time.sleep(6)
 
         equipment_resource = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[4]")
-        equipment_resource.screenshot(path=path_with_thread_id("./image/tmp/equipment_resource.png", thread_id))
+        equipment_resource.screenshot(path=path_with_thread_id("./image/tmp/equipment_resource.png", thread_id), type="png")
 
         # skill_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[1]/div/div[2]")
         # skill_btn.click()
@@ -539,13 +567,13 @@ def fetch_data_from_game_db(page: Page, dict, is_no_translate, base_path = "./im
         #             except Exception as e:
         #                 pass
         #     ex_skill = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[1]")
-        #     ex_skill.screenshot(path=path_with_thread_id("./image/tmp/ex_skill.png", thread_id))
+        #     ex_skill.screenshot(path=path_with_thread_id("./image/tmp/ex_skill.png", thread_id), type="png")
         #     base_skill = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[1]/div[5]/div[2]")
-        #     base_skill.screenshot(path=path_with_thread_id("./image/tmp/base_skill.png", thread_id))
+        #     base_skill.screenshot(path=path_with_thread_id("./image/tmp/base_skill.png", thread_id), type="png")
         #     enhance_skill = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[1]")
-        #     enhance_skill.screenshot(path=path_with_thread_id("./image/tmp/enhance_skill.png", thread_id))
+        #     enhance_skill.screenshot(path=path_with_thread_id("./image/tmp/enhance_skill.png", thread_id), type="png")
         #     sub_skill = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[2]/div[2]/div[2]/div[2]")
-        #     sub_skill.screenshot(path=path_with_thread_id("./image/tmp/sub_skill.png", thread_id))
+        #     sub_skill.screenshot(path=path_with_thread_id("./image/tmp/sub_skill.png", thread_id), type="png")
         # except Exception as _:
         #     print("error in replace skill desc.")
         #     pass

@@ -14,7 +14,7 @@ from fetch_student_info_from_ba_game_db import concat_list, concat_two_im, downl
 
 from tools import draw_image_source
 # 要生成的目标 日文名
-target = ["ホシノ(臨戦)"]
+target = []
 # 如果本地有图片
 
 sources_map = {
@@ -34,8 +34,15 @@ with codecs.open(cache_file_location, "r", encoding="utf-8") as f:
 def run(playwright: Playwright, arr: list[str], thread_id: int):
     with codecs.open("./config/local_file_map.json", "r", encoding="utf-8") as f:
         local_file_path = json.load(f)
-    browser = playwright.chromium.launch(proxy={"server":"http://127.0.0.1:7890"},headless=True, slow_mo=100)
+    browser = playwright.chromium.launch(
+        proxy={"server":"http://127.0.0.1:7890"},
+        headless=True,
+        chromium_sandbox=False,
+        args=[r"--disk-cache-dir=D:\tmp\playwright"],
+        slow_mo=100
+        )
     context = browser.new_context(viewport={'width': 1920, 'height': 1080}, device_scale_factor=4.0)
+    context.set_extra_http_headers({"Cache-Control": "max-age=3600"})
     page = context.new_page()
     # 拿到成长资源截图
     page.goto("https://ba.game-db.tw/")
@@ -217,8 +224,14 @@ def run(playwright: Playwright, arr: list[str], thread_id: int):
         close_btn.click()
 
 def get_cn_info_from_gamekee(playwright: Playwright, path: str):
-    browser = playwright.chromium.launch(headless=True, slow_mo=100)
+    browser = playwright.chromium.launch(
+    headless=True,
+    chromium_sandbox=False,
+    args=[r"--disk-cache-dir=D:\tmp\playwright"],
+    slow_mo=100
+    )
     context = browser.new_context(viewport={'width': 1920, 'height': 1080}, device_scale_factor=4.0)
+    context.set_extra_http_headers({"Cache-Control": "max-age=3600"})
     page = context.new_page()
     try:
         page.goto(path)

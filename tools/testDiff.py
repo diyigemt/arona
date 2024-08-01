@@ -84,7 +84,7 @@ def run(playwright: Playwright):
     if autoattack != None and autoattack.is_visible():
         # 分割线
         autoattack.evaluate("it => {const tmp = it.children[0].children[0];tmp.classList.add('pt-2');tmp.style.borderTop = '2px solid'}")
-        autoattack.screenshot(path="./image/tmp/autoattack.png")
+        autoattack.screenshot(path="./image/tmp/autoattack.png", type="png")
         has_autoattack = True
         path_list.append("./image/tmp/autoattack.png")
     
@@ -107,7 +107,7 @@ def run(playwright: Playwright):
         # page.evaluate("document.querySelectorAll('.skill-icon').forEach(it => it.remove())")
         body.evaluate('it => it.querySelectorAll(".ba-info-pill-s").forEach(s => s.style.backgroundColor = "var(--col-theme-background)")')
         if name != "":
-            body.screenshot(path=name)
+            body.screenshot(path=name, type="png")
             path_list.append(name)
 
     capture_skill_body(page.query_selector('//*[@id="ba-skillpreview-exrange"]'), ex_body, range(1, 6), "./image/tmp/body-ex.png")
@@ -121,7 +121,7 @@ def run(playwright: Playwright):
     # 根据dev拆分
     normal_body.evaluate('it => {const lMap = {0:4,1:3,2:5};for (let index = 0; index < 3; index++) {const el = document.createElement("div");el.classList.add("w-100");el.classList.add("p-2");el.classList.add("tttt");for (let i = 0; i < lMap[index]; i++) {const tmp = it.children[0];tmp.remove();el.appendChild(tmp);}if(index===0){el.children[0].classList.add("pt-2");el.children[0].style.borderTop="2px solid"};it.appendChild(el);}}')
     for idx, it in enumerate(normal_body.query_selector_all(".tttt")):
-        it.screenshot(path="./image/tmp/skill-%d.png" % idx)
+        it.screenshot(path="./image/tmp/skill-%d.png" % idx, type="png")
         path_list.append("./image/tmp/skill-%d.png" % idx)
 
     # 爱用品(如果有)
@@ -164,7 +164,7 @@ def run(playwright: Playwright):
     # # 删掉图标
     # page.query_selector('//*[@id="ba-weapon-page-3star"]/div[2]/div').evaluate("it => it.remove()")
     weapon_body2 = page.query_selector('//*[@id="ba-weapon-page-3star"]/div[2]')
-    weapon_body2.screenshot(path="./image/tmp/weapon-2.png")
+    weapon_body2.screenshot(path="./image/tmp/weapon-2.png", type="png")
     path_list.append("./image/tmp/weapon-2.png")
 
     # 拼接所有图片

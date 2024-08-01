@@ -12,7 +12,7 @@ def run(playwright: Playwright):
     page.locator("#react-select-2-option-0").click()
     page.locator("text=素材 >> nth=1").click()
     time.sleep(2)
-    page.screenshot(path="./image/some/材料一览.png")
+    page.screenshot(path="./image/some/材料一览.png", type="png")
     page.close()
     context.close()
     browser.close()

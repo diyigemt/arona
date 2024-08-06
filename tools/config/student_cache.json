@@ -954,5 +954,15 @@
         "cnName": "泳装亚津子",
         "loma": "Atsuko_Swimsuit",
         "gamekee": "https://www.gamekee.com/ba/618996.html"
+    },
+    "サオリ(水着)": {
+        "cnName": "泳装纱织",
+        "loma": "Saori_Swimsuit",
+        "gamekee": "https://www.gamekee.com/ba/598017.html"
+    },
+    "ヒヨリ(水着)": {
+        "cnName": "泳装日和",
+        "loma": "Hiyori_Swimsuit",
+        "gamekee": "https://www.gamekee.com/ba/606282.html"
     }
 }

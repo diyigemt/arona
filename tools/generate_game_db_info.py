@@ -132,6 +132,7 @@ def run(playwright: Playwright, arr: list[str], thread_id: int):
             cn_info.update(cn_translate_dict[jpName])
 
         # 从shaledb下载 如果有爱用品信息 顺便拿到爱用品
+        # 专武和学生介绍
         cn_info = fetch_data_from_schaledb(playwright, loma, cn_info, thread_id)
 
         # 从gamedb下载

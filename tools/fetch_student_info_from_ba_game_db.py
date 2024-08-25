@@ -128,7 +128,7 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict, thread_id: int):
     context = browser.new_context(viewport={'width': 1920, 'height': 1080}, device_scale_factor=4.0)
     context.set_extra_http_headers({"Cache-Control": "max-age=3600"})
     page = context.new_page()
-    page.goto("https://schale.gg/?chara=%s" % name)
+    page.goto("https://schaledb.com/student/%s" % name)
     page.wait_for_load_state()
 
     # 关闭change-log窗口
@@ -140,12 +140,11 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict, thread_id: int):
                 close_btn.click()
             except Exception as _:
                 pass
-    setting_btn = page.query_selector("#ba-navbar-settings")
-    setting_btn.click()
     # 换成日服
-    region_btn = page.query_selector("#ba-navbar-regionselector")
+    page.pause()
+    region_btn = page.query_selector('//*[@id="ba-content"]/header/nav/div/div[2]/button')
     region_btn.click()
-    region_btn_jp = page.query_selector("#ba-navbar-regionselector-0")
+    region_btn_jp = page.query_selector('//*[@id="ba-content"]/header/nav/div/div[2]/ul/li[2]')
     region_btn_jp.click()
     time.sleep(2)
     # # 中文与日语切换确定是否有中文翻译, 如果有就不采用gamekee的机翻
@@ -163,45 +162,45 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict, thread_id: int):
     # setting_btn.click()
 
     # 切换成民译
-    language_btn = page.query_selector("#ba-navbar-languageselector")
+    setting_btn = page.query_selector('//*[@id="ba-content"]/header/nav/div/a[3]')
+    setting_btn.click()
+    language_btn = page.query_selector('/html/body/div[4]/div/div/div[2]/div/div[2]/div[1]/span[2]/div/button')
     language_btn.click()
-    language_zh_btn = page.query_selector("#ba-navbar-languageselector-zh")
+    language_zh_btn = page.query_selector('/html/body/div[4]/div/div/div[2]/div/div[2]/div[1]/span[2]/div/ul/li[6]')
     language_zh_btn.click()
     time.sleep(2)
     # setting_btn.click()
-
-    cn_hobby = page.query_selector('//*[@id="ba-student-profile-hobbies"]').text_content()
 
     # gamekee就是一坨答辩
     # is_no_translate = jp_hobby == cn_hobby and (("ex_name" in dict) and dict["ex_name"] != "" or (("desc" in dict) and dict["desc"] != ""))
     is_no_translate = False
 
     # 删掉背景
-    page.evaluate("el => el.remove()", page.query_selector("#ba-background"))
+    page.evaluate("el => el.remove()", page.query_selector("#ba-background-back"))
+    page.evaluate("el => el.remove()", page.query_selector("#ba-background-front"))
 
     # 立绘
     # page.query_selector("#ba-student-img").screenshot(path=path_with_thread_id("./image/tmp/stu.png", thread_id), type="png")
 
-    weapon_btn = page.query_selector("#ba-student-tab-weapon")
+    weapon_btn = page.query_selector('//*[@id="ba-item-list-tabs"]/button[3]')
     weapon_btn.click()
     time.sleep(2)
     # 拉满
-    progress = page.query_selector("#ba-weaponpreview-levelrange")
+    progress = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[3]/div/input')
     page.evaluate("input => input.value = '50'", progress)
-    page.evaluate("input => input.oninput(input)", progress)
 
     # 如果没有翻译,使用gamekee替换专武名称和描述
     if is_no_translate:
         page.eval_on_selector('//*[@id="ba-student-weapon-name"]', "node => node.innerText = '%s'" % dict["wp_name"])
         page.eval_on_selector('//*[@id="ba-weapon-description"]', "node => node.innerText = '%s'" % (dict["wp_desc_1"] + "\\n" + dict["wp_desc_2"]))
 
-    weapon_name = page.query_selector("//*[@id='ba-student-page-weapon']/div[1]")
+    weapon_name = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[1]')
     weapon_name.screenshot(path=path_with_thread_id("./image/tmp/weapon_name.png", thread_id), type="png")
     
-    weapon_img = page.query_selector("//*[@id='ba-student-page-weapon']/div[2]")
+    weapon_img = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[2]')
     weapon_img.screenshot(path=path_with_thread_id("./image/tmp/weapon_img.png", thread_id), type="png")
 
-    base_info_btn = page.query_selector("#ba-student-tab-profile")
+    base_info_btn = page.query_selector('//*[@id="ba-item-list-tabs"]/button[4]')
     base_info_btn.click()
     time.sleep(2)
 
@@ -216,36 +215,41 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict, thread_id: int):
             desc = dict["desc"]
         page.eval_on_selector('//*[@id="ba-student-profile-text"]', "node => node.innerHTML = '%s'" % desc.replace("\n", "\\n"))
 
-    name_card = page.query_selector("//*[@id='ba-student-page-profile']/div[1]")
+    name_card = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[1]')
     name_card.screenshot(path=path_with_thread_id("./image/tmp/name_card.png", thread_id), type="png")
-    base_card = page.query_selector("//*[@id='ba-student-page-profile']/table/tbody")
+    base_card = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/table')
     base_card.screenshot(path=path_with_thread_id("./image/tmp/base_card.png", thread_id), type="png")
-    live2d_bannder = page.query_selector("//*[@id='ba-student-page-profile']/div[2]/h5")
-    live2d_bannder.screenshot(path=path_with_thread_id("./image/tmp/live2d_banner.png", thread_id), type="png")
-    live2d = page.query_selector("//*[@id='ba-student-page-profile']/div[3]/div")
+    # 20级羁绊
+    live2d_progress = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[3]/div[2]/input')
+    page.evaluate("input => input.value = '20'", live2d_progress)
+    live2d_bannder = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[2]')
+    live2d_bannder.screenshot(path=path_with_thread_id("./image/tmp/live2d_banner.png", thread_id), type="png") 
+    live2d = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[3]')
     live2d.screenshot(path=path_with_thread_id("./image/tmp/live2d.png", thread_id), type="png")
-    gift_banner = page.query_selector("//*[@id='ba-student-page-profile']/div[4]/h5")
+    live2d_2 = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[4]')
+    live2d_2.screenshot(path=path_with_thread_id("./image/tmp/live2d_2.png", thread_id), type="png")
+    gift_banner = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[6]')
     gift_banner.screenshot(path=path_with_thread_id("./image/tmp/gift_banner.png", thread_id), type="png")
-    gift = page.query_selector("//*[@id='ba-student-favoured-items']")
+    gift = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[7]')
     gift.screenshot(path=path_with_thread_id("./image/tmp/gift.png", thread_id), type="png")
-    furniture_banner = page.query_selector("//*[@id='ba-student-page-profile']/div[6]/h5")
+    furniture_banner = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[8]')
     furniture_banner.screenshot(path=path_with_thread_id("./image/tmp/furniture_banner.png", thread_id), type="png")
-    furniture = page.query_selector("//*[@id='ba-student-favoured-furniture']")
+    furniture = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[9]')
     furniture.screenshot(path=path_with_thread_id("./image/tmp/furniture.png", thread_id), type="png")
 
     # 如果有爱用品, 顺带把爱用品的翻译拿到(本地翻译优先) ba-game-db更新有点慢
     # for (let i = 0; i < 11; ++i) { $0.value = i; $0.oninput($0); console.log([...document.querySelectorAll(".ba-col-explosion")][7].innerText) }
     # document.querySelectorAll(".ba-col-explosion")
-    gear_info_btn = page.query_selector("#ba-student-tab-gear")
-    if gear_info_btn != None and gear_info_btn.is_visible() and "gear_desc" not in dict:
-        skill_bounds = re.compile("\d+%")
+    # gear_info_btn = page.query_selector('//*[@id="ba-item-list-tabs"]/button[4]') if page.query_selector('//*[@id="ba-item-list-tabs"]/button[6]') != None else None
+    # if gear_info_btn != None and gear_info_btn.is_visible() and "gear_desc" not in dict:
+    #     skill_bounds = re.compile("\d+%")
 
-        gear_info_btn.click()
-        time.sleep(2)
-        gear_desc_el = page.query_selector("#ba-skill-gearnormal-description")
-        gear_desc = gear_desc_el.inner_text()
-        gear_desc = skill_bounds.sub("$value", gear_desc).replace("\n", "\\n")
-        dict['gear_desc'] = gear_desc
+    #     gear_info_btn.click()
+    #     time.sleep(2)
+    #     gear_desc_el = page.query_selector("#ba-skill-gearnormal-description")
+    #     gear_desc = gear_desc_el.inner_text()
+    #     gear_desc = skill_bounds.sub("$value", gear_desc).replace("\n", "\\n")
+    #     dict['gear_desc'] = gear_desc
 
     # 拼到一起
     save_path = path_with_thread_id("./image/tmp/schaledb.png", thread_id)
@@ -256,6 +260,7 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict, thread_id: int):
     path_list.append(path_with_thread_id("./image/tmp/weapon_img.png", thread_id))
     path_list.append(path_with_thread_id("./image/tmp/live2d_banner.png", thread_id))
     path_list.append(path_with_thread_id("./image/tmp/live2d.png", thread_id))
+    path_list.append(path_with_thread_id("./image/tmp/live2d_2.png", thread_id))
     path_list.append(path_with_thread_id("./image/tmp/gift_banner.png", thread_id))
     path_list.append(path_with_thread_id("./image/tmp/gift.png", thread_id))
     path_list.append(path_with_thread_id("./image/tmp/furniture_banner.png", thread_id))
@@ -280,7 +285,7 @@ def fetch_skill_data_from_schaledb(pl: Playwright, name, thread_id: int):
     context = browser.new_context(viewport={'width': 1920, 'height': 1080}, device_scale_factor=4.0)
     context.set_extra_http_headers({"Cache-Control": "max-age=3600"})
     page = context.new_page()
-    page.goto("https://schale.gg/?chara=%s" % name)
+    page.goto("https://schaledb.com/student/%s" % name)
     page.wait_for_load_state()
 
     # 关闭change-log窗口

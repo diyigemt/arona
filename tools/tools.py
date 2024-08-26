@@ -302,13 +302,18 @@ def post_data(action: str, data: any, printResp: bool = True):
         "token": get_password(),
         "Content-Type": "application/json"
     }
-    resp = requests.post("https://arona.diyigemt.com/api/v2/admin/action", json={
-        "action": action,
-        "data": data
-    }, headers=header)
-    if printResp:
-        print(resp.text)
-    return resp
+    for _ in range(0, 3):
+        try:
+            resp = requests.post("https://arona.diyigemt.com/api/v2/admin/action", json={
+                "action": action,
+                "data": data
+            }, headers=header)
+            if printResp:
+                print(resp.text)
+                return resp
+        except Exception as _:
+            pass
+    raise Exception()
         
 def test_name_exist(name):
     header = {

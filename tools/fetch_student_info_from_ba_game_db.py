@@ -131,6 +131,34 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict, thread_id: int):
     page.goto("https://schaledb.com/student/%s" % name)
     page.wait_for_load_state()
 
+    # 设置简中 民译 武器50级 好感20级
+    page.evaluate(
+        """
+        () => {
+            let set = localStorage.getItem("settings");
+            if (set) {
+                set = JSON.parse(set);
+                set.language = 'zh';
+                set.server = 0;
+            } else { 
+                set = { language: 'zh', server: 0 }
+            }
+            localStorage.setItem("settings", JSON.stringify(set));
+            let sd = localStorage.getItem("studentDisplay");
+            if (sd) {
+                sd = JSON.parse(sd);
+                sd.WeaponLevelDisplay = 50;
+                sd.BondLevelDisplay = 20;
+            } else { 
+                sd = { WeaponLevelDisplay: 50, BondLevelDisplay: 20 }
+            }
+            localStorage.setItem("studentDisplay", JSON.stringify(sd));
+        }
+"""
+    )
+
+    page.reload()
+    page.wait_for_load_state()
     # 关闭change-log窗口
     model = page.query_selector("#modal-changelog")
     if model != None:
@@ -140,101 +168,72 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict, thread_id: int):
                 close_btn.click()
             except Exception as _:
                 pass
-    # 换成日服
-    page.pause()
-    region_btn = page.query_selector('//*[@id="ba-content"]/header/nav/div/div[2]/button')
-    region_btn.click()
-    region_btn_jp = page.query_selector('//*[@id="ba-content"]/header/nav/div/div[2]/ul/li[2]')
-    region_btn_jp.click()
-    time.sleep(2)
-    # # 中文与日语切换确定是否有中文翻译, 如果有就不采用gamekee的机翻
-    # language_btn = page.query_selector("#ba-navbar-languageselector")
-    # language_btn.click()
-    # language_jp_btn = page.query_selector("#ba-navbar-languageselector-jp")
-    # language_jp_btn.click()
-    # time.sleep(2)
-    # setting_btn.click()
-    
-    # base_info_btn = page.query_selector("#ba-student-tab-profile")
-    # base_info_btn.click()
-
-    # jp_hobby = page.query_selector('//*[@id="ba-student-profile-hobbies"]').text_content()
-    # setting_btn.click()
-
-    # 切换成民译
-    setting_btn = page.query_selector('//*[@id="ba-content"]/header/nav/div/a[3]')
-    setting_btn.click()
-    language_btn = page.query_selector('/html/body/div[4]/div/div/div[2]/div/div[2]/div[1]/span[2]/div/button')
-    language_btn.click()
-    language_zh_btn = page.query_selector('/html/body/div[4]/div/div/div[2]/div/div[2]/div[1]/span[2]/div/ul/li[6]')
-    language_zh_btn.click()
-    time.sleep(2)
-    # setting_btn.click()
-
-    # gamekee就是一坨答辩
-    # is_no_translate = jp_hobby == cn_hobby and (("ex_name" in dict) and dict["ex_name"] != "" or (("desc" in dict) and dict["desc"] != ""))
-    is_no_translate = False
 
     # 删掉背景
-    page.evaluate("el => el.remove()", page.query_selector("#ba-background-back"))
-    page.evaluate("el => el.remove()", page.query_selector("#ba-background-front"))
+    page.evaluate('() => { document.querySelector("#ba-background-back")?.remove(); document.querySelector("#ba-background-front")?.remove() }')
+    page.evaluate('() => { const tmp = document.querySelector("#bg-overlay"); if (tmp) { tmp.style.backgroundColor = "white" } }')
+    time.sleep(2)
+    page.evaluate('() => { document.querySelector("#ba-background-back")?.remove(); document.querySelector("#ba-background-front")?.remove() }')
+    page.evaluate('() => { const tmp = document.querySelector("#bg-overlay"); if (tmp) { tmp.style.backgroundColor = "white" } }')
+    time.sleep(2)
 
     # 立绘
     # page.query_selector("#ba-student-img").screenshot(path=path_with_thread_id("./image/tmp/stu.png", thread_id), type="png")
 
-    weapon_btn = page.query_selector('//*[@id="ba-item-list-tabs"]/button[3]')
+    weapon_btn = page.get_by_role("button", name="固有武器")
     weapon_btn.click()
     time.sleep(2)
-    # 拉满
-    progress = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[3]/div/input')
-    page.evaluate("input => input.value = '50'", progress)
-
-    # 如果没有翻译,使用gamekee替换专武名称和描述
-    if is_no_translate:
-        page.eval_on_selector('//*[@id="ba-student-weapon-name"]', "node => node.innerText = '%s'" % dict["wp_name"])
-        page.eval_on_selector('//*[@id="ba-weapon-description"]', "node => node.innerText = '%s'" % (dict["wp_desc_1"] + "\\n" + dict["wp_desc_2"]))
-
     weapon_name = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[1]')
+    weapon_name.evaluate('el => el.style.backgroundColor = "rgb(222, 226, 230, 0.6)"')
     weapon_name.screenshot(path=path_with_thread_id("./image/tmp/weapon_name.png", thread_id), type="png")
     
     weapon_img = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[2]')
+    weapon_img.evaluate('el => el.style.backgroundColor = "rgb(222, 226, 230, 0.4)"')
     weapon_img.screenshot(path=path_with_thread_id("./image/tmp/weapon_img.png", thread_id), type="png")
 
-    base_info_btn = page.query_selector('//*[@id="ba-item-list-tabs"]/button[4]')
+    base_info_btn = page.get_by_role("button", name="简介")
     base_info_btn.click()
     time.sleep(2)
-
-    # 如果没有翻译,使用gamekee替换介绍名称
-    if is_no_translate:
-        page.eval_on_selector('//*[@id="ba-student-profile-hobbies"]', "node => node.innerText = '%s'" % dict["hobby"])
-        desc = page.eval_on_selector('//*[@id="ba-student-profile-text"]', "node => node.innerHTML")
-        desc_i = str(desc).find("<i class")
-        if desc_i != -1:
-            desc = dict["desc"] + "\\n" + str(desc)[desc_i:]
-        else:
-            desc = dict["desc"]
-        page.eval_on_selector('//*[@id="ba-student-profile-text"]', "node => node.innerHTML = '%s'" % desc.replace("\n", "\\n"))
+    # 删除礼物的显示所有和羁绊等级进度条
+    show_all_gift = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[6]/button')
+    show_all_gift.evaluate("el => el.remove()")
+    favor_progress = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[3]/div[2]')
+    favor_progress.evaluate("el => el.remove()")
 
     name_card = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[1]')
+    name_card.evaluate('el => el.style.backgroundColor = "rgb(222, 226, 230, 0.6)"')
     name_card.screenshot(path=path_with_thread_id("./image/tmp/name_card.png", thread_id), type="png")
+
     base_card = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/table')
+    base_card.evaluate('el => el.style.backgroundColor = "rgb(222, 226, 230, 0.4)"')
     base_card.screenshot(path=path_with_thread_id("./image/tmp/base_card.png", thread_id), type="png")
-    # 20级羁绊
-    live2d_progress = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[3]/div[2]/input')
-    page.evaluate("input => input.value = '20'", live2d_progress)
+
     live2d_bannder = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[2]')
-    live2d_bannder.screenshot(path=path_with_thread_id("./image/tmp/live2d_banner.png", thread_id), type="png") 
+    live2d_bannder.evaluate('el => el.style.backgroundColor = "rgb(222, 226, 230, 0.6)"')
+    live2d_bannder.screenshot(path=path_with_thread_id("./image/tmp/live2d_banner.png", thread_id), type="png")
+
     live2d = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[3]')
+    live2d.evaluate('el => el.style.backgroundColor = "rgb(222, 226, 230, 0.4)"')
     live2d.screenshot(path=path_with_thread_id("./image/tmp/live2d.png", thread_id), type="png")
+
     live2d_2 = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[4]')
+    live2d_2.evaluate('el => el.style.backgroundColor = "rgb(222, 226, 230, 0.4)"')
     live2d_2.screenshot(path=path_with_thread_id("./image/tmp/live2d_2.png", thread_id), type="png")
+
     gift_banner = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[6]')
+    gift_banner.evaluate('el => el.style.backgroundColor = "rgb(222, 226, 230, 0.6)"')
     gift_banner.screenshot(path=path_with_thread_id("./image/tmp/gift_banner.png", thread_id), type="png")
+
     gift = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[7]')
+    gift.evaluate('el => el.style.backgroundColor = "rgb(222, 226, 230, 0.4)"')
     gift.screenshot(path=path_with_thread_id("./image/tmp/gift.png", thread_id), type="png")
+
     furniture_banner = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[8]')
+    furniture_banner.evaluate('el => el.style.backgroundColor = "rgb(222, 226, 230, 0.6)"')
     furniture_banner.screenshot(path=path_with_thread_id("./image/tmp/furniture_banner.png", thread_id), type="png")
+
     furniture = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[9]')
+    furniture.evaluate('el => el.style.backgroundColor = "rgb(222, 226, 230, 0.4)"')
     furniture.screenshot(path=path_with_thread_id("./image/tmp/furniture.png", thread_id), type="png")
 
     # 如果有爱用品, 顺带把爱用品的翻译拿到(本地翻译优先) ba-game-db更新有点慢
@@ -288,44 +287,56 @@ def fetch_skill_data_from_schaledb(pl: Playwright, name, thread_id: int):
     page.goto("https://schaledb.com/student/%s" % name)
     page.wait_for_load_state()
 
+        # 设置简中 民译 武器50级 好感20级
+    page.evaluate(
+        """
+        () => {
+            let set = localStorage.getItem("settings");
+            if (set) {
+                set = JSON.parse(set);
+                set.language = 'zh';
+                set.server = 0;
+            } else { 
+                set = { language: 'zh', server: 0 }
+            }
+            localStorage.setItem("settings", JSON.stringify(set));
+            let sd = localStorage.getItem("studentDisplay");
+            if (sd) {
+                sd = JSON.parse(sd);
+                sd.WeaponLevelDisplay = 50;
+                sd.BondLevelDisplay = 20;
+            } else { 
+                sd = { WeaponLevelDisplay: 50, BondLevelDisplay: 20 }
+            }
+            localStorage.setItem("studentDisplay", JSON.stringify(sd));
+        }
+"""
+    )
+
+    page.reload()
+    page.wait_for_load_state()
+
     # 关闭change-log窗口
     model = page.query_selector("#modal-changelog")
     if model != None:
         close_btn = model.query_selector(".btn-close")
         if close_btn != None:
             close_btn.click()
-    setting_btn = page.query_selector("#ba-navbar-settings")
-    setting_btn.click()
-    # 换成日服
-    region_btn = page.query_selector("#ba-navbar-regionselector")
-    region_btn.click()
-    region_btn_jp = page.query_selector("#ba-navbar-regionselector-0")
-    region_btn_jp.click()
-    time.sleep(2)
-    # 中文与日语切换确定是否有中文翻译, 如果有就不采用gamekee的机翻
-    language_btn = page.query_selector("#ba-navbar-languageselector")
-    language_btn.click()
-    # 切换成民译
-    language_zh_btn = page.query_selector("#ba-navbar-languageselector-zh")
-    language_zh_btn.click()
-    time.sleep(2)
-    setting_btn.click()
-
     # 删掉背景
-    page.evaluate("el => el.remove()", page.query_selector("#ba-background"))
+    page.evaluate('() => { document.querySelector("#ba-background-back")?.remove(); document.querySelector("#ba-background-front")?.remove() }')
+    page.evaluate('() => { const tmp = document.querySelector("#bg-overlay"); if (tmp) { tmp.style.backgroundColor = "white" } }')
 
-    skill_tab = page.query_selector('//*[@id="ba-student-tab-skills"]')
-    if skill_tab != None:
-        skill_tab.click()
-        time.sleep(1)
+    skill_btn = page.get_by_role("button", name="技能", exact=True)
+    skill_btn.click()
+    time.sleep(2)
 
     # 限制宽度
-    outer = page.query_selector("//*[@id='ba-student']")
+    outer = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div')
     if outer != None:
         outer.evaluate("it => it.style.maxWidth = '500px'")
 
     # 改成白色
-    outer_tab = page.query_selector('//*[@id="ba-student"]/div/div')
+    outer_tab = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div')
     if outer_tab != None:
         outer_tab.evaluate("it => it.style.backgroundColor = 'white'")
 
@@ -335,31 +346,50 @@ def fetch_skill_data_from_schaledb(pl: Playwright, name, thread_id: int):
     outer_tab.evaluate('it => it.querySelectorAll(".ba-info-pill-s").forEach(s => s.style.backgroundColor = "var(--col-theme-background)")')
 
     # 获取攻击类型
-    attack_icon = page.query_selector('//*[@id="ba-skill-autoattack-icon"]')
+    attack_icon = page.query_selector('.text-hits')
     if attack_icon != None:
         lst: list[str] = attack_icon.evaluate("it => [...it.classList]")
-        attack_class = f".ba-col-{lst[-1:][0]}"
+        attack_class = None
+        for clazz in lst:
+            if clazz.startswith("ba-col"):
+                attack_class = f".{clazz}"
+                break
+        if attack_class == None:
+            print(f"error in forEach parse attack_class, loma={name}")
+            attack_class = ".ba-col-explosion"
+    else:
+        print(f"error in parse attack_class, loma={name}")
+        attack_class = ".ba-col-explosion"
+    # 删掉下划线
+    page.evaluate("""
+        () => {
+            document.querySelectorAll(".text-hits").forEach(el => el.style.textDecoration = "none");
+        }
+""")
     # # 删掉技能图标
     # page.evaluate("document.querySelectorAll('.skill-icon').forEach(it => it.remove())")
     # 删除搜索框
-    page.evaluate("document.querySelector('#ba-navbar-placeholder').remove()")
+    page.evaluate("document.querySelector('.navbar').remove()")
+    # 删除写死的top
+    page.evaluate('document.querySelector("#ba-content").setAttribute("style", "top: 0px !important;")')
     # 删除hover
-    page.evaluate("document.querySelectorAll('[data-bs-original-title]').forEach(it => it.setAttribute('data-bs-original-title',''))")
+    # page.evaluate("document.querySelectorAll('[data-bs-original-title]').forEach(it => it.setAttribute('data-bs-original-title',''))")
 
     # 获取普攻
     autoattack_path = path_with_thread_id("./image/tmp/autoattack.png", thread_id)
     has_autoattack = False
-    autoattack = page.query_selector('//*[@id="ba-skill-autoattack"]')
+    autoattack = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div/div[2]')
     if autoattack != None and autoattack.is_visible():
         # 分割线
-        autoattack.evaluate("it => {const tmp = it.children[0].children[0];tmp.classList.add('pt-2');tmp.style.borderTop = '2px solid'}")
+        autoattack.evaluate("it => {const tmp = it.children[0].children[0].children[0];tmp.classList.add('pt-2');tmp.classList.add('w-100');tmp.style.borderTop = '2px solid'}")
         autoattack.screenshot(path=autoattack_path, type="png")
         has_autoattack = True
 
     def capture_skill_body(slider, body, range: range, name: str):
         res = {}
+        # ._vei.onInput({target:{valueAsNumber:5}})
         for i in range:
-            slider.evaluate("it => {it.value = %d; it.oninput();}" % (i))
+            slider.evaluate("it => {it._vei.onInput({target:{valueAsNumber:%d}});}" % (i))
             res[i] = list(map(lambda x: str(x.evaluate("it => it.innerText")).replace("\n",""), body.query_selector_all(attack_class)))
         # 替换并截图
         for idx, it in enumerate(body.query_selector_all(attack_class)):
@@ -374,71 +404,104 @@ def fetch_skill_data_from_schaledb(pl: Playwright, name, thread_id: int):
 
     # 获取Ex
     ex_path = path_with_thread_id("./image/tmp/body-ex.png", thread_id)
-    ex_body = page.query_selector('//*[@id="ba-student-page-skills"]/div[3]')
-    ex_body.evaluate("it => {const tmp = it.children[0];tmp.classList.add('pt-2');tmp.style.borderTop = '2px solid'}")
+    ex_body = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div/div[3]/div[1]/div[1]')
+    ex_body.evaluate("it => {const tmp = it.children[0];tmp.classList.add('pt-2');tmp.classList.add('w-100');tmp.style.borderTop = '2px solid'}")
     ex_body.evaluate('it => it.querySelectorAll(".ba-panel-separator").forEach(s => s.style.borderTop = "2px solid")')
-    capture_skill_body(page.query_selector('//*[@id="ba-skillpreview-exrange"]'), ex_body, range(1, 6), ex_path)
+    capture_skill_body(page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div/div[3]/div[1]/div[2]/input'), ex_body, range(1, 6), ex_path)
 
-    normal_body = page.query_selector('//*[@id="ba-student-page-skills"]/div[5]')
+    normal_body = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div/div[4]/div[1]/div[1]')
     # 获取其他技能
     # 先拿到完整数据
-    capture_skill_body(page.query_selector('//*[@id="ba-skillpreview-range"]'), normal_body, range(1, 11), "")
+    capture_skill_body(page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div/div[4]/div[1]/div[2]/input'), normal_body, range(1, 11), "")
     # 分技能截图
     # 根据dev拆分
     bs_path = path_with_thread_id("./image/tmp/bs.png", thread_id)
     ns_path = path_with_thread_id("./image/tmp/ns.png", thread_id)
     ss_path = path_with_thread_id("./image/tmp/ss.png", thread_id)
-    normal_body.evaluate('it => {const lMap = {0:4,1:3,2:5};for (let index = 0; index < 3; index++) {const el = document.createElement("div");el.classList.add("w-100");el.classList.add("p-2");el.classList.add("tttt");for (let i = 0; i < lMap[index]; i++) {const tmp = it.children[0];tmp.remove();el.appendChild(tmp);}if(index===0){el.children[0].classList.add("pt-2");el.children[0].style.borderTop="2px solid"};it.appendChild(el);}}')
+    normal_body.evaluate("""
+        it => { 
+            let size = it.children.length;
+            for (let index = 0; index < 3; index++) {
+                const el = document.createElement("div");
+                el.classList.add("w-100");
+                el.classList.add("p-2");
+                el.classList.add("tttt");
+                let tmp = it.children[0];
+                while(size > 0 && tmp && !tmp.className.startsWith("ba-panel-separator")) {
+                    tmp.remove();
+                    el.appendChild(tmp);
+                    tmp = it.children[0];
+                    size--;
+                }
+                if (tmp.className.startsWith("ba-panel-separator")) {
+                    tmp.remove();
+                    size--;
+                }
+                if (index === 0) {
+                    el.children[0].classList.add("pt-2");
+                    el.children[0].style.borderTop = "2px solid"
+                };
+                it.appendChild(el);
+            }
+            it.querySelectorAll(".tttt").forEach(el => {
+                el.children[0].classList.add("pt-2");
+                el.children[0].style.borderTop = "2px solid";
+            })
+        }
+""")
     path_l = [bs_path,ns_path,ss_path]
     for idx, it in enumerate(normal_body.query_selector_all(".tttt")):
         it.screenshot(path=path_l[idx], type="png")
 
     # 爱用品(如果有)
     gear_path = path_with_thread_id("./image/tmp/gear.png", thread_id)
+    gear_image_path = path_with_thread_id("./image/tmp/gear-1.png", thread_id)
     has_gear = False
-    gear_tab = page.query_selector('//*[@id="ba-student-tab-gear"]')
+    gear_tab = page.get_by_role("button", name="爱用品")
     if gear_tab != None and gear_tab.is_visible():
         gear_tab.click()
-        gear_body = page.query_selector('//*[@id="ba-gear-page-t2"]/div[2]')
+        gear_body = page.query_selector('//*[@id="gear-t2"]/div[2]/div/div[1]')
+        gear_image = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[2]')
         # 分割线
-        gear_body.evaluate("it => {const tmp = it.children[0];tmp.classList.add('pt-2');tmp.classList.add('w-100');tmp.style.borderTop = '2px solid'}")
-        gear_desc = page.query_selector('//*[@id="ba-gear-page-t2"]/div[2]/div/div/div[2]/p/span[2]')
+        gear_image.evaluate("it => {const tmp = it.children[0];tmp.classList.add('pt-2');tmp.classList.add('w-100');tmp.style.borderTop = '2px solid'}")
+        gear_desc = page.query_selector('//*[@id="gear-t2"]/div[2]/div/div[1]/div[1]/div[2]/div[2]/span')
         gear_desc.evaluate("it => it.innerText = it.innerText + '(爱用品T2)'")
-        capture_skill_body(page.query_selector('//*[@id="ba-gear-skillpreview-range"]'), gear_body, range(1, 11), gear_path)
+        capture_skill_body(page.query_selector('//*[@id="gear-t2"]/div[2]/div/div[2]/input'), gear_body, range(1, 11), gear_path)
+        gear_image.screenshot(path=gear_image_path, type="png")
         has_gear = True
         # 不知道为什么下边总是有1px的横线
-        tmp_im = Image.open(gear_path)
-        tmp_im = tmp_im.convert("RGBA")
-        tmp_im.save(gear_path)
-        gear_im = cv2.imdecode(np.fromfile(gear_path, dtype=np.uint8), -1)
-        row, col, _ = gear_im.shape
-        im = Image.new('RGBA', (col, row-10), color='white')
-        im.save(gear_path)
-        im = cv2.imdecode(np.fromfile(gear_path, dtype=np.uint8), -1)
-        im[0:row,0:col]=gear_im[0:row-10,0:col]
-        cv2.imencode(".png", im)[1].tofile(gear_path)
+        # tmp_im = Image.open(gear_path)
+        # tmp_im = tmp_im.convert("RGBA")
+        # tmp_im.save(gear_path)
+        # gear_im = cv2.imdecode(np.fromfile(gear_path, dtype=np.uint8), -1)
+        # row, col, _ = gear_im.shape
+        # im = Image.new('RGBA', (col, row-10), color='white')
+        # im.save(gear_path)
+        # im = cv2.imdecode(np.fromfile(gear_path, dtype=np.uint8), -1)
+        # im[0:row,0:col]=gear_im[0:row-10,0:col]
+        # cv2.imencode(".png", im)[1].tofile(gear_path)
 
     # 获取专武
     weapon1_path = path_with_thread_id("./image/tmp/weapon1.png", thread_id)
     weapon2_path = path_with_thread_id("./image/tmp/weapon2.png", thread_id)
-    weapon_tab = page.query_selector('//*[@id="ba-student-tab-weapon"]')
+    weapon_tab = page.get_by_role("button", name="固有武器")
     if weapon_tab != None:
         weapon_tab.click()
-    weapon_body = page.query_selector('//*[@id="ba-weapon-page-2star"]/div[2]')
+    weapon_body = page.query_selector('//*[@id="weapon-2star"]/div[2]/div/div[1]')
     # 分割线
     weapon_body.evaluate("it => {const tmp = it.children[0];tmp.classList.add('pt-2');tmp.classList.add('w-100');tmp.style.borderTop = '2px solid'}")
 
-    weapon_desc = page.query_selector('//*[@id="ba-weapon-page-2star"]/div[2]/div/div/div[2]/p/span[2]')
+    weapon_desc = page.query_selector('//*[@id="weapon-2star"]/div[2]/div/div[1]/div[1]/div[2]/div[2]/span')
     weapon_desc.evaluate("it => it.innerText = it.innerText + '(固有武器T2)'")
-    capture_skill_body(page.query_selector('//*[@id="ba-weapon-skillpreview-range"]'), weapon_body, range(1, 11), weapon1_path)
+    capture_skill_body(page.query_selector('//*[@id="weapon-2star"]/div[2]/div/div[2]/input'), weapon_body, range(1, 11), weapon1_path)
     # 3星专武效果
-    weapon2_tab = page.query_selector('//*[@id="ba-student-page-weapon"]/ul/li[2]/a')
+    weapon2_tab = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/ul/li[2]/a')
     if weapon2_tab != None:
         weapon2_tab.click()
         time.sleep(1)
     # # 删掉图标
     # page.query_selector('//*[@id="ba-weapon-page-3star"]/div[2]/div').evaluate("it => it.remove()")
-    weapon_body2 = page.query_selector('//*[@id="ba-weapon-page-3star"]/div[2]')
+    weapon_body2 = page.query_selector('//*[@id="weapon-3star"]/div[2]')
     weapon_body2.screenshot(path=weapon2_path, type="png")
 
     # 拼接所有图片
@@ -448,6 +511,7 @@ def fetch_skill_data_from_schaledb(pl: Playwright, name, thread_id: int):
     if has_autoattack:
         concat_two_im(autoattack_path, ex_path, ex_path, type="vertical")
     if has_gear:
+        concat_two_im(gear_image_path, gear_path, gear_path, type="vertical", reshape=True, reshapeType="l")
         concat_two_im(bs_path, gear_path, bs_path, type="vertical", reshape=True, reshapeType="l")
         concat_two_im(ex_path, bs_path, line1_path)
     else:

@@ -9,9 +9,7 @@ from PIL import ImageDraw, ImageFont, Image
 import cv2
 import numpy as np
 import time
-import codecs
 from functools import reduce
-from config import cache_file_location, name_map_dict_file_location
 headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"}
 font_size = 28
 fnt = ImageFont.truetype('C:\Windows\Fonts\msyh.ttc', font_size)
@@ -130,6 +128,13 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict, thread_id: int):
     page = context.new_page()
     page.goto("https://schaledb.com/student/%s" % name)
     page.wait_for_load_state()
+
+    # 关闭change-log窗口
+    model = page.query_selector_all(".show")
+    if len(model) != 0:
+        close_btn = page.query_selector(".btn-close-white")
+        if close_btn != None:
+            close_btn.click()
 
     # 设置简中 民译 武器50级 好感20级
     page.evaluate(
@@ -287,7 +292,14 @@ def fetch_skill_data_from_schaledb(pl: Playwright, name, thread_id: int):
     page.goto("https://schaledb.com/student/%s" % name)
     page.wait_for_load_state()
 
-        # 设置简中 民译 武器50级 好感20级
+    # 关闭change-log窗口
+    model = page.query_selector_all(".show")
+    if len(model) != 0:
+        close_btn = page.query_selector(".btn-close-white")
+        if close_btn != None:
+            close_btn.click()
+
+    # 设置简中 民译 武器50级 好感20级
     page.evaluate(
         """
         () => {
@@ -347,6 +359,7 @@ def fetch_skill_data_from_schaledb(pl: Playwright, name, thread_id: int):
 
     # 获取攻击类型
     attack_icon = page.query_selector('.text-hits')
+    is_special = False
     if attack_icon != None:
         lst: list[str] = attack_icon.evaluate("it => [...it.classList]")
         attack_class = None
@@ -354,12 +367,23 @@ def fetch_skill_data_from_schaledb(pl: Playwright, name, thread_id: int):
             if clazz.startswith("ba-col"):
                 attack_class = f".{clazz}"
                 break
-        if attack_class == None:
+    else:
+        print(f"error in forEach parse attack_class, using another function..., loma={name}")
+        print(f"warming, is a SPECIAL student? loma={name}")
+        is_special = True
+        attack_icon = page.query_selector('.skill-icon')
+        if attack_icon != None:
+            attack_icon_style = attack_icon.evaluate("it => it.style.cssText")
+            reg = re.compile(r"--bg-color: var\(--col-bg-(\w+)\);")
+            reg_res = reg.search(attack_icon_style)
+            if reg_res != None:
+                attack_class = f".ba-col-{reg_res.group(1).lower()}"
+            else:
+                print(f"error in parse attack_class -2, loma={name}")
+                attack_class = ".ba-col-explosion" 
+        else:
             print(f"error in forEach parse attack_class, loma={name}")
             attack_class = ".ba-col-explosion"
-    else:
-        print(f"error in parse attack_class, loma={name}")
-        attack_class = ".ba-col-explosion"
     # 删掉下划线
     page.evaluate("""
         () => {
@@ -379,7 +403,7 @@ def fetch_skill_data_from_schaledb(pl: Playwright, name, thread_id: int):
     autoattack_path = path_with_thread_id("./image/tmp/autoattack.png", thread_id)
     has_autoattack = False
     autoattack = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div/div[2]')
-    if autoattack != None and autoattack.is_visible():
+    if autoattack != None and autoattack.is_visible() and (not is_special):
         # 分割线
         autoattack.evaluate("it => {const tmp = it.children[0].children[0].children[0];tmp.classList.add('pt-2');tmp.classList.add('w-100');tmp.style.borderTop = '2px solid'}")
         autoattack.screenshot(path=autoattack_path, type="png")
@@ -402,17 +426,24 @@ def fetch_skill_data_from_schaledb(pl: Playwright, name, thread_id: int):
         if name != "":
             body.screenshot(path=name, type="png")
 
+    if is_special:
+        ex_body = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div/div[2]/div[1]/div[1]')
+        normal_body = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div/div[3]/div[1]/div[1]')
+        skill_slider = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div/div[3]/div[1]/div[2]/input')
+    else:
+        ex_body = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div/div[3]/div[1]/div[1]')
+        normal_body = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div/div[4]/div[1]/div[1]')
+        skill_slider = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div/div[4]/div[1]/div[2]/input')
+    
     # 获取Ex
     ex_path = path_with_thread_id("./image/tmp/body-ex.png", thread_id)
-    ex_body = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div/div[3]/div[1]/div[1]')
     ex_body.evaluate("it => {const tmp = it.children[0];tmp.classList.add('pt-2');tmp.classList.add('w-100');tmp.style.borderTop = '2px solid'}")
     ex_body.evaluate('it => it.querySelectorAll(".ba-panel-separator").forEach(s => s.style.borderTop = "2px solid")')
     capture_skill_body(page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div/div[3]/div[1]/div[2]/input'), ex_body, range(1, 6), ex_path)
-
-    normal_body = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div/div[4]/div[1]/div[1]')
+    
     # 获取其他技能
     # 先拿到完整数据
-    capture_skill_body(page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div/div[4]/div[1]/div[2]/input'), normal_body, range(1, 11), "")
+    capture_skill_body(skill_slider, normal_body, range(1, 11), "")
     # 分技能截图
     # 根据dev拆分
     bs_path = path_with_thread_id("./image/tmp/bs.png", thread_id)

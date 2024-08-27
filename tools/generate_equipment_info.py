@@ -21,9 +21,9 @@ def run(playwright: Playwright):
     page.wait_for_load_state()
 
     # 关闭change-log窗口
-    model = page.query_selector("#modal-changelog")
-    if model != None:
-        close_btn = model.query_selector(".btn-close")
+    model = page.query_selector_all(".show")
+    if len(model) != 0:
+        close_btn = page.query_selector(".btn-close-white")
         if close_btn != None:
             close_btn.click()
     # 拿到装备截图

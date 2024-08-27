@@ -9,13 +9,16 @@ import threading
 import numpy as np
 from PIL import Image
 from config import cache_file_location, cn_translation_location
-from playwright.sync_api import Playwright, sync_playwright
+from playwright.sync_api import Playwright, sync_playwright, Route, Request
 from fetch_student_info_from_ba_game_db import concat_list, concat_two_im, download_image, fetch_data_from_game_db, fetch_data_from_schaledb, fetch_skill_data_from_schaledb, path_with_thread_id, query_remote_name, replace_none_char, test_name_exist
 
-from tools import draw_image_source
+from tools import confirm_action, draw_image_source
 # 要生成的目标 日文名
 target = []
-# 如果本地有图片
+
+# game-db数据更新缓慢, 使用override的数据
+use_game_db_override = False
+game_db_override_script = "https://ba.game-db.tw/static/main.276d869eba0ea14c09b6.js"
 
 sources_map = {
     "schaledb": "部分学生信息,技能数据来源: http://schale.gg/",
@@ -31,6 +34,9 @@ cache_dict = {}
 with codecs.open(cache_file_location, "r", encoding="utf-8") as f:
     cache_dict = json.loads(f.read())
 
+def game_db_content_override(route: Route, req: Request):
+    route.fulfill(path="playwright/fake.js")
+
 def run(playwright: Playwright, arr: list[str], thread_id: int):
     with codecs.open("./config/local_file_map.json", "r", encoding="utf-8") as f:
         local_file_path = json.load(f)
@@ -44,8 +50,12 @@ def run(playwright: Playwright, arr: list[str], thread_id: int):
     context = browser.new_context(viewport={'width': 1920, 'height': 1080}, device_scale_factor=4.0)
     context.set_extra_http_headers({"Cache-Control": "max-age=3600"})
     page = context.new_page()
+    if (use_game_db_override):
+        page.add_init_script(path="playwright/init.js")
+        page.route(game_db_override_script, game_db_content_override)
     # 拿到成长资源截图
     page.goto("https://ba.game-db.tw/")
+    page.wait_for_load_state()
     page.locator("svg").first.click()
     page.locator("#react-select-2-option-0").click()
     page.get_by_text("一覧").click()
@@ -460,6 +470,9 @@ if __name__ == "__main__":
         threads = [threading.Thread(target=thread_run, args=([],))]
     else:
         threads = [threading.Thread(target=thread_run, args=(arr,index,)) for index, arr in enumerate(splited_arr)]
+    if use_game_db_override:
+        if not confirm_action("内容覆盖已打开, 确保内容正确?"):
+            use_game_db_override = False
     print("start with %d threads" % len(threads))
     for t in threads:
         t.start()

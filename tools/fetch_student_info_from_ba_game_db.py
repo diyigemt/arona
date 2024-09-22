@@ -357,9 +357,13 @@ def fetch_skill_data_from_schaledb(pl: Playwright, name, thread_id: int):
     # 小信息背景色
     outer_tab.evaluate('it => it.querySelectorAll(".ba-info-pill-s").forEach(s => s.style.backgroundColor = "var(--col-theme-background)")')
 
+    # 获取前后排
+    special_text = page.query_selector('.font-nexon')
+    if special_text != None:
+        is_special = special_text.text_content() == "后援"
+
     # 获取攻击类型
     attack_icon = page.query_selector('.text-hits')
-    is_special = False
     if attack_icon != None:
         lst: list[str] = attack_icon.evaluate("it => [...it.classList]")
         attack_class = None

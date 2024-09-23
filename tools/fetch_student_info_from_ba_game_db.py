@@ -117,7 +117,7 @@ def path_with_thread_id(base: str, thread_id: int):
 
 def fetch_data_from_schaledb(pl: Playwright, name, dict, thread_id: int):
     browser = pl.chromium.launch(
-        proxy={"server":"http://127.0.0.1:7890"},
+        proxy={"server":"http://127.0.0.1:12350"},
         headless=True,
         chromium_sandbox=False,
         args=[r"--disk-cache-dir=D:\tmp\playwright"],
@@ -126,9 +126,13 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict, thread_id: int):
     context = browser.new_context(viewport={'width': 1920, 'height': 1080}, device_scale_factor=4.0)
     context.set_extra_http_headers({"Cache-Control": "max-age=3600"})
     page = context.new_page()
+
+    # 设置简中 民译 武器50级 好感20级
+    page.add_init_script(path="playwright/fxxkPlaywwright.js")
+
     page.goto("https://schaledb.com/student/%s" % name)
     page.wait_for_load_state()
-
+    
     # 关闭change-log窗口
     model = page.query_selector_all(".show")
     if len(model) != 0:
@@ -136,34 +140,6 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict, thread_id: int):
         if close_btn != None:
             close_btn.click()
 
-    # 设置简中 民译 武器50级 好感20级
-    page.evaluate(
-        """
-        () => {
-            let set = localStorage.getItem("settings");
-            if (set) {
-                set = JSON.parse(set);
-                set.language = 'zh';
-                set.server = 0;
-            } else { 
-                set = { language: 'zh', server: 0 }
-            }
-            localStorage.setItem("settings", JSON.stringify(set));
-            let sd = localStorage.getItem("studentDisplay");
-            if (sd) {
-                sd = JSON.parse(sd);
-                sd.WeaponLevelDisplay = 50;
-                sd.BondLevelDisplay = 20;
-            } else { 
-                sd = { WeaponLevelDisplay: 50, BondLevelDisplay: 20 }
-            }
-            localStorage.setItem("studentDisplay", JSON.stringify(sd));
-        }
-"""
-    )
-
-    page.reload()
-    page.wait_for_load_state()
     # 关闭change-log窗口
     model = page.query_selector("#modal-changelog")
     if model != None:
@@ -195,7 +171,6 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict, thread_id: int):
     weapon_img = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[2]')
     weapon_img.evaluate('el => el.style.backgroundColor = "rgb(222, 226, 230, 0.4)"')
     weapon_img.screenshot(path=path_with_thread_id("./image/tmp/weapon_img.png", thread_id), type="png")
-
     base_info_btn = page.get_by_role("button", name="简介")
     base_info_btn.click()
     time.sleep(2)
@@ -280,7 +255,7 @@ def fetch_skill_data_from_schaledb(pl: Playwright, name, thread_id: int):
     从schaledb获取技能截图
     """
     browser = pl.chromium.launch(
-        proxy={"server":"http://127.0.0.1:7890"},
+        proxy={"server":"http://127.0.0.1:12350"},
         headless=True,
         chromium_sandbox=False,
         args=[r"--disk-cache-dir=D:\tmp\playwright"],
@@ -289,6 +264,10 @@ def fetch_skill_data_from_schaledb(pl: Playwright, name, thread_id: int):
     context = browser.new_context(viewport={'width': 1920, 'height': 1080}, device_scale_factor=4.0)
     context.set_extra_http_headers({"Cache-Control": "max-age=3600"})
     page = context.new_page()
+
+    # 设置简中 民译 武器50级 好感20级
+    page.add_init_script(path="playwright/fxxkPlaywwright.js")
+
     page.goto("https://schaledb.com/student/%s" % name)
     page.wait_for_load_state()
 
@@ -298,35 +277,6 @@ def fetch_skill_data_from_schaledb(pl: Playwright, name, thread_id: int):
         close_btn = page.query_selector(".btn-close-white")
         if close_btn != None:
             close_btn.click()
-
-    # 设置简中 民译 武器50级 好感20级
-    page.evaluate(
-        """
-        () => {
-            let set = localStorage.getItem("settings");
-            if (set) {
-                set = JSON.parse(set);
-                set.language = 'zh';
-                set.server = 0;
-            } else { 
-                set = { language: 'zh', server: 0 }
-            }
-            localStorage.setItem("settings", JSON.stringify(set));
-            let sd = localStorage.getItem("studentDisplay");
-            if (sd) {
-                sd = JSON.parse(sd);
-                sd.WeaponLevelDisplay = 50;
-                sd.BondLevelDisplay = 20;
-            } else { 
-                sd = { WeaponLevelDisplay: 50, BondLevelDisplay: 20 }
-            }
-            localStorage.setItem("studentDisplay", JSON.stringify(sd));
-        }
-"""
-    )
-
-    page.reload()
-    page.wait_for_load_state()
 
     # 关闭change-log窗口
     model = page.query_selector("#modal-changelog")
@@ -433,17 +383,17 @@ def fetch_skill_data_from_schaledb(pl: Playwright, name, thread_id: int):
     if is_special:
         ex_body = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div/div[2]/div[1]/div[1]')
         normal_body = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div/div[3]/div[1]/div[1]')
-        skill_slider = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div/div[3]/div[1]/div[2]/input')
     else:
         ex_body = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div/div[3]/div[1]/div[1]')
         normal_body = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div/div[4]/div[1]/div[1]')
-        skill_slider = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div/div[4]/div[1]/div[2]/input')
+    ex_skill_slider = page.query_selector_all('input')[7]
+    skill_slider = page.query_selector_all('input')[8]
     
     # 获取Ex
     ex_path = path_with_thread_id("./image/tmp/body-ex.png", thread_id)
     ex_body.evaluate("it => {const tmp = it.children[0];tmp.classList.add('pt-2');tmp.classList.add('w-100');tmp.style.borderTop = '2px solid'}")
     ex_body.evaluate('it => it.querySelectorAll(".ba-panel-separator").forEach(s => s.style.borderTop = "2px solid")')
-    capture_skill_body(page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div/div[3]/div[1]/div[2]/input'), ex_body, range(1, 6), ex_path)
+    capture_skill_body(ex_skill_slider, ex_body, range(1, 6), ex_path)
     
     # 获取其他技能
     # 先拿到完整数据

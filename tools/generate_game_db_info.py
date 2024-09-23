@@ -41,7 +41,7 @@ def run(playwright: Playwright, arr: list[str], thread_id: int):
     with codecs.open("./config/local_file_map.json", "r", encoding="utf-8") as f:
         local_file_path = json.load(f)
     browser = playwright.chromium.launch(
-        proxy={"server":"http://127.0.0.1:7890"},
+        proxy={"server":"http://127.0.0.1:12350"},
         headless=True,
         chromium_sandbox=False,
         args=[r"--disk-cache-dir=D:\tmp\playwright"],

@@ -301,7 +301,7 @@
     },
     "チェリノ(温泉)": {
         "cnName": "温泉切里诺",
-        "loma": "cherino_hotspring",
+        "loma": "cherino_onsen",
         "gamekee": "https://ba.gamekee.com/150144.html"
     },
     "チセ": {
@@ -321,7 +321,7 @@
     },
     "チナツ(温泉)": {
         "cnName": "温泉千夏",
-        "loma": "chinatsu_hotspring",
+        "loma": "chinatsu_onsen",
         "gamekee": "https://ba.gamekee.com/150145.html"
     },
     "チヒロ": {
@@ -381,7 +381,7 @@
     },
     "ノドカ(温泉)": {
         "cnName": "温泉和香",
-        "loma": "nodoka_hotspring",
+        "loma": "nodoka_onsen",
         "gamekee": "https://ba.gamekee.com/150174.html"
     },
     "ノノミ": {
@@ -791,7 +791,7 @@
     },
     "シグレ(温泉)": {
         "cnName": "温泉时雨",
-        "loma": "shigure_hotspring",
+        "loma": "shigure_onsen",
         "gamekee": "https://ba.gamekee.com/161204.html"
     },
     "御坂美琴": {

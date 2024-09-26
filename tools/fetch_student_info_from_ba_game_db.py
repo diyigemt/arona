@@ -271,19 +271,19 @@ def fetch_skill_data_from_schaledb(pl: Playwright, name, thread_id: int):
     page.goto("https://schaledb.com/student/%s" % name)
     page.wait_for_load_state()
 
-    # 关闭change-log窗口
-    model = page.query_selector_all(".show")
-    if len(model) != 0:
-        close_btn = page.query_selector(".btn-close-white")
-        if close_btn != None:
-            close_btn.click()
+    # # 关闭change-log窗口
+    # model = page.query_selector_all(".show")
+    # if len(model) != 0:
+    #     close_btn = page.query_selector(".btn-close-white")
+    #     if close_btn != None:
+    #         close_btn.click()
 
-    # 关闭change-log窗口
-    model = page.query_selector("#modal-changelog")
-    if model != None:
-        close_btn = model.query_selector(".btn-close")
-        if close_btn != None:
-            close_btn.click()
+    # # 关闭change-log窗口
+    # model = page.query_selector("#modal-changelog")
+    # if model != None:
+    #     close_btn = model.query_selector(".btn-close")
+    #     if close_btn != None:
+    #         close_btn.click()
     # 删掉背景
     page.evaluate('() => { document.querySelector("#ba-background-back")?.remove(); document.querySelector("#ba-background-front")?.remove() }')
     page.evaluate('() => { const tmp = document.querySelector("#bg-overlay"); if (tmp) { tmp.style.backgroundColor = "white" } }')

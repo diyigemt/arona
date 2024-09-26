@@ -386,8 +386,8 @@ def fetch_skill_data_from_schaledb(pl: Playwright, name, thread_id: int):
     else:
         ex_body = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div/div[3]/div[1]/div[1]')
         normal_body = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div/div[4]/div[1]/div[1]')
-    ex_skill_slider = page.query_selector_all('input')[7]
-    skill_slider = page.query_selector_all('input')[8]
+    ex_skill_slider = page.query_selector_all('input.flex-fill')[1]
+    skill_slider = page.query_selector_all('input.flex-fill')[2]
     
     # 获取Ex
     ex_path = path_with_thread_id("./image/tmp/body-ex.png", thread_id)

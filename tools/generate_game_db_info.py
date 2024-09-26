@@ -18,7 +18,7 @@ target = []
 
 # game-db数据更新缓慢, 使用override的数据
 use_game_db_override = False
-game_db_override_script = "https://ba.game-db.tw/static/main.276d869eba0ea14c09b6.js"
+game_db_override_script = "https://ba.game-db.tw/static/main.01855ff23e40cfbf5e17.js"
 
 sources_map = {
     "schaledb": "部分学生信息,技能数据来源: http://schale.gg/",

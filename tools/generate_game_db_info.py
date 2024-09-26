@@ -53,6 +53,10 @@ def run(playwright: Playwright, arr: list[str], thread_id: int):
     if (use_game_db_override):
         page.add_init_script(path="playwright/init.js")
         page.route(game_db_override_script, game_db_content_override)
+        page.route("https://ba.game-db.tw/images/items/equipment_icon_watch_tier9.png", lambda r, _ : r.fulfill(path="playwright/im/equipment_icon_watch_tier9.webp"))
+        page.route("https://ba.game-db.tw/images/items/equipment_icon_necklace_tier9.png", lambda r, _ : r.fulfill(path="playwright/im/equipment_icon_necklace_tier9.webp"))
+        page.route("https://ba.game-db.tw/images/items/equipment_icon_watch_tier9_piece.png", lambda r, _ : r.fulfill(path="playwright/im/equipment_icon_watch_tier9_piece.webp"))
+        page.route("https://ba.game-db.tw/images/items/equipment_icon_necklace_tier9_piece.png", lambda r, _ : r.fulfill(path="playwright/im/equipment_icon_necklace_tier9_piece.webp"))
     # 拿到成长资源截图
     page.goto("https://ba.game-db.tw/")
     page.wait_for_load_state()

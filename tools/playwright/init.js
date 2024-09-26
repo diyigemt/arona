@@ -40567,7 +40567,7 @@
             "Cover": true,
             "Range": 750,
             "Equipment": [
-                1,
+                2,
                 6,
                 8
             ],
@@ -40775,9 +40775,9 @@
             "Cover": true,
             "Range": 750,
             "Equipment": [
-                1,
-                6,
-                8
+                3,
+                5,
+                9
             ],
             "SkillDetails": [
                 1,

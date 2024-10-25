@@ -984,5 +984,20 @@
         "cnName": "妃咲",
         "loma": "kisaki",
         "gamekee": "https://www.gamekee.com/ba/68993.html"
+    },
+    "マリー(アイドル)": {
+        "cnName": "偶像玛丽",
+        "loma": "mari_idol",
+        "gamekee": "https://www.gamekee.com/ba/68790.html"
+    },
+    "サクラコ(アイドル)": {
+        "cnName": "偶像樱子",
+        "loma": "sakurako_idol",
+        "gamekee": "https://www.gamekee.com/ba/68786.html"
+    },
+    "ミネ(アイドル)": {
+        "cnName": "偶像美祢",
+        "loma": "mine_idol",
+        "gamekee": "https://www.gamekee.com/ba/68785.html"
     }
 }

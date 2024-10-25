@@ -18,7 +18,7 @@ target = []
 
 # game-db数据更新缓慢, 使用override的数据
 use_game_db_override = False
-game_db_override_script = "https://ba.game-db.tw/static/main.01855ff23e40cfbf5e17.js"
+game_db_override_script = "https://ba.game-db.tw/static/main.4d637d0ff4911b085205.js"
 
 sources_map = {
     "schaledb": "部分学生信息,技能数据来源: http://schale.gg/",
@@ -50,12 +50,15 @@ def run(playwright: Playwright, arr: list[str], thread_id: int):
     context = browser.new_context(viewport={'width': 1920, 'height': 1080}, device_scale_factor=4.0)
     context.set_extra_http_headers({"Cache-Control": "max-age=3600"})
     page = context.new_page()
+    # 帽子: 1 手套: 2 鞋子: 3 背包: 4 徽章: 5 发卡: 6 护符: 7 手表: 8 项链: 9
     if (use_game_db_override):
         page.add_init_script(path="playwright/init.js")
         page.route(game_db_override_script, game_db_content_override)
         page.route("https://ba.game-db.tw/images/items/equipment_icon_watch_tier9.png", lambda r, _ : r.fulfill(path="playwright/im/equipment_icon_watch_tier9.webp"))
+        page.route("https://ba.game-db.tw/images/items/equipment_icon_charm_tier9.png", lambda r, _ : r.fulfill(path="playwright/im/equipment_icon_charm_tier9.webp"))
         page.route("https://ba.game-db.tw/images/items/equipment_icon_necklace_tier9.png", lambda r, _ : r.fulfill(path="playwright/im/equipment_icon_necklace_tier9.webp"))
         page.route("https://ba.game-db.tw/images/items/equipment_icon_watch_tier9_piece.png", lambda r, _ : r.fulfill(path="playwright/im/equipment_icon_watch_tier9_piece.webp"))
+        page.route("https://ba.game-db.tw/images/items/equipment_icon_charm_tier9_piece.png", lambda r, _ : r.fulfill(path="playwright/im/equipment_icon_charm_tier9_piece.webp"))
         page.route("https://ba.game-db.tw/images/items/equipment_icon_necklace_tier9_piece.png", lambda r, _ : r.fulfill(path="playwright/im/equipment_icon_necklace_tier9_piece.webp"))
     # 拿到成长资源截图
     page.goto("https://ba.game-db.tw/")

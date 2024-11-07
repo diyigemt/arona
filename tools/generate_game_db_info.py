@@ -136,18 +136,20 @@ def run(playwright: Playwright, arr: list[str], thread_id: int):
         else:
             source_im = download_image("https://arona.cdn.diyigemt.com/image", path, local_path)
 
-        # 获取gamekee的中文翻译
-        if info["gamekee"] != "":
-            cn_info = get_cn_info_from_gamekee(playwright, info["gamekee"])
-        else:
-            cn_info = {
-                "ex_name": ""
-            }
+        # # 获取gamekee的中文翻译
+        # if info["gamekee"] != "":
+        #     cn_info = get_cn_info_from_gamekee(playwright, info["gamekee"])
+        # else:
+        #     cn_info = {
+        #         "ex_name": ""
+        #     }
         
-        # 有时候gamekee太恶心了拿不到, 手动填上
-        if jpName in cn_translate_dict:
-            cn_info.update(cn_translate_dict[jpName])
-
+        # # 有时候gamekee太恶心了拿不到, 手动填上
+        # if jpName in cn_translate_dict:
+        #     cn_info.update(cn_translate_dict[jpName])
+        cn_info = {
+            "ex_name": ""
+        }
         # 从shaledb下载 如果有爱用品信息 顺便拿到爱用品
         # 专武和学生介绍
         cn_info = fetch_data_from_schaledb(playwright, loma, cn_info, thread_id)

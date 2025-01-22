@@ -17,12 +17,12 @@ from tools import confirm_action, draw_image_source
 target = []
 
 # game-db数据更新缓慢, 使用override的数据
-use_game_db_override = False
-game_db_override_script = "https://ba.game-db.tw/static/main.b4b20375b3a8b7a49b78.js"
+use_game_db_override = True
+game_db_override_script = "https://ba.game-db.tw/static/main.f1a9bf96314c358402ad.js"
 
 sources_map = {
-    "schaledb": "部分学生信息,技能数据来源: http://schale.gg/",
-    "gamedb": "部分技能翻译,技能数据来源: https://ba.game-db.tw/",
+    "schaledb": "部分学生信息,技能数据来源: https://schaledb.com/",
+    "gamedb": "部分样式来源: https://ba.game-db.tw/",
     "gamekee": "部分技能翻译,角色翻译来源: https://ba.gamekee.com/ && https://wiki.biligame.com/ && https://kivo.wiki/",
 }
 

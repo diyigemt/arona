@@ -1019,5 +1019,20 @@
         "cnName": "睡衣诺亚",
         "loma": "noa_pajama",
         "gamekee": "https://www.gamekee.com/ba/643621.html"
+    },
+    "セイア": {
+        "cnName": "圣娅",
+        "loma": "seia",
+        "gamekee": "https://www.gamekee.com/ba/645820.html"
+    },
+    "アスナ(制服)": {
+        "cnName": "制服明日奈",
+        "loma": "asuna_uniform",
+        "gamekee": "https://www.gamekee.com/ba/645821.html"
+    },
+    "カリン(制服)": {
+        "cnName": "制服花凛",
+        "loma": "karin_uniform",
+        "gamekee": "https://www.gamekee.com/ba/645822.html"
     }
 }

@@ -471,7 +471,10 @@ def fetch_skill_data_from_schaledb(pl: Playwright, name, thread_id: int):
     weapon2_path = path_with_thread_id("./image/tmp/weapon2.png", thread_id)
     weapon_tab = page.get_by_role("button", name="固有武器")
     if weapon_tab != None:
-        weapon_tab.click()
+        try:
+            weapon_tab.click(500)
+        except Exception as _:
+            page.evaluate("() => { document.querySelectorAll('button.nav-link')[1].click() }")
     weapon_body = page.query_selector('//*[@id="weapon-2star"]/div[2]/div/div[1]')
     # 分割线
     weapon_body.evaluate("it => {const tmp = it.children[0];tmp.classList.add('pt-2');tmp.classList.add('w-100');tmp.style.borderTop = '2px solid'}")

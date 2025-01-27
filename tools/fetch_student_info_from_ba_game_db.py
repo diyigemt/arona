@@ -160,9 +160,12 @@ def fetch_data_from_schaledb(pl: Playwright, name, dict, thread_id: int):
 
     # 立绘
     # page.query_selector("#ba-student-img").screenshot(path=path_with_thread_id("./image/tmp/stu.png", thread_id), type="png")
-
     weapon_btn = page.get_by_role("button", name="固有武器")
-    weapon_btn.click()
+    if weapon_btn != None:
+        try:
+            weapon_btn.click(500)
+        except Exception as _:
+            page.evaluate("() => { document.querySelectorAll('button.nav-link')[1].click() }")
     time.sleep(2)
     weapon_name = page.query_selector('//*[@id="ba-content"]/main/div/div/div[2]/div/div[2]/div/div[1]')
     weapon_name.evaluate('el => el.style.backgroundColor = "rgb(222, 226, 230, 0.6)"')

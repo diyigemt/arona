@@ -22,8 +22,6 @@ tmp_file_path = "tmp.png"
 tmp_file_path2 = "tmp2.png"
 img_folder = "image/student_rank/"
 source_str = "巴哈姆特@夜喵貓貓咪喵(asaz5566a)"
-font_size = 28
-fnt = ImageFont.truetype('C:\Windows\Fonts\msyh.ttc', font_size)
 # offset 几行字的偏移量默认是1
 def draw_image_source(path: str, source: str, offset = 1):
     # 一律转换为png
@@ -31,6 +29,7 @@ def draw_image_source(path: str, source: str, offset = 1):
     img = img.convert("RGBA", colors=255)
     cols = img.width
     rows = img.height
+    font_size = max(12, cols / 50)
     if offset >= 1:
         mr = int(rows + font_size * offset * 1.5)
         bg = Image.new('RGBA', (cols, mr), color='white')
@@ -38,6 +37,7 @@ def draw_image_source(path: str, source: str, offset = 1):
         bg = Image.new('RGBA', (cols, rows), color='white')
     bg.paste(img, (0,0))
     draw = ImageDraw.Draw(bg)
+    fnt = ImageFont.truetype('C:\Windows\Fonts\msyh.ttc', font_size)
     draw.text((0 + 10, rows + (offset - 1) * font_size * 1.5), source, font=fnt, fill=(0,0,0))
     bg.save(path)
     bg = cv2.imdecode(np.fromfile(path, dtype=np.uint8), -1)

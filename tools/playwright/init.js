@@ -1864,7 +1864,8 @@
         ]
       ],
       "FavorAlts": [
-        10026
+        10026,
+        10111
       ],
       "ReleaseDate": "2021/02/04",
       "SubSkill": "",
@@ -5177,7 +5178,8 @@
         ]
       ],
       "FavorAlts": [
-        10053
+        10053,
+        10108
       ],
       "ReleaseDate": "2021/02/04",
       "SubSkill": "",
@@ -5591,7 +5593,8 @@
         ]
       ],
       "FavorAlts": [
-        10028
+        10028,
+        10112
       ],
       "ReleaseDate": "2021/02/04",
       "SubSkill": "",
@@ -5749,7 +5752,7 @@
         1
       ],
       "WeaponType": "MG",
-      "Gear": "",
+      "Gear": "涙こぼれるメガネ ",
       "Cover": false,
       "Range": 750,
       "Equipment": [
@@ -6366,7 +6369,7 @@
         1
       ],
       "WeaponType": "MT",
-      "Gear": "",
+      "Gear": "マイスターのゴーグル",
       "Cover": false,
       "Range": 1000,
       "Equipment": [
@@ -6426,7 +6429,7 @@
       "Name": "カリン",
       "NameEN": "Karin",
       "NameTW": "花凛",
-      "DevName": "karin",
+      "DevName": "Karin",
       "Icon": "Karin",
       "Star": 3,
       "SkillEx": [
@@ -6622,7 +6625,8 @@
         ]
       ],
       "FavorAlts": [
-        10027
+        10027,
+        26014
       ],
       "ReleaseDate": "2021/02/04",
       "SubSkill": "攻撃力",
@@ -7247,7 +7251,7 @@
       ],
       "ReleaseDate": "2021/02/04",
       "SubSkill": "会心抵抗値",
-      "SubSkillTW": "味方の暴擊抵抗力を増加"
+      "SubSkillTW": "味方の暴擊抵抗值を増加"
     },
     {
       "ID": 23002,
@@ -9467,7 +9471,7 @@
         1
       ],
       "WeaponType": "SR",
-      "Gear": "",
+      "Gear": "お話でわかる！ことわざと四字熟語講座",
       "Cover": false,
       "Range": 1000,
       "Equipment": [
@@ -9881,7 +9885,7 @@
         1
       ],
       "WeaponType": "SG",
-      "Gear": "",
+      "Gear": "思い出の茶器セット",
       "Cover": false,
       "Range": 1000,
       "Equipment": [
@@ -11183,7 +11187,7 @@
       "Name": "アズサ",
       "NameEN": "Azusa",
       "NameTW": "梓",
-      "DevName": "Azusa",
+      "DevName": "CH0056",
       "Icon": "Azusa",
       "Star": 3,
       "SkillEx": [
@@ -11390,7 +11394,7 @@
       "Name": "ハナコ",
       "NameEN": "Hanako",
       "NameTW": "花子",
-      "DevName": "Hanako",
+      "DevName": "CH0055",
       "Icon": "Hanako",
       "Star": 2,
       "SkillEx": [
@@ -11597,7 +11601,7 @@
       "Name": "コハル",
       "NameEN": "Koharu",
       "NameTW": "小春",
-      "DevName": "Koharu",
+      "DevName": "CH0057",
       "Icon": "Koharu",
       "Star": 3,
       "SkillEx": [
@@ -11804,7 +11808,7 @@
       "Name": "アズサ（水着）",
       "NameEN": "Azusa (Swimsuit)",
       "NameTW": "梓(泳裝)",
-      "DevName": "Azusa_Swimsuit",
+      "DevName": "CH0059",
       "Icon": "Azusa_Swimsuit",
       "Star": 3,
       "SkillEx": [
@@ -12011,7 +12015,7 @@
       "Name": "マシロ（水着）",
       "NameEN": "Mashiro (Swimsuit)",
       "NameTW": "麻白(泳裝)",
-      "DevName": "Mashiro_Swimsuit",
+      "DevName": "CH0061",
       "Icon": "Mashiro_Swimsuit",
       "Star": 3,
       "SkillEx": [
@@ -12218,7 +12222,7 @@
       "Name": "ツルギ（水着）",
       "NameEN": "Tsurugi (Swimsuit)",
       "NameTW": "弦生(泳裝)",
-      "DevName": "Tsurugi_Swimsuit",
+      "DevName": "CH0060",
       "Icon": "Tsurugi_Swimsuit",
       "Star": 1,
       "SkillEx": [
@@ -12425,7 +12429,7 @@
       "Name": "ヒフミ（水着）",
       "NameEN": "Hifumi (Swimsuit)",
       "NameTW": "日步美(泳裝)",
-      "DevName": "Hihumi_Swimsuit",
+      "DevName": "CH0058",
       "Icon": "Hifumi_Swimsuit",
       "Star": 3,
       "SkillEx": [
@@ -12573,7 +12577,7 @@
       ],
       "WeaponType": "AR",
       "Gear": "モモフレンズスペシャルティーポット",
-      "Cover": true,
+      "Cover": false,
       "Range": 1000,
       "Equipment": [
         1,
@@ -12987,7 +12991,7 @@
         1
       ],
       "WeaponType": "SR",
-      "Gear": "",
+      "Gear": "ふわふわ毛布",
       "Cover": true,
       "Range": 750,
       "Equipment": [
@@ -13047,7 +13051,7 @@
       "Name": "イズミ（水着）",
       "NameEN": "Izumi (Swimsuit)",
       "NameTW": "泉(泳裝)",
-      "DevName": "Izumi_swimsuit",
+      "DevName": "CH0062",
       "Icon": "Izumi_Swimsuit",
       "Star": 1,
       "SkillEx": [
@@ -13254,7 +13258,7 @@
       "Name": "シロコ（ライディング）",
       "NameEN": "Shiroko (Cycling)",
       "NameTW": "白子(單車)",
-      "DevName": "Shiroko_RidingSuit",
+      "DevName": "CH0065",
       "Icon": "Shiroko_Riding",
       "Star": 3,
       "SkillEx": [
@@ -13669,7 +13673,7 @@
       "Name": "キリノ",
       "NameEN": "Kirino",
       "NameTW": "桐乃",
-      "DevName": "Kirino",
+      "DevName": "CH0140",
       "Icon": "Kirino",
       "Star": 2,
       "SkillEx": [
@@ -13876,7 +13880,7 @@
       "Name": "サヤ（私服）",
       "NameEN": "Saya (Casual)",
       "NameTW": "沙耶(私服)",
-      "DevName": "Saya_Casual",
+      "DevName": "CH0133",
       "Icon": "Saya_Casual",
       "Star": 3,
       "SkillEx": [
@@ -14279,7 +14283,8 @@
         ]
       ],
       "FavorAlts": [
-        10008
+        10008,
+        10111
       ],
       "ReleaseDate": "2021/09/29",
       "SubSkill": "",
@@ -14486,7 +14491,8 @@
         ]
       ],
       "FavorAlts": [
-        20001
+        20001,
+        26014
       ],
       "ReleaseDate": "2021/09/29",
       "SubSkill": "",
@@ -14693,7 +14699,8 @@
         ]
       ],
       "FavorAlts": [
-        16001
+        16001,
+        10112
       ],
       "ReleaseDate": "2021/10/12",
       "SubSkill": "",
@@ -14909,7 +14916,7 @@
       "Name": "マリー",
       "NameEN": "Mari",
       "NameTW": "瑪麗",
-      "DevName": "Mari",
+      "DevName": "CH0072",
       "Icon": "Mari",
       "Star": 2,
       "SkillEx": [
@@ -15056,7 +15063,7 @@
         2
       ],
       "WeaponType": "HG",
-      "Gear": "",
+      "Gear": "潔白なコサージュ",
       "Cover": false,
       "Range": 1000,
       "Equipment": [
@@ -15105,7 +15112,8 @@
         ]
       ],
       "FavorAlts": [
-        10054
+        10054,
+        10105
       ],
       "ReleaseDate": "2021/10/27",
       "SubSkill": "HP",
@@ -15338,14 +15346,14 @@
       "FavorAlts": [],
       "ReleaseDate": "2021/11/03",
       "SubSkill": "被回復率",
-      "SubSkillTW": "味方の受回復率率を増加"
+      "SubSkillTW": "味方の受回復率を増加"
     },
     {
       "ID": 20008,
       "Name": "アコ",
       "NameEN": "Ako",
       "NameTW": "亞子",
-      "DevName": "Ako",
+      "DevName": "CH0083",
       "Icon": "Ako",
       "Star": 3,
       "SkillEx": [
@@ -15966,7 +15974,7 @@
       "Name": "トモエ",
       "NameEN": "Tomoe",
       "NameTW": "智惠",
-      "DevName": "Tomoe",
+      "DevName": "CH0120",
       "Icon": "Tomoe",
       "Star": 1,
       "SkillEx": [
@@ -16161,7 +16169,9 @@
           24
         ]
       ],
-      "FavorAlts": [],
+      "FavorAlts": [
+        20038
+      ],
       "ReleaseDate": "2021/11/30",
       "SubSkill": "",
       "SubSkillTW": ""
@@ -16378,7 +16388,7 @@
       "Name": "アル（正月）",
       "NameEN": "Aru (New Year)",
       "NameTW": "亞瑠(正月)",
-      "DevName": "Aru_Newyear",
+      "DevName": "CH0084",
       "Icon": "Aru_NewYear",
       "Star": 3,
       "SkillEx": [
@@ -16586,7 +16596,7 @@
       "Name": "ムツキ（正月）",
       "NameEN": "Mutsuki (New Year)",
       "NameTW": "無月(正月)",
-      "DevName": "Mutsuki_Newyear",
+      "DevName": "CH0085",
       "Icon": "Mutsuki_NewYear",
       "Star": 3,
       "SkillEx": [
@@ -16793,7 +16803,7 @@
       "Name": "セリカ（正月）",
       "NameEN": "Serika (New Year)",
       "NameTW": "茜香(正月)",
-      "DevName": "Serika_Newyear",
+      "DevName": "CH0090",
       "Icon": "Serika_NewYear",
       "Star": 3,
       "SkillEx": [
@@ -17001,7 +17011,7 @@
       "Name": "ワカモ",
       "NameEN": "Wakamo",
       "NameTW": "若藻",
-      "DevName": "Wakamo",
+      "DevName": "CH0111",
       "Icon": "Wakamo",
       "Star": 3,
       "SkillEx": [
@@ -17161,7 +17171,7 @@
         1,
         1
       ],
-      "IsLimited": 1,
+      "IsLimited": 3,
       "FavorStatType": [
         "AttackPower",
         "MaxHP"
@@ -17825,7 +17835,7 @@
       "Name": "ミモリ",
       "NameEN": "Mimori",
       "NameTW": "三森",
-      "DevName": "Mimori",
+      "DevName": "CH0115",
       "Icon": "Mimori",
       "Star": 3,
       "SkillEx": [
@@ -18239,7 +18249,7 @@
       "Name": "ヒナタ",
       "NameEN": "Hinata",
       "NameTW": "日向",
-      "DevName": "Hinata",
+      "DevName": "CH0073",
       "Icon": "Hinata",
       "Star": 3,
       "SkillEx": [
@@ -18446,7 +18456,7 @@
       "Name": "マリナ",
       "NameEN": "Marina",
       "NameTW": "瑪麗娜",
-      "DevName": "Marina",
+      "DevName": "CH0119",
       "Icon": "Marina",
       "Star": 3,
       "SkillEx": [
@@ -18641,7 +18651,9 @@
           2
         ]
       ],
-      "FavorAlts": [],
+      "FavorAlts": [
+        10103
+      ],
       "ReleaseDate": "2022/03/08",
       "SubSkill": "",
       "SubSkillTW": ""
@@ -18651,7 +18663,7 @@
       "Name": "ミヤコ",
       "NameEN": "Miyako",
       "NameTW": "都子",
-      "DevName": "miyako",
+      "DevName": "CH0142",
       "Icon": "Miyako",
       "Star": 3,
       "SkillEx": [
@@ -19272,7 +19284,7 @@
       "Name": "カエデ",
       "NameEN": "Kaede",
       "NameTW": "楓",
-      "DevName": "Kaede",
+      "DevName": "CH0116",
       "Icon": "Kaede",
       "Star": 3,
       "SkillEx": [
@@ -20092,7 +20104,7 @@
       "Name": "ミサキ",
       "NameEN": "Misaki",
       "NameTW": "美咲",
-      "DevName": "Misaki",
+      "DevName": "CH0105",
       "Icon": "Misaki",
       "Star": 3,
       "SkillEx": [
@@ -20297,7 +20309,7 @@
       "Name": "ヒヨリ",
       "NameEN": "Hiyori",
       "NameTW": "日和",
-      "DevName": "Hiyori",
+      "DevName": "CH0106",
       "Icon": "Hiyori",
       "Star": 3,
       "SkillEx": [
@@ -20504,7 +20516,7 @@
       "Name": "アツコ",
       "NameEN": "Atsuko",
       "NameTW": "敦子",
-      "DevName": "Atsuko",
+      "DevName": "CH0104",
       "Icon": "Atsuko",
       "Star": 3,
       "SkillEx": [
@@ -21332,7 +21344,7 @@
       "Name": "ホシノ（水着）",
       "NameEN": "Hoshino (Swimsuit)",
       "NameTW": "星野(泳裝)",
-      "DevName": "Hoshino_Swimsuit",
+      "DevName": "CH0091",
       "Icon": "Hoshino_Swimsuit",
       "Star": 3,
       "SkillEx": [
@@ -21492,7 +21504,7 @@
         1,
         1
       ],
-      "IsLimited": 1,
+      "IsLimited": 3,
       "FavorStatType": [
         "AttackPower",
         "DefensePower"
@@ -22161,7 +22173,7 @@
       "Name": "サオリ",
       "NameEN": "Saori",
       "NameTW": "沙織",
-      "DevName": "Saori",
+      "DevName": "CH0103",
       "Icon": "Saori",
       "Star": 3,
       "SkillEx": [
@@ -22368,7 +22380,7 @@
       "Name": "モエ",
       "NameEN": "Moe",
       "NameTW": "萌",
-      "DevName": "Moe",
+      "DevName": "CH0143",
       "Icon": "Moe",
       "Star": 3,
       "SkillEx": [
@@ -22575,7 +22587,7 @@
       "Name": "カズサ",
       "NameEN": "Kazusa",
       "NameTW": "千紗",
-      "DevName": "Kazusa",
+      "DevName": "CH0075",
       "Icon": "Kazusa",
       "Star": 3,
       "SkillEx": [
@@ -23389,7 +23401,9 @@
           34
         ]
       ],
-      "FavorAlts": [],
+      "FavorAlts": [
+        10109
+      ],
       "ReleaseDate": "2022/09/28",
       "SubSkill": "",
       "SubSkillTW": ""
@@ -24009,7 +24023,8 @@
         ]
       ],
       "FavorAlts": [
-        13010
+        13010,
+        10108
       ],
       "ReleaseDate": "2022/10/26",
       "SubSkill": "",
@@ -24216,7 +24231,8 @@
         ]
       ],
       "FavorAlts": [
-        23008
+        23008,
+        10105
       ],
       "ReleaseDate": "2022/10/26",
       "SubSkill": "",
@@ -24639,7 +24655,7 @@
       "Name": "シグレ",
       "NameEN": "Shigure",
       "NameTW": "時雨",
-      "DevName": "Shigure",
+      "DevName": "CH0122",
       "Icon": "Shigure",
       "Star": 3,
       "SkillEx": [
@@ -26077,7 +26093,9 @@
           60
         ]
       ],
-      "FavorAlts": [],
+      "FavorAlts": [
+        16016
+      ],
       "ReleaseDate": "2023/01/11",
       "SubSkill": "",
       "SubSkillTW": ""
@@ -26247,7 +26265,7 @@
         1,
         1
       ],
-      "IsLimited": 1,
+      "IsLimited": 3,
       "FavorStatType": [
         "AttackPower",
         "MaxHP"
@@ -26704,7 +26722,7 @@
       "Name": "サクラコ",
       "NameEN": "Sakurako",
       "NameTW": "櫻子",
-      "DevName": "Sakurako",
+      "DevName": "CH0067",
       "Icon": "Sakurako",
       "Star": 3,
       "SkillEx": [
@@ -26899,7 +26917,9 @@
           29
         ]
       ],
-      "FavorAlts": [],
+      "FavorAlts": [
+        10106
+      ],
       "ReleaseDate": "2023/02/10",
       "SubSkill": "",
       "SubSkillTW": ""
@@ -27056,7 +27076,7 @@
         1
       ],
       "WeaponType": "AR",
-      "Gear": "",
+      "Gear": "高性能ヘッドセット",
       "Cover": false,
       "Range": 650,
       "Equipment": [
@@ -27116,7 +27136,7 @@
       "Name": "ナギサ",
       "NameEN": "Nagisa",
       "NameTW": "渚",
-      "DevName": "Nagisa",
+      "DevName": "CH0068",
       "Icon": "Nagisa",
       "Star": 3,
       "SkillEx": [
@@ -31197,7 +31217,7 @@
         1,
         1
       ],
-      "IsLimited": 1,
+      "IsLimited": 3,
       "FavorStatType": [
         "AttackPower",
         "MaxHP"
@@ -31656,7 +31676,7 @@
       "Name": "モミジ",
       "NameEN": "Momiji",
       "NameTW": "紅葉",
-      "DevName": "Momiji",
+      "DevName": "CH0126",
       "Icon": "Momiji",
       "Star": 2,
       "SkillEx": [
@@ -35593,7 +35613,7 @@
         0,
         0
       ],
-      "IsLimited": 1,
+      "IsLimited": 3,
       "FavorStatType": [
         "AttackPower",
         "MaxHP"
@@ -36675,7 +36695,7 @@
       "ID": 10091,
       "Name": "カズサ（バンド）",
       "NameEN": "Kazusa (Band)",
-      "NameTW": "千紗(樂隊)",
+      "NameTW": "千紗(樂團)",
       "DevName": "CH0250",
       "Icon": "Kazusa_Band",
       "Star": 3,
@@ -36882,7 +36902,7 @@
       "ID": 10092,
       "Name": "ヨシミ（バンド）",
       "NameEN": "Yoshimi (Band)",
-      "NameTW": "喜美(樂隊)",
+      "NameTW": "喜美(樂團)",
       "DevName": "CH0220",
       "Icon": "Yoshimi_Band",
       "Star": 3,
@@ -37089,7 +37109,7 @@
       "ID": 16015,
       "Name": "アイリ（バンド）",
       "NameEN": "Airi (Band)",
-      "NameTW": "愛莉(樂隊)",
+      "NameTW": "愛莉(樂團)",
       "DevName": "CH0251",
       "Icon": "Airi_Band",
       "Star": 1,
@@ -37297,7 +37317,7 @@
       "Name": "キララ",
       "NameEN": "Kirara",
       "NameTW": "綺羅羅",
-      "DevName": "kirara",
+      "DevName": "CH0136",
       "Icon": "Kirara",
       "Star": 3,
       "SkillEx": [
@@ -38950,10 +38970,10 @@
     {
       "ID": 10098,
       "Name": "ホシノ（臨戦）",
-      "NameEN": "Hoshino (Battle)",
-      "NameTW": "星野(臨戰)",
+      "NameEN": "Hoshino (Armed)",
+      "NameTW": "星野(武裝)",
       "DevName": "CH0258_02",
-      "Icon": "Hoshino_Battle",
+      "Icon": "Hoshino_Armed",
       "Star": 3,
       "SkillEx": [
         [
@@ -39112,7 +39132,7 @@
         0,
         0
       ],
-      "IsLimited": 1,
+      "IsLimited": 3,
       "FavorStatType": [
         "AttackPower",
         "MaxHP"
@@ -39158,10 +39178,10 @@
     {
       "ID": 10099,
       "Name": "ホシノ（臨戦）",
-      "NameEN": "Hoshino (Battle)",
-      "NameTW": "星野(臨戰)",
+      "NameEN": "Hoshino (Armed)",
+      "NameTW": "星野(武裝)",
       "DevName": "CH0258_01",
-      "Icon": "Hoshino_Battle",
+      "Icon": "Hoshino_Armed",
       "Star": 3,
       "SkillEx": [
         [
@@ -39320,7 +39340,7 @@
         0,
         0
       ],
-      "IsLimited": 1,
+      "IsLimited": 3,
       "FavorStatType": [
         "AttackPower",
         "MaxHP"
@@ -39366,10 +39386,10 @@
     {
       "ID": 10100,
       "Name": "シロコ＊テラー",
-      "NameEN": "Shiroko Terror",
-      "NameTW": "白子＊恐怖",
+      "NameEN": "Shiroko*Terror",
+      "NameTW": "白子＊TERROR",
       "DevName": "CH0263",
-      "Icon": "ShirokoTerror",
+      "Icon": "Shiroko*Terror",
       "Star": 3,
       "SkillEx": [
         [
@@ -39528,7 +39548,7 @@
         0,
         0
       ],
-      "IsLimited": 1,
+      "IsLimited": 3,
       "FavorStatType": [
         "AttackPower",
         "MaxHP"
@@ -40192,69 +40212,167 @@
     {
       "ID": 10103,
       "Name": "マリナ（チーパオ）",
-      "NameEN": "CH0270",
-      "NameTW": "玛利娜（旗袍）",
+      "NameEN": "Marina (Qipao)",
+      "NameTW": "瑪麗娜(旗袍)",
       "DevName": "CH0270",
-      "Icon": "Aru",
+      "Icon": "Marina_Qipao",
       "Star": 3,
-      "SkillEx": [[3010, 120],
-      [3011, 3010, 121, 220],
-      [3012, 3011, 122, 221],
-      [3013, 3012, 123, 222]],
+      "SkillEx": [
+        [
+          3010,
+          120
+        ],
+        [
+          3011,
+          3010,
+          121,
+          220
+        ],
+        [
+          3012,
+          3011,
+          122,
+          221
+        ],
+        [
+          3013,
+          3012,
+          123,
+          222
+        ]
+      ],
       "SkillExAmount": [
-        [12, 14],
-        [12, 18, 14, 30],
-        [12, 18, 11, 25],
-        [8, 18, 12, 17]
+        [
+          12,
+          14
+        ],
+        [
+          12,
+          18,
+          14,
+          30
+        ],
+        [
+          12,
+          18,
+          11,
+          25
+        ],
+        [
+          8,
+          18,
+          12,
+          17
+        ]
       ],
       "Skill": [
-        [4010],
-        [4010],
-        [4011, 4010, 120],
-        [4011, 121, 220],
-        [4012, 4011, 121, 220],
-        [4012, 122, 221],
-        [4013, 4012, 123, 222],
-        [4013, 123, 222]
+        [
+          4010
+        ],
+        [
+          4010
+        ],
+        [
+          4011,
+          4010,
+          120
+        ],
+        [
+          4011,
+          121,
+          220
+        ],
+        [
+          4012,
+          4011,
+          121,
+          220
+        ],
+        [
+          4012,
+          122,
+          221
+        ],
+        [
+          4013,
+          4012,
+          123,
+          222
+        ],
+        [
+          4013,
+          123,
+          222
+        ]
       ],
       "SkillAmount": [
-        [5],
-        [8],
-        [5, 12, 6],
-        [8, 6, 15],
-        [5, 12, 8, 16],
-        [8, 3, 17],
-        [8, 12, 5, 10],
-        [12, 7, 12]
+        [
+          5
+        ],
+        [
+          8
+        ],
+        [
+          5,
+          12,
+          6
+        ],
+        [
+          8,
+          6,
+          15
+        ],
+        [
+          5,
+          12,
+          8,
+          16
+        ],
+        [
+          8,
+          3,
+          17
+        ],
+        [
+          8,
+          12,
+          5,
+          10
+        ],
+        [
+          12,
+          7,
+          12
+        ]
       ],
-      "School": "Gehenna",
+      "School": "RedWinter",
       "Class": 1,
       "Role": "アタッカー",
-      "Position": "Back",
-      "BulletType": 1,
-      "ArmorType": 1,
+      "Position": "Front",
+      "BulletType": 2,
+      "ArmorType": 2,
       "Adaptatio": [
+        0,
         4,
-        2,
-        0
+        2
       ],
       "WeaponAdaptatio": [
-        1,
+        2,
         1
       ],
-      "WeaponType": "SR",
-      "Gear": "アルのすごく貴重な財布",
+      "WeaponType": "SMG",
+      "Gear": "",
       "Cover": true,
-      "Range": 750,
+      "Range": 350,
       "Equipment": [
-        1,
+        2,
         6,
         8
       ],
       "SkillDetails": [
         1,
-        1,
-        1
+        0,
+        0
       ],
       "IsLimited": 0,
       "FavorStatType": [
@@ -40263,37 +40381,36 @@
       ],
       "FavorStatValue": [
         [
+          3,
+          0
+        ],
+        [
           4,
           0
         ],
         [
-          6,
-          0
+          5,
+          79
         ],
         [
           7,
-          48
-        ],
-        [
-          9,
-          58
+          95
         ],
         [
           2,
-          10
+          16
+        ],
+        [
+          2,
+          23
         ],
         [
           4,
-          15
-        ],
-        [
-          6,
-          25
+          39
         ]
       ],
       "FavorAlts": [
-        10031,
-        10089
+        10037
       ],
       "ReleaseDate": "2024/08/21",
       "SubSkill": "",
@@ -40302,122 +40419,217 @@
     {
       "ID": 20038,
       "Name": "トモエ（チーパオ）",
-      "NameEN": "CH0271",
-      "NameTW": "智惠（旗袍）",
+      "NameEN": "Tomoe (Qipao)",
+      "NameTW": "智惠(旗袍)",
       "DevName": "CH0271",
-      "Icon": "Aru",
+      "Icon": "Tomoe_Qipao",
       "Star": 3,
       "SkillEx": [
-        [3010, 270],
-        [3011, 3010, 271, 200],
-        [3012, 3011, 272, 201],
-        [3013, 3012, 273, 202]
+        [
+          3010,
+          270
+        ],
+        [
+          3011,
+          3010,
+          271,
+          200
+        ],
+        [
+          3012,
+          3011,
+          272,
+          201
+        ],
+        [
+          3013,
+          3012,
+          273,
+          202
+        ]
       ],
       "SkillExAmount": [
-        [12, 17],
-        [12, 18, 12, 33],
-        [12, 18, 16, 22],
-        [8, 18, 11, 19]
+        [
+          12,
+          17
+        ],
+        [
+          12,
+          18,
+          12,
+          33
+        ],
+        [
+          12,
+          18,
+          16,
+          22
+        ],
+        [
+          8,
+          18,
+          11,
+          19
+        ]
       ],
       "Skill": [
-        [4010],
-        [4010],
-        [4011, 4010, 270],
-        [4011, 271, 200],
-        [4012, 4011, 271, 200],
-        [4012, 272, 201],
-        [4013, 4012, 273, 202],
-        [4013, 273, 202]
+        [
+          4010
+        ],
+        [
+          4010
+        ],
+        [
+          4011,
+          4010,
+          270
+        ],
+        [
+          4011,
+          271,
+          200
+        ],
+        [
+          4012,
+          4011,
+          271,
+          200
+        ],
+        [
+          4012,
+          272,
+          201
+        ],
+        [
+          4013,
+          4012,
+          273,
+          202
+        ],
+        [
+          4013,
+          273,
+          202
+        ]
       ],
       "SkillAmount": [
-        [5],
-        [8],
-        [5, 12, 5],
-        [8, 6, 14],
-        [5, 12, 7, 15],
-        [8, 2, 19],
-        [8, 12, 5, 8],
-        [12, 6, 13]
+        [
+          5
+        ],
+        [
+          8
+        ],
+        [
+          5,
+          12,
+          5
+        ],
+        [
+          8,
+          6,
+          14
+        ],
+        [
+          5,
+          12,
+          7,
+          15
+        ],
+        [
+          8,
+          2,
+          19
+        ],
+        [
+          8,
+          12,
+          5,
+          8
+        ],
+        [
+          12,
+          6,
+          13
+        ]
       ],
-      "School": "Gehenna",
-      "Class": 1,
-      "Role": "アタッカー",
+      "School": "RedWinter",
+      "Class": 2,
+      "Role": "サポーター",
       "Position": "Back",
-      "BulletType": 1,
-      "ArmorType": 1,
+      "BulletType": 3,
+      "ArmorType": 3,
       "Adaptatio": [
-        4,
+        0,
         2,
-        0
+        4
       ],
       "WeaponAdaptatio": [
-        1,
+        3,
         1
       ],
       "WeaponType": "SR",
-      "Gear": "アルのすごく貴重な財布",
-      "Cover": true,
-      "Range": 750,
+      "Gear": "",
+      "Cover": false,
+      "Range": 1000,
       "Equipment": [
-        1,
-        6,
-        8
+        3,
+        5,
+        9
       ],
       "SkillDetails": [
         1,
-        1,
-        1
+        0,
+        0
       ],
       "IsLimited": 0,
       "FavorStatType": [
-        "AttackPower",
+        "HealPower",
         "MaxHP"
       ],
       "FavorStatValue": [
         [
-          4,
+          5,
           0
         ],
         [
-          6,
+          8,
           0
         ],
         [
-          7,
-          48
+          10,
+          54
         ],
         [
-          9,
-          58
+          13,
+          64
         ],
         [
-          2,
-          10
+          3,
+          11
         ],
         [
-          4,
-          15
+          5,
+          16
         ],
         [
-          6,
-          25
+          8,
+          27
         ]
       ],
       "FavorAlts": [
-        10031,
-        10089
+        16007
       ],
       "ReleaseDate": "2024/08/21",
-      "SubSkill": "",
-      "SubSkillTW": ""
+      "SubSkill": "攻撃力（神秘タイプ）",
+      "SubSkillTW": "攻擊力（神秘類型）"
     },
     {
       "ID": 10104,
       "Name": "レイジョ",
-      "NameEN": "CH0134",
-      "NameTW": "丽情",
+      "NameEN": "Reijo",
+      "NameTW": "令女",
       "DevName": "CH0134",
-      "Icon": "Aru",
+      "Icon": "Reijo",
       "Star": 3,
       "SkillEx": [
         [
@@ -40547,25 +40759,25 @@
           11
         ]
       ],
-      "School": "Gehenna",
+      "School": "Shanhaijing",
       "Class": 1,
-      "Role": "アタッカー",
-      "Position": "Back",
-      "BulletType": 1,
-      "ArmorType": 1,
+      "Role": "サポーター",
+      "Position": "Middle",
+      "BulletType": 3,
+      "ArmorType": 2,
       "Adaptatio": [
+        0,
         4,
-        2,
-        0
+        2
       ],
       "WeaponAdaptatio": [
-        1,
+        2,
         1
       ],
-      "WeaponType": "SR",
-      "Gear": "アルのすごく貴重な財布",
+      "WeaponType": "AR",
+      "Gear": "",
       "Cover": true,
-      "Range": 750,
+      "Range": 650,
       "Equipment": [
         2,
         6,
@@ -40573,8 +40785,8 @@
       ],
       "SkillDetails": [
         1,
-        1,
-        1
+        0,
+        0
       ],
       "IsLimited": 0,
       "FavorStatType": [
@@ -40591,41 +40803,38 @@
           0
         ],
         [
-          7,
+          8,
           48
         ],
         [
-          9,
-          58
+          10,
+          57
         ],
         [
           2,
-          10
+          9
         ],
         [
           4,
-          15
+          14
         ],
         [
           6,
-          25
+          24
         ]
       ],
-      "FavorAlts": [
-        10031,
-        10089
-      ],
-      "ReleaseDate": "2024/08/21",
+      "FavorAlts": [],
+      "ReleaseDate": "2024/09/25",
       "SubSkill": "",
       "SubSkillTW": ""
     },
     {
       "ID": 20039,
       "Name": "キサキ",
-      "NameEN": "CH0139",
-      "NameTW": "妃咲",
+      "NameEN": "Kisaki",
+      "NameTW": "妃姬",
       "DevName": "CH0139",
-      "Icon": "Aru",
+      "Icon": "Kisaki",
       "Star": 3,
       "SkillEx": [
         [
@@ -40755,25 +40964,25 @@
           12
         ]
       ],
-      "School": "Gehenna",
-      "Class": 1,
-      "Role": "アタッカー",
+      "School": "Shanhaijing",
+      "Class": 2,
+      "Role": "サポーター",
       "Position": "Back",
-      "BulletType": 1,
-      "ArmorType": 1,
+      "BulletType": 4,
+      "ArmorType": 4,
       "Adaptatio": [
-        4,
         2,
-        0
+        0,
+        4
       ],
       "WeaponAdaptatio": [
-        1,
+        3,
         1
       ],
-      "WeaponType": "SR",
-      "Gear": "アルのすごく貴重な財布",
-      "Cover": true,
-      "Range": 750,
+      "WeaponType": "SMG",
+      "Gear": "",
+      "Cover": false,
+      "Range": 1000,
       "Equipment": [
         3,
         5,
@@ -40781,59 +40990,56 @@
       ],
       "SkillDetails": [
         1,
-        1,
-        1
+        0,
+        0
       ],
       "IsLimited": 0,
       "FavorStatType": [
-        "AttackPower",
-        "MaxHP"
+        "HealPower",
+        "AttackPower"
       ],
       "FavorStatValue": [
         [
-          4,
+          5,
           0
         ],
         [
-          6,
+          8,
           0
         ],
         [
-          7,
-          48
+          10,
+          6
         ],
         [
-          9,
-          58
+          13,
+          7
         ],
         [
-          2,
-          10
+          3,
+          1
         ],
         [
-          4,
-          15
+          5,
+          2
         ],
         [
-          6,
-          25
+          8,
+          3
         ]
       ],
-      "FavorAlts": [
-        10031,
-        10089
-      ],
-      "ReleaseDate": "2024/08/21",
-      "SubSkill": "",
-      "SubSkillTW": ""
+      "FavorAlts": [],
+      "ReleaseDate": "2024/09/25",
+      "SubSkill": "コスト回復力",
+      "SubSkillTW": "味方のCOST回復力を増加"
     },
     {
       "ID": 10105,
-      "Name": "マリー(アイドル)",
-      "NameEN": "CH0273",
-      "NameTW": "玛丽（偶像）",
+      "Name": "マリー（アイドル）",
+      "NameEN": "Mari (Idol)",
+      "NameTW": "瑪麗(偶像)",
       "DevName": "CH0273",
-      "Icon": "Aru",
+      "Icon": "Mari_Idol",
       "Star": 3,
       "SkillEx": [
         [
@@ -40963,25 +41169,25 @@
           14
         ]
       ],
-      "School": "Gehenna",
+      "School": "Trinity",
       "Class": 1,
-      "Role": "アタッカー",
-      "Position": "Back",
+      "Role": "ヒーラー",
+      "Position": "Middle",
       "BulletType": 1,
-      "ArmorType": 1,
+      "ArmorType": 2,
       "Adaptatio": [
+        0,
         4,
-        2,
-        0
+        2
       ],
       "WeaponAdaptatio": [
-        1,
+        2,
         1
       ],
-      "WeaponType": "SR",
-      "Gear": "アルのすごく貴重な財布",
+      "WeaponType": "HG",
+      "Gear": "",
       "Cover": true,
-      "Range": 750,
+      "Range": 550,
       "Equipment": [
         3,
         6,
@@ -40989,59 +41195,59 @@
       ],
       "SkillDetails": [
         1,
-        1,
-        1
+        0,
+        0
       ],
-      "IsLimited": 0,
+      "IsLimited": 1,
       "FavorStatType": [
-        "AttackPower",
+        "HealPower",
         "MaxHP"
       ],
       "FavorStatValue": [
         [
-          4,
-          0
-        ],
-        [
-          6,
-          0
-        ],
-        [
           7,
-          48
+          0
         ],
         [
-          9,
-          58
+          10,
+          0
         ],
         [
-          2,
-          10
+          14,
+          65
+        ],
+        [
+          17,
+          79
         ],
         [
           4,
-          15
+          13
         ],
         [
           6,
-          25
+          19
+        ],
+        [
+          10,
+          32
         ]
       ],
       "FavorAlts": [
-        10031,
-        10089
+        23008,
+        10054
       ],
-      "ReleaseDate": "2024/08/21",
+      "ReleaseDate": "2024/10/23",
       "SubSkill": "",
       "SubSkillTW": ""
     },
     {
       "ID": 10106,
-      "Name": "サクラコ(アイドル)",
-      "NameEN": "CH0274",
-      "NameTW": "樱子（偶像）",
+      "Name": "サクラコ（アイドル）",
+      "NameEN": "Sakurako (Idol)",
+      "NameTW": "櫻子(偶像)",
       "DevName": "CH0274",
-      "Icon": "Aru",
+      "Icon": "Sakurako_Idol",
       "Star": 3,
       "SkillEx": [
         [
@@ -41171,25 +41377,25 @@
           13
         ]
       ],
-      "School": "Gehenna",
+      "School": "Trinity",
       "Class": 1,
-      "Role": "アタッカー",
-      "Position": "Back",
+      "Role": "サポーター",
+      "Position": "Middle",
       "BulletType": 1,
-      "ArmorType": 1,
+      "ArmorType": 2,
       "Adaptatio": [
+        0,
         4,
-        2,
-        0
+        2
       ],
       "WeaponAdaptatio": [
-        1,
+        2,
         1
       ],
-      "WeaponType": "SR",
-      "Gear": "アルのすごく貴重な財布",
+      "WeaponType": "AR",
+      "Gear": "",
       "Cover": true,
-      "Range": 750,
+      "Range": 650,
       "Equipment": [
         2,
         6,
@@ -41197,60 +41403,59 @@
       ],
       "SkillDetails": [
         1,
-        1,
-        1
+        0,
+        0
       ],
-      "IsLimited": 0,
+      "IsLimited": 1,
       "FavorStatType": [
         "AttackPower",
         "MaxHP"
       ],
       "FavorStatValue": [
         [
+          3,
+          0
+        ],
+        [
           4,
           0
         ],
         [
-          6,
-          0
+          5,
+          56
         ],
         [
           7,
-          48
-        ],
-        [
-          9,
-          58
+          67
         ],
         [
           2,
-          10
+          11
+        ],
+        [
+          2,
+          17
         ],
         [
           4,
-          15
-        ],
-        [
-          6,
-          25
+          28
         ]
       ],
       "FavorAlts": [
-        10031,
-        10089
+        10061
       ],
-      "ReleaseDate": "2024/08/21",
+      "ReleaseDate": "2024/10/23",
       "SubSkill": "",
       "SubSkillTW": ""
     },
     {
       "ID": 16016,
-      "Name": "ミネ(アイドル)",
-      "NameEN": "CH0275",
-      "NameTW": "美祢（偶像）",
+      "Name": "ミネ（アイドル）",
+      "NameEN": "Mine (Idol)",
+      "NameTW": "美禰(偶像)",
       "DevName": "CH0275",
-      "Icon": "Aru",
-      "Star": 3,
+      "Icon": "Mine_Idol",
+      "Star": 1,
       "SkillEx": [
         [
           3020,
@@ -41379,25 +41584,25 @@
           15
         ]
       ],
-      "School": "Gehenna",
+      "School": "Trinity",
       "Class": 1,
-      "Role": "アタッカー",
-      "Position": "Back",
+      "Role": "タンク",
+      "Position": "Front",
       "BulletType": 1,
-      "ArmorType": 1,
+      "ArmorType": 2,
       "Adaptatio": [
-        4,
         2,
-        0
+        2,
+        2
       ],
       "WeaponAdaptatio": [
-        1,
+        2,
         1
       ],
-      "WeaponType": "SR",
-      "Gear": "アルのすごく貴重な財布",
-      "Cover": true,
-      "Range": 750,
+      "WeaponType": "SG",
+      "Gear": "",
+      "Cover": false,
+      "Range": 350,
       "Equipment": [
         3,
         4,
@@ -41405,59 +41610,58 @@
       ],
       "SkillDetails": [
         1,
-        1,
-        1
+        0,
+        0
       ],
-      "IsLimited": 0,
+      "IsLimited": 2,
       "FavorStatType": [
-        "AttackPower",
-        "MaxHP"
+        "MaxHP",
+        "AttackPower"
       ],
       "FavorStatValue": [
         [
-          4,
+          50,
           0
         ],
         [
-          6,
+          75,
           0
         ],
         [
-          7,
-          48
+          100,
+          5
         ],
         [
-          9,
-          58
+          124,
+          6
         ],
         [
-          2,
-          10
+          31,
+          1
         ],
         [
-          4,
-          15
+          46,
+          2
         ],
         [
-          6,
-          25
+          76,
+          2
         ]
       ],
       "FavorAlts": [
-        10031,
-        10089
+        10058
       ],
-      "ReleaseDate": "2024/08/21",
+      "ReleaseDate": "2024/10/23",
       "SubSkill": "",
       "SubSkillTW": ""
     },
     {
       "ID": 10107,
       "Name": "チアキ",
-      "NameEN": "CH0238",
+      "NameEN": "Chiaki",
       "NameTW": "千秋",
       "DevName": "CH0238",
-      "Icon": "Aru",
+      "Icon": "Chiaki",
       "Star": 3,
       "SkillEx": [
         [
@@ -41590,22 +41794,22 @@
       "School": "Gehenna",
       "Class": 1,
       "Role": "アタッカー",
-      "Position": "Back",
-      "BulletType": 1,
-      "ArmorType": 1,
+      "Position": "Middle",
+      "BulletType": 4,
+      "ArmorType": 3,
       "Adaptatio": [
         4,
-        2,
-        0
+        0,
+        2
       ],
       "WeaponAdaptatio": [
         1,
         1
       ],
-      "WeaponType": "SR",
-      "Gear": "アルのすごく貴重な財布",
+      "WeaponType": "AR",
+      "Gear": "",
       "Cover": true,
-      "Range": 750,
+      "Range": 650,
       "Equipment": [
         1,
         6,
@@ -41613,8 +41817,8 @@
       ],
       "SkillDetails": [
         1,
-        1,
-        1
+        0,
+        0
       ],
       "IsLimited": 0,
       "FavorStatType": [
@@ -41623,49 +41827,46 @@
       ],
       "FavorStatValue": [
         [
+          3,
+          0
+        ],
+        [
           4,
           0
         ],
         [
           6,
-          0
+          55
         ],
         [
           7,
-          48
-        ],
-        [
-          9,
-          58
+          66
         ],
         [
           2,
-          10
+          11
+        ],
+        [
+          3,
+          16
         ],
         [
           4,
-          15
-        ],
-        [
-          6,
-          25
+          27
         ]
       ],
-      "FavorAlts": [
-        10031,
-        10089
-      ],
-      "ReleaseDate": "2024/08/21",
+      "FavorAlts": [],
+      "ReleaseDate": "2024/11/20",
       "SubSkill": "",
       "SubSkillTW": ""
     },
     {
       "ID": 20040,
       "Name": "サツキ",
-      "NameEN": "CH0080",
+      "NameEN": "Satsuki",
       "NameTW": "皋月",
       "DevName": "CH0080",
-      "Icon": "Aru",
+      "Icon": "Satsuki",
       "Star": 3,
       "SkillEx": [
         [
@@ -41796,24 +41997,24 @@
         ]
       ],
       "School": "Gehenna",
-      "Class": 1,
+      "Class": 2,
       "Role": "アタッカー",
       "Position": "Back",
       "BulletType": 1,
-      "ArmorType": 1,
+      "ArmorType": 2,
       "Adaptatio": [
-        4,
         2,
+        4,
         0
       ],
       "WeaponAdaptatio": [
-        1,
+        2,
         1
       ],
-      "WeaponType": "SR",
-      "Gear": "アルのすごく貴重な財布",
-      "Cover": true,
-      "Range": 750,
+      "WeaponType": "HG",
+      "Gear": "",
+      "Cover": false,
+      "Range": 1000,
       "Equipment": [
         1,
         4,
@@ -41821,8 +42022,8 @@
       ],
       "SkillDetails": [
         1,
-        1,
-        1
+        0,
+        0
       ],
       "IsLimited": 0,
       "FavorStatType": [
@@ -41831,49 +42032,46 @@
       ],
       "FavorStatValue": [
         [
-          4,
+          3,
+          0
+        ],
+        [
+          5,
           0
         ],
         [
           6,
-          0
+          37
         ],
         [
-          7,
-          48
-        ],
-        [
-          9,
-          58
+          8,
+          44
         ],
         [
           2,
-          10
+          7
         ],
         [
-          4,
-          15
+          3,
+          11
         ],
         [
-          6,
-          25
+          5,
+          18
         ]
       ],
-      "FavorAlts": [
-        10031,
-        10089
-      ],
-      "ReleaseDate": "2024/08/21",
-      "SubSkill": "",
-      "SubSkillTW": ""
+      "FavorAlts": [],
+      "ReleaseDate": "2024/11/20",
+      "SubSkill": "攻撃力",
+      "SubSkillTW": "味方の攻擊力を増加"
     },
     {
       "ID": 10108,
       "Name": "ユウカ（パジャマ）",
-      "NameEN": "CH0284",
-      "NameTW": "优香（睡衣）",
+      "NameEN": "Yuuka (Pajamas)",
+      "NameTW": "優香(睡衣)",
       "DevName": "CH0284",
-      "Icon": "Aru",
+      "Icon": "Yuuka_Pajamas",
       "Star": 3,
       "SkillEx": [
         [
@@ -42003,25 +42201,25 @@
           13
         ]
       ],
-      "School": "Gehenna",
+      "School": "Millennium",
       "Class": 1,
-      "Role": "アタッカー",
-      "Position": "Back",
+      "Role": "タンク",
+      "Position": "Front",
       "BulletType": 1,
-      "ArmorType": 1,
+      "ArmorType": 2,
       "Adaptatio": [
+        0,
         4,
-        2,
-        0
+        2
       ],
       "WeaponAdaptatio": [
-        1,
+        2,
         1
       ],
-      "WeaponType": "SR",
-      "Gear": "アルのすごく貴重な財布",
+      "WeaponType": "SMG",
+      "Gear": "",
       "Cover": true,
-      "Range": 750,
+      "Range": 450,
       "Equipment": [
         3,
         4,
@@ -42029,59 +42227,59 @@
       ],
       "SkillDetails": [
         1,
-        1,
-        1
+        0,
+        0
       ],
       "IsLimited": 0,
       "FavorStatType": [
-        "AttackPower",
-        "MaxHP"
+        "MaxHP",
+        "AttackPower"
       ],
       "FavorStatValue": [
         [
-          4,
+          39,
           0
         ],
         [
-          6,
+          59,
           0
         ],
         [
-          7,
-          48
+          79,
+          4
         ],
         [
-          9,
-          58
+          98,
+          5
         ],
         [
-          2,
-          10
+          24,
+          1
         ],
         [
-          4,
-          15
+          36,
+          1
         ],
         [
-          6,
-          25
+          60,
+          2
         ]
       ],
       "FavorAlts": [
-        10031,
-        10089
+        13010,
+        10053
       ],
-      "ReleaseDate": "2024/08/21",
+      "ReleaseDate": "2024/12/24",
       "SubSkill": "",
       "SubSkillTW": ""
     },
     {
       "ID": 10109,
       "Name": "ノア（パジャマ）",
-      "NameEN": "CH0285",
-      "NameTW": "诺亚（睡衣）",
+      "NameEN": "Noa (Pajamas)",
+      "NameTW": "乃愛(睡衣)",
       "DevName": "CH0285",
-      "Icon": "Aru",
+      "Icon": "Noa_Pajamas",
       "Star": 3,
       "SkillEx": [
         [
@@ -42211,25 +42409,25 @@
           14
         ]
       ],
-      "School": "Gehenna",
+      "School": "Millennium",
       "Class": 1,
       "Role": "アタッカー",
-      "Position": "Back",
-      "BulletType": 1,
+      "Position": "Middle",
+      "BulletType": 2,
       "ArmorType": 1,
       "Adaptatio": [
-        4,
         2,
+        4,
         0
       ],
       "WeaponAdaptatio": [
-        1,
+        2,
         1
       ],
-      "WeaponType": "SR",
-      "Gear": "アルのすごく貴重な財布",
+      "WeaponType": "HG",
+      "Gear": "",
       "Cover": true,
-      "Range": 750,
+      "Range": 550,
       "Equipment": [
         2,
         6,
@@ -42237,8 +42435,8 @@
       ],
       "SkillDetails": [
         1,
-        1,
-        1
+        0,
+        0
       ],
       "IsLimited": 0,
       "FavorStatType": [
@@ -42247,49 +42445,48 @@
       ],
       "FavorStatValue": [
         [
-          4,
+          1,
           0
-        ],
-        [
-          6,
-          0
-        ],
-        [
-          7,
-          48
-        ],
-        [
-          9,
-          58
         ],
         [
           2,
-          10
+          0
+        ],
+        [
+          3,
+          62
         ],
         [
           4,
-          15
+          75
         ],
         [
-          6,
-          25
+          1,
+          12
+        ],
+        [
+          1,
+          18
+        ],
+        [
+          2,
+          31
         ]
       ],
       "FavorAlts": [
-        10031,
-        10089
+        10052
       ],
-      "ReleaseDate": "2024/08/21",
+      "ReleaseDate": "2024/12/24",
       "SubSkill": "",
       "SubSkillTW": ""
     },
     {
       "ID": 10110,
       "Name": "セイア",
-      "NameEN": "CH0070",
-      "NameTW": "圣娅",
+      "NameEN": "Seia",
+      "NameTW": "聖亞",
       "DevName": "CH0070",
-      "Icon": "Aru",
+      "Icon": "Seia",
       "Star": 3,
       "SkillEx": [
         [
@@ -42419,25 +42616,25 @@
           12
         ]
       ],
-      "School": "Gehenna",
+      "School": "Trinity",
       "Class": 1,
-      "Role": "アタッカー",
-      "Position": "Back",
-      "BulletType": 1,
-      "ArmorType": 1,
+      "Role": "サポーター",
+      "Position": "Middle",
+      "BulletType": 2,
+      "ArmorType": 4,
       "Adaptatio": [
-        4,
         2,
-        0
+        0,
+        4
       ],
       "WeaponAdaptatio": [
-        1,
+        3,
         1
       ],
-      "WeaponType": "SR",
-      "Gear": "アルのすごく貴重な財布",
+      "WeaponType": "HG",
+      "Gear": "",
       "Cover": true,
-      "Range": 750,
+      "Range": 550,
       "Equipment": [
         3,
         6,
@@ -42445,12 +42642,12 @@
       ],
       "SkillDetails": [
         1,
-        1,
-        1
+        0,
+        0
       ],
-      "IsLimited": 0,
+      "IsLimited": 1,
       "FavorStatType": [
-        "AttackPower",
+        "HealPower",
         "MaxHP"
       ],
       "FavorStatValue": [
@@ -42459,45 +42656,42 @@
           0
         ],
         [
-          6,
+          7,
           0
         ],
         [
-          7,
-          48
-        ],
-        [
           9,
-          58
+          55
         ],
         [
-          2,
-          10
+          11,
+          66
+        ],
+        [
+          3,
+          11
         ],
         [
           4,
-          15
+          16
         ],
         [
-          6,
-          25
+          7,
+          27
         ]
       ],
-      "FavorAlts": [
-        10031,
-        10089
-      ],
-      "ReleaseDate": "2024/08/21",
+      "FavorAlts": [],
+      "ReleaseDate": "2025/01/20",
       "SubSkill": "",
       "SubSkillTW": ""
     },
     {
       "ID": 10112,
-      "Name": "アスナ(制服)",
-      "NameEN": "CH0281",
+      "Name": "アスナ（制服）",
+      "NameEN": "Asuna (Uniform)",
       "NameTW": "明日奈(制服)",
       "DevName": "CH0281",
-      "Icon": "Aru",
+      "Icon": "Asuna_Uniform",
       "Star": 3,
       "SkillEx": [
         [
@@ -42627,25 +42821,25 @@
           13
         ]
       ],
-      "School": "Gehenna",
+      "School": "Millennium",
       "Class": 1,
-      "Role": "アタッカー",
-      "Position": "Back",
+      "Role": "サポーター",
+      "Position": "Middle",
       "BulletType": 1,
-      "ArmorType": 1,
+      "ArmorType": 2,
       "Adaptatio": [
-        4,
         2,
+        4,
         0
       ],
       "WeaponAdaptatio": [
-        1,
+        2,
         1
       ],
-      "WeaponType": "SR",
-      "Gear": "アルのすごく貴重な財布",
+      "WeaponType": "AR",
+      "Gear": "",
       "Cover": true,
-      "Range": 750,
+      "Range": 650,
       "Equipment": [
         2,
         6,
@@ -42653,12 +42847,12 @@
       ],
       "SkillDetails": [
         1,
-        1,
-        1
+        0,
+        0
       ],
-      "IsLimited": 0,
+      "IsLimited": 1,
       "FavorStatType": [
-        "AttackPower",
+        "HealPower",
         "MaxHP"
       ],
       "FavorStatValue": [
@@ -42671,12 +42865,12 @@
           0
         ],
         [
-          7,
-          48
+          8,
+          51
         ],
         [
-          9,
-          58
+          10,
+          61
         ],
         [
           2,
@@ -42692,21 +42886,21 @@
         ]
       ],
       "FavorAlts": [
-        10031,
-        10089
+        16001,
+        10028
       ],
-      "ReleaseDate": "2024/08/21",
+      "ReleaseDate": "2025/01/20",
       "SubSkill": "",
       "SubSkillTW": ""
     },
     {
       "ID": 26014,
-      "Name": "カリン(制服)",
-      "NameEN": "CH0282",
+      "Name": "カリン（制服）",
+      "NameEN": "Karin (Uniform)",
       "NameTW": "花凛(制服)",
       "DevName": "CH0282",
-      "Icon": "Aru",
-      "Star": 3,
+      "Icon": "Karin_Uniform",
+      "Star": 1,
       "SkillEx": [
         [
           3050,
@@ -42835,25 +43029,25 @@
           14
         ]
       ],
-      "School": "Gehenna",
-      "Class": 1,
+      "School": "Millennium",
+      "Class": 2,
       "Role": "アタッカー",
       "Position": "Back",
       "BulletType": 1,
-      "ArmorType": 1,
+      "ArmorType": 2,
       "Adaptatio": [
-        4,
         2,
-        0
-      ],
-      "WeaponAdaptatio": [
-        1,
+        3,
         1
       ],
+      "WeaponAdaptatio": [
+        3,
+        2
+      ],
       "WeaponType": "SR",
-      "Gear": "アルのすごく貴重な財布",
-      "Cover": true,
-      "Range": 750,
+      "Gear": "",
+      "Cover": false,
+      "Range": 1000,
       "Equipment": [
         1,
         6,
@@ -42861,59 +43055,59 @@
       ],
       "SkillDetails": [
         1,
-        1,
-        1
+        0,
+        0
       ],
-      "IsLimited": 0,
+      "IsLimited": 2,
       "FavorStatType": [
         "AttackPower",
         "MaxHP"
       ],
       "FavorStatValue": [
         [
-          4,
+          3,
+          0
+        ],
+        [
+          5,
           0
         ],
         [
           6,
-          0
+          36
         ],
         [
-          7,
-          48
-        ],
-        [
-          9,
-          58
+          8,
+          44
         ],
         [
           2,
-          10
+          7
         ],
         [
-          4,
-          15
+          3,
+          11
         ],
         [
-          6,
-          25
+          5,
+          18
         ]
       ],
       "FavorAlts": [
-        10031,
-        10089
+        20001,
+        10027
       ],
-      "ReleaseDate": "2024/08/21",
-      "SubSkill": "",
-      "SubSkillTW": ""
+      "ReleaseDate": "2025/01/20",
+      "SubSkill": "攻撃力",
+      "SubSkillTW": "味方の攻擊力を増加"
     },
     {
       "ID": 10111,
-      "Name": "ネル(制服)",
-      "NameEN": "CH0280",
-      "NameTW": "尼禄(制服)",
+      "Name": "ネル（制服）",
+      "NameEN": "Neru (Uniform)",
+      "NameTW": "寧瑠(制服)",
       "DevName": "CH0280",
-      "Icon": "Aru",
+      "Icon": "Neru_Uniform",
       "Star": 3,
       "SkillEx": [
         [
@@ -43043,25 +43237,25 @@
           12
         ]
       ],
-      "School": "Gehenna",
+      "School": "Millennium",
       "Class": 1,
       "Role": "アタッカー",
-      "Position": "Back",
-      "BulletType": 1,
-      "ArmorType": 1,
+      "Position": "Front",
+      "BulletType": 2,
+      "ArmorType": 4,
       "Adaptatio": [
         4,
-        2,
+        3,
         0
       ],
       "WeaponAdaptatio": [
         1,
         1
       ],
-      "WeaponType": "SR",
-      "Gear": "アルのすごく貴重な財布",
+      "WeaponType": "SMG",
+      "Gear": "",
       "Cover": true,
-      "Range": 750,
+      "Range": 450,
       "Equipment": [
         1,
         4,
@@ -43069,59 +43263,59 @@
       ],
       "SkillDetails": [
         1,
-        1,
-        1
+        0,
+        0
       ],
-      "IsLimited": 0,
+      "IsLimited": 3,
       "FavorStatType": [
         "AttackPower",
         "MaxHP"
       ],
       "FavorStatValue": [
         [
-          4,
+          3,
+          0
+        ],
+        [
+          5,
           0
         ],
         [
           6,
-          0
+          64
         ],
         [
-          7,
-          48
-        ],
-        [
-          9,
-          58
+          8,
+          77
         ],
         [
           2,
-          10
+          13
         ],
         [
-          4,
-          15
+          3,
+          19
         ],
         [
-          6,
-          25
+          5,
+          32
         ]
       ],
       "FavorAlts": [
-        10031,
-        10089
+        10008,
+        10026
       ],
-      "ReleaseDate": "2024/08/21",
+      "ReleaseDate": "2025/01/27",
       "SubSkill": "",
       "SubSkillTW": ""
     },
     {
       "ID": 20041,
       "Name": "リオ",
-      "NameEN": "CH0158",
-      "NameTW": "莉音",
+      "NameEN": "Rio",
+      "NameTW": "莉央",
       "DevName": "CH0158",
-      "Icon": "Aru",
+      "Icon": "Rio",
       "Star": 3,
       "SkillEx": [
         [
@@ -43251,25 +43445,25 @@
           13
         ]
       ],
-      "School": "Gehenna",
-      "Class": 1,
-      "Role": "アタッカー",
+      "School": "Millennium",
+      "Class": 2,
+      "Role": "サポーター",
       "Position": "Back",
-      "BulletType": 1,
-      "ArmorType": 1,
+      "BulletType": 3,
+      "ArmorType": 4,
       "Adaptatio": [
-        4,
-        2,
-        0
+        3,
+        0,
+        4
       ],
       "WeaponAdaptatio": [
-        1,
+        3,
         1
       ],
-      "WeaponType": "SR",
-      "Gear": "アルのすごく貴重な財布",
-      "Cover": true,
-      "Range": 750,
+      "WeaponType": "HG",
+      "Gear": "",
+      "Cover": false,
+      "Range": 1000,
       "Equipment": [
         3,
         6,
@@ -43277,51 +43471,253 @@
       ],
       "SkillDetails": [
         1,
-        1,
-        1
+        0,
+        0
       ],
-      "IsLimited": 0,
+      "IsLimited": 3,
       "FavorStatType": [
         "AttackPower",
         "MaxHP"
       ],
       "FavorStatValue": [
         [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
           4,
-          0
+          61
         ],
         [
-          6,
-          0
+          5,
+          73
         ],
         [
-          7,
-          48
-        ],
-        [
-          9,
-          58
+          1,
+          12
         ],
         [
           2,
-          10
+          18
+        ],
+        [
+          3,
+          30
+        ]
+      ],
+      "FavorAlts": [],
+      "ReleaseDate": "2025/01/27",
+      "SubSkill": "攻撃力",
+      "SubSkillTW": "味方の攻擊力を増加"
+    },
+    {
+      "ID": 20042,
+      "Name": "マキ(キャンプ)",
+      "NameEN": "Rio",
+      "NameTW": "真纪（露营）",
+      "DevName": "CH0235",
+      "Icon": "Rio",
+      "Star": 3,
+      "SkillEx": [
+        [
+          3050,
+          250
+        ],
+        [
+          3051,
+          3050,
+          251,
+          150
+        ],
+        [
+          3052,
+          3051,
+          252,
+          151
+        ],
+        [
+          3053,
+          3052,
+          253,
+          152
+        ]
+      ],
+      "SkillExAmount": [
+        [
+          12,
+          14
+        ],
+        [
+          12,
+          18,
+          13,
+          32
+        ],
+        [
+          12,
+          18,
+          9,
+          26
+        ],
+        [
+          8,
+          18,
+          10,
+          13
+        ]
+      ],
+      "Skill": [
+        [
+          4050
+        ],
+        [
+          4050
+        ],
+        [
+          4051,
+          4050,
+          250
+        ],
+        [
+          4051,
+          251,
+          150
+        ],
+        [
+          4052,
+          4051,
+          251,
+          150
+        ],
+        [
+          4052,
+          252,
+          151
+        ],
+        [
+          4053,
+          4052,
+          253,
+          152
+        ],
+        [
+          4053,
+          253,
+          152
+        ]
+      ],
+      "SkillAmount": [
+        [
+          5
+        ],
+        [
+          8
+        ],
+        [
+          5,
+          12,
+          6
+        ],
+        [
+          8,
+          7,
+          13
+        ],
+        [
+          5,
+          12,
+          7,
+          17
+        ],
+        [
+          8,
+          3,
+          18
+        ],
+        [
+          8,
+          12,
+          5,
+          12
+        ],
+        [
+          12,
+          6,
+          13
+        ]
+      ],
+      "School": "Millennium",
+      "Class": 2,
+      "Role": "サポーター",
+      "Position": "Back",
+      "BulletType": 3,
+      "ArmorType": 4,
+      "Adaptatio": [
+        3,
+        0,
+        4
+      ],
+      "WeaponAdaptatio": [
+        3,
+        1
+      ],
+      "WeaponType": "HG",
+      "Gear": "",
+      "Cover": false,
+      "Range": 1000,
+      "Equipment": [
+        1,
+        6,
+        8
+      ],
+      "SkillDetails": [
+        1,
+        0,
+        0
+      ],
+      "IsLimited": 3,
+      "FavorStatType": [
+        "AttackPower",
+        "MaxHP"
+      ],
+      "FavorStatValue": [
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
         ],
         [
           4,
-          15
+          61
         ],
         [
-          6,
-          25
+          5,
+          73
+        ],
+        [
+          1,
+          12
+        ],
+        [
+          2,
+          18
+        ],
+        [
+          3,
+          30
         ]
       ],
-      "FavorAlts": [
-        10031,
-        10089
-      ],
-      "ReleaseDate": "2024/08/21",
-      "SubSkill": "",
-      "SubSkillTW": ""
+      "FavorAlts": [],
+      "ReleaseDate": "2025/01/27",
+      "SubSkill": "攻撃力",
+      "SubSkillTW": "味方の攻擊力を増加"
     }
   ];
   // split
@@ -44718,7 +45114,10 @@
         "10021": 1,
         "10056": 1,
         "10094": 1,
+        "10108": 2,
+        "10109": 1,
         "13009": 2,
+        "16016": 2,
         "20005": 1,
         "20012": 2,
         "20035": 2
@@ -44741,6 +45140,8 @@
         "10067": 2,
         "10076": 1,
         "10100": 2,
+        "10104": 1,
+        "16016": 1,
         "20005": 2,
         "20021": 1,
         "20027": 2,
@@ -44764,12 +45165,14 @@
         "10088": 2,
         "10091": 1,
         "10097": 1,
+        "10108": 1,
         "13005": 2,
         "16010": 2,
         "20000": 2,
         "20013": 2,
         "20018": 2,
         "20032": 1,
+        "20041": 1,
         "26009": 1
       }
     },
@@ -44793,6 +45196,10 @@
         "10083": 1,
         "10096": 1,
         "10102": 2,
+        "10106": 1,
+        "10107": 1,
+        "10109": 1,
+        "10110": 1,
         "13001": 1,
         "13013": 2,
         "16002": 1,
@@ -44802,12 +45209,16 @@
         "20026": 1,
         "20029": 1,
         "20035": 1,
+        "20038": 1,
+        "20039": 1,
+        "20040": 1,
         "23005": 1,
         "23007": 2,
         "26000": 1,
         "26004": 1,
         "26007": 1,
-        "26013": 1
+        "26013": 1,
+        "26014": 1
       }
     },
     {
@@ -44833,6 +45244,11 @@
         "10094": 1,
         "10095": 1,
         "10096": 1,
+        "10106": 1,
+        "10107": 1,
+        "10109": 1,
+        "10110": 1,
+        "10111": 1,
         "13001": 1,
         "13011": 1,
         "13013": 1,
@@ -44843,6 +45259,9 @@
         "20029": 1,
         "20035": 1,
         "20037": 1,
+        "20038": 1,
+        "20039": 1,
+        "20040": 1,
         "23003": 2,
         "23005": 1,
         "23007": 1,
@@ -44872,10 +45291,15 @@
         "10092": 1,
         "10093": 2,
         "10101": 2,
+        "10108": 1,
+        "10109": 1,
+        "10112": 2,
         "13004": 2,
         "13013": 1,
         "16001": 2,
+        "16016": 2,
         "20029": 1,
+        "20038": 2,
         "23002": 1
       }
     },
@@ -44896,8 +45320,12 @@
         "10077": 1,
         "10093": 2,
         "10101": 2,
+        "10108": 1,
+        "10109": 1,
+        "10112": 2,
         "13004": 1,
         "16001": 1,
+        "16016": 1,
         "20029": 1,
         "23002": 2
       }
@@ -44928,8 +45356,12 @@
         "10098": 2,
         "10099": 2,
         "10101": 2,
+        "10108": 1,
+        "10109": 1,
+        "10112": 1,
         "13004": 1,
         "16001": 1,
+        "16016": 1,
         "20003": 2,
         "20004": 1,
         "20014": 2,
@@ -45000,6 +45432,10 @@
         "10075": 1,
         "10083": 2,
         "10096": 1,
+        "10106": 1,
+        "10107": 1,
+        "10109": 1,
+        "10110": 1,
         "13001": 1,
         "13013": 1,
         "16002": 1,
@@ -45009,6 +45445,9 @@
         "20026": 2,
         "20029": 1,
         "20035": 1,
+        "20038": 1,
+        "20039": 1,
+        "20040": 1,
         "23005": 2,
         "23007": 1,
         "26000": 2,
@@ -45035,10 +45474,13 @@
         "10078": 1,
         "10084": 1,
         "10090": 1,
+        "10103": 1,
+        "10111": 1,
         "13006": 1,
         "16014": 1,
         "20010": 1,
         "20015": 1,
+        "20041": 2,
         "23004": 2,
         "26001": 1,
         "26006": 2
@@ -45064,6 +45506,8 @@
         "10094": 2,
         "10095": 1,
         "10097": 1,
+        "10108": 1,
+        "10111": 1,
         "13005": 1,
         "13011": 2,
         "16010": 1,
@@ -45073,6 +45517,7 @@
         "20016": 1,
         "20018": 1,
         "20037": 1,
+        "20041": 1,
         "23003": 1,
         "26009": 2
       }
@@ -45176,6 +45621,8 @@
         "10016": 2,
         "10056": 2,
         "10094": 1,
+        "10108": 1,
+        "10109": 1,
         "13009": 1,
         "20012": 1,
         "20035": 1,
@@ -45200,6 +45647,10 @@
         "10083": 2,
         "10087": 2,
         "10096": 2,
+        "10106": 1,
+        "10107": 1,
+        "10109": 1,
+        "10110": 1,
         "13001": 1,
         "13013": 1,
         "16002": 1,
@@ -45207,6 +45658,9 @@
         "20026": 1,
         "20029": 1,
         "20035": 1,
+        "20038": 1,
+        "20039": 1,
+        "20040": 1,
         "23005": 1,
         "23007": 1,
         "26000": 1,
@@ -45236,6 +45690,8 @@
         "10094": 1,
         "10095": 1,
         "10100": 1,
+        "10104": 1,
+        "10111": 1,
         "13011": 1,
         "20015": 1,
         "20016": 1,
@@ -45273,6 +45729,8 @@
         "10089": 2,
         "10098": 2,
         "10099": 2,
+        "10103": 1,
+        "10104": 1,
         "13008": 1,
         "16009": 2,
         "20008": 1,
@@ -45306,6 +45764,10 @@
         "10084": 1,
         "10090": 2,
         "10097": 1,
+        "10103": 1,
+        "10106": 1,
+        "10110": 1,
+        "10111": 2,
         "13006": 3,
         "16000": 1,
         "16014": 1,
@@ -45314,6 +45776,8 @@
         "20015": 2,
         "20025": 1,
         "20033": 1,
+        "20039": 1,
+        "20041": 1,
         "26001": 1,
         "26013": 1
       }
@@ -45342,6 +45806,9 @@
         "10089": 2,
         "10098": 1,
         "10099": 1,
+        "10103": 1,
+        "10106": 1,
+        "10107": 1,
         "13008": 1,
         "16009": 1,
         "20008": 1,
@@ -45352,6 +45819,7 @@
         "20032": 1,
         "20033": 2,
         "20036": 1,
+        "20040": 1,
         "23007": 2
       }
     },
@@ -45379,9 +45847,12 @@
         "10075": 1,
         "10084": 2,
         "10090": 1,
+        "10103": 2,
+        "10111": 1,
         "13006": 1,
         "16003": 2,
         "16014": 2,
+        "16016": 2,
         "20015": 1,
         "26001": 2
       }
@@ -45415,6 +45886,8 @@
         "10075": 2,
         "10084": 1,
         "10090": 1,
+        "10103": 1,
+        "10111": 1,
         "13006": 1,
         "16014": 2,
         "20015": 1,
@@ -45438,6 +45911,10 @@
         "10075": 1,
         "10083": 2,
         "10096": 1,
+        "10106": 1,
+        "10107": 2,
+        "10109": 2,
+        "10110": 2,
         "13001": 2,
         "13013": 1,
         "16002": 1,
@@ -45446,6 +45923,9 @@
         "20026": 1,
         "20029": 2,
         "20035": 1,
+        "20038": 1,
+        "20039": 1,
+        "20040": 1,
         "23005": 1,
         "23007": 1,
         "26000": 1,
@@ -45465,6 +45945,7 @@
         "10069": 2,
         "10082": 2,
         "10095": 2,
+        "10105": 2,
         "13000": 2,
         "16010": 1,
         "20017": 2,
@@ -45472,7 +45953,9 @@
         "20022": 2,
         "20028": 2,
         "20029": 1,
-        "23001": 2
+        "20039": 2,
+        "23001": 2,
+        "26014": 2
       }
     },
     {
@@ -45493,6 +45976,8 @@
         "10076": 1,
         "10084": 1,
         "10090": 1,
+        "10103": 1,
+        "10111": 1,
         "13006": 1,
         "13010": 2,
         "16014": 1,
@@ -45575,6 +46060,9 @@
         "10070": 1,
         "10090": 1,
         "10097": 1,
+        "10106": 1,
+        "10110": 1,
+        "10111": 1,
         "13006": 1,
         "16000": 2,
         "20006": 1,
@@ -45582,6 +46070,8 @@
         "20015": 1,
         "20025": 2,
         "20033": 1,
+        "20039": 1,
+        "20041": 1,
         "23008": 1,
         "26013": 1
       }
@@ -45610,6 +46100,10 @@
         "10097": 1,
         "10098": 1,
         "10099": 1,
+        "10103": 1,
+        "10106": 1,
+        "10110": 1,
+        "10111": 1,
         "13006": 1,
         "13008": 2,
         "16000": 1,
@@ -45626,6 +46120,8 @@
         "20032": 1,
         "20033": 2,
         "20036": 2,
+        "20039": 1,
+        "20041": 1,
         "26013": 1
       }
     },
@@ -45652,6 +46148,7 @@
         "10091": 1,
         "10098": 1,
         "10099": 1,
+        "10103": 1,
         "13005": 1,
         "13008": 1,
         "16009": 1,
@@ -45690,13 +46187,16 @@
         "10077": 1,
         "10081": 2,
         "10093": 1,
+        "10105": 2,
         "13012": 2,
         "16007": 1,
         "16015": 1,
         "20028": 1,
         "20036": 1,
+        "20038": 1,
         "23008": 2,
-        "26010": 2
+        "26010": 2,
+        "26014": 1
       }
     },
     {
@@ -45722,6 +46222,10 @@
         "10083": 2,
         "10087": 1,
         "10096": 1,
+        "10106": 1,
+        "10107": 1,
+        "10109": 1,
+        "10110": 1,
         "13001": 1,
         "13013": 1,
         "16002": 2,
@@ -45735,6 +46239,9 @@
         "20029": 1,
         "20031": 1,
         "20035": 1,
+        "20038": 1,
+        "20039": 1,
+        "20040": 2,
         "23005": 1,
         "23007": 1,
         "26000": 1,
@@ -45759,6 +46266,8 @@
         "10076": 1,
         "10083": 1,
         "10087": 2,
+        "10104": 2,
+        "10106": 2,
         "16002": 1,
         "20002": 2,
         "20008": 2,
@@ -45769,6 +46278,7 @@
         "20023": 2,
         "20026": 1,
         "20031": 2,
+        "20040": 1,
         "23006": 2,
         "26008": 2,
         "26013": 1
@@ -45830,6 +46340,8 @@
         "10094": 1,
         "10098": 2,
         "10099": 2,
+        "10108": 3,
+        "10109": 3,
         "13009": 1,
         "20012": 1,
         "20035": 3
@@ -45851,6 +46363,10 @@
         "10075": 1,
         "10083": 3,
         "10096": 3,
+        "10106": 1,
+        "10107": 1,
+        "10109": 1,
+        "10110": 3,
         "13001": 1,
         "13013": 3,
         "16002": 1,
@@ -45858,6 +46374,9 @@
         "20026": 1,
         "20029": 1,
         "20035": 1,
+        "20038": 1,
+        "20039": 1,
+        "20040": 1,
         "23005": 1,
         "23007": 1,
         "26000": 1,
@@ -45887,10 +46406,15 @@
         "10077": 3,
         "10093": 3,
         "10101": 1,
+        "10108": 1,
+        "10109": 1,
+        "10112": 3,
         "13004": 1,
         "16001": 1,
         "16013": 2,
+        "16016": 1,
         "20029": 1,
+        "20038": 2,
         "23002": 1,
         "26003": 2
       }
@@ -45917,6 +46441,7 @@
         "10089": 3,
         "10098": 1,
         "10099": 1,
+        "10103": 1,
         "13008": 1,
         "16007": 2,
         "16009": 1,
@@ -45930,6 +46455,7 @@
         "20032": 1,
         "20033": 3,
         "20036": 3,
+        "20040": 2,
         "26000": 2
       }
     },
@@ -45955,6 +46481,7 @@
         "10091": 3,
         "10092": 3,
         "10102": 3,
+        "10106": 2,
         "13002": 2,
         "13003": 1,
         "13007": 1,
@@ -45993,6 +46520,8 @@
         "10085": 2,
         "10088": 3,
         "10097": 3,
+        "10107": 2,
+        "10108": 1,
         "13005": 1,
         "13010": 2,
         "16002": 2,
@@ -46000,6 +46529,7 @@
         "20000": 1,
         "20013": 1,
         "20018": 1,
+        "20041": 3,
         "23003": 2,
         "23004": 2,
         "26007": 2,
@@ -46031,7 +46561,10 @@
         "10081": 3,
         "10093": 3,
         "10101": 2,
+        "10103": 2,
         "16005": 2,
+        "16016": 2,
+        "20038": 1,
         "26010": 2
       }
     },
@@ -46076,6 +46609,7 @@
         "13009": 2,
         "16000": 1,
         "20025": 3,
+        "20039": 2,
         "23008": 1
       }
     },
@@ -46092,6 +46626,7 @@
         "10067": 2,
         "10082": 3,
         "10095": 3,
+        "10105": 3,
         "13000": 1,
         "16004": 2,
         "16010": 3,
@@ -46101,7 +46636,8 @@
         "20022": 1,
         "20028": 3,
         "20029": 3,
-        "23001": 1
+        "23001": 1,
+        "26014": 3
       }
     },
     {
@@ -46134,6 +46670,7 @@
         "10067": 3,
         "10076": 3,
         "10100": 1,
+        "10104": 3,
         "20021": 3,
         "20027": 3,
         "20030": 1,
@@ -46161,6 +46698,8 @@
         "10084": 1,
         "10090": 3,
         "10094": 2,
+        "10103": 1,
+        "10111": 3,
         "13006": 1,
         "13011": 2,
         "16014": 3,
@@ -46168,6 +46707,14 @@
         "26001": 1,
         "26013": 2
       }
+    },
+    {
+      "ID": 5996,
+      "Name": "さわやかな花束",
+      "Icon": "item_icon_favor_lv2_special",
+      "Quality": 4,
+      "ExpValue": 60,
+      "Score": []
     },
     {
       "ID": 5997,

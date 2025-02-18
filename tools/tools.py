@@ -30,15 +30,18 @@ def draw_image_source(path: str, source: str, offset = 1):
     cols = img.width
     rows = img.height
     font_size = max(12, cols / 50)
+    font_size_big = max(12, cols / 40)
     if offset >= 1:
-        mr = int(rows + font_size * offset * 1.5)
+        mr = int(rows + font_size * 1.5 + font_size_big * 1.5)
         bg = Image.new('RGBA', (cols, mr), color='white')
     else:
         bg = Image.new('RGBA', (cols, rows), color='white')
     bg.paste(img, (0,0))
     draw = ImageDraw.Draw(bg)
     fnt = ImageFont.truetype('C:\Windows\Fonts\msyh.ttc', font_size)
-    draw.text((0 + 10, rows + (offset - 1) * font_size * 1.5), source, font=fnt, fill=(0,0,0))
+    fnt_big = ImageFont.truetype('C:\Windows\Fonts\msyh.ttc', font_size_big)
+    draw.text((0 + 10, rows + (1 - 1) * font_size * 1.5), source, font=fnt, fill=(0,0,0))
+    draw.text((0 + 10, rows + (2 - 1) * font_size * 1.5), "角色评分已停止更新，最后更新时间：2025-02-18", font=fnt_big, fill=(255,0,0))
     bg.save(path)
     bg = cv2.imdecode(np.fromfile(path, dtype=np.uint8), -1)
     return bg

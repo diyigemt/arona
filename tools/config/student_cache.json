@@ -1049,5 +1049,15 @@
         "cnName": "露营真纪",
         "loma": "maki_camp",
         "gamekee": "https://www.gamekee.com/ba/645824.html"
+    },
+    "セナ(私服)": {
+        "cnName": "私服濑名",
+        "loma": "sena_casual",
+        "gamekee": "https://www.gamekee.com/ba/649353.html"
+    },
+    "ジュリ(アルバイト)": {
+        "cnName": "打工茱莉",
+        "loma": "juri_parttime",
+        "gamekee": "https://www.gamekee.com/ba/649361.html"
     }
 }

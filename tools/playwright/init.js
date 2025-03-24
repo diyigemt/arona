@@ -44128,6 +44128,115 @@
       "ReleaseDate": "2025/01/27",
       "SubSkill": "攻撃力",
       "SubSkillTW": "味方の攻擊力を増加"
+    },
+    {
+      "ID": 20043,
+      "Name": "イズミ（正月）",
+      "NameEN": "izumi_newyear",
+      "NameTW": "泉(正月)",
+      "DevName": "CH0197",
+      "Icon": "izumi_newyear",
+      "Star": 3,
+      "SkillEx": [
+        [3030, 140],
+        [3031, 3030, 141, 100],
+        [3032, 3031, 142, 101],
+        [3033, 3032, 143, 102]
+      ],
+      "SkillExAmount": [
+        [12, 16],
+        [12, 18, 16, 32],
+        [12, 18, 10, 25],
+        [8, 18, 10, 15]
+      ],
+      "Skill": [
+        [4030],
+        [4030],
+        [4031, 4030, 140],
+        [4031, 141, 100],
+        [4032, 4031, 141, 100],
+        [4032, 142, 101],
+        [4033, 4032, 143, 102],
+        [4033, 143, 102]
+      ],
+      "SkillAmount": [
+        [5],
+        [8],
+        [5, 12, 5],
+        [8, 7, 13],
+        [5, 12, 7, 17],
+        [8, 3, 17],
+        [8, 12, 5, 11],
+        [12, 7, 13]
+      ],
+      "School": "Millennium",
+      "Class": 2,
+      "Role": "サポーター",
+      "Position": "Back",
+      "BulletType": 3,
+      "ArmorType": 4,
+      "Adaptatio": [
+        3,
+        0,
+        4
+      ],
+      "WeaponAdaptatio": [
+        3,
+        1
+      ],
+      "WeaponType": "HG",
+      "Gear": "",
+      "Cover": false,
+      "Range": 1000,
+      "Equipment": [
+        3,
+        5,
+        9
+      ],
+      "SkillDetails": [
+        1,
+        0,
+        0
+      ],
+      "IsLimited": 3,
+      "FavorStatType": [
+        "AttackPower",
+        "MaxHP"
+      ],
+      "FavorStatValue": [
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          4,
+          61
+        ],
+        [
+          5,
+          73
+        ],
+        [
+          1,
+          12
+        ],
+        [
+          2,
+          18
+        ],
+        [
+          3,
+          30
+        ]
+      ],
+      "FavorAlts": [],
+      "ReleaseDate": "2025/01/27",
+      "SubSkill": "攻撃力",
+      "SubSkillTW": "味方の攻擊力を増加"
     }
   ];
   // split

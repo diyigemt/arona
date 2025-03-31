@@ -44175,64 +44175,333 @@
       "Position": "Back",
       "BulletType": 3,
       "ArmorType": 4,
-      "Adaptatio": [
-        3,
-        0,
-        4
-      ],
-      "WeaponAdaptatio": [
-        3,
-        1
-      ],
+      "Adaptatio": [3, 0, 4],
+      "WeaponAdaptatio": [3, 1],
       "WeaponType": "HG",
       "Gear": "",
       "Cover": false,
       "Range": 1000,
-      "Equipment": [
-        3,
-        5,
-        9
-      ],
-      "SkillDetails": [
-        1,
-        0,
-        0
-      ],
+      "Equipment": [3, 5, 9],
+      "SkillDetails": [1, 0, 0],
       "IsLimited": 3,
-      "FavorStatType": [
-        "AttackPower",
-        "MaxHP"
+      "FavorStatType": ["AttackPower", "MaxHP"],
+      "FavorStatValue": [[2, 0], [3, 0], [4, 61], [5, 73], [1, 12], [2, 18], [3, 30]],
+      "FavorAlts": [],
+      "ReleaseDate": "2025/01/27",
+      "SubSkill": "攻撃力",
+      "SubSkillTW": "味方の攻擊力を増加"
+    },
+    {
+      "ID": 10115,
+      "Name": "レイ",
+      "NameEN": "rei",
+      "NameTW": "丽",
+      "DevName": "CH0245",
+      "Icon": "rei",
+      "Star": 3,
+      "SkillEx": [
+        [
+          3050,
+          200
+        ],
+        [
+          3051,
+          3050,
+          201,
+          280
+        ],
+        [
+          3052,
+          3051,
+          202,
+          281
+        ],
+        [
+          3053,
+          3052,
+          203,
+          282
+        ]
       ],
-      "FavorStatValue": [
+      "SkillExAmount": [
         [
-          2,
-          0
-        ],
-        [
-          3,
-          0
-        ],
-        [
-          4,
-          61
-        ],
-        [
-          5,
-          73
-        ],
-        [
-          1,
-          12
-        ],
-        [
-          2,
+          12,
           18
         ],
         [
-          3,
-          30
+          12,
+          18,
+          16,
+          34
+        ],
+        [
+          12,
+          18,
+          9,
+          25
+        ],
+        [
+          8,
+          18,
+          10,
+          19
         ]
       ],
+      "Skill": [
+        [
+          4050
+        ],
+        [
+          4050
+        ],
+        [
+          4051,
+          4050,
+          200
+        ],
+        [
+          4051,
+          201,
+          280
+        ],
+        [
+          4052,
+          4051,
+          201,
+          280
+        ],
+        [
+          4052,
+          202,
+          281
+        ],
+        [
+          4053,
+          4052,
+          203,
+          282
+        ],
+        [
+          4053,
+          203,
+          282
+        ]
+      ],
+      "SkillAmount": [
+        [
+          5
+        ],
+        [
+          8
+        ],
+        [
+          5,
+          12,
+          4
+        ],
+        [
+          8,
+          6,
+          14
+        ],
+        [
+          5,
+          12,
+          8,
+          18
+        ],
+        [
+          8,
+          4,
+          18
+        ],
+        [
+          8,
+          12,
+          5,
+          10
+        ],
+        [
+          12,
+          7,
+          13
+        ]
+      ],
+      "School": "Millennium",
+      "Class": 2,
+      "Role": "サポーター",
+      "Position": "Back",
+      "BulletType": 3,
+      "ArmorType": 4,
+      "Adaptatio": [3, 0, 4],
+      "WeaponAdaptatio": [3, 1],
+      "WeaponType": "HG",
+      "Gear": "",
+      "Cover": false,
+      "Range": 1000,
+      "Equipment": [1, 6, 8],
+      "SkillDetails": [1, 0, 0],
+      "IsLimited": 3,
+      "FavorStatType": ["AttackPower", "MaxHP"],
+      "FavorStatValue": [[2, 0], [3, 0], [4, 61], [5, 73], [1, 12], [2, 18], [3, 30]],
+      "FavorAlts": [],
+      "ReleaseDate": "2025/01/27",
+      "SubSkill": "攻撃力",
+      "SubSkillTW": "味方の攻擊力を増加"
+    },
+    {
+      "ID": 20044,
+      "Name": "スミレ(アルバイト)",
+      "NameEN": "sumire_parttime",
+      "NameTW": "堇(打工)",
+      "DevName": "CH0287",
+      "Icon": "sumire_parttime",
+      "Star": 3,
+      "SkillEx": [
+        [
+          3050,
+          170
+        ],
+        [
+          3051,
+          3050,
+          171,
+          230
+        ],
+        [
+          3052,
+          3051,
+          172,
+          231
+        ],
+        [
+          3053,
+          3052,
+          173,
+          232
+        ]
+      ],
+      "SkillExAmount": [
+        [
+          12,
+          13
+        ],
+        [
+          12,
+          18,
+          14,
+          31
+        ],
+        [
+          12,
+          18,
+          11,
+          27
+        ],
+        [
+          8,
+          18,
+          9,
+          18
+        ]
+      ],
+      "Skill": [
+        [
+          4050
+        ],
+        [
+          4050
+        ],
+        [
+          4051,
+          4050,
+          170
+        ],
+        [
+          4051,
+          171,
+          230
+        ],
+        [
+          4052,
+          4051,
+          171,
+          230
+        ],
+        [
+          4052,
+          172,
+          231
+        ],
+        [
+          4053,
+          4052,
+          173,
+          232
+        ],
+        [
+          4053,
+          173,
+          232
+        ]
+      ],
+      "SkillAmount": [
+        [
+          5
+        ],
+        [
+          8
+        ],
+        [
+          5,
+          12,
+          6
+        ],
+        [
+          8,
+          5,
+          12
+        ],
+        [
+          5,
+          12,
+          8,
+          19
+        ],
+        [
+          8,
+          3,
+          17
+        ],
+        [
+          8,
+          12,
+          5,
+          11
+        ],
+        [
+          12,
+          7,
+          13
+        ]
+      ],
+      "School": "Millennium",
+      "Class": 2,
+      "Role": "サポーター",
+      "Position": "Back",
+      "BulletType": 3,
+      "ArmorType": 4,
+      "Adaptatio": [3, 0, 4],
+      "WeaponAdaptatio": [3, 1],
+      "WeaponType": "HG",
+      "Gear": "",
+      "Cover": false,
+      "Range": 1000,
+      "Equipment": [2, 4, 8],
+      "SkillDetails": [1, 0, 0],
+      "IsLimited": 3,
+      "FavorStatType": ["AttackPower", "MaxHP"],
+      "FavorStatValue": [[2, 0], [3, 0], [4, 61], [5, 73], [1, 12], [2, 18], [3, 30]],
       "FavorAlts": [],
       "ReleaseDate": "2025/01/27",
       "SubSkill": "攻撃力",

@@ -3,7 +3,7 @@ plugins {
   val miraiVersion = "2.16.0"
   kotlin("jvm") version kotlinVersion
   kotlin("plugin.serialization") version kotlinVersion
-
+  id("com.github.gmazzo.buildconfig") version "4.1.1"
   id("net.mamoe.mirai-console") version miraiVersion
 }
 
@@ -31,6 +31,13 @@ mirai {
       !it.nameWithoutExtension.startsWith("mirai-core-jvm")
     }
   }
+}
+buildConfig {
+  className("BuildConfig")
+  packageName("net.diyigemt.arona.cg")
+  buildConfigField("String", "version", "\"${version}\"")
+  buildConfigField("String", "name", "\"blue-archive-arona\"")
+  buildConfigField("String", "id", "\"net.diyigemt.arona\"")
 }
 dependencies {
 //    implementation("com.github.kittinunf.fuel:fuel:2.3.1")

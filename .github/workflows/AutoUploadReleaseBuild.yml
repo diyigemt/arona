@@ -39,16 +39,19 @@ jobs:
 #        with:
 #          arguments: :buildPlugin
 #
-
+      - name: show dis name
+        run: |
+          ls -la
+          echo "Build dir: $(pwd)"
         #取文件名
       - name: Get Plugin Name
-        run: echo "NAME=$(find ./arona-core/build/mirai -name "*.jar" -exec basename {} \;)" >> $GITHUB_ENV
+        run: echo "NAME=$(find arona-core/build/mirai -name "*.jar" -exec basename {} \;)" >> $GITHUB_ENV
         #上传工件
       - name: Upload-Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.NAME }}
-          path: ./arona-core/build/mirai/${{ env.NAME }}
+          path: arona-core/build/mirai/${{ env.NAME }}
 
       #自动发布
       - name: Publish Release

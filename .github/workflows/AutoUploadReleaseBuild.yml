@@ -45,25 +45,24 @@ jobs:
           echo "Build dir: $(pwd)"
         #取文件名
       - name: Get Plugin Name
-        run: echo "NAME=$(find arona-core/build/mirai -name "*.jar" -exec basename {} \;)" >> $GITHUB_ENV
+        run: echo "NAME=$(find build/mirai -name "*.jar" -exec basename {} \;)" >> $GITHUB_ENV
         #上传工件
       - name: Upload-Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.NAME }}
-          path: arona-core/build/mirai/${{ env.NAME }}
+          path: build/mirai/${{ env.NAME }}
 
       #自动发布
       - name: Publish Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "arona-core/build/mirai/${{ env.NAME }}"
+          artifacts: "build/mirai/${{ env.NAME }}"
           prerelease: ${{ contains(github.ref, 'pre') }}
           token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true
       - name: Success
         id: success
-        working-directory: ./arona-core
         run: echo "::set-output name=should_continue::true"
 
       # Generates and submits a dependency graph, enabling Dependabot Alerts for all project dependencies.

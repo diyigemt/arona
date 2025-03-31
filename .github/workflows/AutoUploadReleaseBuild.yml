@@ -28,10 +28,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
         #构建核心模块
-      - name: Build arona
-        working-directory: ./arona-core  # 关键：指定子目录
-        run: |
-          ./gradlew buildPligin
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@v3
+        with:
+          build-root-directory: ./arona-core
+          arguments: :buildPlugin
 #      - name: Build with Gradle 7.2
 #        uses: gradle/gradle-build-action@v3.3.2
 #        working-directory: ./arona-core

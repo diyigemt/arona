@@ -37,7 +37,7 @@ jobs:
       - name: Get Plugin Name
         run: |
           echo "NAME=$(find build/mirai -name "*2.jar" -exec basename {} \;)" >> $GITHUB_ENV
-          echo "PATH=$(find build/mirai -name "*2.jar" -print -quit)" >> $GITHUB_ENV
+          echo "PATH=$(find build/mirai -name "*2.jar" -exec readlink -f {} +)" >> $GITHUB_ENV
 
         #上传工件
       - name: Upload-Artifact

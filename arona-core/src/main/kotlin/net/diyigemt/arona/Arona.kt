@@ -124,7 +124,7 @@ object Arona : KotlinPlugin(
       INIT.forEach {
         it.init()
       }
-      NetworkUtil.registerInstance()
+
     }
 //    startUpload() // 上传图片获取mirai-code
   }

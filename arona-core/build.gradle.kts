@@ -1,6 +1,6 @@
 plugins {
   val kotlinVersion = "1.7.10"
-  val miraiVersion = "2.13.4"
+  val miraiVersion = "2.16.0"
   kotlin("jvm") version kotlinVersion
   kotlin("plugin.serialization") version kotlinVersion
 
@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "net.diyigemt"
-version = "1.1.4"
+version = "1.1.5"
 val exposedVersion = "0.38.2"
 val sqliteVersion = "3.36.0.3"
 val quartzVersion = "2.3.2"
@@ -19,8 +19,19 @@ repositories {
   maven("https://jitpack.io")
   maven("https://maven.aliyun.com/repository/public") // 阿里云国内代理仓库
   maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+  //Overflow依赖仓库
+  maven("https://s01.oss.sonatype.org/content/repositories/snapshots")
 }
-
+//Overflow测试需移除mirai-core
+mirai {
+  noTestCore = true
+  setupConsoleTestRuntime {
+    // 移除 mirai-core 依赖
+    classpath = classpath.filter {
+      !it.nameWithoutExtension.startsWith("mirai-core-jvm")
+    }
+  }
+}
 dependencies {
 //    implementation("com.github.kittinunf.fuel:fuel:2.3.1")
   implementation("org.jsoup:jsoup:1.15.1")
@@ -42,6 +53,8 @@ dependencies {
   // https://mvnrepository.com/artifact/com.github.taptap/pinyin-plus
   implementation("com.github.taptap:pinyin-plus:1.0")
   implementation("net.mamoe.yamlkt:yamlkt-jvm:0.10.2")
+  //Overflow运行时依赖
+  testConsoleRuntime("top.mrxiaom.mirai:overflow-core:1.0.4.589-05fbc9f-SNAPSHOT")
 }
 
 tasks.test {

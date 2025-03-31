@@ -38,7 +38,7 @@ object GameKeeUtil {
     }
 
     for(i in json.data){
-      if(i.title.contains(server.serverName)){
+      if(i.pub_area == server.serverName){
         method.call(
           Calendar.getInstance().time,
           Date(i.begin_at * 1000),

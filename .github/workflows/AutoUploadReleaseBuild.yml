@@ -17,8 +17,13 @@ jobs:
     permissions:
       contents: write
     steps:
-        #安装使用jdk
       - uses: actions/checkout@v4
+        #更改工作目录
+      - name: Navigate to subdirectory
+        run: |
+          cd $GITHUB_WORKSPACE/arona-core
+          ls -la
+        #安装使用jdk
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:

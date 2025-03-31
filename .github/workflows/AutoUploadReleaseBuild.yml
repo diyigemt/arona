@@ -33,16 +33,6 @@ jobs:
         with:
           build-root-directory: ./arona-core
           arguments: :buildPlugin
-#      - name: Build with Gradle 7.2
-#        uses: gradle/gradle-build-action@v3.3.2
-#        working-directory: ./arona-core
-#        with:
-#          arguments: :buildPlugin
-#
-      - name: show dis name
-        run: |
-          ls -la
-          echo "Build dir: $(pwd)"
         #取文件名
       - name: Get Plugin Name
         run: echo "NAME=$(find build/mirai -name "*.jar" -exec basename {} \;)" >> $GITHUB_ENV
@@ -61,27 +51,23 @@ jobs:
           prerelease: ${{ contains(github.ref, 'pre') }}
           token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true
-      - name: Success
-        id: success
-        run: echo "::set-output name=should_continue::true"
+
+  dependency-submission:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./arona-core
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
 
       # Generates and submits a dependency graph, enabling Dependabot Alerts for all project dependencies.
       # See: https://github.com/gradle/actions/blob/main/dependency-submission/README.md
       - name: Generate and submit dependency graph
         uses: gradle/actions/dependency-submission@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
-#  dependency-submission:
-#    runs-on: ubuntu-latest
-#    permissions:
-#      contents: write
-#    steps:
-#      - uses: actions/checkout@v4
-#      - name: Set up JDK 17
-#        uses: actions/setup-java@v4
-#        with:
-#          java-version: '17'
-#          distribution: 'temurin'
-#
-#      # Generates and submits a dependency graph, enabling Dependabot Alerts for all project dependencies.
-#      # See: https://github.com/gradle/actions/blob/main/dependency-submission/README.md
-#      - name: Generate and submit dependency graph
-#        uses: gradle/actions/dependency-submission@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0

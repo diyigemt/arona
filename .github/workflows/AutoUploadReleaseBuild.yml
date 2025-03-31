@@ -27,19 +27,11 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-        #下载并安装指定版本的 Gradle
-      - name: Install Gradle 7.2
+        #构建核心模块
+      - name: Build arona
+        working-directory: ./arona-core  # 关键：指定子目录
         run: |
-          wget https://services.gradle.org/distributions/gradle-7.2-bin.zip -P /tmp
-          unzip -d /opt/gradle /tmp/gradle-7.2-bin.zip
-          echo "/opt/gradle/gradle-7.2/bin" >> $GITHUB_PATH
-        #执行构建
-      - name: Build with Gradle 7.2
-        working-directory: ./arona-core
-        run: gradle buildPlugin  # 注意这里直接使用 gradle 命令
-
+          ./gradlew buildPligin
 #      - name: Build with Gradle 7.2
 #        uses: gradle/gradle-build-action@v3.3.2
 #        working-directory: ./arona-core
@@ -49,14 +41,15 @@ jobs:
 
         #取文件名
       - name: Get Plugin Name
-        run: echo "NAME=$(find arona-core/build/mirai -name "*.jar" -exec basename {} \;)" >> $GITHUB_ENV
-          echo find arona-core/build/mirai -name "*.jar" -exec basename {} \;
+        working-directory: ./arona-core
+        run: echo "NAME=$(find build/mirai -name "*.jar" -exec basename {} \;)" >> $GITHUB_ENV
+          echo find build/mirai -name "*.jar" -exec basename {} \;
         #上传工件
       - name: Upload-Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.NAME }}
-          path: build/mirai/${{ env.NAME }}
+          path: arona-core/build/mirai/${{ env.NAME }}
 
       #自动发布
       - name: Publish Release
@@ -68,12 +61,8 @@ jobs:
           allowUpdates: true
       - name: Success
         id: success
+        working-directory: ./arona-core
         run: echo "::set-output name=should_continue::true"
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
 
       # Generates and submits a dependency graph, enabling Dependabot Alerts for all project dependencies.
       # See: https://github.com/gradle/actions/blob/main/dependency-submission/README.md

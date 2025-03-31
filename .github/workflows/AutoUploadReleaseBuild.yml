@@ -36,7 +36,7 @@ jobs:
         #取文件名
       - name: Get Plugin Name
         run: |
-          echo "NAME=$(find build/mirai -name "*2.jar" -exec sh -c 'basename {} | sed "s/\.mirai2.jar$//"' \;)" >> $GITHUB_ENV
+          echo "NAME=$(find build/mirai -name "*2.jar" -exec sh -c 'basename {} | sed "s/\.jar$//"' \;)" >> $GITHUB_ENV
           echo "PATH=$(find build/mirai -name "*2.jar" -exec readlink -f {} +)" >> $GITHUB_ENV
 
         #上传工件

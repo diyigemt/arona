@@ -30,25 +30,25 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
         #执行构建
-      - name: Build with Gradle 7.6
+      - name: Build with Gradle 7.2
         uses: gradle/gradle-build-action@v3.3.2
         with:
-          arguments: :buildPlugin
+          arguments: -p arona-core :buildPlugin
         #取文件名
       - name: Get Plugin Name
-        run: echo "NAME=$(find build/mirai -name "*.jar" -exec basename {} \;)" >> $GITHUB_ENV
+        run: echo "NAME=$(find arona-core/build/mirai -name "*.jar" -exec basename {} \;)" >> $GITHUB_ENV
         #上传工件
       - name: Upload-Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.NAME }}
-          path: build/mirai/${{ env.NAME }}
+          path: arona-core/build/mirai/${{ env.NAME }}
 
       #自动发布
       - name: Publish Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "build/mirai/${{ env.NAME }}"
+          artifacts: "arona-core/build/mirai/${{ env.NAME }}"
           prerelease: ${{ contains(github.ref, 'pre') }}
           token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true

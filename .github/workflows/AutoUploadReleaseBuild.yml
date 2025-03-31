@@ -10,7 +10,7 @@ name: AutoUploadReleaseBuild
 on:
   push:
     tags:
-      - 'Release v*'
+      - 'v*'
 jobs:
   CreateRelease:
     runs-on: ubuntu-latest

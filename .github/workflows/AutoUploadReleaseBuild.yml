@@ -49,7 +49,8 @@ jobs:
 
         #取文件名
       - name: Get Plugin Name
-        run: echo "NAME=$(find build/mirai -name "*.jar" -exec basename {} \;)" >> $GITHUB_ENV
+        run: echo "NAME=$(find arona-core/build/mirai -name "*.jar" -exec basename {} \;)" >> $GITHUB_ENV
+          echo find arona-core/build/mirai -name "*.jar" -exec basename {} \;
         #上传工件
       - name: Upload-Artifact
         uses: actions/upload-artifact@v4
@@ -61,7 +62,7 @@ jobs:
       - name: Publish Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "build/mirai/${{ env.NAME }}"
+          artifacts: "arona-core/build/mirai/${{ env.NAME }}"
           prerelease: ${{ contains(github.ref, 'pre') }}
           token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true

@@ -36,7 +36,7 @@ jobs:
         #取文件名
       - name: Get Plugin Name
         run: |
-          echo "NAME=$(find build/mirai -name "*2.jar" -exec basename {} \;)" >> $GITHUB_ENV
+          echo "NAME=$(find build/mirai -name "*2.jar" -exec basename {} \; | tr -d)" >> $GITHUB_ENV
           echo "PATH=$(find build/mirai -name "*2.jar" -exec readlink -f {} +)" >> $GITHUB_ENV
 
         #上传工件
@@ -45,7 +45,7 @@ jobs:
         with:
           name: ${{ env.NAME }}
           path: ${{ env.PATH }}
-
+          compression-level: 0
       #自动发布
       - name: Publish Release
         uses: ncipollo/release-action@v1

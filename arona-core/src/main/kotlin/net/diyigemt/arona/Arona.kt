@@ -10,6 +10,7 @@ package net.diyigemt.arona
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import net.diyigemt.arona.cg.BuildConfig
 import net.diyigemt.arona.config.*
 import net.diyigemt.arona.db.DataBaseProvider
 import net.diyigemt.arona.extension.CommandInterceptorManager
@@ -49,9 +50,9 @@ import kotlin.io.path.absolutePathString
 
 object Arona : KotlinPlugin(
   JvmPluginDescription(
-    id = "net.diyigemt.arona",
-    name = "blue-archive-arona",
-    version = "1.1.4"
+    id = BuildConfig.id,
+    name = BuildConfig.name,
+    version = BuildConfig.version
   ) {
     author("diyigemt")
     info("是常驻这个「シッテムの箱」的系统管理员和主操作系统, 也是今后协助老师的秘书!")
@@ -124,7 +125,7 @@ object Arona : KotlinPlugin(
       INIT.forEach {
         it.init()
       }
-      NetworkUtil.registerInstance()
+
     }
 //    startUpload() // 上传图片获取mirai-code
   }

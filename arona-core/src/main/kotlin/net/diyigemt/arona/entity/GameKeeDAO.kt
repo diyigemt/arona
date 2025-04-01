@@ -20,7 +20,8 @@ data class Data(
   val begin_at : Long,
   val end_at : Long,
   val importance : Int,
-  val count_down : Int
+  val count_down : Int,
+  val pub_area : String
 )
 
 data class Meta(

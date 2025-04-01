@@ -30,6 +30,7 @@ object NetworkUtil {
 
 
   // 向后端服务器注册自己
+  @Deprecated("放弃的方法")
   fun registerInstance() {
     val sysSave = SysDataUtil.get(SysStatic.UUID)
     if (sysSave == null) {

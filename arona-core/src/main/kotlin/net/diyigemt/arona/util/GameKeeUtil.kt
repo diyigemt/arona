@@ -13,7 +13,7 @@ import java.util.*
  *@Create 2022/7/21
  */
 object GameKeeUtil {
-  private const val url = "https://ba.gamekee.com/v1/activity/query"
+  private const val url = "https://www.gamekee.com/v1/activity/query"
   fun getEventData(server: ServerLocale) : Pair<MutableList<Activity>, MutableList<Activity>>{
     val res = NetworkUtil.request(Jsoup.connect(url))
       .header("game-alias", "ba")
@@ -38,7 +38,7 @@ object GameKeeUtil {
     }
 
     for(i in json.data){
-      if(i.title.contains(server.serverName)){
+      if(i.pub_area == server.serverName){
         method.call(
           Calendar.getInstance().time,
           Date(i.begin_at * 1000),

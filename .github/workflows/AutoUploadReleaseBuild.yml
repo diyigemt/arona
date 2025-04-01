@@ -1,0 +1,56 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: AutoUploadReleaseBuild
+
+on:
+  push:
+    tags:
+      - 'v*'
+jobs:
+  CreateRelease:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./arona-core
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        #安装使用jdk
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+        #构建核心模块
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@v3
+        with:
+          build-root-directory: ./arona-core
+          arguments: :buildPlugin
+        #取文件名
+      - name: Get Plugin Name
+        run: |
+          echo "NAME=$(find build/mirai -name "*2.jar" -exec sh -c 'basename {} | sed "s/\.jar$//"' \;)" >> $GITHUB_ENV
+          echo "PATH=$(find build/mirai -name "*2.jar" -exec readlink -f {} +)" >> $GITHUB_ENV
+
+        #上传工件
+      - name: Upload-Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.NAME }}
+          path: ${{ env.PATH }}
+          compression-level: 0
+      #自动发布
+      - name: Publish Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "${{ env.PATH }}"
+          prerelease: ${{ contains(github.ref, 'pre') }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          allowUpdates: true

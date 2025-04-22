@@ -8,7 +8,7 @@
 
 由于tx疯狂打压mirai系bot的生存空间，看不到活着的希望，于是决定公开，希望能帮助到其他类型的bot
 
-[bot攻略数据公开计划](https://doc.arona.diyigemt.com/api/)
+[bot攻略数据公开计划](https://doc.arona.diyigemt.com/v1/api/)
 
 ## 最后的公告
 

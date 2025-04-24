@@ -60,6 +60,14 @@ def run(playwright: Playwright, arr: list[str], thread_id: int):
         page.route("https://ba.game-db.tw/images/items/equipment_icon_watch_tier9_piece.png", lambda r, _ : r.fulfill(path="playwright/im/equipment_icon_watch_tier9_piece.webp"))
         page.route("https://ba.game-db.tw/images/items/equipment_icon_charm_tier9_piece.png", lambda r, _ : r.fulfill(path="playwright/im/equipment_icon_charm_tier9_piece.webp"))
         page.route("https://ba.game-db.tw/images/items/equipment_icon_necklace_tier9_piece.png", lambda r, _ : r.fulfill(path="playwright/im/equipment_icon_necklace_tier9_piece.webp"))
+        page.route("https://ba.game-db.tw/images/items/item_icon_skillbook_highlander_0.png", lambda r, _ : r.fulfill(path="playwright/im/item_icon_skillbook_highlander_0.webp"))
+        page.route("https://ba.game-db.tw/images/items/item_icon_skillbook_highlander_1.png", lambda r, _ : r.fulfill(path="playwright/im/item_icon_skillbook_highlander_1.webp"))
+        page.route("https://ba.game-db.tw/images/items/item_icon_skillbook_highlander_2.png", lambda r, _ : r.fulfill(path="playwright/im/item_icon_skillbook_highlander_2.webp"))
+        page.route("https://ba.game-db.tw/images/items/item_icon_skillbook_highlander_3.png", lambda r, _ : r.fulfill(path="playwright/im/item_icon_skillbook_highlander_3.webp"))
+        page.route("https://ba.game-db.tw/images/items/item_icon_material_exskill_highlander_0.png", lambda r, _ : r.fulfill(path="playwright/im/item_icon_material_exskill_highlander_0.webp"))
+        page.route("https://ba.game-db.tw/images/items/item_icon_material_exskill_highlander_1.png", lambda r, _ : r.fulfill(path="playwright/im/item_icon_material_exskill_highlander_1.webp"))
+        page.route("https://ba.game-db.tw/images/items/item_icon_material_exskill_highlander_2.png", lambda r, _ : r.fulfill(path="playwright/im/item_icon_material_exskill_highlander_2.webp"))
+        page.route("https://ba.game-db.tw/images/items/item_icon_material_exskill_highlander_3.png", lambda r, _ : r.fulfill(path="playwright/im/item_icon_material_exskill_highlander_3.webp"))
     # 拿到成长资源截图
     page.goto("https://ba.game-db.tw/")
     page.wait_for_load_state()
@@ -469,10 +477,14 @@ if __name__ == "__main__":
             if not file.endswith(".png"):
                 continue
             file_name = file.replace(".png", "")
+            b = len(target)
             for key in cache_dict:
                 raw = cache_dict[key]
                 if raw["cnName"] == file_name:
                     target.append(key)
+                    break
+            if len(target) - b == 0:
+                print(f"{file_name}不在student_cache中")
     
     splited_arr = split_arr(target, max_thread)
     if len(splited_arr) == 0:

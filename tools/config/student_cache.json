@@ -1079,5 +1079,20 @@
         "cnName": "礼服纱织",
         "loma": "saori_dress",
         "gamekee": "https://www.gamekee.com/ba/654558.html"
+    },
+    "ヒカリ": {
+        "cnName": "光",
+        "loma": "hikari",
+        "gamekee": "https://www.gamekee.com/ba/656706.html"
+    },
+    "ノゾミ": {
+        "cnName": "望",
+        "loma": "nozomi",
+        "gamekee": "https://www.gamekee.com/ba/656708.html"
+    },
+    "アオバ": {
+        "cnName": "青叶",
+        "loma": "aoba",
+        "gamekee": "https://www.gamekee.com/ba/656711.html"
     }
 }

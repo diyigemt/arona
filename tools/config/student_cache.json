@@ -1114,5 +1114,20 @@
         "cnName": "乐队夏",
         "loma": "natsu_band",
         "gamekee": "https://www.gamekee.com/ba/664782.html"
+    },
+    "ユカリ(水着)": {
+        "cnName": "泳装紫",
+        "loma": "yukari_swimsuit",
+        "gamekee": "https://www.gamekee.com/ba/667848.html"
+    },
+    "レンゲ(水着)": {
+        "cnName": "泳装莲华",
+        "loma": "renge_swimsuit",
+        "gamekee": "https://www.gamekee.com/ba/667850.html"
+    },
+    "キキョウ(水着)": {
+        "cnName": "泳装桔梗",
+        "loma": "kikyou_swimsuit",
+        "gamekee": "https://www.gamekee.com/ba/667849.html"
     }
 }

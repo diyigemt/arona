@@ -44852,68 +44852,6 @@
       "SubSkillTW": "味方の攻擊力を増加"
     },
     {
-      "ID": 10118,
-      "Name": "ノゾミ",
-      "NameEN": "nozomi",
-      "NameTW": "望",
-      "DevName": "CH0243",
-      "Icon": "nozomi",
-      "Star": 3,
-      "SkillEx": [
-        [3090, 270],
-        [3091, 3090, 271, 240],
-        [3092, 3091, 272, 241],
-        [3093, 3092, 273, 242]
-      ],
-      "SkillExAmount": [
-        [12, 19],
-        [12, 18, 17, 35],
-        [12, 18, 8, 23],
-        [8, 18, 8, 20]
-      ],
-      "Skill": [
-        [4090],
-        [4090],
-        [4091, 4090, 270],
-        [4091, 271, 240],
-        [4092, 4091, 271, 240],
-        [4092, 272, 241],
-        [4093, 4092, 273, 242],
-        [4093, 273, 242]
-      ],
-      "SkillAmount": [
-        [5],
-        [8],
-        [5, 12, 4],
-        [8, 7, 13],
-        [5, 12, 8, 18],
-        [8, 4, 17],
-        [8, 12, 5, 10],
-        [12, 8, 12]
-      ],
-      "School": "Millennium",
-      "Class": 2,
-      "Role": "サポーター",
-      "Position": "Back",
-      "BulletType": 3,
-      "ArmorType": 4,
-      "Adaptatio": [3, 0, 4],
-      "WeaponAdaptatio": [3, 1],
-      "WeaponType": "HG",
-      "Gear": "",
-      "Cover": false,
-      "Range": 1000,
-      "Equipment": [1, 6, 8],
-      "SkillDetails": [1, 0, 0],
-      "IsLimited": 3,
-      "FavorStatType": ["AttackPower", "MaxHP"],
-      "FavorStatValue": [[2, 0], [3, 0], [4, 61], [5, 73], [1, 12], [2, 18], [3, 30]],
-      "FavorAlts": [],
-      "ReleaseDate": "2025/01/27",
-      "SubSkill": "攻撃力",
-      "SubSkillTW": "味方の攻擊力を増加"
-    },
-    {
       "ID": 20045,
       "Name": "フィーナ(ガイド)",
       "NameEN": "pina_guide",
@@ -45099,7 +45037,6 @@
       "SubSkill": "攻撃力",
       "SubSkillTW": "味方の攻擊力を増加"
     },
-
     {
       "ID": 10120,
       "Name": "ナツ(バンド)",
@@ -45139,6 +45076,384 @@
         [8, 4, 17],
         [8, 12, 5, 10],
         [12, 8, 13]
+      ],
+      "School": "Millennium",
+      "Class": 2,
+      "Role": "サポーター",
+      "Position": "Back",
+      "BulletType": 3,
+      "ArmorType": 4,
+      "Adaptatio": [3, 0, 4],
+      "WeaponAdaptatio": [3, 1],
+      "WeaponType": "HG",
+      "Gear": "",
+      "Cover": false,
+      "Range": 1000,
+      "Equipment": [1, 6, 8],
+      "SkillDetails": [1, 0, 0],
+      "IsLimited": 3,
+      "FavorStatType": ["AttackPower", "MaxHP"],
+      "FavorStatValue": [[2, 0], [3, 0], [4, 61], [5, 73], [1, 12], [2, 18], [3, 30]],
+      "FavorAlts": [],
+      "ReleaseDate": "2025/01/27",
+      "SubSkill": "攻撃力",
+      "SubSkillTW": "味方の攻擊力を増加"
+    },
+    {
+      "ID": 10121,
+      "Name": "ユカリ(水着)",
+      "NameEN": "yukari_swimsuit",
+      "NameTW": "泳装紫",
+      "DevName": "CH0301",
+      "Icon": "yukari_swimsuit",
+      "Star": 3,
+      "SkillEx": [
+        [3000, 250],
+        [3001, 3000, 251, 210],
+        [3002, 3001, 252, 211],
+        [3003, 3002, 253, 212]
+      ],
+      "SkillExAmount": [
+        [12, 17],
+        [12, 18, 13, 31],
+        [12, 18, 9, 26],
+        [8, 18, 5, 19]
+      ],
+      "Skill": [
+        [4000],
+        [4000],
+        [4001, 4000, 250],
+        [4001, 251, 210],
+        [4002, 4001, 251, 210],
+        [4002, 252, 211],
+        [4003, 4002, 253, 212],
+        [4003, 253, 212]
+      ],
+      "SkillAmount": [
+        [5],
+        [8],
+        [5, 12, 5],
+        [8, 6, 12],
+        [5, 12, 9, 19],
+        [8, 3, 18],
+        [8, 12, 5, 10],
+        [12, 9, 13]
+      ],
+      "School": "Millennium",
+      "Class": 2,
+      "Role": "サポーター",
+      "Position": "Back",
+      "BulletType": 3,
+      "ArmorType": 4,
+      "Adaptatio": [3, 0, 4],
+      "WeaponAdaptatio": [3, 1],
+      "WeaponType": "HG",
+      "Gear": "",
+      "Cover": false,
+      "Range": 1000,
+      "Equipment": [1, 6, 8],
+      "SkillDetails": [1, 0, 0],
+      "IsLimited": 3,
+      "FavorStatType": ["AttackPower", "MaxHP"],
+      "FavorStatValue": [[2, 0], [3, 0], [4, 61], [5, 73], [1, 12], [2, 18], [3, 30]],
+      "FavorAlts": [],
+      "ReleaseDate": "2025/01/27",
+      "SubSkill": "攻撃力",
+      "SubSkillTW": "味方の攻擊力を増加"
+    },
+    {
+      "ID": 13014,
+      "Name": "レンゲ(水着)",
+      "NameEN": "renge_swimsuit",
+      "NameTW": "泳装莲华",
+      "DevName": "CH0302",
+      "Icon": "renge_swimsuit",
+      "Star": 3,
+      "SkillEx": [
+        [
+          3000,
+          260
+        ],
+        [
+          3001,
+          3000,
+          261,
+          270
+        ],
+        [
+          3002,
+          3001,
+          262,
+          271
+        ],
+        [
+          3003,
+          3002,
+          263,
+          272
+        ]
+      ],
+      "SkillExAmount": [
+        [
+          12,
+          18
+        ],
+        [
+          12,
+          18,
+          17,
+          29
+        ],
+        [
+          12,
+          18,
+          9,
+          24
+        ],
+        [
+          8,
+          18,
+          7,
+          22
+        ]
+      ],
+      "Skill": [
+        [
+          4000
+        ],
+        [
+          4000
+        ],
+        [
+          4001,
+          4000,
+          260
+        ],
+        [
+          4001,
+          261,
+          270
+        ],
+        [
+          4002,
+          4001,
+          261,
+          270
+        ],
+        [
+          4002,
+          262,
+          271
+        ],
+        [
+          4003,
+          4002,
+          263,
+          272
+        ],
+        [
+          4003,
+          263,
+          272
+        ]
+      ],
+      "SkillAmount": [
+        [
+          5
+        ],
+        [
+          8
+        ],
+        [
+          5,
+          12,
+          5
+        ],
+        [
+          8,
+          6,
+          14
+        ],
+        [
+          5,
+          12,
+          9,
+          18
+        ],
+        [
+          8,
+          4,
+          19
+        ],
+        [
+          8,
+          12,
+          5,
+          9
+        ],
+        [
+          12,
+          8,
+          12
+        ]
+      ],
+      "School": "Millennium",
+      "Class": 2,
+      "Role": "サポーター",
+      "Position": "Back",
+      "BulletType": 3,
+      "ArmorType": 4,
+      "Adaptatio": [3, 0, 4],
+      "WeaponAdaptatio": [3, 1],
+      "WeaponType": "HG",
+      "Gear": "",
+      "Cover": false,
+      "Range": 1000,
+      "Equipment": [1, 6, 8],
+      "SkillDetails": [1, 0, 0],
+      "IsLimited": 3,
+      "FavorStatType": ["AttackPower", "MaxHP"],
+      "FavorStatValue": [[2, 0], [3, 0], [4, 61], [5, 73], [1, 12], [2, 18], [3, 30]],
+      "FavorAlts": [],
+      "ReleaseDate": "2025/01/27",
+      "SubSkill": "攻撃力",
+      "SubSkillTW": "味方の攻擊力を増加"
+    },
+    {
+      "ID": 20047,
+      "Name": "キキョウ(水着)",
+      "NameEN": "kikyou_swimsuit",
+      "NameTW": "泳装桔梗",
+      "DevName": "CH0300",
+      "Icon": "kikyou_swimsuit",
+      "Star": 3,
+      "SkillEx": [
+        [
+          3000,
+          290
+        ],
+        [
+          3001,
+          3000,
+          291,
+          280
+        ],
+        [
+          3002,
+          3001,
+          292,
+          281
+        ],
+        [
+          3003,
+          3002,
+          293,
+          282
+        ]
+      ],
+      "SkillExAmount": [
+        [
+          12,
+          16
+        ],
+        [
+          12,
+          18,
+          15,
+          32
+        ],
+        [
+          12,
+          18,
+          10,
+          28
+        ],
+        [
+          8,
+          18,
+          8,
+          20
+        ]
+      ],
+      "Skill": [
+        [
+          4000
+        ],
+        [
+          4000
+        ],
+        [
+          4001,
+          4000,
+          290
+        ],
+        [
+          4001,
+          291,
+          280
+        ],
+        [
+          4002,
+          4001,
+          291,
+          280
+        ],
+        [
+          4002,
+          292,
+          281
+        ],
+        [
+          4003,
+          4002,
+          293,
+          282
+        ],
+        [
+          4003,
+          293,
+          282
+        ]
+      ],
+      "SkillAmount": [
+        [
+          5
+        ],
+        [
+          8
+        ],
+        [
+          5,
+          12,
+          4
+        ],
+        [
+          8,
+          5,
+          13
+        ],
+        [
+          5,
+          12,
+          10,
+          18
+        ],
+        [
+          8,
+          3,
+          17
+        ],
+        [
+          8,
+          12,
+          4,
+          8
+        ],
+        [
+          12,
+          9,
+          15
+        ]
       ],
       "School": "Millennium",
       "Class": 2,

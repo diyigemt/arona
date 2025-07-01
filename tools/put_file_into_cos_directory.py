@@ -26,6 +26,9 @@ if __name__ == "__main__":
             SECRET_ID = read["SECRET_ID"]
             SECRET_KEY = read["SECRET_KEY"]
             Bucket = COS_NAME + "-" + COS_ID 
+    else:
+        print("arona-cos.json not found.")
+        exit(0)
     config = CosConfig(Region=REGION, SecretId=SECRET_ID, SecretKey=SECRET_KEY)
     client = CosS3Client(config)
     pool = SimpleThreadPool()

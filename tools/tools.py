@@ -13,6 +13,7 @@ import paramiko
 import json
 import numpy as np
 import uuid
+from pathlib import Path
 
 from reflash_cdn import purgeFiles
 password_file = "C:\\Users\\%s\\.ssh\\arona-backend-password" % getpass.getuser()
@@ -190,13 +191,13 @@ type_str_map = {
 def update_image_from_api(folder: str, type: int = 2):
     index = 0
     dict = []
-    for file in os.listdir(base_img_folder + folder):
+    for file in os.listdir(os.path.join(base_img_folder, folder)):
         if not file.endswith(".png"):
             continue
         file_name = file.replace(".png", "")
-        file_path = base_img_folder + folder + file
-        file_compress_for_guild_path = base_img_folder + "/s" + folder + file
-        file_path_absolute = folder + file
+        file_path = os.path.join(base_img_folder, folder, file)
+        file_compress_for_guild_path = os.path.join(base_img_folder, "s", folder, file)
+        file_path_absolute = "/" + os.path.join(folder, file).replace("\\", "/")
         
         file_names = list(map(lambda n: replace0(n), file_name.split("_")))
         # webp压缩
@@ -252,14 +253,6 @@ def update_image_from_api(folder: str, type: int = 2):
                     "region": region
                 })
         index += 1
-    if len(dict) == 0:
-        print("empty!")
-        return
-    #信息收集完成
-    print(list(map(lambda item: item["name"], dict)))
-    if not confirm_action():
-        exit(0)
-    #提交到后端进行处理
     return dict
 
 def post_image_to_remote(folder: str):
@@ -274,19 +267,19 @@ def post_image_to_remote(folder: str):
     transport = paramiko.Transport(("42.192.117.253", 22))
     transport.connect(username="root", pkey=key)
     sftp = paramiko.SFTPClient.from_transport(transport)
-    for file in os.listdir(base_img_folder + folder):
+    for file in os.listdir(os.path.join(base_img_folder, folder)):
         if not file.endswith(".png"):
             continue
-        file_path = base_img_folder + folder + file
-        file_history_path = base_img_folder + "/history" + folder + file
-        file_remote_path = folder + file
-        file_compress_for_guild_path = base_img_folder + "/s" + folder + file
-        remote_guild_path = "/srv/arona-backend/image/s%s" % (file_remote_path)
-        remote_path = "/srv/arona-backend/image%s" % (file_remote_path)
+        file_path = os.path.join(base_img_folder, folder, file).replace("\\", "/")
+        file_history_path = os.path.join(base_img_folder, "history", folder, file).replace("\\", "/")
+        file_remote_path = os.path.join(folder, file).replace("\\", "/")
+        file_compress_for_guild_path = os.path.join(base_img_folder, "s", folder, file).replace("\\", "/")
+        remote_guild_path = "/srv/arona-backend/image/s/%s" % (file_remote_path)
+        remote_path = "/srv/arona-backend/image/%s" % (file_remote_path)
         sftp.put(file_path, remote_path)
         sftp.put(file_compress_for_guild_path, remote_guild_path)
-        purgePath.append(cdn_path + file_remote_path)
-        purgePath.append(cdn_path + "/s" + file_remote_path)
+        purgePath.append(cdn_path + "/" + file_remote_path)
+        purgePath.append(cdn_path + os.path.join("s", file_remote_path).replace("\\", "/"))
         shutil.move(file_path, file_history_path)
         index += 1
     if index == 0:

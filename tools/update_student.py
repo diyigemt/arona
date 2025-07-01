@@ -4,11 +4,13 @@ import os
 import cv2
 import numpy as np
 from PIL import Image
-base_folder = "/student_rank/"
+base_folder = "student_rank"
 # 更新学生
 # tencentcloud-sdk-python-common==3.0.754
 
 # 将夜喵的图和wiki图整合
+
+
 def process_old():
     file_list = os.listdir("./image" + base_folder)
     total = len(file_list)
@@ -44,12 +46,15 @@ def process_old():
             path = str(remote["content"])
             png_name = path.replace("/student_rank/", "")
             local_path = "./image/parse/%s" % png_name
-            source_im = download_image("https://arona.cdn.diyigemt.com/image", path, local_path)
+            source_im = download_image(
+                "https://arona.cdn.diyigemt.com/image", path, local_path)
             im = Image.open(local_path)
             im = im.convert("RGBA")
             im.save(local_path)
-            source_im = cv2.imdecode(np.fromfile(local_path, dtype=np.uint8), -1)
-            replace_im = cv2.imdecode(np.fromfile(file_path, dtype=np.uint8), -1)
+            source_im = cv2.imdecode(np.fromfile(
+                local_path, dtype=np.uint8), -1)
+            replace_im = cv2.imdecode(
+                np.fromfile(file_path, dtype=np.uint8), -1)
             rows, cols, _ = replace_im.shape
             s_rows, s_cols, _ = source_im.shape
             # 新图片大小变了
@@ -58,18 +63,27 @@ def process_old():
                 s_p = "./image/parse/tmp-%s" % png_name
                 im.save(s_p)
                 im = cv2.imdecode(np.fromfile(s_p, dtype=np.uint8), -1)
-                im[0:s_rows,0:s_cols] = source_im
+                im[0:s_rows, 0:s_cols] = source_im
                 source_im = im
-            source_im[0:rows,0:cols] = replace_im
+            source_im[0:rows, 0:cols] = replace_im
             cv2.imencode(".png", source_im)[1].tofile(file_path)
             os.remove(local_path)
             count += 1
-            print("student: %s process success [%d/%d]" % (stu_name, count, total))
+            print(
+                "student: %s process success [%d/%d]" % (stu_name, count, total))
 
 
 if __name__ == '__main__':
     if confirm_action("update old?"):
         process_old()
     image_dict = update_image_from_api(base_folder, type=1)
+    if len(image_dict) == 0:
+        print("empty")
+        exit(0)
+    # 信息收集完成
+    print(list(map(lambda item: item["name"], image_dict)))
+    if not confirm_action():
+        exit(0)
+    # 提交到后端进行处理
     post_image_to_remote(base_folder)
     post_data("imageUpdate", image_dict)

@@ -55,4 +55,4 @@ def purgeFiles(paths: list[str]):
         print(err)
 
 if __name__ == "__main__":
-    purgeFiles(paths)
+    purgeFiles([])

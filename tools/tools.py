@@ -213,7 +213,7 @@ def update_image_from_api(folder: str, type: int = 2):
         with open(file_path, "rb") as f:
             hash = hashlib.md5(f.read()).digest().hex()
         # 将大于4M的图片压缩供频道发送
-        shutil.copy(file_path, file_compress_for_guild_path)
+        safe_copy(file_path, file_compress_for_guild_path)
         while os.path.getsize(file_compress_for_guild_path) / 1024 / 1024 > 3.8:
             im = Image.open(file_compress_for_guild_path)
             (x, y) = im.size
@@ -280,7 +280,7 @@ def post_image_to_remote(folder: str):
         sftp.put(file_compress_for_guild_path, remote_guild_path)
         purgePath.append(cdn_path + "/" + file_remote_path)
         purgePath.append(cdn_path + os.path.join("s", file_remote_path).replace("\\", "/"))
-        shutil.move(file_path, file_history_path)
+        safe_move(file_path, file_history_path)
         index += 1
     if index == 0:
         print("empty!")
@@ -321,6 +321,18 @@ def confirm_action(info = "process update?") -> bool:
         return False
     return True
 
+def safe_copy(src: str, dist: str):
+    if not os.path.exists(src):
+        return
+    dist_dir = os.path.dirname(dist)
+    if not os.path.exists(dist_dir):
+        os.makedirs(dist_dir)
+    shutil.copy(src, dist)
+
+def safe_move(src: str, dist: str):
+    safe_copy(src, dist)
+    os.remove(src)
+    
 replace_name = {
     "沙耶": "/老鼠/鼠鼠",
     "沙耶(私服)": "/滑鼠/私服老鼠/私服鼠鼠",

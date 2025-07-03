@@ -4,6 +4,7 @@ import os
 import re
 import shutil
 from config import cache_file_location, cn_translation_location
+from tools import safe_move
 
 regex = re.compile(r".*\(.*?([a-zA-Z]+).*?\).*")
 copy_suffix_map = {
@@ -54,6 +55,6 @@ if __name__ == "__main__":
             continue
         name = loma_map[matched_loma]
         new_path = os.path.join("./image/some", name) + ".png"
-        shutil.move(file_path, new_path)
+        safe_move(file_path, new_path)
         print("success: %s" % name)
     

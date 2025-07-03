@@ -9,7 +9,7 @@ from qcloud_cos import CosS3Client
 from qcloud_cos.cos_threadpool import SimpleThreadPool
 
 from reflash_cdn import purgeFiles
-from tools import confirm_action, post_data, update_image_from_api
+from tools import confirm_action, post_data, safe_move, update_image_from_api
 from progressbar import ProgressBar, Percentage, Bar, Timer, ETA
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Tuple, Union
@@ -24,6 +24,9 @@ BASE_FOLDER = "image"
 CHAPTER_MAP_PATH = "chapter_map"
 SOME_PATH = "some"
 STUDENT_PATH = "student_rank"
+CHAPTER_MAP_S_PATH = "s/chapter_map"
+SOME_S_PATH = "s/some"
+STUDENT_S_PATH = "s/student_rank"
 
 def list_folder(folder: str) -> list[Tuple[str, str]]:
     list_name = []
@@ -34,7 +37,7 @@ def list_folder(folder: str) -> list[Tuple[str, str]]:
         list_name.append((file_no_extend_name, full_path))
     return list_name
 
-def do_upload(client: CosS3Client, Bucket: str, path: str) -> Union[Tuple[Exception, str], None]:
+def do_upload(client: CosS3Client, Bucket: str, path: str) -> Tuple[Union[Exception, None], str]:
     try:
         client.upload_file(Bucket, path, path)
     except Exception as e:
@@ -60,20 +63,33 @@ if __name__ == "__main__":
     student_list = list_folder(STUDENT_PATH)
     # 遍历chapter_map文件夹
     chapter_list = list_folder(CHAPTER_MAP_PATH)
-    print("some: %s" % ", ".join(list(map(lambda tu: tu[0], some_list))))
-    print("student: %s" % ", ".join(list(map(lambda tu: tu[0], student_list))))
-    print("chapter: %s" % ", ".join(list(map(lambda tu: tu[0], chapter_list))))
-    student_data = update_image_from_api(STUDENT_PATH, type=1)
-    chapter_map_data = update_image_from_api(CHAPTER_MAP_PATH, type=2)
-    some_data = update_image_from_api(SOME_PATH, type=3)
-    upload_file_list = some_list + student_list + chapter_list
+    if len(some_list) > 0:
+        print("some: %s" % ", ".join(list(map(lambda tu: tu[0], some_list))))
+    if len(student_list) > 0:
+        print("student: %s" % ", ".join(list(map(lambda tu: tu[0], student_list))))
+    if len(chapter_list) > 0:
+        print("chapter: %s" % ", ".join(list(map(lambda tu: tu[0], chapter_list))))
+    if not confirm_action():
+        exit(0)
+    student_data = update_image_from_api(STUDENT_PATH, type=1) if len(student_list) > 0 else []
+    chapter_map_data = update_image_from_api(CHAPTER_MAP_PATH, type=2) if len(chapter_list) > 0 else []
+    some_data = update_image_from_api(SOME_PATH, type=3) if len(some_list) > 0 else []
+    _upload_file_list = some_list + student_list + chapter_list
+    if len(_upload_file_list) <= 0:
+        print("empty")
+        exit(0)
+    # 频道用的s系列
+    upload_file_s_list = list_folder(SOME_S_PATH) + list_folder(STUDENT_S_PATH) + list_folder(CHAPTER_MAP_S_PATH)
+    # 过滤只用于上传的
+    upload_file_s_list = list(filter(lambda x: len([it for it in _upload_file_list if it[0] == x[0]]) > 0, upload_file_s_list))
+    upload_file_list = _upload_file_list + upload_file_s_list
     backend_data_list = student_data + chapter_map_data + some_data
     widgets = ["Progress: ", Percentage(), " ", Bar("#"), " ",
                Timer(), " ", ETA()]
-    pbar = ProgressBar(widgets=widgets, maxval=len(upload_file_list)).start()
+    pbar = ProgressBar(widgets=widgets, maxval=100).start()
     finish = 0
     error_list: list[Tuple[Exception, str]] = []
-    with ThreadPoolExecutor(max_workers=4) as executor:
+    with ThreadPoolExecutor(max_workers=8) as executor:
         futures = [executor.submit(
             do_upload, client, Bucket, it[1]) for it in upload_file_list]
         for future in as_completed(futures):
@@ -83,13 +99,15 @@ if __name__ == "__main__":
             else:
                 local_path = resp[1]
                 # 移动到history文件夹
-                file_history_path = str(local_path).replace("image", "image/history")
-                shutil.move(local_path, file_history_path)
+                # s系列不管
+                if local_path.find("/s/") == -1:
+                    file_history_path = str(local_path).replace("image", "image/history")
+                    safe_move(local_path, file_history_path)
             finish = finish + 1
             pbar.update(math.ceil(finish / len(upload_file_list) * 100))
     pbar.finish()
     backend_data = []
-    for item in upload_file_list:
+    for item in _upload_file_list:
         has_error = [it for it in error_list if it[1] == item[1]]
         if has_error:
             print(f"file: {has_error[1]} upload failed.")

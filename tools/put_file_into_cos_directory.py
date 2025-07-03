@@ -7,7 +7,7 @@ from qcloud_cos import CosConfig
 from qcloud_cos import CosS3Client
 from qcloud_cos.cos_threadpool import SimpleThreadPool
 
-from tools import confirm_action
+from tools import confirm_action, safe_move
 
 COS_ID = ""
 COS_NAME = ""
@@ -52,5 +52,5 @@ if __name__ == "__main__":
         parent_path = file_history_path[:file_history_path.rfind("/")]
         if not os.path.exists(parent_path):
             os.makedirs(file_history_path[:file_history_path.rfind("/")])
-        shutil.move(local_path, file_history_path)
+        safe_move(local_path, file_history_path)
     pass

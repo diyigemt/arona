@@ -1129,5 +1129,20 @@
         "cnName": "泳装桔梗",
         "loma": "kikyou_swimsuit",
         "gamekee": "https://www.gamekee.com/ba/667849.html"
+    },
+    "セイア(水着)": {
+        "cnName": "泳装圣娅",
+        "loma": "seia_swimsuit",
+        "gamekee": "https://www.gamekee.com/ba/tj/671018.html"
+    },
+    "ハスミ(水着)": {
+        "cnName": "泳装莲见",
+        "loma": "hasumi_swimsuit",
+        "gamekee": "https://www.gamekee.com/ba/tj/671015.html"
+    },
+    "イチカ(水着)": {
+        "cnName": "泳装一花",
+        "loma": "ichika_swimsuit",
+        "gamekee": "https://www.gamekee.com/ba/tj/671014.html"
     }
 }

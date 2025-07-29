@@ -104,10 +104,9 @@ def run(playwright: Playwright, arr: list[str], thread_id: int):
             count = count + 1
             print("%s not found in btn" % jpName)
             continue
-        
-        # 切换回中文
-        page.locator("svg").first.click()
-        page.locator("#react-select-2-option-1").click()
+        # 切到日文
+        # page.locator("svg").first.click()
+        # page.locator("#react-select-2-option-0").click()
         time.sleep(3)
         start_time = time.time()
         end_time = 0
@@ -166,19 +165,23 @@ def run(playwright: Playwright, arr: list[str], thread_id: int):
         btnFilterList[offset].click()
         time.sleep(2)
         # 中日切换判断是否有翻译
-        try:
-            cn_skill = page.query_selector('//*[@id="skill1"]/div/div[1]').text_content()
-        except Exception as e:
-            cn_skill = ""
-        finally:
-            # 关闭信息窗口
-            close_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[1]")
-            if close_btn != None:
-                close_btn.click()
+        cn_skill = ""
+        # try:
+        #     cn_skill = page.query_selector('//*[@id="skill1"]/div/div[1]').text_content()
+        # except Exception as e:
+        #     cn_skill = ""
+        # finally:
+        #     # 关闭信息窗口
+        #     close_btn = page.query_selector("//*[@id='root']/div/div[2]/div[2]/div[1]")
+        #     if close_btn != None:
+        #         close_btn.click()
         # 切换回日文
-        page.locator("svg").first.click()
-        page.locator("#react-select-2-option-0").click()
-        btnFilterList[offset].click()
+        # try:
+        #     page.locator("svg").first.click()
+        #     page.locator("#react-select-2-option-0").click()
+        # except Exception as e:
+        #     pass
+        # btnFilterList[offset].click()
         time.sleep(2)
         try:
             jp_skill = page.query_selector('//*[@id="skill1"]/div/div[1]').text_content()

@@ -1144,5 +1144,15 @@
         "cnName": "泳装一花",
         "loma": "ichika_swimsuit",
         "gamekee": "https://www.gamekee.com/ba/tj/671014.html"
+    },
+    "ナギサ(水着)": {
+        "cnName": "泳装渚",
+        "loma": "nagisa_swimsuit",
+        "gamekee": "https://www.gamekee.com/ba/tj/671362.html"
+    },
+    "ミカ(水着)": {
+        "cnName": "泳装未花",
+        "loma": "mika_swimsuit",
+        "gamekee": "https://www.gamekee.com/ba/tj/671319.html"
     }
 }

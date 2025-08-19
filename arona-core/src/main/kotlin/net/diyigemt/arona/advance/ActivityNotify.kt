@@ -89,15 +89,29 @@ object ActivityNotify : AronaQuartzService {
       }
     }
 
+    /**
+     * 创建单次任务用于活动提醒
+     *
+     * 该函数用于创建一个定时任务，在指定时间触发活动提醒。
+     * 任务将在指定的小时执行ActivityNotifyOneHourJob来发送提醒消息
+     *
+     * @param activity 需要提醒的活动列表
+     * @param h 执行任务的小时数（24小时制）
+     * @param locale 服务器区域，用于确定发送目标群组
+     * @param extraKey 额外的键值，用于区分不同的任务
+     */
     private fun doInsert(activity: List<Activity>, h: Int, locale: ServerLocale, extraKey: String = "") {
+      // 设置任务执行时间
       val now = Calendar.getInstance()
-      now.set(Calendar.HOUR_OF_DAY, h)
+      val hour = if (h > 24) h + 1 else h
+      val hout = if (hour > 24) hour - 24 else hour
+      now.set(Calendar.HOUR_OF_DAY, hour)
       now.set(Calendar.MINUTE, 0)
       now.set(Calendar.MILLISECOND, 0)
       QuartzProvider.createSingleTask(
         ActivityNotifyOneHourJob::class.java,
         now.time,
-        "${ActivityNotifyOneHour}-${locale.commandName}-${h}-${extraKey}",
+        "${ActivityNotifyOneHour}-${locale.commandName}-${hout}-${extraKey}",
         ActivityNotifyOneHour,
         mapOf(
           ActivityKey to activity, NotifyStringKey to when (locale) {
@@ -118,12 +132,14 @@ object ActivityNotify : AronaQuartzService {
       val nowH = instance.get(Calendar.HOUR_OF_DAY)
       if (activity.isNotEmpty()) {
         activity.groupBy { calcDiffDayAndHour(it.time).second }.forEach { (h, u) ->
-          doInsert(u, nowH + h - 1, locale, h.toString())
+          // 根据服务器类型调整提醒时间
+          doInsert(u, if(locale.serverName == "国服"){nowH + h} else { nowH + h - 1 }, locale, h.toString())
         }
       }
       // 双倍掉落提醒
       if (dropActivities.isNotEmpty()) {
-        doInsert(dropActivities, DropActivityTime, locale)
+        // 根据服务器类型设置双倍掉落活动提醒时间
+        doInsert(dropActivities, if (locale.serverName == "国服"){DropActivityTime + 1}else{DropActivityTime}, locale)
       }
     }
 
@@ -152,13 +168,23 @@ object ActivityNotify : AronaQuartzService {
 
   }
 
+
   @Suppress("UNCHECKED_CAST")
   class ActivityNotifyOneHourJob : InterruptableJob {
+    /**
+     * 活动通知任务
+     *
+     * 该类实现了InterruptableJob接口，用于在活动开始前一小时向指定群组发送提醒消息。
+     * 主要功能包括：处理维护通知、处理活动结束提醒等。
+     *
+     * @property context 任务执行上下文，包含活动数据和通知配置信息
+     */
     override fun execute(context: JobExecutionContext?) {
       val ac = context?.mergedJobDataMap?.get(ActivityKey) ?: return
       ac as List<Activity>
       if (ac.isEmpty()) return
       val activity = ac.toMutableList()
+      // 提取维护活动信息
       val maintenance: Activity? = activity
         .filter { isMaintenanceActivity(it) }
         .let {
@@ -188,6 +214,7 @@ object ActivityNotify : AronaQuartzService {
       val serverString = if (context.mergedJobDataMap?.get(NotifyStringKey) != null) {
         MiraiCode.deserializeMiraiCode(notifyPrefix as String)
       } else notifyPrefix
+      // 计算活动结束时间
       val endTime = if (isMidnightEndActivity(activity[0])) {
         DropEndTime
       } else {

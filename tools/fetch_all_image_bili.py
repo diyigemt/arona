@@ -8,29 +8,29 @@ import threading
 
 img_folder = "image/some/"
 debug_index = -1
-cvs = ['cv20557188', 'cv20560474', 'cv20550621', 'cv20550020']
-base_url = "https://www.bilibili.com/read/%s"
+cvs = ['1097620850084937769', '1097991351118594048', '1097998549497413650', '1098009664831881217']
+base_url = "https://www.bilibili.com/opus/%s"
 headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"}
 
 def download(cv: str):
     url = base_url % cv
     web_data = requests.get(url=url, headers=headers)
     body = BeautifulSoup(web_data.text).body
-    main_contain = list(body.select(".img-box"))
+    main_contain = list(body.select(".opus-para-pic"))
     index = 0
     for item in main_contain:
         try:
             # if debug_index == index:
             #     print("a")
             image = item.select("img")[0]
-            image_url = "https://" + image.attrs["data-src"].replace("//", "").replace("\'", "")
+            image_url = "https://" + image.attrs["src"].replace("//", "").replace("\'", "")
             outer = item.previous_sibling
             names = outer.get_text().replace("/", "-")
             # 意料之外的多余空行
             if len(names) < 2:
                 names = outer.previous_sibling.get_text()
             # 下载图片
-            path, hash = draw_image(image_url, "%s.png" % names, img_folder)
+            path, hash = draw_image(image_url, "%s.png" % names, img_folder, "bilbilibili@赛博夜猫攻略组-白夜清露(20612969)")
 
             index = index + 1
             print(names)

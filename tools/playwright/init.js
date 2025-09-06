@@ -45910,6 +45910,68 @@
       "ReleaseDate": "2025/01/27",
       "SubSkill": "攻撃力",
       "SubSkillTW": "味方の攻擊力を増加"
+    },
+    {
+      "ID": 20049,
+      "Name": "ミサキ(水着)",
+      "NameEN": "misaki_swimsuit",
+      "NameTW": "泳装美咲",
+      "DevName": "CH0268",
+      "Icon": "misaki_swimsuit",
+      "Star": 3,
+      "SkillEx": [
+        [3060,240],
+        [3061,3060,241,160],
+        [3062,3061,242,161],
+        [3063,3062,243,162]
+      ],
+      "SkillExAmount": [
+        [12,17],
+        [12,18,14,33],
+        [12,18,10,28],
+        [8,18,7,20]
+      ],
+      "Skill": [
+        [4060],
+        [4060],
+        [4061,4060,240],
+        [4061,241,160],
+        [4062,4061,241,160],
+        [4062,242,161],
+        [4063,4062,243,162],
+        [4063,243,162]
+      ],
+      "SkillAmount": [
+        [5],
+        [8],
+        [5,12,4],
+        [8,5,13],
+        [5,12,10,17],
+        [8,3,17],
+        [8,12,4,8],
+        [12,9,16]
+      ],
+      "School": "Millennium",
+      "Class": 2,
+      "Role": "サポーター",
+      "Position": "Back",
+      "BulletType": 3,
+      "ArmorType": 4,
+      "Adaptatio": [3,0,4],
+      "WeaponAdaptatio": [3,1],
+      "WeaponType": "HG",
+      "Gear": "",
+      "Cover": false,
+      "Range": 1000,
+      "Equipment": [1,4,8],
+      "SkillDetails": [1,0,0],
+      "IsLimited": 3,
+      "FavorStatType": ["AttackPower","MaxHP"],
+      "FavorStatValue": [[2,0],[3,0],[4,61],[5,73],[1,12],[2,18],[3,30]],
+      "FavorAlts": [],
+      "ReleaseDate": "2025/01/27",
+      "SubSkill": "攻撃力",
+      "SubSkillTW": "味方の攻擊力を増加"
     }
   ];
   // split

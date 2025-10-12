@@ -46096,6 +46096,68 @@
       "ReleaseDate": "2025/01/27",
       "SubSkill": "攻撃力",
       "SubSkillTW": "味方の攻擊力を増加"
+    },
+    {
+      "ID": 20050,
+      "Name": "リツ",
+      "NameEN": "ritsu",
+      "NameTW": "律",
+      "DevName": "CH0319",
+      "Icon": "ritsu",
+      "Star": 3,
+      "SkillEx": [
+        [3100,200],
+        [3101,3100,201,150],
+        [3102,3101,202,151],
+        [3103,3102,203,152]
+      ],
+      "SkillExAmount": [
+        [12,17],
+        [12,18,13,33],
+        [12,18,11,26],
+        [8,18,6,20]
+      ],
+      "Skill": [
+        [4100],
+        [4100],
+        [4101,4100,200],
+        [4101,201,150],
+        [4102,4101,201,150],
+        [4102,202,151],
+        [4103,4102,203,152],
+        [4103,203,152]
+      ],
+      "SkillAmount": [
+        [5],
+        [8],
+        [5,12,5],
+        [8,4,13],
+        [5,12,10,17],
+        [8,3,18],
+        [8,12,4,8],
+        [12,9,15]
+      ],
+      "School": "Millennium",
+      "Class": 2,
+      "Role": "サポーター",
+      "Position": "Back",
+      "BulletType": 3,
+      "ArmorType": 4,
+      "Adaptatio": [3,0,4],
+      "WeaponAdaptatio": [3,1],
+      "WeaponType": "HG",
+      "Gear": "",
+      "Cover": false,
+      "Range": 1000,
+      "Equipment": [3,6,9],
+      "SkillDetails": [1,0,0],
+      "IsLimited": 3,
+      "FavorStatType": ["AttackPower","MaxHP"],
+      "FavorStatValue": [[2,0],[3,0],[4,61],[5,73],[1,12],[2,18],[3,30]],
+      "FavorAlts": [],
+      "ReleaseDate": "2025/01/27",
+      "SubSkill": "攻撃力",
+      "SubSkillTW": "味方の攻擊力を増加"
     }
   ];
   // split

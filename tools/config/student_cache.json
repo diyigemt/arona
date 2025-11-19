@@ -1184,5 +1184,25 @@
         "cnName": "律",
         "loma": "ritsu",
         "gamekee": "https://www.gamekee.com/ba/tj/677904.html"
+    },
+    "レイサ(マジカル)": {
+        "cnName": "魔法玲纱",
+        "loma": "reisa_magical",
+        "gamekee": "http://gamekee.com/ba/tj/674785.html"
+    },
+    "スズミ(マジカル)": {
+        "cnName": "魔法铃美",
+        "loma": "suzumi_magical",
+        "gamekee": "https://www.gamekee.com/ba/tj/677898.html"
+    },
+    "ラブ": {
+        "cnName": "兰舞",
+        "loma": "rabu",
+        "gamekee": "https://www.gamekee.com/ba/tj/161252.html"
+    },
+    "スバル": {
+        "cnName": "昴",
+        "loma": "subaru",
+        "gamekee": "https://www.gamekee.com/ba/tj/677499.html"
     }
 }

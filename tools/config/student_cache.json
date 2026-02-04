@@ -1214,5 +1214,40 @@
         "cnName": "八云",
         "loma": "yakumo",
         "gamekee": "https://www.gamekee.com/ba/tj/598110.html"
+    },
+    "ツクヨ(ドレス)": {
+        "cnName": "礼服月咏",
+        "loma": "tsukuyo_dress",
+        "gamekee": "https://www.gamekee.com/ba/tj/686688.html"
+    },
+    "ミチル(ドレス)": {
+        "cnName": "礼服满",
+        "loma": "michiru_dress",
+        "gamekee": "https://www.gamekee.com/ba/tj/686689.html"
+    },
+    "リオ(臨戦)": {
+        "cnName": "临战莉音",
+        "loma": "rio_battle",
+        "gamekee": "https://www.gamekee.com/ba/tj/690584.html"
+    },
+    "ヒマリ(臨戦)": {
+        "cnName": "临战日鞠",
+        "loma": "himari_battle",
+        "gamekee": "https://www.gamekee.com/ba/tj/690585.html"
+    },
+    "トキ(臨戦)": {
+        "cnName": "临战时",
+        "loma": "toki_battle",
+        "gamekee": "https://www.gamekee.com/ba/tj/690587.html"
+    },
+    "アリス(臨戦)": {
+        "cnName": "临战爱丽丝",
+        "loma": "aris_battle",
+        "gamekee": "https://www.gamekee.com/ba/tj/690586.html"
+    },
+    "ケイ": {
+        "cnName": "凯伊",
+        "loma": "kei",
+        "gamekee": "https://www.gamekee.com/ba/tj/690582.html"
     }
 }

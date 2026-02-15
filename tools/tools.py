@@ -30,7 +30,7 @@ def draw_image_source(path: str, source: str, offset = 1):
     img = img.convert("RGBA", colors=255)
     cols = img.width
     rows = img.height
-    font_size = max(12, cols / 50)
+    font_size = int(max(12, cols / 50))
     if offset >= 1:
         mr = int(rows + font_size * offset * 1.5)
         bg = Image.new('RGBA', (cols, mr), color='white')

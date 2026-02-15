@@ -6,18 +6,24 @@
 # "6": "bilbilibili@本心Official(20612969)",
 # "7": "bilbilibili@赛博夜猫攻略组-白夜清露(20612969)",
 # "8": "bilbilibili@碧蓝档案资讯站(37507923)",
+# "9": "bilbilibili@校委会攻略组(259878)",
+
 image:
   - name: 'test'
     path: './image/some/'
     url: ''
     group: ''
     type: "vertical" # horizen or vertical
-    source: '7'
+    source: '9'
   - name: 'test'
     path: './image/some/'
     url: ''
-    source: '7'
+    source: '9'
+  - name: 'test'
+    path: './image/some/'
+    url: ''
+    source: '9'
   - name: 'test'
     path: './image/student_rank/'
     url: ''
-    source: '7'
+    source: '9'

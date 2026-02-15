@@ -30,7 +30,7 @@ def download(cv: str):
             if len(names) < 2:
                 names = outer.previous_sibling.get_text()
             # 下载图片
-            path, hash = draw_image(image_url, "%s.png" % names, img_folder, "bilbilibili@赛博夜猫攻略组-白夜清露(20612969)")
+            path, hash = draw_image(image_url, "%s.png" % names, img_folder, "bilbilibili@校委会攻略组(259878)")
 
             index = index + 1
             print(names)

@@ -1249,5 +1249,15 @@
         "cnName": "凯伊",
         "loma": "kei",
         "gamekee": "https://www.gamekee.com/ba/tj/690582.html"
+    },
+    "ユズ(臨戦)": {
+        "cnName": "临战柚子",
+        "loma": "yuzu_battle",
+        "gamekee": "https://www.gamekee.com/ba/tj/690661.html"
+    },
+    "エイミ(臨戦)": {
+        "cnName": "临战艾米",
+        "loma": "eimi_battle",
+        "gamekee": "https://www.gamekee.com/ba/tj/690663.html"
     }
 }

@@ -6,6 +6,7 @@ import time
 import json
 import codecs
 import threading
+from pathlib import Path
 import numpy as np
 from PIL import Image
 from config import cache_file_location, cn_translation_location
@@ -19,6 +20,9 @@ target = []
 # game-db数据更新缓慢, 使用override的数据
 use_game_db_override = True
 game_db_override_script = "https://ba.game-db.tw/static/main.60fb9fc1a0d8c5d39ee5.js"
+
+ROOT = Path(__file__).resolve().parent
+ROUTE_OVERRIDES_JSON = ROOT / "playwright" / "route_overrides.json"
 
 sources_map = {
     "schaledb": "部分学生信息,技能数据来源: https://schaledb.com/",
@@ -37,6 +41,25 @@ with codecs.open(cache_file_location, "r", encoding="utf-8") as f:
 def game_db_content_override(route: Route, req: Request):
     route.fulfill(path="playwright/fake.js")
 
+def load_route_overrides() -> dict[str, str]:
+    if not ROUTE_OVERRIDES_JSON.exists():
+        raise FileNotFoundError(
+            f"{ROUTE_OVERRIDES_JSON} not found; run build_init_js.py first"
+        )
+    with codecs.open(str(ROUTE_OVERRIDES_JSON), "r", encoding="utf-8") as f:
+        raw = json.load(f)
+    resolved: dict[str, str] = {}
+    for url, local_path in raw.items():
+        path = Path(local_path)
+        if not path.is_absolute():
+            path = ROOT / path
+        resolved[url] = str(path)
+    return resolved
+
+def register_route_overrides(page, overrides: dict[str, str]):
+    for url, local_path in overrides.items():
+        page.route(url, lambda r, _, p=local_path: r.fulfill(path=p))
+
 def run(playwright: Playwright, arr: list[str], thread_id: int):
     with codecs.open("./config/local_file_map.json", "r", encoding="utf-8") as f:
         local_file_path = json.load(f)
@@ -54,17 +77,7 @@ def run(playwright: Playwright, arr: list[str], thread_id: int):
     if (use_game_db_override):
         page.add_init_script(path="playwright/init.js")
         page.route(game_db_override_script, game_db_content_override)
-        page.route("https://ba.game-db.tw/images/items/equipment_icon_watch_tier9.png", lambda r, _ : r.fulfill(path="playwright/im/equipment_icon_watch_tier9.webp"))
-        page.route("https://ba.game-db.tw/images/items/equipment_icon_charm_tier9.png", lambda r, _ : r.fulfill(path="playwright/im/equipment_icon_charm_tier9.webp"))
-        page.route("https://ba.game-db.tw/images/items/equipment_icon_necklace_tier9.png", lambda r, _ : r.fulfill(path="playwright/im/equipment_icon_necklace_tier9.webp"))
-        page.route("https://ba.game-db.tw/images/items/equipment_icon_watch_tier9_piece.png", lambda r, _ : r.fulfill(path="playwright/im/equipment_icon_watch_tier9_piece.webp"))
-        page.route("https://ba.game-db.tw/images/items/equipment_icon_charm_tier9_piece.png", lambda r, _ : r.fulfill(path="playwright/im/equipment_icon_charm_tier9_piece.webp"))
-        page.route("https://ba.game-db.tw/images/items/equipment_icon_necklace_tier9_piece.png", lambda r, _ : r.fulfill(path="playwright/im/equipment_icon_necklace_tier9_piece.webp"))
-        for i in range(4):
-            page.route(f"https://ba.game-db.tw/images/items/item_icon_skillbook_highlander_{i}.png", lambda r, _ : r.fulfill(path=f"playwright/im/item_icon_skillbook_highlander_{i}.webp"))
-            page.route(f"https://ba.game-db.tw/images/items/item_icon_skillbook_wildhunt_{i}.png", lambda r, _ : r.fulfill(path=f"playwright/im/item_icon_skillbook_wildhunt_{i}.webp"))
-            page.route(f"https://ba.game-db.tw/images/items/item_icon_material_exskill_highlander_{i}.png", lambda r, _ : r.fulfill(path=f"playwright/im/item_icon_material_exskill_highlander_{i}.webp"))
-            page.route(f"https://ba.game-db.tw/images/items/item_icon_material_exskill_wildhunt_{i}.png", lambda r, _ : r.fulfill(path=f"playwright/im/item_icon_material_exskill_wildhunt_{i}.webp"))
+        register_route_overrides(page, load_route_overrides())
     # 拿到成长资源截图
     page.goto("https://ba.game-db.tw/")
     page.wait_for_load_state()

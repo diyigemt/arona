@@ -2,3 +2,14 @@ log.7z
 log/
 log.db
 db/
+img/
+image/
+raw/
+__pycache__/
+pixiv.db
+pixiv.py
+pixiv.db-journal
+tmp.png
+tmp2.png
+playwright/im
+playwright/route_overrides.json

@@ -42,7 +42,7 @@ EQUIPMENT_TYPE_MAP = {
     "Necklace": 9,
 }
 
-ITEM_BOOK_SUBCATEGORIES = {"BookItem", "CDItem"}
+ITEM_BOOK_SUBCATEGORIES = {"BookItem", "CDItem", "Artifact"}
 
 BASE_INDENT = "  "
 

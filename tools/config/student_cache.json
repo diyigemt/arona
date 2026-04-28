@@ -1279,5 +1279,20 @@
         "cnName": "制服茜",
         "loma": "akane_uniform",
         "gamekee": "https://www.gamekee.com/ba/tj/645973.html"
+    },
+    "ニコ": {
+        "cnName": "妮可",
+        "loma": "niko",
+        "gamekee": "https://www.gamekee.com/ba/tj/161248.html"
+    },
+    "クルミ": {
+        "cnName": "胡桃",
+        "loma": "kurumi",
+        "gamekee": "https://www.gamekee.com/ba/tj/591006.html"
+    },
+    "オトギ": {
+        "cnName": "音葵",
+        "loma": "otogi",
+        "gamekee": "https://www.gamekee.com/ba/tj/591005.html"
     }
 }

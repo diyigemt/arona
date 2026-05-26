@@ -28966,6 +28966,422 @@
       "SubSkillTW": ""
     },
     {
+      "ID": 10139,
+      "Name": "ニコ",
+      "NameEN": "",
+      "NameTW": "",
+      "DevName": "CH0172",
+      "Icon": "",
+      "Star": 3,
+      "SkillEx": [
+        [
+          3080,
+          130
+        ],
+        [
+          3081,
+          3080,
+          131,
+          270
+        ],
+        [
+          3082,
+          3081,
+          132,
+          271
+        ],
+        [
+          3083,
+          3082,
+          133,
+          272
+        ]
+      ],
+      "SkillExAmount": [
+        [
+          12,
+          16
+        ],
+        [
+          12,
+          18,
+          15,
+          34
+        ],
+        [
+          12,
+          18,
+          11,
+          25
+        ],
+        [
+          8,
+          18,
+          7,
+          19
+        ]
+      ],
+      "Skill": [
+        [
+          4080
+        ],
+        [
+          4080
+        ],
+        [
+          4081,
+          4080,
+          130
+        ],
+        [
+          4081,
+          131,
+          270
+        ],
+        [
+          4082,
+          4081,
+          131,
+          270
+        ],
+        [
+          4082,
+          132,
+          271
+        ],
+        [
+          4083,
+          4082,
+          133,
+          272
+        ],
+        [
+          4083,
+          133,
+          272
+        ]
+      ],
+      "SkillAmount": [
+        [
+          5
+        ],
+        [
+          8
+        ],
+        [
+          5,
+          12,
+          4
+        ],
+        [
+          8,
+          5,
+          14
+        ],
+        [
+          5,
+          12,
+          10,
+          18
+        ],
+        [
+          8,
+          3,
+          17
+        ],
+        [
+          8,
+          12,
+          5,
+          9
+        ],
+        [
+          12,
+          8,
+          15
+        ]
+      ],
+      "School": "Gehenna",
+      "Class": 1,
+      "Role": "アタッカー",
+      "Position": "Back",
+      "BulletType": 1,
+      "ArmorType": 1,
+      "Adaptatio": [
+        4,
+        2,
+        0
+      ],
+      "WeaponAdaptatio": [
+        1,
+        1
+      ],
+      "WeaponType": "SR",
+      "Gear": "アルのすごく貴重な財布",
+      "Cover": true,
+      "Range": 750,
+      "Equipment": [
+        3,
+        6,
+        8
+      ],
+      "SkillDetails": [
+        1,
+        1,
+        1
+      ],
+      "IsLimited": 0,
+      "FavorStatType": [
+        "AttackPower",
+        "MaxHP"
+      ],
+      "FavorStatValue": [
+        [
+          4,
+          0
+        ],
+        [
+          6,
+          0
+        ],
+        [
+          7,
+          48
+        ],
+        [
+          9,
+          58
+        ],
+        [
+          2,
+          10
+        ],
+        [
+          4,
+          15
+        ],
+        [
+          6,
+          25
+        ]
+      ],
+      "FavorAlts": [
+        10031,
+        10089
+      ],
+      "ReleaseDate": "2021/02/04",
+      "SubSkill": "",
+      "SubSkillTW": ""
+    },
+    {
+      "ID": 10140,
+      "Name": "クルミ",
+      "NameEN": "",
+      "NameTW": "",
+      "DevName": "CH0173",
+      "Icon": "",
+      "Star": 3,
+      "SkillEx": [
+        [
+          3080,
+          150
+        ],
+        [
+          3081,
+          3080,
+          151,
+          220
+        ],
+        [
+          3082,
+          3081,
+          152,
+          221
+        ],
+        [
+          3083,
+          3082,
+          153,
+          222
+        ]
+      ],
+      "SkillExAmount": [
+        [
+          12,
+          14
+        ],
+        [
+          12,
+          18,
+          14,
+          27
+        ],
+        [
+          12,
+          18,
+          9,
+          27
+        ],
+        [
+          8,
+          18,
+          9,
+          19
+        ]
+      ],
+      "Skill": [
+        [
+          4080
+        ],
+        [
+          4080
+        ],
+        [
+          4081,
+          4080,
+          150
+        ],
+        [
+          4081,
+          151,
+          220
+        ],
+        [
+          4082,
+          4081,
+          151,
+          220
+        ],
+        [
+          4082,
+          152,
+          221
+        ],
+        [
+          4083,
+          4082,
+          153,
+          222
+        ],
+        [
+          4083,
+          153,
+          222
+        ]
+      ],
+      "SkillAmount": [
+        [
+          5
+        ],
+        [
+          8
+        ],
+        [
+          5,
+          12,
+          5
+        ],
+        [
+          8,
+          3,
+          11
+        ],
+        [
+          5,
+          12,
+          10,
+          19
+        ],
+        [
+          8,
+          3,
+          16
+        ],
+        [
+          8,
+          12,
+          4,
+          8
+        ],
+        [
+          12,
+          9,
+          15
+        ]
+      ],
+      "School": "Gehenna",
+      "Class": 1,
+      "Role": "アタッカー",
+      "Position": "Back",
+      "BulletType": 1,
+      "ArmorType": 1,
+      "Adaptatio": [
+        4,
+        2,
+        0
+      ],
+      "WeaponAdaptatio": [
+        1,
+        1
+      ],
+      "WeaponType": "SR",
+      "Gear": "アルのすごく貴重な財布",
+      "Cover": true,
+      "Range": 750,
+      "Equipment": [
+        3,
+        4,
+        9
+      ],
+      "SkillDetails": [
+        1,
+        1,
+        1
+      ],
+      "IsLimited": 0,
+      "FavorStatType": [
+        "AttackPower",
+        "MaxHP"
+      ],
+      "FavorStatValue": [
+        [
+          4,
+          0
+        ],
+        [
+          6,
+          0
+        ],
+        [
+          7,
+          48
+        ],
+        [
+          9,
+          58
+        ],
+        [
+          2,
+          10
+        ],
+        [
+          4,
+          15
+        ],
+        [
+          6,
+          25
+        ]
+      ],
+      "FavorAlts": [
+        10031,
+        10089
+      ],
+      "ReleaseDate": "2021/02/04",
+      "SubSkill": "",
+      "SubSkillTW": ""
+    },
+    {
       "ID": 13000,
       "Name": "アカネ",
       "NameEN": "",
@@ -36196,6 +36612,214 @@
         1,
         6,
         9
+      ],
+      "SkillDetails": [
+        1,
+        1,
+        1
+      ],
+      "IsLimited": 0,
+      "FavorStatType": [
+        "AttackPower",
+        "MaxHP"
+      ],
+      "FavorStatValue": [
+        [
+          4,
+          0
+        ],
+        [
+          6,
+          0
+        ],
+        [
+          7,
+          48
+        ],
+        [
+          9,
+          58
+        ],
+        [
+          2,
+          10
+        ],
+        [
+          4,
+          15
+        ],
+        [
+          6,
+          25
+        ]
+      ],
+      "FavorAlts": [
+        10031,
+        10089
+      ],
+      "ReleaseDate": "2021/02/04",
+      "SubSkill": "",
+      "SubSkillTW": ""
+    },
+    {
+      "ID": 16020,
+      "Name": "オトギ",
+      "NameEN": "",
+      "NameTW": "",
+      "DevName": "CH0174",
+      "Icon": "",
+      "Star": 1,
+      "SkillEx": [
+        [
+          3080,
+          170
+        ],
+        [
+          3081,
+          3080,
+          171,
+          290
+        ],
+        [
+          3082,
+          3081,
+          172,
+          291
+        ],
+        [
+          3083,
+          3082,
+          173,
+          292
+        ]
+      ],
+      "SkillExAmount": [
+        [
+          12,
+          17
+        ],
+        [
+          12,
+          18,
+          12,
+          31
+        ],
+        [
+          12,
+          18,
+          10,
+          24
+        ],
+        [
+          8,
+          18,
+          7,
+          20
+        ]
+      ],
+      "Skill": [
+        [
+          4080
+        ],
+        [
+          4080
+        ],
+        [
+          4081,
+          4080,
+          170
+        ],
+        [
+          4081,
+          171,
+          290
+        ],
+        [
+          4082,
+          4081,
+          171,
+          290
+        ],
+        [
+          4082,
+          172,
+          291
+        ],
+        [
+          4083,
+          4082,
+          173,
+          292
+        ],
+        [
+          4083,
+          173,
+          292
+        ]
+      ],
+      "SkillAmount": [
+        [
+          5
+        ],
+        [
+          8
+        ],
+        [
+          5,
+          12,
+          5
+        ],
+        [
+          8,
+          6,
+          11
+        ],
+        [
+          5,
+          12,
+          10,
+          19
+        ],
+        [
+          8,
+          3,
+          17
+        ],
+        [
+          8,
+          12,
+          4,
+          9
+        ],
+        [
+          12,
+          9,
+          14
+        ]
+      ],
+      "School": "Gehenna",
+      "Class": 1,
+      "Role": "アタッカー",
+      "Position": "Back",
+      "BulletType": 1,
+      "ArmorType": 1,
+      "Adaptatio": [
+        4,
+        2,
+        0
+      ],
+      "WeaponAdaptatio": [
+        1,
+        1
+      ],
+      "WeaponType": "SR",
+      "Gear": "アルのすごく貴重な財布",
+      "Cover": true,
+      "Range": 750,
+      "Equipment": [
+        2,
+        6,
+        8
       ],
       "SkillDetails": [
         1,
@@ -48334,6 +48958,214 @@
       "SubSkillTW": ""
     },
     {
+      "ID": 20058,
+      "Name": "エリカ",
+      "NameEN": "",
+      "NameTW": "",
+      "DevName": "CH0076",
+      "Icon": "",
+      "Star": 3,
+      "SkillEx": [
+        [
+          3030,
+          200
+        ],
+        [
+          3031,
+          3030,
+          201,
+          180
+        ],
+        [
+          3032,
+          3031,
+          202,
+          181
+        ],
+        [
+          3033,
+          3032,
+          203,
+          182
+        ]
+      ],
+      "SkillExAmount": [
+        [
+          12,
+          16
+        ],
+        [
+          12,
+          18,
+          14,
+          31
+        ],
+        [
+          12,
+          18,
+          10,
+          25
+        ],
+        [
+          8,
+          18,
+          10,
+          23
+        ]
+      ],
+      "Skill": [
+        [
+          4030
+        ],
+        [
+          4030
+        ],
+        [
+          4031,
+          4030,
+          200
+        ],
+        [
+          4031,
+          201,
+          180
+        ],
+        [
+          4032,
+          4031,
+          201,
+          180
+        ],
+        [
+          4032,
+          202,
+          181
+        ],
+        [
+          4033,
+          4032,
+          203,
+          182
+        ],
+        [
+          4033,
+          203,
+          182
+        ]
+      ],
+      "SkillAmount": [
+        [
+          5
+        ],
+        [
+          8
+        ],
+        [
+          5,
+          12,
+          5
+        ],
+        [
+          8,
+          4,
+          13
+        ],
+        [
+          5,
+          12,
+          9,
+          18
+        ],
+        [
+          8,
+          3,
+          17
+        ],
+        [
+          8,
+          12,
+          4,
+          9
+        ],
+        [
+          12,
+          8,
+          14
+        ]
+      ],
+      "School": "Gehenna",
+      "Class": 1,
+      "Role": "アタッカー",
+      "Position": "Back",
+      "BulletType": 1,
+      "ArmorType": 1,
+      "Adaptatio": [
+        4,
+        2,
+        0
+      ],
+      "WeaponAdaptatio": [
+        1,
+        1
+      ],
+      "WeaponType": "SR",
+      "Gear": "アルのすごく貴重な財布",
+      "Cover": true,
+      "Range": 750,
+      "Equipment": [
+        3,
+        4,
+        9
+      ],
+      "SkillDetails": [
+        1,
+        1,
+        1
+      ],
+      "IsLimited": 0,
+      "FavorStatType": [
+        "AttackPower",
+        "MaxHP"
+      ],
+      "FavorStatValue": [
+        [
+          4,
+          0
+        ],
+        [
+          6,
+          0
+        ],
+        [
+          7,
+          48
+        ],
+        [
+          9,
+          58
+        ],
+        [
+          2,
+          10
+        ],
+        [
+          4,
+          15
+        ],
+        [
+          6,
+          25
+        ]
+      ],
+      "FavorAlts": [
+        10031,
+        10089
+      ],
+      "ReleaseDate": "2021/02/04",
+      "SubSkill": "",
+      "SubSkillTW": ""
+    },
+    {
       "ID": 23000,
       "Name": "アイリ",
       "NameEN": "",
@@ -53561,6 +54393,2966 @@
   // split
   window.items = [
     {
+      "ID": 100,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "N",
+      "Quality": 1,
+      "Tags": [
+        "k",
+        "M",
+        "cr"
+      ],
+      "ShiftingCraftQuality": 10,
+      "CraftQuality": 5,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_nebra_0",
+      "Name": "内布拉星象磁盘碎片",
+      "Desc": "内布拉星象磁盘损坏的碎片。用于制造及强化。"
+    },
+    {
+      "ID": 101,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "R",
+      "Quality": 2,
+      "Tags": [
+        "k",
+        "M",
+        "cS"
+      ],
+      "ShiftingCraftQuality": 20,
+      "CraftQuality": 10,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_nebra_1",
+      "Name": "破损的内布拉星象磁盘",
+      "Desc": "破损到难以看出原本形态的内布拉星象磁盘。用于制造及强化。"
+    },
+    {
+      "ID": 102,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SR",
+      "Quality": 3,
+      "Tags": [
+        "k",
+        "M",
+        "cs"
+      ],
+      "ShiftingCraftQuality": 50,
+      "CraftQuality": 20,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        false
+      ],
+      "Icon": "item_icon_material_nebra_2",
+      "Name": "磨损的内布拉星象磁盘",
+      "Desc": "老旧而各处磨损的内布拉星象磁盘。用于制造及强化。"
+    },
+    {
+      "ID": 103,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SSR",
+      "Quality": 4,
+      "Tags": [
+        "k",
+        "M",
+        "cT"
+      ],
+      "ShiftingCraftQuality": 80,
+      "CraftQuality": 50,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        false,
+        false,
+        false
+      ],
+      "Shop": [
+        true,
+        true,
+        false
+      ],
+      "Icon": "item_icon_material_nebra_3",
+      "Name": "完好的内布拉星象磁盘",
+      "Desc": "状态完好的内布拉星象磁盘。用于制造及强化。"
+    },
+    {
+      "ID": 110,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "N",
+      "Quality": 1,
+      "Tags": [
+        "k",
+        "M",
+        "cr"
+      ],
+      "ShiftingCraftQuality": 10,
+      "CraftQuality": 5,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_phaistos_0",
+      "Name": "斐斯托斯圆盘碎片",
+      "Desc": "斐斯托斯圆盘损坏的碎片。用于制造及强化。"
+    },
+    {
+      "ID": 111,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "R",
+      "Quality": 2,
+      "Tags": [
+        "k",
+        "M",
+        "cS"
+      ],
+      "ShiftingCraftQuality": 20,
+      "CraftQuality": 10,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_phaistos_1",
+      "Name": "破损的斐斯托斯圆盘",
+      "Desc": "破损到难以看出原本形态的斐斯托斯圆盘。用于制造及强化。"
+    },
+    {
+      "ID": 112,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SR",
+      "Quality": 3,
+      "Tags": [
+        "k",
+        "M",
+        "cs"
+      ],
+      "ShiftingCraftQuality": 50,
+      "CraftQuality": 20,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_phaistos_2",
+      "Name": "磨损的斐斯托斯圆盘",
+      "Desc": "老旧而各处磨损的斐斯托斯圆盘。用于制造及强化。"
+    },
+    {
+      "ID": 113,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SSR",
+      "Quality": 4,
+      "Tags": [
+        "k",
+        "M",
+        "cT"
+      ],
+      "ShiftingCraftQuality": 80,
+      "CraftQuality": 50,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        false,
+        false,
+        false
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_phaistos_3",
+      "Name": "完好的斐斯托斯圆盘",
+      "Desc": "状态完好的斐斯托斯圆盘。用于制造及强化。"
+    },
+    {
+      "ID": 120,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "N",
+      "Quality": 1,
+      "Tags": [
+        "k",
+        "M",
+        "cr"
+      ],
+      "ShiftingCraftQuality": 10,
+      "CraftQuality": 5,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_wolfsegg_0",
+      "Name": "沃尔夫赛格铁矿",
+      "Desc": "尚未冶炼提纯的沃尔夫赛格铁矿石。用于制造及强化。"
+    },
+    {
+      "ID": 121,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "R",
+      "Quality": 2,
+      "Tags": [
+        "k",
+        "M",
+        "cS"
+      ],
+      "ShiftingCraftQuality": 20,
+      "CraftQuality": 10,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_wolfsegg_1",
+      "Name": "沃尔夫赛格钢块",
+      "Desc": "冶炼提纯途中掉出来的一小块沃尔夫赛格钢。用于制造及强化。"
+    },
+    {
+      "ID": 122,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SR",
+      "Quality": 3,
+      "Tags": [
+        "k",
+        "M",
+        "cs"
+      ],
+      "ShiftingCraftQuality": 50,
+      "CraftQuality": 20,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_wolfsegg_2",
+      "Name": "低纯沃尔夫赛格钢",
+      "Desc": "混有各种杂质的低纯沃尔夫赛格钢。用于制造及强化。"
+    },
+    {
+      "ID": 123,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SSR",
+      "Quality": 4,
+      "Tags": [
+        "k",
+        "M",
+        "cT"
+      ],
+      "ShiftingCraftQuality": 80,
+      "CraftQuality": 50,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        false,
+        false,
+        false
+      ],
+      "Shop": [
+        true,
+        true,
+        false
+      ],
+      "Icon": "item_icon_material_wolfsegg_3",
+      "Name": "高纯沃尔夫赛格钢",
+      "Desc": "通过精炼提高了纯度的高纯沃尔夫赛格钢。用于制造及强化。"
+    },
+    {
+      "ID": 130,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "N",
+      "Quality": 1,
+      "Tags": [
+        "k",
+        "M",
+        "cr"
+      ],
+      "ShiftingCraftQuality": 10,
+      "CraftQuality": 5,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_nimrud_0",
+      "Name": "尼姆鲁德透镜碎片",
+      "Desc": "尼姆鲁德透镜的损坏碎片。用于制造及强化。"
+    },
+    {
+      "ID": 131,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "R",
+      "Quality": 2,
+      "Tags": [
+        "k",
+        "M",
+        "cS"
+      ],
+      "ShiftingCraftQuality": 20,
+      "CraftQuality": 10,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_nimrud_1",
+      "Name": "破损的尼姆鲁德透镜",
+      "Desc": "各处充满裂痕的尼姆鲁德透镜。用于制造及强化。"
+    },
+    {
+      "ID": 132,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SR",
+      "Quality": 3,
+      "Tags": [
+        "k",
+        "M",
+        "cs"
+      ],
+      "ShiftingCraftQuality": 50,
+      "CraftQuality": 20,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_nimrud_2",
+      "Name": "修复过的尼姆鲁德透镜",
+      "Desc": "拼合碎片修复过的尼姆鲁德透镜。用于制造及强化。"
+    },
+    {
+      "ID": 133,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SSR",
+      "Quality": 4,
+      "Tags": [
+        "k",
+        "M",
+        "cT"
+      ],
+      "ShiftingCraftQuality": 80,
+      "CraftQuality": 50,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        false,
+        false,
+        false
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_nimrud_3",
+      "Name": "完好的尼姆鲁德透镜",
+      "Desc": "状态完好的尼姆鲁德透镜"
+    },
+    {
+      "ID": 140,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "N",
+      "Quality": 1,
+      "Tags": [
+        "k",
+        "M",
+        "cr"
+      ],
+      "ShiftingCraftQuality": 10,
+      "CraftQuality": 5,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_mandragora_0",
+      "Name": "曼德拉草种子",
+      "Desc": "紧闭着的曼德拉草种子。用于制造及强化。"
+    },
+    {
+      "ID": 141,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "R",
+      "Quality": 2,
+      "Tags": [
+        "k",
+        "M",
+        "cS"
+      ],
+      "ShiftingCraftQuality": 20,
+      "CraftQuality": 10,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_mandragora_1",
+      "Name": "曼德拉草幼苗",
+      "Desc": "萌发出嫩芽的曼德拉草幼苗。用于制造及强化。"
+    },
+    {
+      "ID": 142,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SR",
+      "Quality": 3,
+      "Tags": [
+        "k",
+        "M",
+        "cs"
+      ],
+      "ShiftingCraftQuality": 50,
+      "CraftQuality": 20,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_mandragora_2",
+      "Name": "曼德拉草汁",
+      "Desc": "榨取成熟曼德拉草制成的汁液。用于制造及强化。"
+    },
+    {
+      "ID": 143,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SSR",
+      "Quality": 4,
+      "Tags": [
+        "k",
+        "M",
+        "cT"
+      ],
+      "ShiftingCraftQuality": 80,
+      "CraftQuality": 50,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        false,
+        false,
+        false
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_mandragora_3",
+      "Name": "曼德拉草浓缩液",
+      "Desc": "浓缩曼德拉草汁制成的曼德拉草浓缩液。用于制造及强化。"
+    },
+    {
+      "ID": 150,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "N",
+      "Quality": 1,
+      "Tags": [
+        "k",
+        "M",
+        "cr"
+      ],
+      "ShiftingCraftQuality": 10,
+      "CraftQuality": 5,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_rohonc_0",
+      "Name": "罗洪特抄本残页",
+      "Desc": "从原书上撕下来的罗洪特抄本残页。用于制造及强化。"
+    },
+    {
+      "ID": 151,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "R",
+      "Quality": 2,
+      "Tags": [
+        "k",
+        "M",
+        "cS"
+      ],
+      "ShiftingCraftQuality": 20,
+      "CraftQuality": 10,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_rohonc_1",
+      "Name": "损毁的罗洪特抄本",
+      "Desc": "各处都被撕扯乱涂的损毁的罗洪特抄本。用于制造及强化。"
+    },
+    {
+      "ID": 152,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SR",
+      "Quality": 3,
+      "Tags": [
+        "k",
+        "M",
+        "cs"
+      ],
+      "ShiftingCraftQuality": 50,
+      "CraftQuality": 20,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        false
+      ],
+      "Icon": "item_icon_material_rohonc_2",
+      "Name": "编辑过的罗洪特抄本",
+      "Desc": "在损毁处写上了注释的编辑过的罗洪特抄本。用于制造及强化。"
+    },
+    {
+      "ID": 153,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SSR",
+      "Quality": 4,
+      "Tags": [
+        "k",
+        "M",
+        "cT"
+      ],
+      "ShiftingCraftQuality": 80,
+      "CraftQuality": 50,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        false,
+        false,
+        false
+      ],
+      "Shop": [
+        true,
+        true,
+        false
+      ],
+      "Icon": "item_icon_material_rohonc_3",
+      "Name": "完好的罗洪特抄本",
+      "Desc": "状态完好的罗洪特抄本。用于制造及强化。"
+    },
+    {
+      "ID": 160,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "N",
+      "Quality": 1,
+      "Tags": [
+        "k",
+        "M",
+        "cr"
+      ],
+      "ShiftingCraftQuality": 10,
+      "CraftQuality": 5,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_ether_0",
+      "Name": "以太尘",
+      "Desc": "从空气中提取的以太的最基本形态，以太尘。用于制造及强化。"
+    },
+    {
+      "ID": 161,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "R",
+      "Quality": 2,
+      "Tags": [
+        "k",
+        "M",
+        "cS"
+      ],
+      "ShiftingCraftQuality": 20,
+      "CraftQuality": 10,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_ether_1",
+      "Name": "以太块",
+      "Desc": "将以太尘压缩后制成的定形以太块。用于制造及强化。"
+    },
+    {
+      "ID": 162,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SR",
+      "Quality": 3,
+      "Tags": [
+        "k",
+        "M",
+        "cs"
+      ],
+      "ShiftingCraftQuality": 50,
+      "CraftQuality": 20,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_ether_2",
+      "Name": "以太晶",
+      "Desc": "仅选用纯净以太结晶精炼而成的以太晶。用于制造及强化。"
+    },
+    {
+      "ID": 163,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SSR",
+      "Quality": 4,
+      "Tags": [
+        "k",
+        "M",
+        "cT"
+      ],
+      "ShiftingCraftQuality": 80,
+      "CraftQuality": 50,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        false,
+        false
+      ],
+      "Shop": [
+        true,
+        true,
+        false
+      ],
+      "Icon": "item_icon_material_ether_3",
+      "Name": "以太精",
+      "Desc": "仅选用最为纯净强效的以太提炼制成的以太澄清液。用于制造及强化。"
+    },
+    {
+      "ID": 170,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "N",
+      "Quality": 1,
+      "Tags": [
+        "k",
+        "M",
+        "cr"
+      ],
+      "ShiftingCraftQuality": 10,
+      "CraftQuality": 5,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_antikythera_0",
+      "Name": "安提基西拉机械碎片",
+      "Desc": "安提基西拉机械的损坏部件。用于制造及强化。"
+    },
+    {
+      "ID": 171,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "R",
+      "Quality": 2,
+      "Tags": [
+        "k",
+        "M",
+        "cS"
+      ],
+      "ShiftingCraftQuality": 20,
+      "CraftQuality": 10,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_antikythera_1",
+      "Name": "破损的安提基西拉机械",
+      "Desc": "破损到难以看出原本形态的安提基西拉机械。用于制造及强化。"
+    },
+    {
+      "ID": 172,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SR",
+      "Quality": 3,
+      "Tags": [
+        "k",
+        "M",
+        "cs"
+      ],
+      "ShiftingCraftQuality": 50,
+      "CraftQuality": 20,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_antikythera_2",
+      "Name": "磨损的安提基西拉机械",
+      "Desc": "损坏而无法正常运作的安提基西拉机械。用于制造及强化。"
+    },
+    {
+      "ID": 173,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SSR",
+      "Quality": 4,
+      "Tags": [
+        "k",
+        "M",
+        "cT"
+      ],
+      "ShiftingCraftQuality": 80,
+      "CraftQuality": 50,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        false,
+        false
+      ],
+      "Shop": [
+        true,
+        true,
+        false
+      ],
+      "Icon": "item_icon_material_antikythera_3",
+      "Name": "完好的安提基西拉机械",
+      "Desc": "状态完好的安提基西拉机械。用于制造及强化。"
+    },
+    {
+      "ID": 180,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "N",
+      "Quality": 1,
+      "Tags": [
+        "k",
+        "M",
+        "cr"
+      ],
+      "ShiftingCraftQuality": 10,
+      "CraftQuality": 5,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_voynich_0",
+      "Name": "伏尼契手稿副本残页",
+      "Desc": "从原书上撕下来的伏尼契手稿副本残页。用于制造及强化。"
+    },
+    {
+      "ID": 181,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "R",
+      "Quality": 2,
+      "Tags": [
+        "k",
+        "M",
+        "cS"
+      ],
+      "ShiftingCraftQuality": 20,
+      "CraftQuality": 10,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_voynich_1",
+      "Name": "损毁的伏尼契手稿副本",
+      "Desc": "各处都被撕扯乱涂的损毁的罗洪特抄本。用于制造及强化。"
+    },
+    {
+      "ID": 182,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SR",
+      "Quality": 3,
+      "Tags": [
+        "k",
+        "M",
+        "cs"
+      ],
+      "ShiftingCraftQuality": 50,
+      "CraftQuality": 20,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_voynich_2",
+      "Name": "编辑过的伏尼契手稿副本",
+      "Desc": "在损毁处写上了注释的编辑过的罗洪特抄本。用于制造及强化。"
+    },
+    {
+      "ID": 183,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SSR",
+      "Quality": 4,
+      "Tags": [
+        "k",
+        "M",
+        "cT"
+      ],
+      "ShiftingCraftQuality": 80,
+      "CraftQuality": 50,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        false,
+        false
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_voynich_3",
+      "Name": "完好的伏尼契手稿副本",
+      "Desc": "状态完好的罗洪特抄本。用于制造及强化。"
+    },
+    {
+      "ID": 190,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "N",
+      "Quality": 1,
+      "Tags": [
+        "k",
+        "M",
+        "cr"
+      ],
+      "ShiftingCraftQuality": 10,
+      "CraftQuality": 5,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_crystalhaniwa_0",
+      "Name": "水晶埴轮碎块",
+      "Desc": "水晶埴轮的碎块。用于制造及强化。"
+    },
+    {
+      "ID": 191,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "R",
+      "Quality": 2,
+      "Tags": [
+        "k",
+        "M",
+        "cS"
+      ],
+      "ShiftingCraftQuality": 20,
+      "CraftQuality": 10,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_crystalhaniwa_1",
+      "Name": "破损的水晶埴轮",
+      "Desc": "破损到难以看出原本形态的水晶埴轮。用于制造及强化。"
+    },
+    {
+      "ID": 192,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SR",
+      "Quality": 3,
+      "Tags": [
+        "k",
+        "M",
+        "cs"
+      ],
+      "ShiftingCraftQuality": 50,
+      "CraftQuality": 20,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        false
+      ],
+      "Icon": "item_icon_material_crystalhaniwa_2",
+      "Name": "修复中的水晶埴轮",
+      "Desc": "拼合碎片修复中的水晶埴轮。用于制造及强化。"
+    },
+    {
+      "ID": 193,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SSR",
+      "Quality": 4,
+      "Tags": [
+        "k",
+        "M",
+        "cT"
+      ],
+      "ShiftingCraftQuality": 80,
+      "CraftQuality": 50,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        false,
+        false
+      ],
+      "Shop": [
+        true,
+        true,
+        false
+      ],
+      "Icon": "item_icon_material_crystalhaniwa_3",
+      "Name": "完好的水晶埴轮",
+      "Desc": "状态完好的水晶埴轮。用于制造及强化。"
+    },
+    {
+      "ID": 200,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "N",
+      "Quality": 1,
+      "Tags": [
+        "k",
+        "M",
+        "cr"
+      ],
+      "ShiftingCraftQuality": 10,
+      "CraftQuality": 5,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_totempole_0",
+      "Name": "图腾柱碎块",
+      "Desc": "图腾柱的碎块。用于制造及强化。"
+    },
+    {
+      "ID": 201,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "R",
+      "Quality": 2,
+      "Tags": [
+        "k",
+        "M",
+        "cS"
+      ],
+      "ShiftingCraftQuality": 20,
+      "CraftQuality": 10,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_totempole_1",
+      "Name": "破损的图腾柱",
+      "Desc": "已有相当部分丢失的图腾柱。用于制造及强化。"
+    },
+    {
+      "ID": 202,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SR",
+      "Quality": 3,
+      "Tags": [
+        "k",
+        "M",
+        "cs"
+      ],
+      "ShiftingCraftQuality": 50,
+      "CraftQuality": 20,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_totempole_2",
+      "Name": "修复过的图腾柱",
+      "Desc": "拼合数个图腾柱修理而成的图腾柱。用于制造及强化。"
+    },
+    {
+      "ID": 203,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SSR",
+      "Quality": 4,
+      "Tags": [
+        "k",
+        "M",
+        "cT"
+      ],
+      "ShiftingCraftQuality": 80,
+      "CraftQuality": 50,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        false,
+        false
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_totempole_3",
+      "Name": "完好的图腾柱",
+      "Desc": "状态完好的图腾柱。用于制造及强化。"
+    },
+    {
+      "ID": 210,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "N",
+      "Quality": 1,
+      "Tags": [
+        "k",
+        "M",
+        "cr"
+      ],
+      "ShiftingCraftQuality": 10,
+      "CraftQuality": 5,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_baghdad_0",
+      "Name": "巴格达古代电池碎片",
+      "Desc": "巴格达古代电池的损坏部件。用于制造及强化。"
+    },
+    {
+      "ID": 211,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "R",
+      "Quality": 2,
+      "Tags": [
+        "k",
+        "M",
+        "cS"
+      ],
+      "ShiftingCraftQuality": 20,
+      "CraftQuality": 10,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_baghdad_1",
+      "Name": "破损的巴格达古代电池",
+      "Desc": "已有相当部分丢失的巴格达古代电池。用于制造及强化。"
+    },
+    {
+      "ID": 212,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SR",
+      "Quality": 3,
+      "Tags": [
+        "k",
+        "M",
+        "cs"
+      ],
+      "ShiftingCraftQuality": 50,
+      "CraftQuality": 20,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_baghdad_2",
+      "Name": "磨损的巴格达古代电池",
+      "Desc": "如今已无法放电的巴格达古代电池。用于制造及强化。"
+    },
+    {
+      "ID": 213,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SSR",
+      "Quality": 4,
+      "Tags": [
+        "k",
+        "M",
+        "cT"
+      ],
+      "ShiftingCraftQuality": 80,
+      "CraftQuality": 50,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        false,
+        false
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_baghdad_3",
+      "Name": "完好的巴格达古代电池",
+      "Desc": "状态完好的巴格达古代电池。用于制造及强化。"
+    },
+    {
+      "ID": 220,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "N",
+      "Quality": 1,
+      "Tags": [
+        "k",
+        "M",
+        "cr"
+      ],
+      "ShiftingCraftQuality": 10,
+      "CraftQuality": 5,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_goldenfleece_0",
+      "Name": "金线束",
+      "Desc": "用从闪耀着光辉的罕见金绵羊身上得到的羊毛制成的丝线束。用于制造及强化。"
+    },
+    {
+      "ID": 221,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "R",
+      "Quality": 2,
+      "Tags": [
+        "k",
+        "M",
+        "cS"
+      ],
+      "ShiftingCraftQuality": 20,
+      "CraftQuality": 10,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_goldenfleece_1",
+      "Name": "金线轴",
+      "Desc": "缠满了金羊毛制成的丝线的线轴。用于制造及强化。"
+    },
+    {
+      "ID": 222,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SR",
+      "Quality": 3,
+      "Tags": [
+        "k",
+        "M",
+        "cs"
+      ],
+      "ShiftingCraftQuality": 50,
+      "CraftQuality": 20,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_goldenfleece_2",
+      "Name": "金线团",
+      "Desc": "用许多金羊毛制成的丝线缠成的线团。用于制造及强化。"
+    },
+    {
+      "ID": 223,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SSR",
+      "Quality": 4,
+      "Tags": [
+        "k",
+        "M",
+        "cT"
+      ],
+      "ShiftingCraftQuality": 80,
+      "CraftQuality": 50,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        false,
+        false,
+        false
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_goldenfleece_3",
+      "Name": "金布匹",
+      "Desc": "使用金羊毛制成的丝线编织而成的高级布匹。用于制造及强化。"
+    },
+    {
+      "ID": 230,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "N",
+      "Quality": 1,
+      "Tags": [
+        "k",
+        "M",
+        "cr"
+      ],
+      "ShiftingCraftQuality": 10,
+      "CraftQuality": 5,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_kikuko_0",
+      "Name": "御菊人偶碎块",
+      "Desc": "御菊人偶的一些碎块。用于制造及强化。"
+    },
+    {
+      "ID": 231,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "R",
+      "Quality": 2,
+      "Tags": [
+        "k",
+        "M",
+        "cS"
+      ],
+      "ShiftingCraftQuality": 20,
+      "CraftQuality": 10,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_kikuko_1",
+      "Name": "破损的御菊人偶",
+      "Desc": "已有相当部分丢失的御菊人偶。用于制造及强化。"
+    },
+    {
+      "ID": 232,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SR",
+      "Quality": 3,
+      "Tags": [
+        "k",
+        "M",
+        "cs"
+      ],
+      "ShiftingCraftQuality": 50,
+      "CraftQuality": 20,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_kikuko_2",
+      "Name": "修复过的御菊人偶",
+      "Desc": "各处都清洁过了的御菊人偶。用于制造及强化。"
+    },
+    {
+      "ID": 233,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SSR",
+      "Quality": 4,
+      "Tags": [
+        "k",
+        "M",
+        "cT"
+      ],
+      "ShiftingCraftQuality": 80,
+      "CraftQuality": 50,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        false,
+        false,
+        false
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_kikuko_3",
+      "Name": "完好的御菊人偶",
+      "Desc": "状态完好的御菊人偶。用于制造及强化。"
+    },
+    {
+      "ID": 240,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "N",
+      "Quality": 1,
+      "Tags": [
+        "k",
+        "M",
+        "cr"
+      ],
+      "ShiftingCraftQuality": 10,
+      "CraftQuality": 5,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_discocolgante_0",
+      "Name": "科尔甘特圆盘坠饰碎片",
+      "Desc": "科尔甘特圆盘坠饰的损坏碎片。用于制造及强化。"
+    },
+    {
+      "ID": 241,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "R",
+      "Quality": 2,
+      "Tags": [
+        "k",
+        "M",
+        "cS"
+      ],
+      "ShiftingCraftQuality": 20,
+      "CraftQuality": 10,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_discocolgante_1",
+      "Name": "破损的科尔甘特圆盘坠饰",
+      "Desc": "破损到难以看出原本形态的科尔甘特圆盘坠饰。用于制造及强化。"
+    },
+    {
+      "ID": 242,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SR",
+      "Quality": 3,
+      "Tags": [
+        "k",
+        "M",
+        "cs"
+      ],
+      "ShiftingCraftQuality": 50,
+      "CraftQuality": 20,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_discocolgante_2",
+      "Name": "修复中的科尔甘特圆盘坠饰",
+      "Desc": "拼合碎片修复中的科尔甘特圆盘坠饰。用于制造及强化。"
+    },
+    {
+      "ID": 243,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SSR",
+      "Quality": 4,
+      "Tags": [
+        "k",
+        "M",
+        "cT"
+      ],
+      "ShiftingCraftQuality": 80,
+      "CraftQuality": 50,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        false,
+        false,
+        false
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_discocolgante_3",
+      "Name": "完好的科尔甘特圆盘坠饰",
+      "Desc": "状态完好的科尔甘特圆盘坠饰。用于制造及强化。"
+    },
+    {
+      "ID": 250,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "N",
+      "Quality": 1,
+      "Tags": [
+        "k",
+        "M",
+        "cr"
+      ],
+      "ShiftingCraftQuality": 10,
+      "CraftQuality": 5,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_atlantismedal_0",
+      "Name": "亚特兰蒂斯古币碎片",
+      "Desc": "亚特兰蒂斯古币的损坏碎片。用于制造及强化。"
+    },
+    {
+      "ID": 251,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "R",
+      "Quality": 2,
+      "Tags": [
+        "k",
+        "M",
+        "cS"
+      ],
+      "ShiftingCraftQuality": 20,
+      "CraftQuality": 10,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_atlantismedal_1",
+      "Name": "破损的亚特兰蒂斯古币",
+      "Desc": "破损到难以看出原本形态的亚特兰蒂斯古币。用于制造及强化。"
+    },
+    {
+      "ID": 252,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SR",
+      "Quality": 3,
+      "Tags": [
+        "k",
+        "M",
+        "cs"
+      ],
+      "ShiftingCraftQuality": 50,
+      "CraftQuality": 20,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_atlantismedal_2",
+      "Name": "修复中的亚特兰蒂斯古币",
+      "Desc": "拼合碎片修复中的亚特兰蒂斯古币。用于制造及强化。"
+    },
+    {
+      "ID": 253,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SSR",
+      "Quality": 4,
+      "Tags": [
+        "k",
+        "M",
+        "cT"
+      ],
+      "ShiftingCraftQuality": 80,
+      "CraftQuality": 50,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        false,
+        false,
+        false
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_atlantismedal_3",
+      "Name": "完好的亚特兰蒂斯古币",
+      "Desc": "状态完好的亚特兰蒂斯古币。用于制造及强化。"
+    },
+    {
+      "ID": 260,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "N",
+      "Quality": 1,
+      "Tags": [
+        "k",
+        "M",
+        "cr"
+      ],
+      "ShiftingCraftQuality": 10,
+      "CraftQuality": 5,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_romandice_0",
+      "Name": "罗马十二面体碎片",
+      "Desc": "罗马十二面体的损坏碎片。用于制造及强化。"
+    },
+    {
+      "ID": 261,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "R",
+      "Quality": 2,
+      "Tags": [
+        "k",
+        "M",
+        "cS"
+      ],
+      "ShiftingCraftQuality": 20,
+      "CraftQuality": 10,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_romandice_1",
+      "Name": "破损的罗马十二面体",
+      "Desc": "破损到难以看出原本形态的罗马十二面体。用于制造及强化。"
+    },
+    {
+      "ID": 262,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SR",
+      "Quality": 3,
+      "Tags": [
+        "k",
+        "M",
+        "cs"
+      ],
+      "ShiftingCraftQuality": 50,
+      "CraftQuality": 20,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_romandice_2",
+      "Name": "修复中的罗马十二面体",
+      "Desc": "拼合碎片修复中的罗马十二面体。用于制造及强化。"
+    },
+    {
+      "ID": 263,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SSR",
+      "Quality": 4,
+      "Tags": [
+        "k",
+        "M",
+        "cT"
+      ],
+      "ShiftingCraftQuality": 80,
+      "CraftQuality": 50,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        false,
+        false,
+        false
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_romandice_3",
+      "Name": "完好的罗马十二面体",
+      "Desc": "状态完好的罗马十二面体。用于制造及强化。"
+    },
+    {
+      "ID": 270,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "N",
+      "Quality": 1,
+      "Tags": [
+        "k",
+        "M",
+        "cr"
+      ],
+      "ShiftingCraftQuality": 10,
+      "CraftQuality": 5,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_quimbaya_0",
+      "Name": "金巴亚黄金飞机碎片",
+      "Desc": "金巴亚黄金飞机的损坏碎片。用于制造及强化。"
+    },
+    {
+      "ID": 271,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "R",
+      "Quality": 2,
+      "Tags": [
+        "k",
+        "M",
+        "cS"
+      ],
+      "ShiftingCraftQuality": 20,
+      "CraftQuality": 10,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_quimbaya_1",
+      "Name": "破损的金巴亚黄金飞机",
+      "Desc": "破损到难以看出原本形态的金巴亚黄金飞机。用于制造及强化。"
+    },
+    {
+      "ID": 272,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SR",
+      "Quality": 3,
+      "Tags": [
+        "k",
+        "M",
+        "cs"
+      ],
+      "ShiftingCraftQuality": 50,
+      "CraftQuality": 20,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_quimbaya_2",
+      "Name": "修复中的金巴亚黄金飞机",
+      "Desc": "拼合碎片修复中的金巴亚黄金飞机。用于制造及强化。"
+    },
+    {
+      "ID": 273,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SSR",
+      "Quality": 4,
+      "Tags": [
+        "k",
+        "M",
+        "cT"
+      ],
+      "ShiftingCraftQuality": 80,
+      "CraftQuality": 50,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        false,
+        false,
+        false
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_quimbaya_3",
+      "Name": "完好的金巴亚黄金飞机",
+      "Desc": "状态完好的金巴亚黄金飞机。用于制造及强化。"
+    },
+    {
+      "ID": 280,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "N",
+      "Quality": 1,
+      "Tags": [
+        "k",
+        "M",
+        "cr"
+      ],
+      "ShiftingCraftQuality": 10,
+      "CraftQuality": 5,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_rocket_0",
+      "Name": "伊斯坦布尔古代火箭碎片",
+      "Desc": "伊斯坦布尔古代火箭的损坏碎片。用于制造及强化。"
+    },
+    {
+      "ID": 281,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "R",
+      "Quality": 2,
+      "Tags": [
+        "k",
+        "M",
+        "cS"
+      ],
+      "ShiftingCraftQuality": 20,
+      "CraftQuality": 10,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_rocket_1",
+      "Name": "破损的伊斯坦布尔古代火箭",
+      "Desc": "破损到难以看出原本形态的伊斯坦布尔古代火箭。用于制造及强化。"
+    },
+    {
+      "ID": 282,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SR",
+      "Quality": 3,
+      "Tags": [
+        "k",
+        "M",
+        "cs"
+      ],
+      "ShiftingCraftQuality": 50,
+      "CraftQuality": 20,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_rocket_2",
+      "Name": "修复中的伊斯坦布尔古代火箭",
+      "Desc": "拼合碎片修复中的伊斯坦布尔古代火箭。用于制造及强化。"
+    },
+    {
+      "ID": 283,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SSR",
+      "Quality": 4,
+      "Tags": [
+        "k",
+        "M",
+        "cT"
+      ],
+      "ShiftingCraftQuality": 80,
+      "CraftQuality": 50,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        false,
+        false,
+        false
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_rocket_3",
+      "Name": "完好的伊斯坦布尔古代火箭",
+      "Desc": "状态完好的伊斯坦布尔古代火箭。用于制造及强化。"
+    },
+    {
+      "ID": 290,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "N",
+      "Quality": 1,
+      "Tags": [
+        "k",
+        "M",
+        "cr"
+      ],
+      "ShiftingCraftQuality": 10,
+      "CraftQuality": 5,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_winnistone_0",
+      "Name": "温尼珀索基石碎块",
+      "Desc": "温尼珀索基石的碎块。用于制造及强化。"
+    },
+    {
+      "ID": 291,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "R",
+      "Quality": 2,
+      "Tags": [
+        "k",
+        "M",
+        "cS"
+      ],
+      "ShiftingCraftQuality": 20,
+      "CraftQuality": 10,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_winnistone_1",
+      "Name": "破损的温尼珀索基石",
+      "Desc": "破损到难以看出原本形态的温尼珀索基石。用于制造及强化。"
+    },
+    {
+      "ID": 292,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SR",
+      "Quality": 3,
+      "Tags": [
+        "k",
+        "M",
+        "cs"
+      ],
+      "ShiftingCraftQuality": 50,
+      "CraftQuality": 20,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        true,
+        true,
+        true
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_winnistone_2",
+      "Name": "不完整的温尼珀索基石",
+      "Desc": "修复了但仍不知道真实形态的温尼珀索基石。用于制造及强化。"
+    },
+    {
+      "ID": 293,
+      "IsReleased": [
+        true,
+        true,
+        true
+      ],
+      "Category": "Material",
+      "SubCategory": "Artifact",
+      "Rarity": "SSR",
+      "Quality": 4,
+      "Tags": [
+        "k",
+        "M",
+        "cT"
+      ],
+      "ShiftingCraftQuality": 80,
+      "CraftQuality": 50,
+      "Craftable": [
+        true,
+        true,
+        true
+      ],
+      "StageDrop": [
+        false,
+        false,
+        false
+      ],
+      "Shop": [
+        true,
+        true,
+        true
+      ],
+      "Icon": "item_icon_material_winnistone_3",
+      "Name": "完好的温尼珀索基石",
+      "Desc": "状态完好的温尼珀索基石。用于制造及强化。"
+    },
+    {
       "ID": 3000,
       "IsReleased": [
         true,
@@ -55003,7 +58795,7 @@
       ],
       "StageDrop": [
         true,
-        false,
+        true,
         false
       ],
       "Shop": [
@@ -55151,7 +58943,7 @@
       ],
       "StageDrop": [
         true,
-        false,
+        true,
         false
       ],
       "Shop": [
@@ -62858,6 +66650,177 @@
       "StatType": [],
       "StatValue": [],
       "LevelUpFeedExp": 200
+    },
+    {
+      "ID": 501000,
+      "Category": "Hat",
+      "Rarity": "N",
+      "Tier": 0,
+      "Icon": "equipment_icon_hat_useall_piece",
+      "Shops": [],
+      "Name": "帽子万能设计图",
+      "Desc": "用于制作装备的图纸。",
+      "IsReleased": [
+        true,
+        false,
+        false
+      ],
+      "MaxLevel": 1,
+      "StatType": [],
+      "StatValue": [],
+      "LevelUpFeedExp": 1
+    },
+    {
+      "ID": 502000,
+      "Category": "Gloves",
+      "Rarity": "N",
+      "Tier": 0,
+      "Icon": "equipment_icon_gloves_useall_piece",
+      "Shops": [],
+      "Name": "手套万能设计图",
+      "Desc": "用于制作装备的图纸。",
+      "IsReleased": [
+        true,
+        false,
+        false
+      ],
+      "MaxLevel": 1,
+      "StatType": [],
+      "StatValue": [],
+      "LevelUpFeedExp": 1
+    },
+    {
+      "ID": 503000,
+      "Category": "Shoes",
+      "Rarity": "N",
+      "Tier": 0,
+      "Icon": "equipment_icon_shoes_useall_piece",
+      "Shops": [],
+      "Name": "鞋子万能设计图",
+      "Desc": "用于制作装备的图纸。",
+      "IsReleased": [
+        true,
+        false,
+        false
+      ],
+      "MaxLevel": 1,
+      "StatType": [],
+      "StatValue": [],
+      "LevelUpFeedExp": 1
+    },
+    {
+      "ID": 504000,
+      "Category": "Bag",
+      "Rarity": "N",
+      "Tier": 0,
+      "Icon": "equipment_icon_bag_useall_piece",
+      "Shops": [],
+      "Name": "背包万能设计图",
+      "Desc": "用于制作装备的图纸。",
+      "IsReleased": [
+        true,
+        false,
+        false
+      ],
+      "MaxLevel": 1,
+      "StatType": [],
+      "StatValue": [],
+      "LevelUpFeedExp": 1
+    },
+    {
+      "ID": 505000,
+      "Category": "Badge",
+      "Rarity": "N",
+      "Tier": 0,
+      "Icon": "equipment_icon_badge_useall_piece",
+      "Shops": [],
+      "Name": "徽章万能设计图",
+      "Desc": "用于制作装备的图纸。",
+      "IsReleased": [
+        true,
+        false,
+        false
+      ],
+      "MaxLevel": 1,
+      "StatType": [],
+      "StatValue": [],
+      "LevelUpFeedExp": 1
+    },
+    {
+      "ID": 506000,
+      "Category": "Hairpin",
+      "Rarity": "N",
+      "Tier": 0,
+      "Icon": "equipment_icon_hairpin_useall_piece",
+      "Shops": [],
+      "Name": "发卡万能设计图",
+      "Desc": "用于制作装备的图纸。",
+      "IsReleased": [
+        true,
+        false,
+        false
+      ],
+      "MaxLevel": 1,
+      "StatType": [],
+      "StatValue": [],
+      "LevelUpFeedExp": 1
+    },
+    {
+      "ID": 507000,
+      "Category": "Charm",
+      "Rarity": "N",
+      "Tier": 0,
+      "Icon": "equipment_icon_charm_useall_piece",
+      "Shops": [],
+      "Name": "护符万能设计图",
+      "Desc": "用于制作装备的图纸。",
+      "IsReleased": [
+        true,
+        false,
+        false
+      ],
+      "MaxLevel": 1,
+      "StatType": [],
+      "StatValue": [],
+      "LevelUpFeedExp": 1
+    },
+    {
+      "ID": 508000,
+      "Category": "Watch",
+      "Rarity": "N",
+      "Tier": 0,
+      "Icon": "equipment_icon_watch_useall_piece",
+      "Shops": [],
+      "Name": "手表万能设计图",
+      "Desc": "用于制作装备的图纸。",
+      "IsReleased": [
+        true,
+        false,
+        false
+      ],
+      "MaxLevel": 1,
+      "StatType": [],
+      "StatValue": [],
+      "LevelUpFeedExp": 1
+    },
+    {
+      "ID": 509000,
+      "Category": "Necklace",
+      "Rarity": "N",
+      "Tier": 0,
+      "Icon": "equipment_icon_necklace_useall_piece",
+      "Shops": [],
+      "Name": "项链万能设计图",
+      "Desc": "用于制作装备的图纸。",
+      "IsReleased": [
+        true,
+        false,
+        false
+      ],
+      "MaxLevel": 1,
+      "StatType": [],
+      "StatValue": [],
+      "LevelUpFeedExp": 1
     }
   ];
   // split

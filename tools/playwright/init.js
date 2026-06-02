@@ -29382,6 +29382,214 @@
       "SubSkillTW": ""
     },
     {
+      "ID": 10141,
+      "Name": "ハルカ（ドレス）",
+      "NameEN": "",
+      "NameTW": "",
+      "DevName": "CH0247",
+      "Icon": "",
+      "Star": 3,
+      "SkillEx": [
+        [
+          3030,
+          110
+        ],
+        [
+          3031,
+          3030,
+          111,
+          260
+        ],
+        [
+          3032,
+          3031,
+          112,
+          261
+        ],
+        [
+          3033,
+          3032,
+          113,
+          262
+        ]
+      ],
+      "SkillExAmount": [
+        [
+          12,
+          15
+        ],
+        [
+          12,
+          18,
+          15,
+          31
+        ],
+        [
+          12,
+          18,
+          10,
+          26
+        ],
+        [
+          8,
+          18,
+          7,
+          21
+        ]
+      ],
+      "Skill": [
+        [
+          4030
+        ],
+        [
+          4030
+        ],
+        [
+          4031,
+          4030,
+          110
+        ],
+        [
+          4031,
+          111,
+          260
+        ],
+        [
+          4032,
+          4031,
+          111,
+          260
+        ],
+        [
+          4032,
+          112,
+          261
+        ],
+        [
+          4033,
+          4032,
+          113,
+          262
+        ],
+        [
+          4033,
+          113,
+          262
+        ]
+      ],
+      "SkillAmount": [
+        [
+          5
+        ],
+        [
+          8
+        ],
+        [
+          5,
+          12,
+          5
+        ],
+        [
+          8,
+          4,
+          14
+        ],
+        [
+          5,
+          12,
+          10,
+          17
+        ],
+        [
+          8,
+          3,
+          16
+        ],
+        [
+          8,
+          12,
+          5,
+          9
+        ],
+        [
+          12,
+          8,
+          13
+        ]
+      ],
+      "School": "Gehenna",
+      "Class": 1,
+      "Role": "アタッカー",
+      "Position": "Back",
+      "BulletType": 1,
+      "ArmorType": 1,
+      "Adaptatio": [
+        4,
+        2,
+        0
+      ],
+      "WeaponAdaptatio": [
+        1,
+        1
+      ],
+      "WeaponType": "SR",
+      "Gear": "アルのすごく貴重な財布",
+      "Cover": true,
+      "Range": 750,
+      "Equipment": [
+        2,
+        6,
+        8
+      ],
+      "SkillDetails": [
+        1,
+        1,
+        1
+      ],
+      "IsLimited": 0,
+      "FavorStatType": [
+        "AttackPower",
+        "MaxHP"
+      ],
+      "FavorStatValue": [
+        [
+          4,
+          0
+        ],
+        [
+          6,
+          0
+        ],
+        [
+          7,
+          48
+        ],
+        [
+          9,
+          58
+        ],
+        [
+          2,
+          10
+        ],
+        [
+          4,
+          15
+        ],
+        [
+          6,
+          25
+        ]
+      ],
+      "FavorAlts": [
+        10031,
+        10089
+      ],
+      "ReleaseDate": "2021/02/04",
+      "SubSkill": "",
+      "SubSkillTW": ""
+    },
+    {
       "ID": 13000,
       "Name": "アカネ",
       "NameEN": "",
@@ -49166,6 +49374,214 @@
       "SubSkillTW": ""
     },
     {
+      "ID": 20059,
+      "Name": "ムツキ（ドレス）",
+      "NameEN": "",
+      "NameTW": "",
+      "DevName": "CH0246",
+      "Icon": "",
+      "Star": 3,
+      "SkillEx": [
+        [
+          3030,
+          120
+        ],
+        [
+          3031,
+          3030,
+          121,
+          240
+        ],
+        [
+          3032,
+          3031,
+          122,
+          241
+        ],
+        [
+          3033,
+          3032,
+          123,
+          242
+        ]
+      ],
+      "SkillExAmount": [
+        [
+          12,
+          16
+        ],
+        [
+          12,
+          18,
+          13,
+          28
+        ],
+        [
+          12,
+          18,
+          11,
+          25
+        ],
+        [
+          8,
+          18,
+          9,
+          20
+        ]
+      ],
+      "Skill": [
+        [
+          4030
+        ],
+        [
+          4030
+        ],
+        [
+          4031,
+          4030,
+          120
+        ],
+        [
+          4031,
+          121,
+          240
+        ],
+        [
+          4032,
+          4031,
+          121,
+          240
+        ],
+        [
+          4032,
+          122,
+          241
+        ],
+        [
+          4033,
+          4032,
+          123,
+          242
+        ],
+        [
+          4033,
+          123,
+          242
+        ]
+      ],
+      "SkillAmount": [
+        [
+          5
+        ],
+        [
+          8
+        ],
+        [
+          5,
+          12,
+          5
+        ],
+        [
+          8,
+          5,
+          14
+        ],
+        [
+          5,
+          12,
+          10,
+          19
+        ],
+        [
+          8,
+          3,
+          16
+        ],
+        [
+          8,
+          12,
+          4,
+          8
+        ],
+        [
+          12,
+          8,
+          14
+        ]
+      ],
+      "School": "Gehenna",
+      "Class": 1,
+      "Role": "アタッカー",
+      "Position": "Back",
+      "BulletType": 1,
+      "ArmorType": 1,
+      "Adaptatio": [
+        4,
+        2,
+        0
+      ],
+      "WeaponAdaptatio": [
+        1,
+        1
+      ],
+      "WeaponType": "SR",
+      "Gear": "アルのすごく貴重な財布",
+      "Cover": true,
+      "Range": 750,
+      "Equipment": [
+        1,
+        6,
+        8
+      ],
+      "SkillDetails": [
+        1,
+        1,
+        1
+      ],
+      "IsLimited": 0,
+      "FavorStatType": [
+        "AttackPower",
+        "MaxHP"
+      ],
+      "FavorStatValue": [
+        [
+          4,
+          0
+        ],
+        [
+          6,
+          0
+        ],
+        [
+          7,
+          48
+        ],
+        [
+          9,
+          58
+        ],
+        [
+          2,
+          10
+        ],
+        [
+          4,
+          15
+        ],
+        [
+          6,
+          25
+        ]
+      ],
+      "FavorAlts": [
+        10031,
+        10089
+      ],
+      "ReleaseDate": "2021/02/04",
+      "SubSkill": "",
+      "SubSkillTW": ""
+    },
+    {
       "ID": 23000,
       "Name": "アイリ",
       "NameEN": "",
@@ -55089,7 +55505,7 @@
       "Shop": [
         true,
         true,
-        true
+        false
       ],
       "Icon": "item_icon_material_mandragora_2",
       "Name": "曼德拉草汁",
@@ -55126,7 +55542,7 @@
       "Shop": [
         true,
         true,
-        true
+        false
       ],
       "Icon": "item_icon_material_mandragora_3",
       "Name": "曼德拉草浓缩液",
@@ -55385,7 +55801,7 @@
       "Shop": [
         true,
         true,
-        true
+        false
       ],
       "Icon": "item_icon_material_ether_2",
       "Name": "以太晶",
@@ -55570,7 +55986,7 @@
       "Shop": [
         true,
         true,
-        false
+        true
       ],
       "Icon": "item_icon_material_antikythera_3",
       "Name": "完好的安提基西拉机械",
@@ -55718,7 +56134,7 @@
       "Shop": [
         true,
         true,
-        true
+        false
       ],
       "Icon": "item_icon_material_voynich_3",
       "Name": "完好的伏尼契手稿副本",
@@ -55829,7 +56245,7 @@
       "Shop": [
         true,
         true,
-        false
+        true
       ],
       "Icon": "item_icon_material_crystalhaniwa_2",
       "Name": "修复中的水晶埴轮",

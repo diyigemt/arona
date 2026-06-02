@@ -367,16 +367,28 @@ def fetch_skill_data_from_schaledb(pl: Playwright, name, thread_id: int):
         has_autoattack = True
 
     def capture_skill_body(slider, body, range: range, name: str):
-        res = {}
+        # 逐等级抓取每个数值 span 的文本，保留内部换行，仅去除首尾空白
+        per_level_texts: dict[int, list[str]] = {}
         # ._vei.onInput({target:{valueAsNumber:5}})
-        for i in range:
-            slider.evaluate("it => {it._vei.onInput({target:{valueAsNumber:%d}});}" % (i))
-            res[i] = list(map(lambda x: str(x.evaluate("it => it.innerText")).replace("\n",""), body.query_selector_all(attack_class)))
+        for level in range:
+            slider.evaluate("it => {it._vei.onInput({target:{valueAsNumber:%d}});}" % (level))
+            per_level_texts[level] = [
+                str(span.evaluate("it => it.innerText")).strip()
+                for span in body.query_selector_all(attack_class)
+            ]
         # 替换并截图
         for idx, it in enumerate(body.query_selector_all(attack_class)):
-            it.evaluate("it => it.innerText = '%s'" % "/".join(list(map(lambda x: res[x][idx] if res[x][idx] != "" else "-", range))))
+            level_values = [
+                per_level_texts[level][idx] if per_level_texts[level][idx] != "" else "-"
+                for level in range
+            ]
+            # 各等级取值完全一致时只展示一次(保留换行)，否则逐等级用 / 拼接
+            display_text = level_values[0] if len(set(level_values)) == 1 else "/".join(level_values)
+            # 以传参方式回写，安全处理换行/引号；innerText setter 会将 \n 渲染为换行
+            it.evaluate("(it, value) => { it.innerText = value; }", display_text)
             it.evaluate("it => it.style.wordBreak = 'break-all'")
-            it.evaluate("it => it.parentElement.style.whiteSpace = 'normal'")
+            # 会导致技能描述换行失效
+            # it.evaluate("it => it.parentElement.style.whiteSpace = 'normal'")
         # # 删掉技能图标
         # page.evaluate("document.querySelectorAll('.skill-icon').forEach(it => it.remove())")
         body.evaluate('it => it.querySelectorAll(".ba-info-pill-s").forEach(s => s.style.backgroundColor = "var(--col-theme-background)")')

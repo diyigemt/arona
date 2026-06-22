@@ -150,7 +150,7 @@ def build_students(
     for record in sort_by_id(source):
         student = copy.deepcopy(template)
         student["ID"] = record["Id"]
-        student["Name"] = record["Name"]
+        student["Name"] = record["Name"].replace("（", "(").replace("）", ")").strip()
         student["NameEN"] = ""
         student["NameTW"] = ""
         student["DevName"] = record["DevName"]

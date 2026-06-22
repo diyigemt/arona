@@ -29,6 +29,10 @@ def download(cv: str):
             # 意料之外的多余空行
             if len(names) < 2:
                 names = outer.previous_sibling.get_text()
+            names = names.split(" ")[0].strip()
+            names = names.split("\xa0")[0].strip()
+            if names.find("(") != -1:
+                names = re.sub(r'([^(]+)\(([^)]+)\)', r'\2\1', names)
             # 下载图片
             path, hash = draw_image(image_url, "%s.png" % names, img_folder, "bilbilibili@校委会攻略组(259878)")
 

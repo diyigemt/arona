@@ -4,6 +4,8 @@ import getpass
 import json
 import codecs
 import shutil
+import posixpath
+from datetime import datetime
 from qcloud_cos import CosConfig
 from qcloud_cos import CosS3Client
 from qcloud_cos.cos_threadpool import SimpleThreadPool
@@ -20,6 +22,8 @@ SECRET_KEY = ""
 Bucket = ""
 REGION = "ap-shanghai"
 BASE_FOLDER = "image"
+# 备份文件夹: 上传前先把 COS 上即将被覆盖的旧对象拷贝到这里, 与 image 平级
+BACKUP_FOLDER = "backup"
 
 CHAPTER_MAP_PATH = "chapter_map"
 SOME_PATH = "some"
@@ -37,9 +41,40 @@ def list_folder(folder: str) -> list[Tuple[str, str]]:
         list_name.append((file_no_extend_name, full_path))
     return list_name
 
-def do_upload(client: CosS3Client, Bucket: str, path: str) -> Tuple[Union[Exception, None], str]:
+def build_backup_key(key: str, backup_date: str) -> str:
+    """生成 COS 上的备份对象 key。
+
+    备份统一放到 BACKUP_FOLDER 文件夹下, 保留相对 BASE_FOLDER 的子目录结构,
+    并在文件名后追加备份日期, 形如:
+        image/some/foo.png      -> backup/some/foo_20260615.png
+    """
+    normalized = key.replace("\\", "/")
+    base_prefix = BASE_FOLDER + "/"
+    relative_key = normalized[len(base_prefix):] if normalized.startswith(base_prefix) else normalized
+    dir_name = posixpath.dirname(relative_key)
+    name, ext = posixpath.splitext(posixpath.basename(relative_key))
+    backup_name = f"{name}_{backup_date}{ext}"
+    return posixpath.join(BACKUP_FOLDER, dir_name, backup_name)
+
+
+def do_upload(client: CosS3Client, Bucket: str, path: str, backup_date: str) -> Tuple[Union[Exception, None], str]:
+    key = path.replace("\\", "/")
     try:
-        client.upload_file(Bucket, path, path)
+        # 上传前先把 COS 上即将被覆盖的同名对象拷贝到备份文件夹, 以保留旧版本。
+        # s 系列(image/s/ 前缀)无需备份, 它可由对应原图的备份重新生成。
+        # object_exists 在鉴权/网络等非 404 错误时会抛异常, 此时一并视为上传失败,
+        # 避免在备份缺失的情况下直接覆盖原文件。
+        is_s_key = key.startswith(f"{BASE_FOLDER}/s/")
+        if not is_s_key and client.object_exists(Bucket, key):
+            backup_key = build_backup_key(key, backup_date)
+            # 当天已存在备份则保留首次备份, 不再覆盖。
+            if not client.object_exists(Bucket, backup_key):
+                client.copy_object(
+                    Bucket=Bucket,
+                    Key=backup_key,
+                    CopySource={"Bucket": Bucket, "Key": key, "Region": REGION},
+                )
+        client.upload_file(Bucket, key, path)
     except Exception as e:
         return (e, path)
     return (None, path)
@@ -89,9 +124,11 @@ if __name__ == "__main__":
     pbar = ProgressBar(widgets=widgets, maxval=100).start()
     finish = 0
     error_list: list[Tuple[Exception, str]] = []
+    # 整批共用同一个备份日期: 当天已存在备份时不再覆盖, 以保留当天首次备份。
+    backup_date = datetime.now().strftime("%Y%m%d")
     with ThreadPoolExecutor(max_workers=8) as executor:
         futures = [executor.submit(
-            do_upload, client, Bucket, it[1]) for it in upload_file_list]
+            do_upload, client, Bucket, it[1], backup_date) for it in upload_file_list]
         for future in as_completed(futures):
             resp = future.result()  # 上传完成，可做后续处理
             if resp[0] != None:
@@ -110,7 +147,7 @@ if __name__ == "__main__":
     for item in _upload_file_list:
         has_error = [it for it in error_list if it[1] == item[1]]
         if has_error:
-            print(f"file: {has_error[1]} upload failed.")
+            print(f"file: {item[1]} upload failed: {has_error[0][0]}")
             continue
         b_data = [it for it in backend_data_list if item[1].find(it["name"]) != -1]
         if b_data:

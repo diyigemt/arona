@@ -8,7 +8,7 @@ import threading
 
 img_folder = "image/some/"
 debug_index = -1
-cvs = ['1097620850084937769', '1097991351118594048', '1097998549497413650', '1098009664831881217']
+cvs = ['1214073455168716821', '1214143476040466455', '1214440687747989511', '1214762784537968695', '1215107301055135767', '1215489492984528915', '1216413726981226515']
 base_url = "https://www.bilibili.com/opus/%s"
 headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"}
 
@@ -31,6 +31,7 @@ def download(cv: str):
                 names = outer.previous_sibling.get_text()
             names = names.split(" ")[0].strip()
             names = names.split("\xa0")[0].strip()
+            names = names.split("\ufeff")[0].strip()
             if names.find("(") != -1:
                 names = re.sub(r'([^(]+)\(([^)]+)\)', r'\2\1', names)
             # 下载图片

@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parent
 PLAYWRIGHT_DIR = ROOT / "playwright"
 INIT_JS = PLAYWRIGHT_DIR / "init.js"
 ICON_DIR = PLAYWRIGHT_DIR / "im"
+MMT_DIR = ROOT / "image" / "mmt"
 ROUTE_OVERRIDES_JSON = PLAYWRIGHT_DIR / "route_overrides.json"
 
 STUDENTS_URL = "https://schaledb.com/data/jp/students.min.json"
@@ -24,6 +25,8 @@ EQUIPMENT_ICON_URL_TEMPLATE = "https://schaledb.com/images/equipment/icon/{icon}
 ITEM_ICON_URL_TEMPLATE = "https://schaledb.com/images/item/icon/{icon}.webp"
 GAME_DB_ROUTE_URL_TEMPLATE = "https://ba.game-db.tw/images/items/{icon}.png"
 ROUTE_LOCAL_PATH_TEMPLATE = "playwright/im/{icon}.webp"
+STUDENT_PORTRAIT_URL_TEMPLATE = "https://github.com/benx1n/BAAssetBundlesJP-Assets/raw/refs/heads/main/uis/01_common/01_character/Student_Portrait_{name}.png"
+STUDENT_PORTRAIT_SMALL_URL_TEMPLATE = "https://github.com/benx1n/BAAssetBundlesJP-Assets/raw/refs/heads/main/uis/01_common/01_character/Student_Portrait_{name}_Small.png"
 
 HTTP_TIMEOUT = 20
 RETRY_BACKOFF_SECONDS = (1, 2)
@@ -204,6 +207,14 @@ def collect_item_icons(source: dict[str, Any]) -> set[str]:
     }
 
 
+def collect_student_dev_names(source: dict[str, Any]) -> set[str]:
+    return {
+        record["DevName"]
+        for record in source.values()
+        if record.get("DevName")
+    }
+
+
 ICON_STATUS_EXISTED = "existed"
 ICON_STATUS_DOWNLOADED = "downloaded"
 ICON_STATUS_FAILED = "failed"
@@ -222,6 +233,49 @@ def download_icon(icon: str, url_template: str) -> str:
     except Exception as error:
         print(f"[build_init_js] failed icon {icon}: {error}")
         return ICON_STATUS_FAILED
+
+
+def download_student_portrait(dev_name: str) -> str:
+    downloaded = False
+    portraits = (
+        (f"Student_Portrait_{dev_name}.png", STUDENT_PORTRAIT_URL_TEMPLATE),
+        (f"Student_Portrait_{dev_name}_Small.png", STUDENT_PORTRAIT_SMALL_URL_TEMPLATE),
+    )
+    for filename, url_template in portraits:
+        dest_path = MMT_DIR / filename
+        if dest_path.exists():
+            print(f"[build_init_js] skip portrait (exists): {filename}")
+            continue
+        try:
+            payload = fetch_bytes(
+                url_template.format(name=dev_name),
+                "image/png,image/*",
+            )
+            dest_path.write_bytes(payload)
+            print(f"[build_init_js] wrote portrait {dest_path.name}")
+            downloaded = True
+        except Exception as error:
+            print(f"[build_init_js] failed portrait {filename}: {error}")
+            return ICON_STATUS_FAILED
+    if downloaded:
+        return ICON_STATUS_DOWNLOADED
+    return ICON_STATUS_EXISTED
+
+
+def download_student_portraits_batch(dev_names: set[str]) -> tuple[int, int, int]:
+    MMT_DIR.mkdir(parents=True, exist_ok=True)
+    existed = 0
+    downloaded = 0
+    failed = 0
+    for dev_name in sorted(dev_names):
+        status = download_student_portrait(dev_name)
+        if status == ICON_STATUS_EXISTED:
+            existed += 1
+        elif status == ICON_STATUS_DOWNLOADED:
+            downloaded += 1
+        else:
+            failed += 1
+    return existed, downloaded, failed
 
 
 def download_icons_batch(icons: set[str], url_template: str) -> tuple[set[str], int, int, int]:
@@ -278,6 +332,16 @@ def main() -> None:
 
     INIT_JS.write_text(new_text, encoding="utf-8")
     print(f"[build_init_js] wrote {INIT_JS}")
+
+    student_dev_names = collect_student_dev_names(students_source)
+    portrait_existed, portrait_downloaded, portrait_failed = download_student_portraits_batch(
+        student_dev_names
+    )
+    print(
+        f"[build_init_js] portraits={len(student_dev_names)} students "
+        f"downloaded={portrait_downloaded} "
+        f"existed={portrait_existed} failed={portrait_failed}"
+    )
 
     equipment_icons = collect_equipment_icons(equipments_source)
     item_icons = collect_item_icons(items_source)

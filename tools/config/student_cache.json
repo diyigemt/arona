@@ -1324,5 +1324,20 @@
         "cnName": "泳装幼瞬",
         "loma": "shunling_swimsuit",
         "gamekee": "https://www.gamekee.com/ba/tj/709617.html"
+    },
+    "マコト(水着)": {
+        "cnName": "泳装真琴",
+        "loma": "makoto_swimsuit",
+        "gamekee": "https://www.gamekee.com/ba/tj/714033.html"
+    },
+    "サツキ(水着)": {
+        "cnName": "泳装皋月",
+        "loma": "satsuki_swimsuit",
+        "gamekee": "https://www.gamekee.com/ba/tj/714037.html"
+    },
+    "チアキ(水着)": {
+        "cnName": "泳装千秋",
+        "loma": "chiaki_swimsuit",
+        "gamekee": "https://www.gamekee.com/ba/tj/714029.html"
     }
 }

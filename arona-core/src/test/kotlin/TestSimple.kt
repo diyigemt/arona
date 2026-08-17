@@ -9,6 +9,7 @@ import net.diyigemt.arona.command.TrainerCommand
 import net.diyigemt.arona.entity.Activity
 import net.diyigemt.arona.entity.ActivityType
 import net.diyigemt.arona.util.ActivityUtil
+import net.diyigemt.arona.util.BattleImageUtil
 import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.NetworkUtil
 import net.diyigemt.arona.util.WikiruUtil
@@ -27,7 +28,10 @@ import java.util.*
 import kotlin.math.pow
 
 class TestSimple {
-
+  @Test
+  fun main(){
+    BattleImageUtil.getJPGrandBattleInfo()
+  }
   @Test
   fun testParseDate() {
     val parse = SimpleDateFormat("yyyy/M/d HH").parse("2022/12/12 12")
@@ -108,8 +112,8 @@ class TestSimple {
 
   @Test
   fun testSchaleDB() {
-    System.setProperty("proxyHost", "127.0.0.1")
-    System.setProperty("proxyPort", "7890")
+//    System.setProperty("proxyHost", "127.0.0.1")
+//    System.setProperty("proxyPort", "7890")
     SchaleDBDataSyncService.SchaleDBDataSyncJob().getData()
     val res = SchaleDBUtil.getJPEventData()
     print(res)

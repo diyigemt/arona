@@ -9,6 +9,7 @@ import net.diyigemt.arona.quartz.QuartzProvider
 import net.diyigemt.arona.service.AronaQuartzService
 import net.diyigemt.arona.util.ActivityUtil
 import net.diyigemt.arona.util.MessageUtil
+import net.diyigemt.arona.util.TimeUtil.calculateActivityNotifyTime
 import net.diyigemt.arona.util.TimeUtil.calcDiffDayAndHour
 import net.mamoe.mirai.contact.Contact.Companion.uploadImage
 import net.mamoe.mirai.message.code.MiraiCode
@@ -26,8 +27,8 @@ object ActivityNotify : AronaQuartzService {
   private const val ActivityKey = "activity"
   private const val NotifyStringKey = "notifyString"
   private const val MaintenanceKey = "maintenance"
-  private const val DropActivityTime = 22
-  private const val DropEndTime = 24 + 3 - DropActivityTime
+  private const val NormalActivityNotifyBeforeHours = 1
+  private const val DropActivityNotifyBeforeHours = 5
   override var jobKey: JobKey? = null
 
   class ActivityNotifyJob : Job {
@@ -96,22 +97,16 @@ object ActivityNotify : AronaQuartzService {
      * 任务将在指定的小时执行ActivityNotifyOneHourJob来发送提醒消息
      *
      * @param activity 需要提醒的活动列表
-     * @param h 执行任务的小时数（24小时制）
+     * @param expected 执行任务的准确时间
      * @param locale 服务器区域，用于确定发送目标群组
      * @param extraKey 额外的键值，用于区分不同的任务
      */
-    private fun doInsert(activity: List<Activity>, h: Int, locale: ServerLocale, extraKey: String = "") {
+    private fun doInsert(activity: List<Activity>, expected: Date, locale: ServerLocale, extraKey: String = "") {
       // 设置任务执行时间
-      val now = Calendar.getInstance()
-      val hour = if (h > 24) h + 1 else h
-      val hout = if (hour > 24) hour - 24 else hour
-      now.set(Calendar.HOUR_OF_DAY, hour)
-      now.set(Calendar.MINUTE, 0)
-      now.set(Calendar.MILLISECOND, 0)
       QuartzProvider.createSingleTask(
         ActivityNotifyOneHourJob::class.java,
-        now.time,
-        "${ActivityNotifyOneHour}-${locale.commandName}-${hout}-${extraKey}",
+        expected,
+        "${ActivityNotifyOneHour}-${locale.commandName}-${expected.time}-${extraKey}",
         ActivityNotifyOneHour,
         mapOf(
           ActivityKey to activity, NotifyStringKey to when (locale) {
@@ -125,22 +120,19 @@ object ActivityNotify : AronaQuartzService {
 
     private fun insertAlert(activity: MutableList<Activity>, locale: ServerLocale) {
       if (activity.isEmpty()) return
-      val instance = Calendar.getInstance()
       val dropActivities = activity.filter { isMidnightEndActivity(it) }
       activity.removeAll(dropActivities)
       // 非双倍掉落提醒
-      val nowH = instance.get(Calendar.HOUR_OF_DAY)
-      if (activity.isNotEmpty()) {
-        activity.groupBy { calcDiffDayAndHour(it.time).second }.forEach { (h, u) ->
-          // 根据服务器类型调整提醒时间
-          doInsert(u, if(locale.serverName == "国服"){nowH + h} else { nowH + h - 1 }, locale, h.toString())
-        }
-      }
+      insertAlertBeforeEnd(activity, locale, NormalActivityNotifyBeforeHours)
       // 双倍掉落提醒
-      if (dropActivities.isNotEmpty()) {
-        // 根据服务器类型设置双倍掉落活动提醒时间
-        doInsert(dropActivities, if (locale.serverName == "国服"){DropActivityTime + 1}else{DropActivityTime}, locale)
-      }
+      insertAlertBeforeEnd(dropActivities, locale, DropActivityNotifyBeforeHours)
+    }
+
+    private fun insertAlertBeforeEnd(activity: List<Activity>, locale: ServerLocale, beforeHours: Int) {
+      activity.groupBy { calculateActivityNotifyTime(it.time, beforeHours) }
+        .forEach { (notifyAt, activities) ->
+          doInsert(activities, notifyAt, locale, beforeHours.toString())
+        }
     }
 
     private fun filterPending(activity: Activity): Boolean {
@@ -216,9 +208,9 @@ object ActivityNotify : AronaQuartzService {
       } else notifyPrefix
       // 计算活动结束时间
       val endTime = if (isMidnightEndActivity(activity[0])) {
-        DropEndTime
+        DropActivityNotifyBeforeHours
       } else {
-        1
+        NormalActivityNotifyBeforeHours
       }
       Arona.sendFilterGroupMessage(
         "${serverString}\n" +

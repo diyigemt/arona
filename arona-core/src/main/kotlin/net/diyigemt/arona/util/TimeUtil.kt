@@ -55,13 +55,20 @@ object TimeUtil {
     return day to leftHour
   }
 
+  fun parseActivityTime(timeString: String): Date = buildNowAndTime(timeString).first.time
+
+  fun calculateActivityNotifyTime(timeString: String, beforeHours: Int): Date =
+    Date(parseActivityTime(timeString).time - beforeHours * 60L * 60L * 1000L)
+
   private fun buildNowAndTime(timeString: String): Pair<Calendar, Calendar> {
     val date = DEFAULT_TIME_FORMAT.parse(timeString)
     val calendar = Calendar.getInstance()
     calendar.time = date
     val now = Calendar.getInstance()
     calendar.set(Calendar.YEAR, now.get(Calendar.YEAR))
-    calendar.set(Calendar.MONTH, now.get(Calendar.MONTH))
+    if (calendar.before(now) && calendar.get(Calendar.MONTH) < now.get(Calendar.MONTH)) {
+      calendar.add(Calendar.YEAR, 1)
+    }
     return calendar to now
   }
 

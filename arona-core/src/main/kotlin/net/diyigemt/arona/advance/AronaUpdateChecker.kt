@@ -56,16 +56,16 @@ object AronaUpdateChecker: AronaQuartzService {
       }
     }
   }
-
+  //关闭无用的自动更新服务
   override fun enableService() {
-    jobKey = QuartzProvider.createCronTask(
-      UpdateCheckJob::class.java,
-      "0 0 ${AronaConfig.updateCheckTime} * * ? *",
-      AronaUpdateCheckJobKey,
-      AronaUpdateCheckJobKey
-    ).first
-    QuartzProvider.createSimpleDelayJob(20) {
-      QuartzProvider.triggerTask(jobKey!!)
-    }
+//    jobKey = QuartzProvider.createCronTask(
+//      UpdateCheckJob::class.java,
+//      "0 0 ${AronaConfig.updateCheckTime} * * ? *",
+//      AronaUpdateCheckJobKey,
+//      AronaUpdateCheckJobKey
+//    ).first
+//    QuartzProvider.createSimpleDelayJob(20) {
+//      QuartzProvider.triggerTask(jobKey!!)
+//    }
   }
 }

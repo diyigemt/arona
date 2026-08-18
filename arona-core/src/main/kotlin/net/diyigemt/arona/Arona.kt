@@ -24,7 +24,6 @@ import net.diyigemt.arona.remote.RemoteServiceManager
 import net.diyigemt.arona.service.AronaServiceManager
 import net.diyigemt.arona.util.GeneralUtils
 import net.diyigemt.arona.util.ImageUtil
-import net.diyigemt.arona.util.NetworkUtil
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.console.command.descriptor.ExperimentalCommandDescriptors
 import net.mamoe.mirai.console.extension.PluginComponentStorage

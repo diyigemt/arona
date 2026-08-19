@@ -1339,5 +1339,15 @@
         "cnName": "泳装千秋",
         "loma": "chiaki_swimsuit",
         "gamekee": "https://www.gamekee.com/ba/tj/714029.html"
+    },
+    "イロハ(水着)": {
+        "cnName": "泳装伊吕波",
+        "loma": "iroha_swimsuit",
+        "gamekee": "https://www.gamekee.com/ba/tj/714062.html"
+    },
+    "イブキ(水着)": {
+        "cnName": "泳装伊吹",
+        "loma": "ibuki_swimsuit",
+        "gamekee": "https://www.gamekee.com/ba/tj/714055.html"
     }
 }

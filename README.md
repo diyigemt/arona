@@ -1,3 +1,7 @@
+## 仓库已经实质上停止维护
+
+没有archive是因为攻略图的工具链还在这仓库里，如果要继续使用，这里还有个积极维护的分支：[YuLinLoli/arona](https://github.com/YuLinLoli/arona)
+
 ## 新项目引流
 
 关注 [arona-reborn](https://github.com/diyigemt/arona-reborn) 喵，关注 [arona-reborn](https://github.com/diyigemt/arona-reborn) 谢谢喵

@@ -31046,6 +31046,422 @@
       "SubSkillTW": ""
     },
     {
+      "ID": 10149,
+      "Name": "ココロ",
+      "NameEN": "",
+      "NameTW": "",
+      "DevName": "CH0368",
+      "Icon": "",
+      "Star": 3,
+      "SkillEx": [
+        [
+          3120,
+          240
+        ],
+        [
+          3121,
+          3120,
+          241,
+          120
+        ],
+        [
+          3122,
+          3121,
+          242,
+          121
+        ],
+        [
+          3123,
+          3122,
+          243,
+          122
+        ]
+      ],
+      "SkillExAmount": [
+        [
+          12,
+          16
+        ],
+        [
+          12,
+          18,
+          15,
+          32
+        ],
+        [
+          12,
+          18,
+          11,
+          26
+        ],
+        [
+          8,
+          18,
+          8,
+          20
+        ]
+      ],
+      "Skill": [
+        [
+          4120
+        ],
+        [
+          4120
+        ],
+        [
+          4121,
+          4120,
+          240
+        ],
+        [
+          4121,
+          241,
+          120
+        ],
+        [
+          4122,
+          4121,
+          241,
+          120
+        ],
+        [
+          4122,
+          242,
+          121
+        ],
+        [
+          4123,
+          4122,
+          243,
+          122
+        ],
+        [
+          4123,
+          243,
+          122
+        ]
+      ],
+      "SkillAmount": [
+        [
+          5
+        ],
+        [
+          8
+        ],
+        [
+          5,
+          12,
+          5
+        ],
+        [
+          8,
+          4,
+          13
+        ],
+        [
+          5,
+          12,
+          10,
+          18
+        ],
+        [
+          8,
+          3,
+          16
+        ],
+        [
+          8,
+          12,
+          4,
+          9
+        ],
+        [
+          12,
+          8,
+          14
+        ]
+      ],
+      "School": "Gehenna",
+      "Class": 1,
+      "Role": "アタッカー",
+      "Position": "Back",
+      "BulletType": 1,
+      "ArmorType": 1,
+      "Adaptatio": [
+        4,
+        2,
+        0
+      ],
+      "WeaponAdaptatio": [
+        1,
+        1
+      ],
+      "WeaponType": "SR",
+      "Gear": "アルのすごく貴重な財布",
+      "Cover": true,
+      "Range": 750,
+      "Equipment": [
+        3,
+        6,
+        8
+      ],
+      "SkillDetails": [
+        1,
+        1,
+        1
+      ],
+      "IsLimited": 0,
+      "FavorStatType": [
+        "AttackPower",
+        "MaxHP"
+      ],
+      "FavorStatValue": [
+        [
+          4,
+          0
+        ],
+        [
+          6,
+          0
+        ],
+        [
+          7,
+          48
+        ],
+        [
+          9,
+          58
+        ],
+        [
+          2,
+          10
+        ],
+        [
+          4,
+          15
+        ],
+        [
+          6,
+          25
+        ]
+      ],
+      "FavorAlts": [
+        10031,
+        10089
+      ],
+      "ReleaseDate": "2021/02/04",
+      "SubSkill": "",
+      "SubSkillTW": ""
+    },
+    {
+      "ID": 10150,
+      "Name": "コトネ",
+      "NameEN": "",
+      "NameTW": "",
+      "DevName": "CH0369",
+      "Icon": "",
+      "Star": 3,
+      "SkillEx": [
+        [
+          3120,
+          280
+        ],
+        [
+          3121,
+          3120,
+          281,
+          180
+        ],
+        [
+          3122,
+          3121,
+          282,
+          181
+        ],
+        [
+          3123,
+          3122,
+          283,
+          182
+        ]
+      ],
+      "SkillExAmount": [
+        [
+          12,
+          14
+        ],
+        [
+          12,
+          18,
+          11,
+          32
+        ],
+        [
+          12,
+          18,
+          10,
+          25
+        ],
+        [
+          8,
+          18,
+          8,
+          21
+        ]
+      ],
+      "Skill": [
+        [
+          4120
+        ],
+        [
+          4120
+        ],
+        [
+          4121,
+          4120,
+          280
+        ],
+        [
+          4121,
+          281,
+          180
+        ],
+        [
+          4122,
+          4121,
+          281,
+          180
+        ],
+        [
+          4122,
+          282,
+          181
+        ],
+        [
+          4123,
+          4122,
+          283,
+          182
+        ],
+        [
+          4123,
+          283,
+          182
+        ]
+      ],
+      "SkillAmount": [
+        [
+          5
+        ],
+        [
+          8
+        ],
+        [
+          5,
+          12,
+          6
+        ],
+        [
+          8,
+          4,
+          14
+        ],
+        [
+          5,
+          12,
+          11,
+          17
+        ],
+        [
+          8,
+          3,
+          17
+        ],
+        [
+          8,
+          12,
+          4,
+          9
+        ],
+        [
+          12,
+          8,
+          14
+        ]
+      ],
+      "School": "Gehenna",
+      "Class": 1,
+      "Role": "アタッカー",
+      "Position": "Back",
+      "BulletType": 1,
+      "ArmorType": 1,
+      "Adaptatio": [
+        4,
+        2,
+        0
+      ],
+      "WeaponAdaptatio": [
+        1,
+        1
+      ],
+      "WeaponType": "SR",
+      "Gear": "アルのすごく貴重な財布",
+      "Cover": true,
+      "Range": 750,
+      "Equipment": [
+        3,
+        4,
+        9
+      ],
+      "SkillDetails": [
+        1,
+        1,
+        1
+      ],
+      "IsLimited": 0,
+      "FavorStatType": [
+        "AttackPower",
+        "MaxHP"
+      ],
+      "FavorStatValue": [
+        [
+          4,
+          0
+        ],
+        [
+          6,
+          0
+        ],
+        [
+          7,
+          48
+        ],
+        [
+          9,
+          58
+        ],
+        [
+          2,
+          10
+        ],
+        [
+          4,
+          15
+        ],
+        [
+          6,
+          25
+        ]
+      ],
+      "FavorAlts": [
+        10031,
+        10089
+      ],
+      "ReleaseDate": "2021/02/04",
+      "SubSkill": "",
+      "SubSkillTW": ""
+    },
+    {
       "ID": 13000,
       "Name": "アカネ",
       "NameEN": "",
@@ -61281,6 +61697,154 @@
       "Desc": "通过视频形式记录了狂猎学生战术行动的教学用BD。"
     },
     {
+      "ID": 3120,
+      "IsReleased": [
+        true,
+        false,
+        false
+      ],
+      "Category": "Material",
+      "SubCategory": "CDItem",
+      "Rarity": "N",
+      "Quality": 1,
+      "Tags": [
+        "I",
+        "M",
+        "ct"
+      ],
+      "ShiftingCraftQuality": 30,
+      "CraftQuality": 5,
+      "Craftable": [
+        true,
+        false,
+        false
+      ],
+      "StageDrop": [
+        false,
+        false,
+        false
+      ],
+      "Shop": [
+        true,
+        false,
+        false
+      ],
+      "Icon": "item_icon_material_exskill_odyssey_0",
+      "Name": "初級戦術教育BD\n（オデュッセイア）",
+      "Desc": "オデュッセイアの生徒の戦術活動を映像として記録した教育用BD。"
+    },
+    {
+      "ID": 3121,
+      "IsReleased": [
+        true,
+        false,
+        false
+      ],
+      "Category": "Material",
+      "SubCategory": "CDItem",
+      "Rarity": "R",
+      "Quality": 2,
+      "Tags": [
+        "I",
+        "M",
+        "cU"
+      ],
+      "ShiftingCraftQuality": 60,
+      "CraftQuality": 10,
+      "Craftable": [
+        true,
+        false,
+        false
+      ],
+      "StageDrop": [
+        false,
+        false,
+        false
+      ],
+      "Shop": [
+        true,
+        false,
+        false
+      ],
+      "Icon": "item_icon_material_exskill_odyssey_1",
+      "Name": "中級戦術教育BD\n（オデュッセイア）",
+      "Desc": "オデュッセイアの生徒の戦術活動を映像として記録した教育用BD。"
+    },
+    {
+      "ID": 3122,
+      "IsReleased": [
+        true,
+        false,
+        false
+      ],
+      "Category": "Material",
+      "SubCategory": "CDItem",
+      "Rarity": "SR",
+      "Quality": 3,
+      "Tags": [
+        "I",
+        "M",
+        "cu"
+      ],
+      "ShiftingCraftQuality": 150,
+      "CraftQuality": 20,
+      "Craftable": [
+        true,
+        false,
+        false
+      ],
+      "StageDrop": [
+        false,
+        false,
+        false
+      ],
+      "Shop": [
+        true,
+        false,
+        false
+      ],
+      "Icon": "item_icon_material_exskill_odyssey_2",
+      "Name": "上級戦術教育BD\n（オデュッセイア）",
+      "Desc": "オデュッセイアの生徒の戦術活動を映像として記録した教育用BD。"
+    },
+    {
+      "ID": 3123,
+      "IsReleased": [
+        true,
+        false,
+        false
+      ],
+      "Category": "Material",
+      "SubCategory": "CDItem",
+      "Rarity": "SSR",
+      "Quality": 4,
+      "Tags": [
+        "I",
+        "M",
+        "cV"
+      ],
+      "ShiftingCraftQuality": 200,
+      "CraftQuality": 50,
+      "Craftable": [
+        true,
+        false,
+        false
+      ],
+      "StageDrop": [
+        false,
+        false,
+        false
+      ],
+      "Shop": [
+        true,
+        false,
+        false
+      ],
+      "Icon": "item_icon_material_exskill_odyssey_3",
+      "Name": "最上級戦術教育BD\n（オデュッセイア）",
+      "Desc": "オデュッセイアの生徒の戦術活動を映像として記録した教育用BD。"
+    },
+    {
       "ID": 4000,
       "IsReleased": [
         true,
@@ -62919,6 +63483,154 @@
       "Icon": "item_icon_skillbook_wildhunt_3",
       "Name": "最高级技术笔记（狂猎）",
       "Desc": "汇集总结了狂猎艺术学院战术精粹的笔记。"
+    },
+    {
+      "ID": 4120,
+      "IsReleased": [
+        true,
+        false,
+        false
+      ],
+      "Category": "Material",
+      "SubCategory": "BookItem",
+      "Rarity": "N",
+      "Quality": 1,
+      "Tags": [
+        "j",
+        "M",
+        "cv"
+      ],
+      "ShiftingCraftQuality": 10,
+      "CraftQuality": 5,
+      "Craftable": [
+        true,
+        false,
+        false
+      ],
+      "StageDrop": [
+        false,
+        false,
+        false
+      ],
+      "Shop": [
+        true,
+        false,
+        false
+      ],
+      "Icon": "item_icon_skillbook_odyssey_0",
+      "Name": "初級技術ノート\n（オデュッセイア）",
+      "Desc": "オデュッセイア海洋高等学校の戦術の極意がまとめられているノート。"
+    },
+    {
+      "ID": 4121,
+      "IsReleased": [
+        true,
+        false,
+        false
+      ],
+      "Category": "Material",
+      "SubCategory": "BookItem",
+      "Rarity": "R",
+      "Quality": 2,
+      "Tags": [
+        "j",
+        "M",
+        "cW"
+      ],
+      "ShiftingCraftQuality": 20,
+      "CraftQuality": 10,
+      "Craftable": [
+        true,
+        false,
+        false
+      ],
+      "StageDrop": [
+        false,
+        false,
+        false
+      ],
+      "Shop": [
+        true,
+        false,
+        false
+      ],
+      "Icon": "item_icon_skillbook_odyssey_1",
+      "Name": "中級技術ノート\n（オデュッセイア）",
+      "Desc": "オデュッセイア海洋高等学校の戦術の極意がまとめられているノート。"
+    },
+    {
+      "ID": 4122,
+      "IsReleased": [
+        true,
+        false,
+        false
+      ],
+      "Category": "Material",
+      "SubCategory": "BookItem",
+      "Rarity": "SR",
+      "Quality": 3,
+      "Tags": [
+        "j",
+        "M",
+        "cw"
+      ],
+      "ShiftingCraftQuality": 50,
+      "CraftQuality": 20,
+      "Craftable": [
+        true,
+        false,
+        false
+      ],
+      "StageDrop": [
+        false,
+        false,
+        false
+      ],
+      "Shop": [
+        true,
+        false,
+        false
+      ],
+      "Icon": "item_icon_skillbook_odyssey_2",
+      "Name": "上級技術ノート\n（オデュッセイア）",
+      "Desc": "オデュッセイア海洋高等学校の戦術の極意がまとめられているノート。"
+    },
+    {
+      "ID": 4123,
+      "IsReleased": [
+        true,
+        false,
+        false
+      ],
+      "Category": "Material",
+      "SubCategory": "BookItem",
+      "Rarity": "SSR",
+      "Quality": 4,
+      "Tags": [
+        "j",
+        "M",
+        "cX"
+      ],
+      "ShiftingCraftQuality": 80,
+      "CraftQuality": 50,
+      "Craftable": [
+        true,
+        false,
+        false
+      ],
+      "StageDrop": [
+        false,
+        false,
+        false
+      ],
+      "Shop": [
+        true,
+        false,
+        false
+      ],
+      "Icon": "item_icon_skillbook_odyssey_3",
+      "Name": "最上級技術ノート\n（オデュッセイア）",
+      "Desc": "オデュッセイア海洋高等学校の戦術の極意がまとめられているノート。"
     },
     {
       "ID": 9999,
@@ -68950,7 +69662,7 @@
       "Desc": "用于制作装备的图纸。",
       "IsReleased": [
         true,
-        false,
+        true,
         false
       ],
       "MaxLevel": 1,
@@ -68969,7 +69681,7 @@
       "Desc": "用于制作装备的图纸。",
       "IsReleased": [
         true,
-        false,
+        true,
         false
       ],
       "MaxLevel": 1,
@@ -68988,7 +69700,7 @@
       "Desc": "用于制作装备的图纸。",
       "IsReleased": [
         true,
-        false,
+        true,
         false
       ],
       "MaxLevel": 1,
@@ -69007,7 +69719,7 @@
       "Desc": "用于制作装备的图纸。",
       "IsReleased": [
         true,
-        false,
+        true,
         false
       ],
       "MaxLevel": 1,
@@ -69026,7 +69738,7 @@
       "Desc": "用于制作装备的图纸。",
       "IsReleased": [
         true,
-        false,
+        true,
         false
       ],
       "MaxLevel": 1,
@@ -69045,7 +69757,7 @@
       "Desc": "用于制作装备的图纸。",
       "IsReleased": [
         true,
-        false,
+        true,
         false
       ],
       "MaxLevel": 1,
@@ -69064,7 +69776,7 @@
       "Desc": "用于制作装备的图纸。",
       "IsReleased": [
         true,
-        false,
+        true,
         false
       ],
       "MaxLevel": 1,
@@ -69083,7 +69795,7 @@
       "Desc": "用于制作装备的图纸。",
       "IsReleased": [
         true,
-        false,
+        true,
         false
       ],
       "MaxLevel": 1,
@@ -69102,7 +69814,7 @@
       "Desc": "用于制作装备的图纸。",
       "IsReleased": [
         true,
-        false,
+        true,
         false
       ],
       "MaxLevel": 1,

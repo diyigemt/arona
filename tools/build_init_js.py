@@ -3,13 +3,17 @@ from __future__ import annotations
 import copy
 import http.client
 import json
+import math
 import re
 import socket
 import time
 import urllib.error
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any
+
+from progressbar import Bar, ETA, Percentage, ProgressBar, Timer
 
 ROOT = Path(__file__).resolve().parent
 PLAYWRIGHT_DIR = ROOT / "playwright"
@@ -32,6 +36,8 @@ HTTP_TIMEOUT = 20
 RETRY_BACKOFF_SECONDS = (1, 2)
 USER_AGENT = "arona-tools/1.0"
 EQUIPMENT_ICON_TIER = 9
+# 头像批量下载的线程池大小
+PORTRAIT_DOWNLOAD_WORKERS = 8
 
 EQUIPMENT_TYPE_MAP = {
     "Hat": 1,
@@ -50,7 +56,7 @@ ITEM_BOOK_SUBCATEGORIES = {"BookItem", "CDItem", "Artifact"}
 BASE_INDENT = "  "
 
 
-def fetch_bytes(url: str, accept: str) -> bytes:
+def fetch_bytes(url: str, accept: str, verbose: bool = True) -> bytes:
     request = urllib.request.Request(
         url,
         headers={
@@ -64,7 +70,8 @@ def fetch_bytes(url: str, accept: str) -> bytes:
         try:
             with urllib.request.urlopen(request, timeout=HTTP_TIMEOUT) as response:
                 payload = response.read()
-            print(f"[build_init_js] fetched {url} bytes={len(payload)}")
+            if verbose:
+                print(f"[build_init_js] fetched {url} bytes={len(payload)}")
             return payload
         except (
             urllib.error.URLError,
@@ -235,7 +242,7 @@ def download_icon(icon: str, url_template: str) -> str:
         return ICON_STATUS_FAILED
 
 
-def download_student_portrait(dev_name: str) -> str:
+def download_student_portrait(dev_name: str, verbose: bool = True) -> str:
     downloaded = False
     portraits = (
         (f"Student_Portrait_{dev_name}.png", STUDENT_PORTRAIT_URL_TEMPLATE),
@@ -244,15 +251,18 @@ def download_student_portrait(dev_name: str) -> str:
     for filename, url_template in portraits:
         dest_path = MMT_DIR / filename
         if dest_path.exists():
-            print(f"[build_init_js] skip portrait (exists): {filename}")
+            if verbose:
+                print(f"[build_init_js] skip portrait (exists): {filename}")
             continue
         try:
             payload = fetch_bytes(
                 url_template.format(name=dev_name),
                 "image/png,image/*",
+                verbose=verbose,
             )
             dest_path.write_bytes(payload)
-            print(f"[build_init_js] wrote portrait {dest_path.name}")
+            if verbose:
+                print(f"[build_init_js] wrote portrait {dest_path.name}")
             downloaded = True
         except Exception as error:
             print(f"[build_init_js] failed portrait {filename}: {error}")
@@ -263,18 +273,43 @@ def download_student_portrait(dev_name: str) -> str:
 
 
 def download_student_portraits_batch(dev_names: set[str]) -> tuple[int, int, int]:
+    """多线程下载全部学生头像, 带进度条。
+
+    单个学生的两个头像文件由同一个线程串行获取, 不同学生之间并发;
+    某个头像失败不影响其余头像的下载。
+    """
     MMT_DIR.mkdir(parents=True, exist_ok=True)
+    targets = sorted(dev_names)
     existed = 0
     downloaded = 0
     failed = 0
-    for dev_name in sorted(dev_names):
-        status = download_student_portrait(dev_name)
-        if status == ICON_STATUS_EXISTED:
-            existed += 1
-        elif status == ICON_STATUS_DOWNLOADED:
-            downloaded += 1
-        else:
-            failed += 1
+    if not targets:
+        return existed, downloaded, failed
+    widgets = ["Progress: ", Percentage(), " ", Bar("#"), " ",
+               Timer(), " ", ETA()]
+    pbar = ProgressBar(widgets=widgets, maxval=100).start()
+    finish = 0
+    with ThreadPoolExecutor(max_workers=PORTRAIT_DOWNLOAD_WORKERS) as executor:
+        # verbose=False: 并发下载时不逐文件打印, 避免刷屏盖住进度条
+        future_to_name = {
+            executor.submit(download_student_portrait, dev_name, False): dev_name
+            for dev_name in targets
+        }
+        for future in as_completed(future_to_name):
+            try:
+                status = future.result()  # 下载完成, 统计结果
+            except Exception as error:
+                print(f"[build_init_js] failed portrait {future_to_name[future]}: {error}")
+                status = ICON_STATUS_FAILED
+            if status == ICON_STATUS_EXISTED:
+                existed += 1
+            elif status == ICON_STATUS_DOWNLOADED:
+                downloaded += 1
+            else:
+                failed += 1
+            finish = finish + 1
+            pbar.update(math.ceil(finish / len(targets) * 100))
+    pbar.finish()
     return existed, downloaded, failed
 
 

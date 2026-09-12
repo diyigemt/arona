@@ -3,6 +3,7 @@ numpy
 paramiko
 Pillow
 playwright
+progressbar2
 PyYAML
 cos-python-sdk-v5
 Requests
